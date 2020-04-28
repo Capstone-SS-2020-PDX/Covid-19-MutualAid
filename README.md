@@ -6,14 +6,19 @@ to those who are geographically close to them, as well as make requests for good
 There is no opportunity for profiteering on this platform. All items are exchanged out of goodwill.
 
 ### Build and Test
-# TODO
+###### TODO
 
+### Team
 ##### Project Lead
 Erik Haake
 
-#### Project members
+##### Project members
 Sean Sisson
+
 Michael Jenkins
+
 Allie Hanson
+
 Simon Barton
+
 Roland Ballinger
