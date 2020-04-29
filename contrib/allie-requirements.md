@@ -1,6 +1,6 @@
 # Suggested Requirements
 
-Author:     Allie Hanson
+Author:     Allie Hanson  
 Updated:    April 28, 2020
 
 This document contains my suggested requirements and specifications for the COVID-19-MutualAid project.
