@@ -1,7 +1,7 @@
 # Suggested Requirements
 
 Author:     Allie Hanson  
-Updated:    April 28, 2020
+Updated:    April 29, 2020
 
 This document contains my suggested requirements and specifications for the COVID-19-MutualAid project.
 
@@ -33,3 +33,14 @@ This document contains my suggested requirements and specifications for the COVI
 2. How do we ensure the physical safety of our users? Or, does the responsibility to ensure physical safety not fall on us?
 3. Could we include some kind of "rating" or user moderation so that bad-intentioned (or poorly behaved) individuals can be taken off of the app or face consequences?
 4. Will there be an in-app communication feature -- comments, chat, etc.?
+
+## Technical Aspects
+
+Note: I have never built a mobile or web app before so I will default to the recommendations of those of you with more experience than me. Also, some of my thoughts below could be incorrect, so please feel free to correct me if you notice something that's inaccurate.
+
+1. The IBM "Community cooperation" starter kit recommends using the React Native framework, Node.js environment, and the Cloudant database service (along with the Watson Assistant, but I don't know if we wanted to use a chatbot).
+    * A tutorial can be found here: https://developer.ibm.com/tutorials/create-a-mobile-app-to-facilitate-community-collaboration/
+    * As an alternative to React Native, we could use Express.js.
+2. I think another alternative would be Django, and this might work well since I think many of us are already familiar with Python.
+    * I found a comparison of Django and Node.js here: https://dashbouquet.com/blog/frontend-development/nodejs-vs-django-is-javascript-better-than-python, although of course this is somewhat subjective.
+3. Ruby on Rails is another common web app framework. I don't know Ruby at all, so I'm not sure if this would be the best option -- I have just heard good things about it.
