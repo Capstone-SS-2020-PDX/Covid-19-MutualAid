@@ -1,0 +1,40 @@
+Platform will have user accounts with certain permissions
+Permissions might evolve over time? i.e. users who have established themselves as helpful can post more times,
+  while users who make trouble can post fewer times, or could even face a ban
+  We should probably keep track of how many requests a person has made and satisfied
+Users can post:
+NEED - I need something
+	Sublabels:
+	MATERIAL GOOD - I need toilet paper or whatever. Suggests a sensible match from the database?
+	SERVICE - I need something done and I can't do it myself - maybe have defined categories for this?
+HAVE - I have something to give (same categories)
+Maybe these posts could be made through a flowchart-like structure? (I need... > Select category > Select item)
+It might not be necessary or helpful to have a database for that sort of thing since people's needs are varied,
+  but it might be a good idea to populate suggestions from the pool of "I have" posts, to match needs to haves?
+Should posts be anonymous, or at least remain anonymous until accepted? How important is it for users to know who they're helping?
+  Maybe have an option for users - "Don't show my posts to this person again"
+To avoid abuse of the platform, maybe users can only post a limited number of times per week?
+  craigslist is often full of garbage so this precaution might be necessary, not to mention potential for excessive requests
+Backend could potentially match HAVES to NEEDS with some type of pattern matching
+Possibly limited to geographical area?
+  User can maybe specify geo areas? (near home, near work, etc)
+  Geo data is hidden from users - used only for matching (sending a notification that says "Somebody near you needs {Thing you have}!")
+  Rather than having geo data verification, maybe we can use a user report system: i.e., if somebody makes a request in area A,
+    but then tells the user who answers them they're actually in area B, the second user can report the first user?
+Posts could have an option for "standing offers" - i.e. "I will sew you a face mask" can be accepted by multiple users, but
+  "I baked an extra loaf of bread" can only be accepted once. Maybe a configurable numerical limit?
+  Actually that might be a good idea in general - posts can have an associated number (I have X items to give, I can offer
+    remote tutoring for X hours, I need X face masks) - poster will be prompted to change count after an encounter?
+Some requests may require a monetary exchange, i.e. "I can go to the grocery store for you" - should there be a report
+  system for this, in case of fraud? Obviously the actual money matter can go to the financial institution, but how can
+    we verify whether or not a user has committed fraud? (for the purpose of issuing a ban)
+Built-in safety features: I know a lot of people have anxiety about meeting people from craigslist, and although this
+  app is designed around altruism, it might help people to feel better about it if there were built-in safety
+  Could look like this:
+    1. Ask user for emergency contact
+    2. In the app, have users select their meetup time on a calendar
+    3. An hour or so after the scheduled meetup time, send users a notification 
+        "How did the meetup go? 
+          Fine(Complete request/Prompt to change request count)/Bad(Block user)/Didn't happen(Leave request posted)
+    4. If the user doesn't respond to that message (could be sent more than once), a message could be sent to 
+        their emergency contact saying that they didn't respond
