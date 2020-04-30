@@ -1,4 +1,4 @@
-﻿Comments/Questions/Knowns/Unknowns
+﻿# Comments/Questions/Knowns/Unknowns
 
 
 * How to ensure user safety within the app
@@ -30,7 +30,7 @@
 
 
 
-Technical Aspects
+# Technical Aspects
 
 
 * I’ve personally never done mobile development, so I’m not sure what questions/concerns to have here
