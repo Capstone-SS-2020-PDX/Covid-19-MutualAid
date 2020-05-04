@@ -7,8 +7,8 @@ assignees: ''
 
 ---
 
-# Proposed Change
+# Plan/Proposed Change
 
 # Why is this important
 
-# Additional Context
+# Additional Context/Questions
