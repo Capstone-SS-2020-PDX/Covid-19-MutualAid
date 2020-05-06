@@ -38,7 +38,7 @@ Django:
     - Even if you got errors from Django, it's still talking to django!
 
 React Native simulator:
-- In repo folder `/react-native`, run `expo start`
+- In a separate terminal, go to repo folder `/react-native`, run `expo start`
   - If you haven't already download the Expo app on your phone then point your camera at the QR code
   - Or hit W to get a Web preview
 
