@@ -1,19 +1,13 @@
 from .models import Ask
 from .serializers import AskSerializer
 
-from rest_framework import generics
+from rest_framework import viewsets, permissions
 
-class AskList(generics.ListCreateAPIView):
+
+class AskViewSet(viewsets.ModelViewSet):
     """
-    View all Asks.
+    API endpoint allowing Ask objects to be created, viewed, edited, deleted
     """
     queryset = Ask.objects.all()
     serializer_class = AskSerializer
 
-class AskDetail(generics.RetrieveUpdateDestroyAPIView):
-    """
-    Returns a single Ask and allows updates and deletion of an Ask
-    """
-    queryset = Ask.objects.all()
-    serializer_class = AskSerializer
-    lookup_url_kwarg = 'ask_id'
