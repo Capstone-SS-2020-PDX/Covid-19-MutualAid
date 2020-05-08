@@ -53,6 +53,7 @@ Observe that REST requests aren't fully communicating between the two (Network e
 
 ### Set Up Git Pre-push hook
 In order for automatic `pytest` and `jest` suites to run before `git push` please run the following in the root of the repo:
+
 `ln -s pre-push.sh .git/hooks/pre-push`
 
 This will ensure that the `pre-push.sh` script actually runs before a push.
