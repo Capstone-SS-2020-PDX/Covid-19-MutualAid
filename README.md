@@ -51,33 +51,12 @@ Observe that REST requests aren't fully communicating between the two (Network e
 
 ## Deploy and Test
 
-Local test ideas:
-- runs `jest` and `pytest` suites
-  - Upon commit or just upon push?
-- Postman, expo
-- Code review
+### Set Up Git Pre-push hook
+In order for automatic `pytest` and `jest` suites to run before `git push` please run the following in the root of the repo:
+`ln -s pre-push.sh .git/hooks/pre-push`
 
-For long term CI:
-- Biggest question in my mind is DBs.
-  - Do we want just one persistent DB w/ rolling backups?
-
-Backend rough idea:
-- pull request opens
-  1. Typical `jest` and `pytest` run against code locally (automatic git hook)
-  2. At the same time, django docker instance made on GCP
-  3. GCP psql instance made? (or connect to static instance w/ known data?)
-  4. run a postman suite of tests (GitHub - Postman integration, automatically run a Postman "collection")
-  5. keep instances up for a bit manual poking purposes
-- pull request is updated indicating postman tests pass
-- either merge or repeat upon subsequent `git push`
-
-Frontend rough idea:
-- pull request opens
-  1. `jest` and `pytest` run against code locally
-  2. run a [detox](https://github.com/wix/Detox) automated GUI sanity test suite (locally?)
-   - Not sure if this one can alert the GitHub pull request, or if dev would need to comment
-  3. expo available for team to test during review
-- either merge or repeat upon subsequent `git push`
+This will ensure that the `pre-push.sh` script actually runs before a push.
+You may need to install pytest and jest locally as well.
 
 ## Team
 ### Project Lead
