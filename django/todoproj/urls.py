@@ -20,7 +20,7 @@ from rest_framework import routers
 from todoapi import views as todoapi_views
 
 router = routers.DefaultRouter()
-router.register(r'ask', todoapi_views.AskViewSet)
+router.register(r'post', todoapi_views.PostViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
