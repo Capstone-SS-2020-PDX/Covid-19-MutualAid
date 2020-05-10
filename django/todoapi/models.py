@@ -16,7 +16,7 @@ class User(models.Model):
 class Post(models.Model):
     title = models.CharField(max_length=50)
     created_on = models.DateField(default=date.today)
-    owner = models.ForeignKey('User',  on_delete=models.CASCADE)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     
     # Meta data about DB table
     class Meta:
