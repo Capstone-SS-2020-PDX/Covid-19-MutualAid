@@ -25,19 +25,6 @@ class Migration(migrations.Migration):
                 'ordering': ['name'],
             },
         ),
-        migrations.CreateModel(
-            name='Community',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=50)),
-                ('created_on', models.DateField(default=datetime.date.today)),
-                ('members', models.ManyToManyField(related_name='member_of', to='todoapi.User')),
-            ],
-            options={
-                'db_table': 'community',
-                'ordering': ['id'],
-            },
-        ),
         migrations.AddField(
             model_name='post',
             name='owner',
