@@ -61,26 +61,26 @@ export default class App extends Component {
 
   async onFetchLoginRecords() {
     var data = {
-    email: this.state.title
+      email: this.state.title
     };
     try {
-    let response = await fetch(
-      "http://localhost:80/api/ask/",
-      {
-        method: "POST",
-        headers: {
-        "Accept": "application/json",
-        "Content-Type": "application/json"
-        },
-      body: JSON.stringify(data)
+      let response = await fetch(
+        "http://localhost:80/api/ask/",
+        {
+          method: "POST",
+          headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+          },
+          body: JSON.stringify(data)
+        }
+      );
+      if (response.status >= 200 && response.status < 300) {
+          alert("authenticated successfully!!!");
+      }
     }
-    );
-    if (response.status >= 200 && response.status < 300) {
-        alert("authenticated successfully!!!");
-    }
-  } catch (errors) {
-
-    alert(errors);
+    catch (errors) {
+      alert(errors);
     } 
   }
 }
