@@ -17,12 +17,14 @@ class PostViewSet(rf.viewsets.ModelViewSet):
         serializer = PostSerializer(post, many=True)
         return rf.response.Response(serializer.data)
 
+
 class CommunityViewSet(rf.viewsets.ModelViewSet):
     """
     API endpoint allowing Community objects to be created, viewed, edited, deleted
     """
     queryset = Community.objects.all()
     serializer_class = CommunitySerializer
+
 
 class UserViewSet(rf.viewsets.ModelViewSet):
     queryset = User.objects.all()

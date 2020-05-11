@@ -1,6 +1,7 @@
 from django.db import models
 from datetime import date
 
+
 class User(models.Model):
     name = models.CharField(max_length=50)
     created_on = models.DateField(default=date.today)
@@ -12,6 +13,7 @@ class User(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class Post(models.Model):
     title = models.CharField(max_length=50)
@@ -27,6 +29,8 @@ class Post(models.Model):
     # What to output when model is printed as a String
     def __str__(self):
         return self.title
+
+
 class Community(models.Model):
     """"""
     name = models.CharField(max_length=50)
