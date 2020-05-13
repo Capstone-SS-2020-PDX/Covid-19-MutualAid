@@ -14,11 +14,14 @@ export default class App extends React.Component {
   }
 
   componentDidMount() {
-    return fetch('https://reactnative.dev/movies.json', {
+    // Change IP address below to your machine on your *local* network
+    // (e.g., 192.168.1.3, 10.0.0.12, etc)
+    return fetch('http://192.168.1.122:8080/post/?format=json', {
 			method: 'GET',
       headers: {
 				'Accept': 'application/json',
-				'Content-type': 'application/json'
+				'Content-type': 'application/json',
+        //'Access-Control-Allow-Origin': '*',
       }
 		})
     .then((response) => response.json())
@@ -43,16 +46,10 @@ export default class App extends React.Component {
     } else {
       return (
         <View style={styles.container}>
-          <Text>Content Loaded</Text>
+          <p>{this.state.dataSource[0].title}</p>
         </View>
       );
     }
-
-    return (
-      <View style={styles.container}>
-        <Text>This is some text</Text>
-      </View>
-    )  
   }
 }
 
