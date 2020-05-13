@@ -39,9 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'todoapi',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -70,6 +72,10 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'todoproj.wsgi.application'
+
+#This is so testing can be done. In the future we'll want to limit this to
+#whatever URL we use to host our browser-based service (if any).
+CORS_ORIGIN_ALLOW_ALL = True
 
 
 # Database
