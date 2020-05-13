@@ -25,7 +25,7 @@ SECRET_KEY = 'sd1v^qwjvnb+4hd1tn0dy0#cl98mlfxez@69pno-^t3s$*2v4+'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["cellular-virtue-277000.uc.r.appspot.com"]
 
 
 # Application definition
@@ -74,16 +74,27 @@ WSGI_APPLICATION = 'todoproj.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'HOST': 'db',
-        'PORT': 5432,
+if os.getenv('GAE_APPLICATION', None):
+    DATABASES = {
+        'default': {
+                'ENGINE': 'django.db.backends.postgresql',
+                'HOST': '/cloudsql/cellular-virtue-277000:us-central1:mutual-aid-test',
+                'USER': 'postgres',
+                'NAME': 'postgres',
+                'PASSWORD': 'testpassword',
+                }
+        }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'postgres',
+            'USER': 'postgres',
+            'HOST': '/cloud_sql/cellular-virtue-277000:us-central1:mutual-aid-test/',
+            'PORT': '5432',
+            'PASSWORD': 'testpassword',
+        }
     }
-}
 
 
 # Password validation
@@ -123,3 +134,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = 'static'
