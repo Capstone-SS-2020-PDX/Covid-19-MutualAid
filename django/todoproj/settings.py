@@ -88,13 +88,24 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'HOST': 'localhost',
-            'PORT': '3306',
             'NAME': 'postgres',
             'USER': 'postgres',
-            'PASSWORD': 'testpassword',
+            'HOST': 'db',
+            'PORT': 5432,
         }
     }
+# Comment out the above and change to this one if you have the cloudsql proxy
+# running, to do migrations or whatever.
+#    DATABASES = {
+#        'default': {
+#            'ENGINE': 'django.db.backends.postgresql',
+#            'HOST': 'localhost',
+#            'PORT': '3306',
+#            'NAME': 'postgres',
+#            'USER': 'postgres',
+#            'PASSWORD': 'testpassword',
+#        }
+#    }
 
     # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
