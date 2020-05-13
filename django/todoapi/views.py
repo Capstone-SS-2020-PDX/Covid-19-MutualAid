@@ -1,20 +1,20 @@
 import rest_framework as rf
 from rest_framework.decorators import action
-from .models import Post, Community, User
-from .serializers import PostSerializer, CommunitySerializer, UserSerializer
+from .models import Posting, Community, User
+from .serializers import PostingSerializer, CommunitySerializer, UserSerializer
 
 from rest_framework import viewsets, permissions
 
 
-class PostViewSet(rf.viewsets.ModelViewSet):
-    queryset = Post.objects.all()
-    serializer_class = PostSerializer
+class PostingViewSet(rf.viewsets.ModelViewSet):
+    queryset = Posting.objects.all()
+    serializer_class = PostingSerializer
     
     @action(detail=False)
     def foo(self, request):
         argument = request.query_params.get('title', '')
-        post = Post.objects.filter(title__contains=argument)
-        serializer = PostSerializer(post, many=True)
+        posting = Posting.objects.filter(title__contains=argument)
+        serializer = PostingSerializer(posting, many=True)
         return rf.response.Response(serializer.data)
 
 class CommunityViewSet(rf.viewsets.ModelViewSet):

@@ -1,9 +1,9 @@
 from rest_framework import serializers
-from .models import Post, Community, User
+from .models import Posting, Community, User
 
-class PostSerializer(serializers.ModelSerializer):
+class PostingSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Post
+        model = Posting
         fields = ('id', 'title', 'created_on', 'owner')
 
 class CommunitySerializer(serializers.ModelSerializer):
