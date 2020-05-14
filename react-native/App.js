@@ -16,7 +16,7 @@ export default class App extends React.Component {
   componentDidMount() {
     // Change IP address below to your machine on your *local* network
     // (e.g., 192.168.1.3, 10.0.0.12, etc)
-    return fetch('http://192.168.1.122:80/post/?format=json', {
+    return fetch('https://cellular-virtue-277000.uc.r.appspot.com/posting/?format=json', {
 			method: 'GET',
       headers: {
 				'Accept': 'application/json',
