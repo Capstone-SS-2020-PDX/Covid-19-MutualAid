@@ -1,0 +1,106 @@
+{
+	"info": {
+		"_postman_id": "95e07abc-46ad-41a7-94ce-adbadf945a3d",
+		"name": "Covid-19 Mutual Aid backend test suite",
+		"description": "This is a test suite for a group of developers working on their PSU capstone project. We want to hammer this endpoint: https://cellular-virtue-277000.uc.r.appspot.com/",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Basic GET",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "49503cda-2d2d-4367-a91e-1c52c910328e",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () { ",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://cellular-virtue-277000.uc.r.appspot.com/posting/",
+					"protocol": "https",
+					"host": [
+						"cellular-virtue-277000",
+						"uc",
+						"r",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"posting",
+						""
+					]
+				},
+				"description": "Run a basic GET request against our endpoint for 'posting's"
+			},
+			"response": []
+		},
+		{
+			"name": "Basic POST",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "8aa71ae3-ac2e-4ad7-9e72-6174b622504c",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () { ",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Body matches string\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"title\");",
+							"});",
+							"",
+							"pm.test(\"response should be okay to process\", function () {",
+							"    pm.response.to.not.be.error;",
+							"    pm.response.to.not.have.jsonBody(\"error\");",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"title\": \"POSTMAN TEST, BABY\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://cellular-virtue-277000.uc.r.appspot.com/posting/",
+					"protocol": "https",
+					"host": [
+						"cellular-virtue-277000",
+						"uc",
+						"r",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"posting",
+						""
+					]
+				},
+				"description": "Send a POST request for a Posting. Verify 201 response and item added."
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
