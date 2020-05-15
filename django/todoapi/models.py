@@ -1,10 +1,23 @@
 from django.db import models
 from datetime import date
 
+class Community(models.Model):
+    """"""
+    name = models.CharField(max_length=50)
+    created_on = models.DateField(default=date.today)
+    
+    class Meta:
+        db_table = 'community'
+        ordering = ['id']
+    
+    def __str__(self):
+        return self.name
+
 class User(models.Model):
     name = models.CharField(max_length=50)
     created_on = models.DateField(default=date.today)
     profile = models.CharField(max_length=160)
+    member_of = models.ManyToManyField(Community, related_name='members')
 
     class Meta:
         db_table = 'user'
@@ -13,7 +26,7 @@ class User(models.Model):
     def __str__(self):
         return self.name
 
-class Post(models.Model):
+class Posting(models.Model):
     title = models.CharField(max_length=50)
     created_on = models.DateField(default=date.today)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
@@ -21,21 +34,10 @@ class Post(models.Model):
     # Meta data about DB table
     class Meta:
         # Set table name, default ordering
-        db_table = 'post'
+        db_table = 'posting'
         ordering = ['id']
     
     # What to output when model is printed as a String
     def __str__(self):
         return self.title
-class Community(models.Model):
-    """"""
-    name = models.CharField(max_length=50)
-    created_on = models.DateField(default=date.today)
-    members = models.ManyToManyField(User, related_name='member_of')
-    
-    class Meta:
-        db_table = 'community'
-        ordering = ['id']
-    
-    def __str__(self):
-        return self.name
+
