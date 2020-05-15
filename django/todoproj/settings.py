@@ -96,12 +96,10 @@ else:
             'ENGINE': 'django.db.backends.postgresql',
             'NAME': 'postgres',
             'USER': 'postgres',
-            'HOST': '/cloud_sql/cellular-virtue-277000:us-central1:mutual-aid-test/',
-            'PORT': '5432',
-            'PASSWORD': 'testpassword',
+            'HOST': 'db',
+            'PORT': 5432,
         }
     }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
