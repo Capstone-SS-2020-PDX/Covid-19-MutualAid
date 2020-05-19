@@ -46,7 +46,7 @@ export default class App extends React.Component {
     } else {
       return (
         <View style={styles.container}>
-          <p>{this.state.dataSource[0].title}</p>
+          <Text>{this.state.dataSource[0].title}</Text>
         </View>
       );
     }
