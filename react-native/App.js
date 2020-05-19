@@ -1,86 +1,63 @@
 "use strict";
 
-import React, { Component } from "react";
-import {
-     StyleSheet,
-     View,
-     TextInput,
-     Button,
-} from "react-native";
+import React from "react";
+import {StyleSheet, Text, View, ActivityIndicator} from "react-native";
 
-export default class App extends Component {
+export default class App extends React.Component {
+
   constructor(props) {
-  super(props);
-
- this.state = {
-     title: ""
-    };
+    super(props);
+    this.state = {
+      isLoading: true,
+      dataSource: null,
+    }
   }
 
-  onPressSubmitButton() {
-    this.onFetchLoginRecords();
+  componentDidMount() {
+    // Change IP address below to your machine on your *local* network
+    // (e.g., 192.168.1.3, 10.0.0.12, etc)
+    return fetch('https://cellular-virtue-277000.uc.r.appspot.com/posting/?format=json', {
+			method: 'GET',
+      headers: {
+				'Accept': 'application/json',
+				'Content-type': 'application/json',
+        //'Access-Control-Allow-Origin': '*',
+      }
+		})
+    .then((response) => response.json())
+    .then((responseJson) => {
+      this.setState({
+        isLoading: false,
+        dataSource: responseJson,
+      })
+    })
+    .catch((error) => {
+      console.log(error)
+    });
   }
- 
+
   render() {
-    return (
-      <View>
-      <TextInput
-        ref="title"
-        style={this.loginStyles.textInput}
-        placeholder="What do you need?"
-        keyboardType="email-address"
-        onChangeText={text => this.setState({ emailAddress: text })}
-      />
-      <Button
-        title="Submit"
-        color="#841584"
-        onPress={this.onPressSubmitButton.bind(this)}
-      />
-    </View>
-    );
-}
-
-  loginStyles = StyleSheet.create({
-    container: {
-      flex: 1,
-      alignItems: "center",
-      justifyContent: "center",
-      flexDirection: "column",
-      backgroundColor: "#F5FCFF"
-    },
-    textInput: {
-      height: 40,
-      textAlign: "center",
-      borderWidth: 1,
-      width: "80%"
-      },
-      buttonSubmit: {
-      color: "#841584"
+    if (this.state.isLoading) {
+      return (
+        <View style={styles.container}>
+          <ActivityIndicator />
+        </View>
+      )
+    } else {
+      return (
+        <View style={styles.container}>
+          <Text>{this.state.dataSource[0].title}</Text>
+        </View>
+      );
     }
-  });
-
-  async onFetchLoginRecords() {
-    var data = {
-    email: this.state.title
-    };
-    try {
-    let response = await fetch(
-      "http://localhost:80/api/ask/",
-      {
-        method: "POST",
-        headers: {
-        "Accept": "application/json",
-        "Content-Type": "application/json"
-        },
-      body: JSON.stringify(data)
-    }
-    );
-    if (response.status >= 200 && response.status < 300) {
-        alert("authenticated successfully!!!");
-    }
-  } catch (errors) {
-
-    alert(errors);
-    } 
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#ffffff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
