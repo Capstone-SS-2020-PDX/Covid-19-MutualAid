@@ -1,13 +1,12 @@
 .PHONY: server js
 
 server:
-       docker-compose build
-       docker-compose up
+	docker-compose build && docker-compose up
 
 js:
-       cd react-native && expo start
+	cd react-native && expo start
 
 console:
-       docker exec -it djapi bash
+	docker exec -it djapi bash
 
 
