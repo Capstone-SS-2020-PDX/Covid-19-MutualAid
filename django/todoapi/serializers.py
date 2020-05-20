@@ -14,4 +14,4 @@ class CommunitySerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'name', 'profile', 'created_on', 'member_of')
+        fields = ('id', 'username', 'profile_text', 'created_on', 'member_of')
