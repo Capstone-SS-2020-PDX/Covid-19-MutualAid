@@ -21,8 +21,8 @@ from todoapi import views as todoapi_views
 
 router = routers.DefaultRouter()
 router.register(r'communities', todoapi_views.CommunityViewSet)
-router.register(r'posting', todoapi_views.PostingViewSet)
-router.register(r'user', todoapi_views.UserViewSet)
+router.register(r'postings', todoapi_views.PostingViewSet)
+router.register(r'users', todoapi_views.UserViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
