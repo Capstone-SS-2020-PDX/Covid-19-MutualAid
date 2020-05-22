@@ -32,9 +32,9 @@ class User(AbstractBaseUser):
 
 class Posting(models.Model):
     title = models.CharField(max_length=50)
-    desc = models.CharField(max_length=256, blank=True, null=True)
-    count = models.IntegerField
-    category = models.CharField(max_length=30, blank=True, null=True)
+    desc = models.CharField(max_length=256)
+    count = models.IntegerField()
+    category = models.CharField(max_length=30)
     created_on = models.DateField(default=date.today)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     
