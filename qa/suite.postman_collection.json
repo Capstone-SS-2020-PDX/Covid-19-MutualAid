@@ -85,7 +85,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"title\": \"POSTMAN Sprint 3\"\n}",
+					"raw": "{\n\t\"title\": \"POSTMAN Sprint 3\",\n\t\"count\": 222\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -131,7 +131,7 @@
 	],
 	"variable": [
 		{
-			"id": "6a17243a-3297-4dbc-82bc-db2fa1278789",
+			"id": "d4f321f4-1b84-44c5-8f57-a0c5d8d919ef",
 			"key": "url",
 			"value": "https://cellular-virtue-277000.uc.r.appspot.com/",
 			"type": "string"
