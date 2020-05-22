@@ -1,7 +1,9 @@
 "use strict";
 
 import React from "react";
-import {StyleSheet, Text, View, ActivityIndicator} from "react-native";
+import {StyleSheet, Text, View, ActivityIndicator, Button} from "react-native";
+import PostingCreationScreen from './screens/PostingCreationScreen';
+import PostingListScreen from './screens/PostingListScreen'
 
 export default class App extends React.Component {
 
@@ -16,7 +18,7 @@ export default class App extends React.Component {
   componentDidMount() {
     // Change IP address below to your machine on your *local* network
     // (e.g., 192.168.1.3, 10.0.0.12, etc)
-    return fetch('https://cellular-virtue-277000.uc.r.appspot.com/posting/?format=json', {
+    return fetch('https://cellular-virtue-277000.uc.r.appspot.com/postings/?format=json', {
 			method: 'GET',
       headers: {
 				'Accept': 'application/json',
@@ -47,10 +49,23 @@ export default class App extends React.Component {
       return (
         <View style={styles.container}>
           <Text>{this.state.dataSource[0].title}</Text>
+        
+          <Button onPress={load_posting_screenfoobar} title="Posting List Screen"></Button>
+          <Button onPress={load_posting_creation_screen} title="Posting creation screen"></Button>
         </View>
       );
     }
   }
+}
+
+function load_posting_screenfoobar() {
+  // do the thing
+  // render(posting_screen please)
+}
+
+function load_posting_creation_screen() {
+  // do anozer ting
+  // render()
 }
 
 const styles = StyleSheet.create({
