@@ -7,7 +7,7 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    replaces = [('todoapi', '0001_initial'), ('todoapi', '0002_dummy_asks'), ('todoapi', '0003_rename_posts'), ('todoapi', '0004_create_models'), ('todoapi', '0005_django_users'), ('todoapi', '0006_user_username'), ('todoapi', '0007_posting_model'), ('todoapi', '0008_posting_count'), ('todoapi', '0009_phone_fix')]
+    replaces = [('cgapi', '0001_initial'), ('cgapi', '0002_dummy_asks'), ('cgapi', '0003_rename_posts'), ('cgapi', '0004_create_models'), ('cgapi', '0005_django_users'), ('cgapi', '0006_user_username'), ('cgapi', '0007_posting_model'), ('cgapi', '0008_posting_count'), ('cgapi', '0009_phone_fix')]
 
     initial = True
 
