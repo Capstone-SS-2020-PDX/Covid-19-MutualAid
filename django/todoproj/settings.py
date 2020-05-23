@@ -25,7 +25,7 @@ SECRET_KEY = 'sd1v^qwjvnb+4hd1tn0dy0#cl98mlfxez@69pno-^t3s$*2v4+'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["cellular-virtue-277000.uc.r.appspot.com"]
+ALLOWED_HOSTS = ["cellular-virtue-277000.uc.r.appspot.com", 'localhost']
 
 
 # Application definition
