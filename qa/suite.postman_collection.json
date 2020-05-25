@@ -38,9 +38,9 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{url}}/postings/",
+					"raw": "{{local_url}}/postings/",
 					"host": [
-						"{{url}}"
+						"{{local_url}}"
 					],
 					"path": [
 						"postings",
@@ -93,9 +93,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{url}}/postings/",
+					"raw": "{{local_url}}/postings/",
 					"host": [
-						"{{url}}"
+						"{{local_url}}"
 					],
 					"path": [
 						"postings",
@@ -131,9 +131,15 @@
 	],
 	"variable": [
 		{
-			"id": "d4f321f4-1b84-44c5-8f57-a0c5d8d919ef",
+			"id": "b38beb25-0356-41c5-9804-bca703d76ebc",
 			"key": "url",
 			"value": "https://cellular-virtue-277000.uc.r.appspot.com/",
+			"type": "string"
+		},
+		{
+			"id": "8dfa876a-ca78-4e99-aeaa-92953ef501f4",
+			"key": "local_url",
+			"value": "http://localhost",
 			"type": "string"
 		}
 	],

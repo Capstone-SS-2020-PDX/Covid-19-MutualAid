@@ -5,6 +5,9 @@ import {StyleSheet, Text, View, ActivityIndicator, Button} from "react-native";
 import PostingCreationScreen from './screens/PostingCreationScreen';
 import PostingListScreen from './screens/PostingListScreen'
 
+const url = "https://cellular-virtue-277000.uc.r.appspot.com"
+const local_url = "http://localhost"
+
 export default class App extends React.Component {
 
   constructor(props) {
@@ -18,7 +21,7 @@ export default class App extends React.Component {
   componentDidMount() {
     // Change IP address below to your machine on your *local* network
     // (e.g., 192.168.1.3, 10.0.0.12, etc)
-    return fetch('https://cellular-virtue-277000.uc.r.appspot.com/postings/?format=json', {
+    return fetch(url.concat('/postings/?format=json'), {
 			method: 'GET',
       headers: {
 				'Accept': 'application/json',

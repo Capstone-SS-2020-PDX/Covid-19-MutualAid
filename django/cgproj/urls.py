@@ -1,4 +1,4 @@
-"""todoproj URL Configuration
+"""cgproj URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.0/topics/http/urls/
@@ -17,12 +17,12 @@ from django.contrib import admin
 from django.urls import include, path
 from rest_framework import routers
 
-from todoapi import views as todoapi_views
+from cgapi import views as cgapi_views
 
 router = routers.DefaultRouter()
-router.register(r'communities', todoapi_views.CommunityViewSet)
-router.register(r'postings', todoapi_views.PostingViewSet)
-router.register(r'users', todoapi_views.UserViewSet)
+router.register(r'communities', cgapi_views.CommunityViewSet)
+router.register(r'postings', cgapi_views.PostingViewSet)
+router.register(r'users', cgapi_views.UserViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

@@ -7,7 +7,7 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    replaces = [('todoapi', '0001_initial'), ('todoapi', '0002_dummy_asks'), ('todoapi', '0003_rename_posts'), ('todoapi', '0004_create_models'), ('todoapi', '0005_django_users'), ('todoapi', '0006_user_username'), ('todoapi', '0007_posting_model'), ('todoapi', '0008_posting_count'), ('todoapi', '0009_phone_fix')]
+    replaces = [('cgapi', '0001_initial'), ('cgapi', '0002_dummy_asks'), ('cgapi', '0003_rename_posts'), ('cgapi', '0004_create_models'), ('cgapi', '0005_django_users'), ('cgapi', '0006_user_username'), ('cgapi', '0007_posting_model'), ('cgapi', '0008_posting_count'), ('cgapi', '0009_phone_fix')]
 
     initial = True
 
@@ -33,7 +33,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('created_on', models.DateField(default=datetime.date.today)),
                 ('profile_text', models.CharField(max_length=160)),
-                ('member_of', models.ManyToManyField(related_name='members', to='todoapi.Community')),
+                ('member_of', models.ManyToManyField(related_name='members', to='cgapi.Community')),
                 ('last_login', models.DateTimeField(blank=True, null=True, verbose_name='last login')),
                 ('password', models.CharField(default='', max_length=128, verbose_name='password')),
                 ('phone_number', models.CharField(blank=True, max_length=17)),
@@ -50,7 +50,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('title', models.CharField(max_length=50)),
                 ('created_on', models.DateField(default=datetime.date.today)),
-                ('owner', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='todoapi.User')),
+                ('owner', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='cgapi.User')),
                 ('category', models.CharField(blank=True, max_length=30, null=True)),
                 ('desc', models.CharField(blank=True, max_length=256, null=True)),
                 ('count', models.IntegerField(default=1)),

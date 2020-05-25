@@ -1,2 +1,2 @@
-from todoproj.wsgi import application
+from cgproj.wsgi import application
 app = application
