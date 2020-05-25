@@ -84,7 +84,7 @@ if os.getenv('GAE_APPLICATION', None):
     DATABASES = {
         'default': {
                 'ENGINE': 'django.db.backends.postgresql',
-                'HOST': '/cloudsql/cellular-virtue-277000:us-central1:mutual-aid-test',
+                'HOST': '/cloudsql/cellular-virtue-277000:us-central1:cgtest',
                 'USER': 'postgres',
                 'NAME': 'postgres',
                 'PASSWORD': 'testpassword',
