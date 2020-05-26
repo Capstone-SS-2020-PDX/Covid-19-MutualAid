@@ -2,8 +2,8 @@
 
 import React from "react";
 import {StyleSheet, Text, View, ActivityIndicator, Button} from "react-native";
-import PostingCreationScreen from './screens/PostingCreationScreen';
-import PostingListScreen from './screens/PostingListScreen'
+import PostingCreationScreen from './components/PostingCreationScreen';
+import PostingListScreen from './components/PostingListScreen'
 
 const url = "https://cellular-virtue-277000.uc.r.appspot.com"
 const local_url = "http://localhost"
