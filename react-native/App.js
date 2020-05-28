@@ -2,40 +2,47 @@
 
 import 'react-native-gesture-handler';
 import * as React from "react";
-import {StyleSheet, Text, View, ActivityIndicator, Button} from "react-native";
+import {StyleSheet, Text, TextInput, View, ActivityIndicator, Button} from "react-native";
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import PostingCreationScreen from './components/PostingCreationScreen';
-import PostingListScreen from './components/PostingListScreen';
+//import PostingCreationScreen from './components/PostingCreationScreen';
+//import PostingListScreen from './components/PostingListScreen';
 
 const url = "https://cellular-virtue-277000.uc.r.appspot.com"
 const local_url = "http://localhost"
-
-function HomeScreen({ navigation }) {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Home Screen</Text>
-      <Button
-        title="Go to Details"
-        onPress={() => navigation.navigate('Details')}
-      />
-    </View>
-  );
-}
-
-function DetailsScreen({ navigation }) {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Details Screen</Text>
-      <Button
-        title="Go to Details... again"
-        onPress={() => navigation.navigate('Details')}
-      />
-    </View>
-  );
-}
-
 const Stack = createStackNavigator();
+
+function PostingListScreen({ navigation }) {
+  return (
+    <View style={styles.default_view}>
+      <Text>Posting List</Text>
+      <Button
+        title="Go to Create Post"
+        onPress={() => navigation.navigate('Create')}
+      />
+    </View>
+  );
+}
+
+function PostingCreationScreen({ navigation }) {
+  const [value, onChangeText] = React.useState();
+
+  return (
+    <View style={styles.default_view}>
+      <Text>Create a Post</Text>
+      <TextInput
+        style={{borderColor: 'gray', borderWidth: 1}}
+        onChangeText={text => onChangeText(text)}
+        value={value}
+      />
+      <Button
+        title="Go to Create Post... again"
+        onPress={() => navigation.navigate('Create')}
+        // onPress={() => navigation.navigate('Create')}
+      />
+    </View>
+  );
+}
 
 export default class App extends React.Component {
 
@@ -74,7 +81,7 @@ export default class App extends React.Component {
     if (this.state.isLoading) {
       return (
         <NavigationContainer>
-        <Stack.Navigator initialRouteName="Home">
+        <Stack.Navigator initialRouteName="Loading">
           <Stack.Screen name="Loading" component={ActivityIndicator} />
         </Stack.Navigator>
       </NavigationContainer>
@@ -83,8 +90,8 @@ export default class App extends React.Component {
       return (
         <NavigationContainer>
         <Stack.Navigator initialRouteName="Home">
-          <Stack.Screen name="Home" component={HomeScreen} />
-          <Stack.Screen name="Details" component={DetailsScreen} />
+          <Stack.Screen name="Home" component={PostingListScreen} />
+          <Stack.Screen name="Create" component={PostingCreationScreen} />
         </Stack.Navigator>
       </NavigationContainer>
       );
@@ -109,4 +116,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  default_view: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  }
 });
