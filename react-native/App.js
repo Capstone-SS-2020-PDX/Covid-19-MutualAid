@@ -2,7 +2,7 @@
 
 import 'react-native-gesture-handler';
 import * as React from "react";
-import {StyleSheet, Text, TextInput, View, ActivityIndicator, Button} from "react-native";
+import {StyleSheet, FlatList, Text, TextInput, View, ActivityIndicator, Button} from "react-native";
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 //import PostingCreationScreen from './components/PostingCreationScreen';
@@ -58,8 +58,15 @@ export default class App extends React.Component {
       return (
         <NavigationContainer>
         <Stack.Navigator initialRouteName="Home">
-          <Stack.Screen name="Home" component={PostingListScreen} />
-          <Stack.Screen name="Create" component={PostingCreationScreen} />
+          <Stack.Screen 
+            name="Home" 
+            component={PostingListScreen}
+            initialParams={{renderData: this.state.dataSource}}
+          />
+          <Stack.Screen 
+            name="Create" 
+            component={PostingCreationScreen}
+          />
         </Stack.Navigator>
       </NavigationContainer>
       );
@@ -67,10 +74,16 @@ export default class App extends React.Component {
   }
 }
 
-function PostingListScreen({ navigation }) {
+function PostingListScreen({ route, navigation }) {
+  const { renderData } = route.params;
+
   return (
     <View style={styles.default_view}>
       <Text>Posting List</Text>
+      <FlatList
+        data={renderData}
+        renderItem={({item}) => <Text>{item.title}</Text>} 
+      />
       <Button
         title="Go to Create Post"
         onPress={() => navigation.navigate('Create')}
