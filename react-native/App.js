@@ -12,38 +12,6 @@ const url = "https://cellular-virtue-277000.uc.r.appspot.com"
 const local_url = "http://localhost"
 const Stack = createStackNavigator();
 
-function PostingListScreen({ navigation }) {
-  return (
-    <View style={styles.default_view}>
-      <Text>Posting List</Text>
-      <Button
-        title="Go to Create Post"
-        onPress={() => navigation.navigate('Create')}
-      />
-    </View>
-  );
-}
-
-function PostingCreationScreen({ navigation }) {
-  const [value, onChangeText] = React.useState();
-
-  return (
-    <View style={styles.default_view}>
-      <Text>Create a Post</Text>
-      <TextInput
-        style={{borderColor: 'gray', borderWidth: 1}}
-        onChangeText={text => onChangeText(text)}
-        value={value}
-      />
-      <Button
-        title="Go to Create Post... again"
-        onPress={() => navigation.navigate('Create')}
-        // onPress={() => navigation.navigate('Create')}
-      />
-    </View>
-  );
-}
-
 export default class App extends React.Component {
 
   constructor(props) {
@@ -97,6 +65,38 @@ export default class App extends React.Component {
       );
     }
   }
+}
+
+function PostingListScreen({ navigation }) {
+  return (
+    <View style={styles.default_view}>
+      <Text>Posting List</Text>
+      <Button
+        title="Go to Create Post"
+        onPress={() => navigation.navigate('Create')}
+      />
+    </View>
+  );
+}
+
+function PostingCreationScreen({ navigation }) {
+  const [value, onChangeText] = React.useState();
+
+  return (
+    <View style={styles.default_view}>
+      <Text>Create a Post</Text>
+      <TextInput
+        style={{borderColor: 'gray', borderWidth: 1}}
+        onChangeText={text => onChangeText(text)}
+        value={value}
+      />
+      <Button
+        title="Go to Create Post... again"
+        onPress={() => navigation.navigate('Create')}
+        // onPress={() => navigation.navigate('Create')}
+      />
+    </View>
+  );
 }
 
 function load_posting_screenfoobar() {
