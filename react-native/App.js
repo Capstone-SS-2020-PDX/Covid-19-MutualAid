@@ -1,12 +1,16 @@
 "use strict";
 
-import React from "react";
-import {StyleSheet, Text, View, ActivityIndicator, Button} from "react-native";
+import 'react-native-gesture-handler';
+import * as React from "react";
+import {StyleSheet, FlatList, Text, TextInput, View, ActivityIndicator, Button} from "react-native";
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 import PostingCreationScreen from './components/PostingCreationScreen';
-import PostingListScreen from './components/PostingListScreen'
+import PostingListScreen from './components/PostingListScreen';
 
 const url = "https://cellular-virtue-277000.uc.r.appspot.com"
 const local_url = "http://localhost"
+const Stack = createStackNavigator();
 
 export default class App extends React.Component {
 
@@ -19,8 +23,6 @@ export default class App extends React.Component {
   }
 
   componentDidMount() {
-    // Change IP address below to your machine on your *local* network
-    // (e.g., 192.168.1.3, 10.0.0.12, etc)
     return fetch(url.concat('/postings/?format=json'), {
 			method: 'GET',
       headers: {
@@ -44,31 +46,30 @@ export default class App extends React.Component {
   render() {
     if (this.state.isLoading) {
       return (
-        <View style={styles.container}>
-          <ActivityIndicator />
-        </View>
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="Loading">
+            <Stack.Screen name="Loading" component={ActivityIndicator} />
+          </Stack.Navigator>
+        </NavigationContainer>
       )
     } else {
       return (
-        <View style={styles.container}>
-          <Text>{this.state.dataSource[0].title}</Text>
-        
-          <Button onPress={load_posting_screenfoobar} title="Posting List Screen"></Button>
-          <Button onPress={load_posting_creation_screen} title="Posting creation screen"></Button>
-        </View>
+        <NavigationContainer>
+        <Stack.Navigator initialRouteName="Home">
+          <Stack.Screen 
+            name="Home" 
+            component={PostingListScreen}
+            initialParams={{renderData: this.state.dataSource}}
+          />
+          <Stack.Screen 
+            name="Create" 
+            component={PostingCreationScreen}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
       );
     }
   }
-}
-
-function load_posting_screenfoobar() {
-  // do the thing
-  // render(posting_screen please)
-}
-
-function load_posting_creation_screen() {
-  // do anozer ting
-  // render()
 }
 
 const styles = StyleSheet.create({
@@ -78,4 +79,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  default_view: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  }
 });
