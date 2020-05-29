@@ -23,8 +23,6 @@ export default class App extends React.Component {
   }
 
   componentDidMount() {
-    // Change IP address below to your machine on your *local* network
-    // (e.g., 192.168.1.3, 10.0.0.12, etc)
     return fetch(url.concat('/postings/?format=json'), {
 			method: 'GET',
       headers: {
@@ -49,10 +47,10 @@ export default class App extends React.Component {
     if (this.state.isLoading) {
       return (
         <NavigationContainer>
-        <Stack.Navigator initialRouteName="Loading">
-          <Stack.Screen name="Loading" component={ActivityIndicator} />
-        </Stack.Navigator>
-      </NavigationContainer>
+          <Stack.Navigator initialRouteName="Loading">
+            <Stack.Screen name="Loading" component={ActivityIndicator} />
+          </Stack.Navigator>
+        </NavigationContainer>
       )
     } else {
       return (
@@ -106,7 +104,6 @@ function PostingCreationScreen({ navigation }) {
       <Button
         title="Go to Create Post... again"
         onPress={() => navigation.navigate('Create')}
-        // onPress={() => navigation.navigate('Create')}
       />
     </View>
   );
