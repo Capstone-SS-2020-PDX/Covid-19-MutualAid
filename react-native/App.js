@@ -5,8 +5,8 @@ import * as React from "react";
 import {StyleSheet, FlatList, Text, TextInput, View, ActivityIndicator, Button} from "react-native";
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-//import PostingCreationScreen from './components/PostingCreationScreen';
-//import PostingListScreen from './components/PostingListScreen';
+import PostingCreationScreen from './components/PostingCreationScreen';
+import PostingListScreen from './components/PostingListScreen';
 
 const url = "https://cellular-virtue-277000.uc.r.appspot.com"
 const local_url = "http://localhost"
@@ -70,53 +70,6 @@ export default class App extends React.Component {
       );
     }
   }
-}
-
-function PostingListScreen({ route, navigation }) {
-  const { renderData } = route.params;
-
-  return (
-    <View style={styles.default_view}>
-      <Text>Posting List</Text>
-      <FlatList
-        data={renderData}
-        renderItem={({item}) => <Text>{item.title}</Text>} 
-      />
-      <Button
-        title="Go to Create Post"
-        onPress={() => navigation.navigate('Create')}
-      />
-    </View>
-  );
-}
-
-function PostingCreationScreen({ navigation }) {
-  const [value, onChangeText] = React.useState();
-
-  return (
-    <View style={styles.default_view}>
-      <Text>Create a Post</Text>
-      <TextInput
-        style={{borderColor: 'gray', borderWidth: 1}}
-        onChangeText={text => onChangeText(text)}
-        value={value}
-      />
-      <Button
-        title="Go to Create Post... again"
-        onPress={() => navigation.navigate('Create')}
-      />
-    </View>
-  );
-}
-
-function load_posting_screenfoobar() {
-  // do the thing
-  // render(posting_screen please)
-}
-
-function load_posting_creation_screen() {
-  // do anozer ting
-  // render()
 }
 
 const styles = StyleSheet.create({
