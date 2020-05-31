@@ -8,6 +8,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import PostingCreationScreen from './components/PostingCreationScreen';
 import PostingListScreen from './components/PostingListScreen';
 
+import colors from './config/colors.js';
+
 const url = "https://cellular-virtue-277000.uc.r.appspot.com"
 const local_url = "http://localhost"
 const Stack = createStackNavigator();
@@ -75,7 +77,7 @@ export default class App extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.light_shade2,
     alignItems: 'center',
     justifyContent: 'center',
   },
