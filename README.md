@@ -19,7 +19,7 @@ On a Mac, for django run:
 - `brew install postgresql`
 - `brew cask install docker`
 - On Mac actually open the 'Docker' app in applications folder, you'll see little whale in the menu bar at top after
-  - On Linux, you want to get dockerd running so that you at least get the empty column result from `docker ps`
+  - On Linux, you want to get docker running so that you at least get the empty column result from `docker ps`
     - I forget some of the misc stuff I had to do, I can help here if necessary.
 - `brew install docker-compose`
   
