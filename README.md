@@ -27,6 +27,9 @@ For react native run:
 - `brew install yarn`
 - `npm install --global expo-cli`
 - `yarn add expo`
+- `yarn add @react-navigation/native`
+- From within the `/react-native` directory, run:
+  * `expo install react-native-gesture-handler react-native-reanimated react-native-screens react-native-safe-area-context @react-native-community/masked-view`
 
 ### Set Up Git Pre-push hook!
 In order for automatic `pytest` and `jest` and Postman suites to run before `git push` please run the following in the root of the repo:
