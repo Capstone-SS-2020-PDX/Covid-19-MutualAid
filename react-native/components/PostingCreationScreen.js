@@ -1,12 +1,13 @@
 import React from "react";
 import { StyleSheet, Text, TextInput, View, Button } from "react-native";
 
+import colors from '../config/colors.js';
 
 function PostingCreationScreen({ navigation }) {
   const [value, onChangeText] = React.useState();
 
   return (
-    <View style={styles.default_view}>
+    <View style={styles.container}>
       <Text>Create a Post</Text>
       <TextInput
         style={{ borderColor: 'gray', borderWidth: 1 }}
@@ -24,7 +25,7 @@ function PostingCreationScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.light_shade2,
     alignItems: 'center',
     justifyContent: 'center',
   },
