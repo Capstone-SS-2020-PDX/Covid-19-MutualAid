@@ -96,8 +96,9 @@ else:
             'ENGINE': 'django.db.backends.postgresql',
             'NAME': 'postgres',
             'USER': 'postgres',
-            'HOST': 'db',
-            'PORT': 5432,
+            'HOST': '/cloud_sql/cellular-virtue-277000:us-central1:cgtest',
+            'PORT': '5432',
+            'PASSWORD': 'testpassword',
         }
     }
 
@@ -139,3 +140,20 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = 'static'
+
+
+if os.getenv('GAE_APPLICATION', None):
+    DEFAULT_FILE_STORAGE = 'gcloud.GoogleCloudMediaFileStorage'
+    
+    GS_PROJECT_ID = 'cellular-virtue-277000'
+    GS_MEDIA_BUCKET_NAME = 'cgapi-upload-media'
+    
+
+    MEDIA_URL = 'https://storage.googleapis.com/{}/'.format(GS_MEDIA_BUCKET_NAME)
+    MEDIA_ROOT = "media/"
+    
+    UPLOAD_ROOT = 'media/uploads/'
+
+else:
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
