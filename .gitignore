@@ -1,3 +1,7 @@
+# qa secrets and uneccesary to put in repo
+qa/cloud_sql_proxy
+qa/deploy.sh
+
 # Mac OS
 .DS_Store
 
