@@ -96,9 +96,8 @@ else:
             'ENGINE': 'django.db.backends.postgresql',
             'NAME': 'postgres',
             'USER': 'postgres',
-            'HOST': '/cloud_sql/cellular-virtue-277000:us-central1:cgtest',
-            'PORT': '5432',
-            'PASSWORD': 'testpassword',
+            'HOST': 'db',
+            'PORT': 5432,
         }
     }
 
