@@ -11,3 +11,6 @@ console:
 
 deploy:
 	bash qa/deploy.sh
+
+install:
+	bash qa/prereq-linux.sh
