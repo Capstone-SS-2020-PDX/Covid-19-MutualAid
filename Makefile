@@ -13,4 +13,7 @@ deploy:
 	bash qa/deploy.sh
 
 install:
-	bash qa/prereq-linux.sh
+	sudo bash qa/prereq-linux.sh
+
+install2:
+	sudo bash qa/prereq-linux2.sh

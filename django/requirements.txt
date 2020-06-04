@@ -6,3 +6,4 @@ pillow
 google-cloud-storage
 django-storages
 gcloud
+pytest
