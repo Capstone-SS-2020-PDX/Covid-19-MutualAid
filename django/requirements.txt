@@ -2,3 +2,7 @@ Django
 djangorestframework
 psycopg2
 django-cors-headers
+pillow
+google-cloud-storage
+django-storages
+gcloud
