@@ -9,4 +9,5 @@ js:
 console:
 	docker exec -it djapi bash
 
-
+deploy:
+	bash qa/deploy.sh

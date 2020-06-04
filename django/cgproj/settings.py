@@ -84,7 +84,19 @@ if os.getenv('GAE_APPLICATION', None):
     DATABASES = {
         'default': {
                 'ENGINE': 'django.db.backends.postgresql',
-                'HOST': '/cloudsql/cellular-virtue-277000:us-central1:cgtest',
+                'HOST': '/cloudsql/cellular-virtue-277000:us-central-1:cgtest',
+                'PORT': '5432',
+                'USER': 'postgres',
+                'NAME': 'postgres',
+                'PASSWORD': 'testpassword',
+                }
+        }
+elif os.getenv('SECRET_CAPSTONE_SCRIPT', None) == "1":
+    DATABASES = {
+        'default': {
+                'ENGINE': 'django.db.backends.postgresql',
+                'HOST': '127.0.0.1',
+                'PORT': '5432',
                 'USER': 'postgres',
                 'NAME': 'postgres',
                 'PASSWORD': 'testpassword',
