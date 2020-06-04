@@ -12,6 +12,7 @@ function PostingListScreen({ route, navigation }) {
       <FlatList
         data={renderData}
         renderItem={({ item }) => <Text>{item.title}</Text>}
+        keyExtractor = { (item, index) => index.toString() }
       />
       <Button
         title="Go to Create Post"
