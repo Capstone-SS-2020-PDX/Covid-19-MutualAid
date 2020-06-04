@@ -7,7 +7,7 @@ class Community(models.Model):
     """"""
     name = models.CharField(max_length=50)
     created_on = models.DateField(default=date.today)
-    
+    home_pic = models.ImageField(upload_to='cimg/', default='')    
     class Meta:
         db_table = 'community'
         ordering = ['id']
@@ -19,9 +19,10 @@ class User(AbstractBaseUser):
     username = models.CharField(max_length=160, unique=True)
     profile_text = models.CharField(max_length=160)
     member_of = models.ManyToManyField(Community, related_name='members')
-    phone_regex = RegexValidator(regex=r'^+?1?\d{9,15}$')
-    phone_number = models.CharField(validators=[phone_regex], max_length=17, blank=True)
+    home = models.ForeignKey(Community, on_delete=models.CASCADE, blank=True, null=True)
+    phone_number = models.CharField(max_length=17, blank=True)
     created_on = models.DateField(default=date.today)
+    profile_pic = models.ImageField(upload_to='uimg/', default='')
     
     class Meta:
         db_table = 'user'
@@ -33,10 +34,13 @@ class User(AbstractBaseUser):
 class Posting(models.Model):
     title = models.CharField(max_length=50)
     desc = models.CharField(max_length=256, blank=True, null=True)
-    count = models.IntegerField()
+    count = models.IntegerField(default=1)
     category = models.CharField(max_length=30, blank=True, null=True)
     created_on = models.DateField(default=date.today)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    in_community = models.ForeignKey(Community, on_delete=models.CASCADE, blank=True, null=True, related_name='posts')
+    item_pic = models.ImageField(upload_to='pimg/', default='')
+    
     
     # Meta data about DB table
     class Meta:
