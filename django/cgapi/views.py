@@ -1,8 +1,8 @@
 import rest_framework as rf
 from rest_framework.decorators import action
+from django.contrib.auth import get_user
 from .models import Posting, Community, UserProfile
 from .serializers import PostingSerializer, CommunitySerializer, UserProfileSerializer
-
 from rest_framework import viewsets, permissions
 
 
@@ -16,6 +16,16 @@ class PostingViewSet(rf.viewsets.ModelViewSet):
         posting = Posting.objects.filter(title__contains=argument)
         serializer = PostingSerializer(posting, many=True)
         return rf.response.Response(serializer.data)
+    
+    @action(detail=False)
+    def auth(self, request):
+        user = get_user(request)
+        if user.is_authenticated:
+            posting = Posting.objects.all()
+            serializer = PostingSerializer(posting, many=True)
+            return rf.response.Response(serializer.data)
+        else:
+            return rf.response.Response(status=400)
 
 class CommunityViewSet(rf.viewsets.ModelViewSet):
     """
