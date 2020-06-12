@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Posting, Community, User
+from .models import Posting, Community, UserProfile
 
 class PostingSerializer(serializers.ModelSerializer):
     class Meta:
@@ -11,7 +11,7 @@ class CommunitySerializer(serializers.ModelSerializer):
         model = Community
         fields = ('id', 'name', 'created_on', 'members', 'posts', 'home_pic')
 
-class UserSerializer(serializers.ModelSerializer):
+class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
+        model = UserProfile
         fields = ('id', 'username', 'profile_text', 'created_on', 'home', 'member_of', 'phone_number', 'profile_pic')

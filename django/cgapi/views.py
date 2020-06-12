@@ -1,7 +1,7 @@
 import rest_framework as rf
 from rest_framework.decorators import action
-from .models import Posting, Community, User
-from .serializers import PostingSerializer, CommunitySerializer, UserSerializer
+from .models import Posting, Community, UserProfile
+from .serializers import PostingSerializer, CommunitySerializer, UserProfileSerializer
 
 from rest_framework import viewsets, permissions
 
@@ -24,13 +24,13 @@ class CommunityViewSet(rf.viewsets.ModelViewSet):
     queryset = Community.objects.all()
     serializer_class = CommunitySerializer
 
-class UserViewSet(rf.viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+class UserProfileViewSet(rf.viewsets.ModelViewSet):
+    queryset = UserProfile.objects.all()
+    serializer_class = UserProfileSerializer
 
     @action(detail=False)
     def bar(self, request):
         argument = request.query_params.get('member_of', '')
-        user = User.objects.filter(member_of__id=argument)
-        serializer = UserSerializer(user, many=True)
+        user = UserProfile.objects.filter(member_of__id=argument)
+        serializer = UserProfileSerializer(userprofile, many=True)
         return rf.response.Response(serializer.data)
