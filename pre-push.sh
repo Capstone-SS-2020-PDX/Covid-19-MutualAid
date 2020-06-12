@@ -8,8 +8,7 @@ set -x
 # Run Postman tests against local django (new code)
 # Kill docker containers in background
 
-cd django/tests && source .venv/bin/activate && pytest -vvv \
-&& deactiavte \
+cd django/tests && pytest -vvv \
 && cd ../.. && (make server > /dev/null 2>&1 &) \
 && sleep 5 \
 && cd react-native && npm run test \
