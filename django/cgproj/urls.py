@@ -22,7 +22,7 @@ from cgapi import views as cgapi_views
 router = routers.DefaultRouter()
 router.register(r'communities', cgapi_views.CommunityViewSet)
 router.register(r'postings', cgapi_views.PostingViewSet)
-router.register(r'users', cgapi_views.UserViewSet)
+router.register(r'users', cgapi_views.UserProfileViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
