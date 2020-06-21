@@ -1,4 +1,4 @@
-from django.contrib.auth.models import AbstractBaseUser
+from django.contrib.auth.models import AbstractBaseUser, User
 from django.db import models
 from datetime import date
 from django.core.validators import RegexValidator
@@ -15,8 +15,8 @@ class Community(models.Model):
     def __str__(self):
         return self.name
 
-class User(AbstractBaseUser):
-    username = models.CharField(max_length=160, unique=True)
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
     profile_text = models.CharField(max_length=160)
     member_of = models.ManyToManyField(Community, related_name='members')
     home = models.ForeignKey(Community, on_delete=models.CASCADE, blank=True, null=True)
@@ -25,11 +25,13 @@ class User(AbstractBaseUser):
     profile_pic = models.ImageField(upload_to='uimg/', default='')
     
     class Meta:
-        db_table = 'user'
+        db_table = 'userprofile'
         ordering = ['id']
 
     def __str__(self):
         return self.username
+
+User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])
 
 class Posting(models.Model):
     title = models.CharField(max_length=50)
@@ -37,10 +39,9 @@ class Posting(models.Model):
     count = models.IntegerField(default=1)
     category = models.CharField(max_length=30, blank=True, null=True)
     created_on = models.DateField(default=date.today)
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    owner = models.ForeignKey(UserProfile, on_delete=models.CASCADE, blank=True, null=True)
     in_community = models.ForeignKey(Community, on_delete=models.CASCADE, blank=True, null=True, related_name='posts')
     item_pic = models.ImageField(upload_to='pimg/', default='')
-    
     
     # Meta data about DB table
     class Meta:
