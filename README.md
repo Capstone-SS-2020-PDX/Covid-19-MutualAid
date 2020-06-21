@@ -7,31 +7,14 @@ There is no opportunity for profiteering on this platform. All items are exchang
 
 ## Initial local Setup
 
-Clone repo
-
 #### Install dependencies: 
 
-For Linux just replace `brew install` or `brew cask install` with `sudo apt-get install`
+For Linux bash scripts exist to automatically install dependencies.
 
-For Windows, I'm not entirely sure yet.
+Run `make install` in the root of the repo, follow the instructions then run `make install2`
 
-On a Mac, for django run:
-- `brew install postgresql`
-- `brew cask install docker`
-- On Mac actually open the 'Docker' app in applications folder, you'll see little whale in the menu bar at top after
-  - On Linux, you want to get docker running so that you at least get the empty column result from `docker ps`
-    - I forget some of the misc stuff I had to do, I can help here if necessary.
-- `brew install docker-compose`
-  
-For react native run:
-- `brew install yarn`
-- `npm install --global expo-cli`
-- `yarn add expo`
-- `yarn add @react-navigation/native`
-- From within the `/react-native` directory, run:
-  * `expo install react-native-gesture-handler react-native-reanimated react-native-screens react-native-safe-area-context @react-native-community/masked-view`
 
-### Set Up Git Pre-push hook!
+#### Set Up Git Pre-push hook!
 In order for automatic `pytest` and `jest` and Postman suites to run before `git push` please run the following in the root of the repo:
 
 `ln -s pre-push.sh .git/hooks/pre-push`
@@ -39,14 +22,11 @@ In order for automatic `pytest` and `jest` and Postman suites to run before `git
 This will ensure that the `pre-push.sh` script actually runs before a push.
 You will need to install pytest, jest and newman locally as well.
 
-`pip install pytest`
+#### Deploy and Test
+Deployment is handled by our development team.
 
-`npm install --save-dev jest`
-
-`npm install -g newman`
-
-## Deploy and Test
-Pending an awesome Makefile :)
+`make server` will run local postgres and django docker containers.
+`make js` will run the expo emulator locally. This is configured to point to our deployed API by default.
 
 ## Team
 ### Project Lead
