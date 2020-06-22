@@ -1,0 +1,40 @@
+import React from 'react';
+import { createStackNavigator } from '@react-navigation/stack';
+
+import LoginScreen from '../screens/LoginScreen';
+import RegisterScreen from '../screens/RegisterScreen';
+
+const Stack = createStackNavigator();
+
+// setup options for screens
+const LoginScreenOptions = {
+  header: () => null,
+}
+
+// AuthStack is the UI Stack shown when User is not logged in.
+// Consists of a Login Screen and Register Screen.
+const AuthStack = props => {
+  return(
+    <Stack.Navigator
+      initialRouteName='Login'
+      screenOptions={LoginScreenOptions}
+    >
+      <Stack.Screen
+        name='Login'
+        component={LoginScreen}
+        options={{
+          title: 'Sign In',
+        }}
+      />
+      <Stack.Screen
+        name='Register'
+        component={RegisterScreen}
+        options={{
+          title: 'Sign Up',
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
+
+export default AuthStack;

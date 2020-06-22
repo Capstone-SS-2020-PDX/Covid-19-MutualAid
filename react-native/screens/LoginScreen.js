@@ -2,11 +2,11 @@ import React, { useContext } from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
 
 import Center from '../components/Center';
-// import { AuthContext } from './AuthProvider';
+import { AuthContext } from '../providers/AuthProvider';
 
 const LoginScreen = props => {
     const { navigation, route } = props;
-    // const { login } = useContext(AuthContext);
+    const { login } = useContext(AuthContext);
 
     return(
         <Center>

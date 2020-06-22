@@ -10,9 +10,11 @@
   },
   "dependencies": {
     "@react-native-community/masked-view": "0.1.6",
+    "@react-navigation/bottom-tabs": "^5.5.2",
     "@react-navigation/native": "^5.5.0",
     "@react-navigation/stack": "^5.4.1",
     "expo": "~37.0.3",
+    "faker": "^4.1.0",
     "logkitty": "^0.7.1",
     "react": "~16.9.0",
     "react-dom": "~16.9.0",
