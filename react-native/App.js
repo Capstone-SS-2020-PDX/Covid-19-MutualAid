@@ -91,11 +91,14 @@
 import React from 'react';
 
 import Routes from './navigation/Routes';
+import { AuthProvider } from './providers/AuthProvider';
 
-function App() {
-  return(
-    <Routes />
+const App = () =>  {
+  return (
+    <AuthProvider>
+      <Routes />
+    </AuthProvider>
   );
-};
+}
 
 export default App;

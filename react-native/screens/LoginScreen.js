@@ -4,7 +4,7 @@ import { View, Text, Button, StyleSheet } from 'react-native';
 import Center from '../components/Center';
 // import { AuthContext } from './AuthProvider';
 
-const Login = props => {
+const LoginScreen = props => {
     const { navigation, route } = props;
     // const { login } = useContext(AuthContext);
 
@@ -33,4 +33,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default Login;
+export default LoginScreen;

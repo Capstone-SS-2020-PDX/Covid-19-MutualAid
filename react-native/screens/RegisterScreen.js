@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
 import Center from '../components/Center';
 
-const Register = props => {
+const RegisterScreen = props => {
     const { navigation, route } = props;
 
     return(
@@ -25,4 +25,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default Register;
+export default RegisterScreen;
