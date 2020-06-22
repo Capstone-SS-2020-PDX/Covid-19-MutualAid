@@ -1,12 +1,12 @@
 import React, { useContext } from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
 
-import Center from './Center';
-import { AuthContext } from './AuthProvider';
+import Center from '../components/Center';
+// import { AuthContext } from './AuthProvider';
 
 const Login = props => {
     const { navigation, route } = props;
-    const { login } = useContext(AuthContext);
+    // const { login } = useContext(AuthContext);
 
     return(
         <Center>

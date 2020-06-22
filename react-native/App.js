@@ -89,15 +89,12 @@
 // });
 
 import React from 'react';
-import { Text } from 'react-native';
 
-import Center from './components/Center';
+import Routes from './navigation/Routes';
 
 function App() {
   return(
-    <Center>
-      <Text>Hello</Text>
-    </Center>
+    <Routes />
   );
 };
 

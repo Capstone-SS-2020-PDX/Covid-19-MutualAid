@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
-import Center from './Center';
+import Center from '../components/Center';
 
 const Register = props => {
     const { navigation, route } = props;
@@ -12,8 +12,8 @@ const Register = props => {
           <Button
             title="Login"
             onPress={() => {
-                /* navigation.navigate('Login'); */
-                navigation.goBack();
+                navigation.navigate('Login');
+                /* navigation.goBack(); */
             }}
           />
         </Center>
