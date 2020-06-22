@@ -42,11 +42,11 @@ const Feed = props => {
     return(
       <PostingListItem
         title={itemData.item}
-        onSelectPosting={ () => {
+        onSelectPosting={() => {
           navigation.navigate('PostingDetail', {
             name: itemData.item,
           });
-        } }
+        }}
       />
     );
   };

@@ -6,6 +6,8 @@ import HomeStack from './HomeStack';
 import SearchStack from './SearchStack';
 import PostingCreationScreen from '../screens/PostingCreationScreen';
 
+import Colors from '../config/colors';
+
 const NavbarTabs = createBottomTabNavigator();
 
 const NavTabs = props => {
@@ -13,8 +15,8 @@ const NavTabs = props => {
     <NavbarTabs.Navigator
 
       // Options
-      screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused, color, size }) => {
+      screenOptions={({route}) => ({
+        tabBarIcon: ({focused, color, size}) => {
           let iconName;
 
           if (route.name === 'Home') {
@@ -55,8 +57,9 @@ const NavTabs = props => {
         },
       })}
       tabBarOptions={{
-        activeTintColor: 'tomato',
+        activeTintColor: Colors.primary,
         inactiveTintColor: 'gray',
+
       }}
     >
 
