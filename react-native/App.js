@@ -35,6 +35,7 @@
 // 		})
 //     .then((response) => response.json())
 //     .then((responseJson) => {
+//       console.log(responseJson)
 //       this.setState({
 //         isLoading: false,
 //         dataSource: responseJson,
@@ -97,14 +98,21 @@ import { AuthProvider } from './providers/AuthProvider';
 import { fetchFonts } from './components/fetchFonts';
 
 const App = () =>  {
-  const [fontLoaded, setFontLoaded] = useState(false);
+  const [isFontLoaded, setIsFontLoaded] = useState(false);
 
   // Load fonts and other assets before launching app
-  if (!fontLoaded) {
+  const fetchFonts = () => {
+    return Font.loadAsync({
+      'open-sans': require('./assets/fonts/OpenSans-Regular.ttf'),
+      'open-sans-bold': require('./assets/fonts/OpenSans-Bold.ttf')
+    });
+  };
+
+  if (!isFontLoaded) {
     return (
       <AppLoading
         startAsync={ fetchFonts }
-        onFinish={ () => setFontLoaded(true) }
+        onFinish={ () => setIsFontLoaded(true) }
       />
     );
   } else {

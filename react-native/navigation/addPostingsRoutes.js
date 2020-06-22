@@ -14,7 +14,7 @@ export const addPostingsRoutes = (Stack) => {
             component={PostingDetailScreen}
             options={
                 ({route, navigation}) => ({
-                    headerTitle: `This is ${route.params.name}`
+                    headerTitle: route.params.name
                 })
             }
           />
