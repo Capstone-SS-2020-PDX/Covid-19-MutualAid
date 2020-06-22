@@ -10,7 +10,7 @@ const PostingDetailScreen = props => {
   return(
     <Center style={styles.container}>
       <Text>
-        {route.params.name}
+        This is definitely a {route.params.name}
       </Text>
       <Button
         title='Edit this posting'
@@ -23,8 +23,6 @@ const PostingDetailScreen = props => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-  },
 });
 
 export default PostingDetailScreen;

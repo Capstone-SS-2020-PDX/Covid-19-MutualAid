@@ -88,17 +88,32 @@
 //   }
 // });
 
-import React from 'react';
+import React, { useState } from 'react';
+import * as Font from 'expo-font';
+import { AppLoading } from 'expo';
 
 import Routes from './navigation/Routes';
 import { AuthProvider } from './providers/AuthProvider';
+import { fetchFonts } from './components/fetchFonts';
 
 const App = () =>  {
-  return (
-    <AuthProvider>
-      <Routes />
-    </AuthProvider>
-  );
+  const [fontLoaded, setFontLoaded] = useState(false);
+
+  // Load fonts and other assets before launching app
+  if (!fontLoaded) {
+    return (
+      <AppLoading
+        startAsync={ fetchFonts }
+        onFinish={ () => setFontLoaded(true) }
+      />
+    );
+  } else {
+    return (
+      <AuthProvider>
+        <Routes />
+      </AuthProvider>
+    );
+  }
 }
 
 export default App;
