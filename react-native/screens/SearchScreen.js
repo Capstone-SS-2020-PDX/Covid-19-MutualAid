@@ -3,15 +3,29 @@ import { View, Text, Button, FlatList, StyleSheet } from 'react-native';
 import faker from 'faker';
 
 import Center from '../components/Center';
+import PostingListItem from '../components/PostingListItem';
 
 const Search = props => {
   const { navigation } = props;
   const [show, setShow] = useState(false);
 
+  const renderPostingListItem = itemData => {
+    return(
+      <PostingListItem
+        title={itemData.item}
+        onSelectPosting={ () => {
+          navigation.navigate('PostingDetail', {
+            name: itemData.item,
+          });
+        } }
+      />
+    );
+  };
+
   return(
     <Center>
       <Button
-        title='Search Products'
+        title='Search Postings'
         onPress={() => {
           setShow(!show);
         }}
@@ -19,18 +33,7 @@ const Search = props => {
       { show
         ? <FlatList
             style={ styles.list }
-            renderItem={({item}) => {
-              return(
-                <Button
-                  title={item}
-                  onPress={() =>
-                    navigation.navigate('PostingDetail', {
-                      name: item
-                    })
-                  }
-                />
-              );
-            }}
+            renderItem={renderPostingListItem}
             keyExtractor={(product, i) => product + i}
             data={Array.from(Array(50), () => faker.commerce.product())}
           />

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Button, StyleSheet, FlatList } from 'react-native';
 import faker from 'faker';
+import axios from 'axios';
 
 import Center from '../components/Center';
 import PostingListItem from '../components/PostingListItem';
-import PostingDetailScreen from './PostingDetailScreen';
 
-const url = "http://cellular-virtue-277000.uc.r.appspot.com/postings/?format=json";
+const url = "https://cellular-virtue-277000.uc.r.appspot.com/postings/?format=json";
 
 const Feed = props => {
   const { navigation } = props;
@@ -28,6 +28,14 @@ const Feed = props => {
   //     })
   //     .catch(error => console.error(error))
   //     .finally(() => setIsLoading(false));
+  // }, []);
+
+  // useEffect(() => {
+  //   axios.get(url)
+  //        .then(response => {
+  //          console.log(response);
+  //        })
+  //        .catch(error => console.log(error))
   // }, []);
 
   const renderPostingListItem = itemData => {

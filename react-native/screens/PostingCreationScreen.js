@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, Text, TextInput, View, Button } from "react-native";
 
-import colors from '../config/colors.js';
+import Colors from '../config/colors.js';
 
 function PostingCreationScreen({ navigation }) {
-  const [value, onChangeText] = React.useState();
+  const [value, onChangeText] = useState();
 
   return (
     <View style={styles.container}>
@@ -25,7 +25,7 @@ function PostingCreationScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.light_shade2,
+    backgroundColor: Colors.light_shade2,
     alignItems: 'center',
     justifyContent: 'center',
   },

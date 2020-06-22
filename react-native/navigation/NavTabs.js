@@ -4,12 +4,15 @@ import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 
 import HomeStack from './HomeStack';
 import SearchStack from './SearchStack';
+import PostingCreationScreen from '../screens/PostingCreationScreen';
 
 const NavbarTabs = createBottomTabNavigator();
 
 const NavTabs = props => {
   return(
     <NavbarTabs.Navigator
+
+      // Options
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
@@ -20,6 +23,17 @@ const NavTabs = props => {
               : 'home-outline';
             return (
               <MaterialCommunityIcons
+                name={iconName}
+                size={size}
+                color={color}
+              />
+            );
+          } else if (route.name === 'Create') {
+            iconName = focused
+              ? 'ios-add-circle'
+              : 'ios-add-circle-outline';
+            return (
+              <Ionicons
                 name={iconName}
                 size={size}
                 color={color}
@@ -37,7 +51,6 @@ const NavTabs = props => {
               />
             );
           }
-
           // You can return any component that you like here!
         },
       })}
@@ -46,9 +59,16 @@ const NavTabs = props => {
         inactiveTintColor: 'gray',
       }}
     >
+
+      {/* Here is where you add screens/Stack Navigators */}
       <NavbarTabs.Screen
         name='Home'
         component={HomeStack}
+        options={{}}
+      />
+      <NavbarTabs.Screen
+        name='Create'
+        component={PostingCreationScreen}
         options={{}}
       />
       <NavbarTabs.Screen
