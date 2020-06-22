@@ -8,32 +8,31 @@ import { Text,
 import Center from './Center';
 
 const PostingListItem = props => {
-   return(
-      <View style={{ ...styles.listItem, ...props.style }}>
+    return(
         <TouchableOpacity
+          style={{ ...styles.listItem, ...props.style }}
           onPress={props.onSelectPosting}
         >
-          <Center>
             <Text style={styles.text}>
               {props.title}
             </Text>
-          </Center>
         </TouchableOpacity>
-      </View>
-   );
+    );
 };
 
 const styles = StyleSheet.create({
-   listItem: {
-      width: '100%',
-      borderColor: 'gray',
-      borderWidth: 1,
-      marginVertical: 5,
-      paddingVertical: 10,
-   },
-   text: {
-      fontSize: 20,
-   }
+    listItem: {
+        width: '100%',
+        borderColor: 'gray',
+        borderWidth: 1,
+        borderRadius: 5,
+        marginBottom: 15,
+        paddingVertical: 10,
+        paddingHorizontal: 10,
+    },
+    text: {
+        fontSize: 20,
+    }
 });
 
 export default PostingListItem;

@@ -9,8 +9,11 @@ const PostingDetailScreen = props => {
 
   return(
     <Center style={styles.container}>
-      <Text>
+      <Text style={styles.titleText}>
         This is definitely a {route.params.name}
+      </Text>
+      <Text style={styles.bodyText}>
+        Body: {route.params.body}
       </Text>
       <Button
         title='Edit this posting'
@@ -23,6 +26,14 @@ const PostingDetailScreen = props => {
 };
 
 const styles = StyleSheet.create({
+  titleText: {
+    fontSize: 20,
+    fontFamily: 'open-sans-bold',
+  },
+  bodyText: {
+    textAlign: 'center',
+    fontFamily: 'open-sans',
+  },
 });
 
 export default PostingDetailScreen;
