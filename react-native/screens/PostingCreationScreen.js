@@ -3,7 +3,8 @@ import { StyleSheet, Text, TextInput, View, Button } from "react-native";
 
 import Colors from '../config/colors.js';
 
-function PostingCreationScreen({ navigation }) {
+const PostingCreationScreen = props => {
+  const { navigation } = props;
   const [value, onChangeText] = useState();
 
   return (
