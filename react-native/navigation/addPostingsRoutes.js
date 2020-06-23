@@ -5,10 +5,28 @@ import PostingDetailScreen from '../screens/PostingDetailScreen';
 import EditPostingScreen from '../screens/EditPostingScreen';
 
 import Colors from '../config/colors';
+import headerOptions  from '../config/headerOptions';
 
 // Combine multiple screen routes that can be shown on different...
 // Navigation stacks.
-export const addPostingsRoutes = (Stack) => {
+export const addPostingsRoutes = Stack => {
+
+    const handleDone = route => {
+        return(
+            <TouchableOpacity style={styles.headerRight}>
+              <Button
+                title='Done'
+                onPress={() => {
+                    console.log(`Finish Editing ${route.params.name}`);
+                    if (route.params.submit) {
+                        route.params.submit.current();
+                    }
+                }}
+              />
+            </TouchableOpacity>
+        );
+    }
+
     return(
         <>
           <Stack.Screen
@@ -17,10 +35,7 @@ export const addPostingsRoutes = (Stack) => {
             options={
                 ({route, navigation}) => ({
                     headerTitle: route.params.name,
-                    headerTintColor: Colors.light_shade1,
-                    headerStyle: {
-                        backgroundColor: Colors.secondary,
-                    },
+                    ...headerOptions,
                 })
             }
           />
@@ -30,21 +45,8 @@ export const addPostingsRoutes = (Stack) => {
             options={
                 ({route, navigation}) => ({
                     headerTitle: `Edit your ${route.params.name}`,
-                    headerRight: () => {
-                        return(
-                            <TouchableOpacity style={styles.headerRight}>
-                              <Button
-                                title='Done'
-                                onPress={() => {
-                                    console.log(`Finish Editing ${route.params.name}`);
-                                    if (route.params.submit) {
-                                        route.params.submit.current();
-                                    }
-                                }}
-                              />
-                            </TouchableOpacity>
-                        );
-                    },
+                    ...headerOptions,
+                    headerRight: () => handleDone(route)
                 })
             }
           />

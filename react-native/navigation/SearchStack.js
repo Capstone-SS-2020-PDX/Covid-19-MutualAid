@@ -6,6 +6,7 @@ import SearchScreen from '../screens/SearchScreen';
 import { AuthContext } from '../providers/AuthProvider';
 import { addPostingsRoutes } from './addPostingsRoutes';
 
+import headerOptions from '../config/headerOptions';
 
 const Stack = createStackNavigator();
 
@@ -15,6 +16,7 @@ const SearchStack = props => {
       <Stack.Screen
         name='Search'
         component={SearchScreen}
+        options={headerOptions}
       />
       {addPostingsRoutes(Stack)}
     </Stack.Navigator>

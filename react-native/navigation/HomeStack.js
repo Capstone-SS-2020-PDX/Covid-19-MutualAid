@@ -8,6 +8,7 @@ import { AuthContext } from '../providers/AuthProvider';
 import { addPostingsRoutes } from './addPostingsRoutes';
 
 import Colors from '../config/colors';
+import headerOptions from '../config/headerOptions';
 
 const Stack = createStackNavigator();
 
@@ -16,10 +17,7 @@ const HomeStack = props => {
 
   const FeedScreenOptions = {
     title: `Welcome ${currentUser.userName}`,
-    headerTintColor: Colors.light_shade1,
-    headerStyle: {
-      backgroundColor: Colors.secondary,
-    },
+    ...headerOptions,
     headerRight: () => {
       return(
         <TouchableOpacity
@@ -34,9 +32,6 @@ const HomeStack = props => {
         </TouchableOpacity>
       );
     },
-  };
-
-  const ProductScreenOptions = {
   };
 
   return(
