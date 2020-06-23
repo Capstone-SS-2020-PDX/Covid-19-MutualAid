@@ -21,11 +21,17 @@ export const AuthProvider = props => {
         AsyncStorage.removeItem('currentUser');
     };
 
+    const handleRegister = userData => {
+        setCurrentUser(userData);
+        AsyncStorage.setItem('currentUser', JSON.stringify(userData));
+    };
+
     return (
         <AuthContext.Provider
           value={{ currentUser,
                    login: handleLogin,
                    logout: handleLogout,
+                   register: handleRegister,
                  }}
         >
           {props.children}

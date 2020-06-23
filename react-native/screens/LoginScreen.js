@@ -36,7 +36,7 @@ const LoginScreen = props => {
             <TextInput
               style={styles.inputText}
               placeholder='Email...'
-              placeholderTextColor='#003f5c'
+              placeholderTextColor={Colors.dark_shade1}
               onChangeText={text => setEmailText(text)}
             />
           </View>
@@ -49,9 +49,9 @@ const LoginScreen = props => {
               onChangeText={text => setPasswordText(text)}
             />
           </View>
-          <TouchableOpacity>
-            <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
-          </TouchableOpacity>
+          {/* <TouchableOpacity> */}
+          {/*   <Text style={styles.forgotPasswordText}>Forgot Password?</Text> */}
+          {/* </TouchableOpacity> */}
 
           <TouchableOpacity
             style={styles.loginButton}
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: Colors.light_shade4,
         alignItems: 'center',
-        justifyContent: 'flex-start',
+        justifyContent: 'center',
     },
     inputView: {
         width: '80%',
@@ -89,15 +89,20 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         padding: 20,
     },
+    imageContainer: {
+        // Dimesions.get as an example of responsive styling
+        width: Dimensions.get('window').width * 0.7,
+        height: Dimensions.get('window').width * 0.7,
+        marginBottom: Dimensions.get('window').height / 20,
+        overflow: 'hidden',
+    },
+    image: {
+        width: '100%',
+        height: '100%',
+    },
     inputText: {
         height: 50,
         color: Colors.dark_shade1,
-    },
-    logo: {
-        fontWeight: 'bold',
-        fontSize: 50,
-        color: '#fb5b5a',
-        marginBottom: 40,
     },
     forgotPasswordText: {
         color: Colors.contrast3,
@@ -120,16 +125,6 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         marginTop: 20,
         marginBottom: 20,
-    },
-    image: {
-        width: '100%',
-        height: '100%',
-    },
-    imageContainer: {
-        width: Dimensions.get('window').width * 0.7,
-        height: Dimensions.get('window').width * 0.7,
-        marginVertical: Dimensions.get('window').height / 15,
-        overflow: 'hidden',
     },
 });
 
