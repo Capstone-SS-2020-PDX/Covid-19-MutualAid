@@ -32,7 +32,7 @@ export const addPostingsRoutes = (Stack, navigation) => {
             <TouchableOpacity
               style={styles.headerRight}
               onPress={() => {
-                  console.log(`Editing ${route.params.name}`);
+                  console.log(`Editing ${route.params.id}`);
                   navigation.navigate('EditPosting', {
                       name: route.params.name,
                   });
@@ -61,7 +61,7 @@ export const addPostingsRoutes = (Stack, navigation) => {
             component={EditPostingScreen}
             options={
                 ({route, navigation}) => ({
-                    headerTitle: `Edit your ${route.params.name}`,
+                    headerTitle: `Edit your ${route.params.id}`,
                     ...headerOptions,
                     headerRight: () => handleDone(route),
                 })

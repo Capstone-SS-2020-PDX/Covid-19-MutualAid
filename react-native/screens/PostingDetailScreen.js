@@ -19,8 +19,7 @@ const PostingDetailScreen = props => {
   const { route, navigation } = props;
 
   return(
-    <ScrollView contentContainerStyle={styles.screen}>
-      <Center >
+    <Center style={styles.screen}>
         <View style={styles.detailTitle}>
           <Text style={styles.titleText}>{route.params.title}</Text>
         </View>
@@ -35,23 +34,22 @@ const PostingDetailScreen = props => {
           </View>
         </View>
 
-        <View style={styles.detailBody}>
-          <Text style={styles.bodyText}>{route.params.body}</Text>
-        </View>
+      <ScrollView style={styles.detailScroll}>
+        <Text style={styles.bodyText}>{route.params.body}</Text>
+      </ScrollView>
 
-        <View style={styles.reachOutButtonContainer}>
-          <TouchableOpacity
-            style={styles.reachOutButton}
-            onPress={() => {
-              console.log('Reach out pressed!');
-            }}
-          >
-            <Text style={styles.reachOutButtonText}>Reach Out!</Text>
-          </TouchableOpacity>
-        </View>
+      <View style={styles.reachOutButtonContainer}>
+        <TouchableOpacity
+          style={styles.reachOutButton}
+          onPress={() => {
+            console.log('Reach out pressed!');
+          }}
+        >
+          <Text style={styles.reachOutButtonText}>Reach Out!</Text>
+        </TouchableOpacity>
+      </View>
 
-      </Center>
-    </ScrollView>
+    </Center>
 
 
     // <Center style={styles.container}>
@@ -98,6 +96,8 @@ const styles = StyleSheet.create({
   },
   bodyText: {
     fontFamily: 'open-sans',
+  },
+  detailScroll: {
   },
   reachOutButtonContainer: {
     width: '80%',

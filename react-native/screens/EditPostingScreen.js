@@ -26,7 +26,7 @@ const EditPostingScreen = props => {
     return(
         <Center style={styles.container}>
           <Text>
-            Editing {route.params.name}
+            Editing {route.params.id}
           </Text>
         </Center>
     );
