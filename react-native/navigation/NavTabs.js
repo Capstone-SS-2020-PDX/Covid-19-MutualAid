@@ -4,7 +4,7 @@ import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 
 import HomeStack from './HomeStack';
 import SearchStack from './SearchStack';
-import PostingCreationScreen from '../screens/PostingCreationScreen';
+import PostingCreationStack from '../navigation/PostingCreationStack';
 
 import Colors from '../config/colors';
 
@@ -30,7 +30,7 @@ const NavTabs = props => {
                 color={color}
               />
             );
-          } else if (route.name === 'Create') {
+          } else if (route.name === 'List') {
             iconName = focused
               ? 'ios-add-circle'
               : 'ios-add-circle-outline';
@@ -70,8 +70,8 @@ const NavTabs = props => {
         options={{}}
       />
       <NavbarTabs.Screen
-        name='Create'
-        component={PostingCreationScreen}
+        name='List'
+        component={PostingCreationStack}
         options={{}}
       />
       <NavbarTabs.Screen
