@@ -30,7 +30,7 @@ const Feed = props => {
     })
       .then(response => response.json())
       .then(json => {
-        console.log(json);
+        console.log(json.length);
         setPostings(json);
       })
       .catch(error => console.error(error))

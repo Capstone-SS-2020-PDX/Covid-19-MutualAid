@@ -95,7 +95,6 @@ import { AppLoading } from 'expo';
 
 import Routes from './navigation/Routes';
 import { AuthProvider } from './providers/AuthProvider';
-import { fetchFonts } from './components/fetchFonts';
 
 const App = () =>  {
   const [isFontLoaded, setIsFontLoaded] = useState(false);
