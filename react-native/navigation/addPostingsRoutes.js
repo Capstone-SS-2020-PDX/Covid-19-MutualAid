@@ -4,6 +4,8 @@ import { Button, TouchableOpacity, StyleSheet } from 'react-native';
 import PostingDetailScreen from '../screens/PostingDetailScreen';
 import EditPostingScreen from '../screens/EditPostingScreen';
 
+import Colors from '../config/colors';
+
 // Combine multiple screen routes that can be shown on different...
 // Navigation stacks.
 export const addPostingsRoutes = (Stack) => {
@@ -14,7 +16,11 @@ export const addPostingsRoutes = (Stack) => {
             component={PostingDetailScreen}
             options={
                 ({route, navigation}) => ({
-                    headerTitle: route.params.name
+                    headerTitle: route.params.name,
+                    headerTintColor: Colors.light_shade1,
+                    headerStyle: {
+                        backgroundColor: Colors.secondary,
+                    },
                 })
             }
           />
