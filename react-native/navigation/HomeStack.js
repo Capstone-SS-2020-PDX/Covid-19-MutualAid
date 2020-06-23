@@ -69,9 +69,9 @@ const styles = StyleSheet.create({
     paddingRight: 15,
   },
   logoutButton: {
-    fontFamily: 'open-sans',
+    fontFamily: 'open-sans-bold',
     color: Colors.contrast3,
-    fontSize: 18,
+    fontSize: 16,
   },
   drawerIcon: {
     paddingLeft: 15,

@@ -16,7 +16,7 @@ export const addPostingsRoutes = (Stack, navigation) => {
             <TouchableOpacity
               style={styles.headerRight}
               onPress={() => {
-                  console.log(`Finish Editing ${route.params.name}`);
+                  console.log(`Finish Editing ${route.params.id}`);
                   if (route.params.submit) {
                       route.params.submit.current();
                   }
@@ -34,7 +34,7 @@ export const addPostingsRoutes = (Stack, navigation) => {
               onPress={() => {
                   console.log(`Editing ${route.params.id}`);
                   navigation.navigate('EditPosting', {
-                      name: route.params.name,
+                      ...route.params
                   });
               }}
             >
@@ -61,7 +61,7 @@ export const addPostingsRoutes = (Stack, navigation) => {
             component={EditPostingScreen}
             options={
                 ({route, navigation}) => ({
-                    headerTitle: `Edit your ${route.params.id}`,
+                    headerTitle: `Editing ${route.params.id}`,
                     ...headerOptions,
                     headerRight: () => handleDone(route),
                 })
@@ -74,6 +74,10 @@ export const addPostingsRoutes = (Stack, navigation) => {
 const styles = StyleSheet.create({
     headerRight: {
         paddingRight: 15,
+    },
+    doneButtonText: {
+        color: Colors.contrast1,
+        fontSize: 20,
     },
     headerRightEditText: {
         color: Colors.contrast1,
