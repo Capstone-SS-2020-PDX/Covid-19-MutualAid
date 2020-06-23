@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Button, TouchableOpacity, StyleSheet } from 'react-native';
+import { Text, Button, TouchableOpacity, StyleSheet } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { Ionicons } from '@expo/vector-icons';
@@ -25,13 +25,11 @@ const HomeStack = props => {
       return(
         <TouchableOpacity
           style={styles.headerRight}
+          onPress={() => {
+            logout();
+          }}
         >
-          <Button
-            title="Logout"
-            style={styles.headerButton}
-            onPress={() => {
-              logout();
-            }}/>
+        <Text style={styles.logoutButton}>Logout</Text>
         </TouchableOpacity>
       );
     },
@@ -61,7 +59,7 @@ const HomeStack = props => {
         component={FeedScreen}
         options={FeedScreenOptions}
       />
-      {addPostingsRoutes(Stack)}
+      {addPostingsRoutes(Stack, navigation)}
     </Stack.Navigator>
   );
 };
@@ -70,8 +68,10 @@ const styles = StyleSheet.create({
   headerRight: {
     paddingRight: 15,
   },
-  headerButton: {
-    color: Colors.contrast,
+  logoutButton: {
+    fontFamily: 'open-sans',
+    color: Colors.contrast3,
+    fontSize: 18,
   },
   drawerIcon: {
     paddingLeft: 15,

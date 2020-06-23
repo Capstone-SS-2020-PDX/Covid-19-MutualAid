@@ -13,33 +13,33 @@ const PostingList = props => {
               title={itemData.item.title}
               onSelectPosting={() => {
                   navigation.navigate('PostingDetail', {
-                      name: itemData.item.id,
-                      body: itemData.item.body,
-                      userId: itemData.item.userId,
-                      id: itemData.item.id,
-                      /* name: itemData.item, */
+                    title: itemData.item.title,
+                    body: itemData.item.body,
+                    userId: itemData.item.userId,
+                    id: itemData.item.id,
+                    /* name: itemData.item, */
                   });
               }}
             />
         );
     };
 
-    return(
-        <FlatList
-          style={styles.list}
-          renderItem={renderPostingListItem}
-          keyExtractor={(itemData, i) => i.toString()}
-          data={postings}
-        />
-    );
+  return(
+    <FlatList
+      style={styles.list}
+      renderItem={renderPostingListItem}
+      keyExtractor={(itemData, i) => i.toString()}
+      data={postings}
+    />
+  );
 };
 
 const styles = StyleSheet.create({
-    list: {
-        width: '100%',
-        margin: 10,
-        padding: 10,
-    },
+  list: {
+    width: '100%',
+    margin: 10,
+    padding: 10,
+  },
 });
 
 export default PostingList;
