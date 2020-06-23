@@ -7,6 +7,7 @@ import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import AuthStack from './AuthStack';
 import NavTabs from './NavTabs';
+import DrawerNav from './DrawerNav';
 
 import { AuthContext } from '../providers/AuthProvider';
 
@@ -44,10 +45,12 @@ const Routes = () => {
     } else {
         // Inside our Nav Container, show the appropriate UI...
         // depending on whether or not our user is logged in.
-        // Show NavbarTabs is logged in, AuthStack if not
+        // Show DrawerNav is logged in, AuthStack if not
+        // Main App Components is nested within DrawerNav
         return(
             <NavigationContainer>
-              { currentUser ? <NavTabs /> : <AuthStack /> }
+              {/* { currentUser ? <NavTabs /> : <AuthStack /> } */}
+              { currentUser ? <DrawerNav /> : <AuthStack /> }
             </NavigationContainer>
         );
     }

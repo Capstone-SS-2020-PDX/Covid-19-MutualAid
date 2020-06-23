@@ -1,6 +1,8 @@
 import React, { useContext } from 'react';
 import { Button, TouchableOpacity, StyleSheet } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { Ionicons } from '@expo/vector-icons';
 
 import FeedScreen from '../screens/FeedScreen';
 
@@ -13,6 +15,7 @@ import headerOptions from '../config/headerOptions';
 const Stack = createStackNavigator();
 
 const HomeStack = props => {
+  const { navigation } = props;
   const { logout, currentUser } = useContext(AuthContext);
 
   const FeedScreenOptions = {
@@ -29,6 +32,21 @@ const HomeStack = props => {
             onPress={() => {
               logout();
             }}/>
+        </TouchableOpacity>
+      );
+    },
+    headerLeft: () => {
+      return(
+        <TouchableOpacity
+          style={styles.drawerIcon}
+          onPress={() => {
+            navigation.toggleDrawer();
+          }}
+        >
+          <Ionicons
+            name='md-menu'
+            size={30}
+          />
         </TouchableOpacity>
       );
     },
@@ -50,10 +68,13 @@ const HomeStack = props => {
 
 const styles = StyleSheet.create({
   headerRight: {
-    paddingRight: 10,
+    paddingRight: 15,
   },
   headerButton: {
     color: Colors.contrast,
+  },
+  drawerIcon: {
+    paddingLeft: 15,
   },
 });
 
