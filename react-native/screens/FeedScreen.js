@@ -9,7 +9,7 @@ import { View,
 import faker from 'faker';
 
 import Center from '../components/Center';
-import PostingListItem from '../components/PostingListItem';
+import PostingList from '../components/PostingList';
 
 // const url = "https://cellular-virtue-277000.uc.r.appspot.com/postings/?format=json";
 const url = 'https://jsonplaceholder.typicode.com/posts';
@@ -39,23 +39,6 @@ const Feed = props => {
       });
   }, []);
 
-  const renderPostingListItem = itemData => {
-    return(
-      <PostingListItem
-        /* title={itemData.item} */
-        title={itemData.item.title}
-        onSelectPosting={() => {
-          navigation.navigate('PostingDetail', {
-            name: itemData.item.id,
-            body: itemData.item.body,
-            userId: itemData.item.userId,
-            id: itemData.item.id,
-            /* name: itemData.item, */
-          });
-        }}
-      />
-    );
-  };
 
   return(
     <Center>
@@ -68,11 +51,9 @@ const Feed = props => {
       {
         isLoading
           ? <ActivityIndicator size='large'/>
-          : <FlatList
-              style={styles.list}
-              renderItem={renderPostingListItem}
-              keyExtractor={(itemData, i) => i}
-              data={postings}
+          : <PostingList
+              postings={postings}
+              navigation={navigation}
             />
       }
     </Center>
@@ -80,11 +61,6 @@ const Feed = props => {
 };
 
 const styles = StyleSheet.create({
-  list: {
-    width: '100%',
-    margin: 10,
-    padding: 10,
-  },
 });
 
 export default Feed;

@@ -11,9 +11,14 @@ export const AuthProvider = props => {
     const demoUser = { userName: 'demoUser' };
     const [currentUser, setCurrentUser] = useState(null);
 
-    const handleLogin = () => {
-        setCurrentUser(demoUser);
-        AsyncStorage.setItem('currentUser', JSON.stringify(demoUser));
+    const handleLogin = userData => {
+        if (userData) {
+            setCurrentUser(userData);
+            AsyncStorage.setItem('currentUser', JSON.stringify(userData));
+        } else {
+            setCurrentUser(demoUser);
+            AsyncStorage.setItem('currentUser', JSON.stringify(demoUser));
+        }
     };
 
     const handleLogout = () => {
