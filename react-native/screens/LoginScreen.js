@@ -11,6 +11,7 @@ import { View,
 
 import { useInputState } from '../hooks/useInputState';
 import Center from '../components/Center';
+import CustomButton from '../components/CustomButton';
 import { AuthContext } from '../providers/AuthProvider';
 
 import Colors from '../config/colors';
@@ -53,7 +54,7 @@ const LoginScreen = props => {
       {/*   <Text style={styles.forgotPasswordText}>Forgot Password?</Text> */}
       {/* </TouchableOpacity> */}
 
-      <TouchableOpacity
+      <CustomButton
         style={styles.loginButton}
         onPress={() => {
           const userData = { userName: emailText, password: passwordText };
@@ -61,7 +62,7 @@ const LoginScreen = props => {
         }}
       >
         <Text style={styles.loginText}>LOGIN</Text>
-      </TouchableOpacity>
+      </CustomButton>
 
       <TouchableOpacity
         onPress={() => {
@@ -118,12 +119,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   loginButton: {
-    width: '80%',
     backgroundColor: Colors.secondary,
-    borderRadius: 25,
-    height: 50,
-    alignItems: "center",
-    justifyContent: "center",
     marginTop: 20,
     marginBottom: 20,
   },

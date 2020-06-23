@@ -10,6 +10,7 @@ import { View,
        } from 'react-native';
 
 import Center from '../components/Center';
+import CustomButton from '../components/CustomButton';
 import EditPostingScreen from './EditPostingScreen';
 
 import Colors from '../config/colors';
@@ -38,34 +39,14 @@ const PostingDetailScreen = props => {
         <Text style={styles.bodyText}>{route.params.body}</Text>
       </ScrollView>
 
-      <View style={styles.reachOutButtonContainer}>
-        <TouchableOpacity
+        <CustomButton
           style={styles.reachOutButton}
-          onPress={() => {
-            console.log('Reach out pressed!');
-          }}
+          onPress={() => console.log('Reach out pressed!')}
         >
           <Text style={styles.reachOutButtonText}>Reach Out!</Text>
-        </TouchableOpacity>
-      </View>
+        </CustomButton>
 
     </Center>
-
-
-    // <Center style={styles.container}>
-    //   <Text style={styles.titleText}>
-    //     This is definitely a {route.params.name}
-    //   </Text>
-    //   <Text style={styles.bodyText}>
-    //     Body: {route.params.body}
-    //   </Text>
-    //   <Button
-    //     title='Edit this posting'
-    //     onPress={() => navigation.navigate('EditPosting', {
-    //       name: route.params.name,
-    //     })}
-    //   />
-    // </Center>
   );
 };
 

@@ -10,6 +10,7 @@ import { View,
        } from 'react-native';
 
 import Center from '../components/Center';
+import CustomButton from '../components/CustomButton';
 import { AuthContext } from '../providers/AuthProvider';
 
 import Colors from '../config/colors';
@@ -51,7 +52,7 @@ const RegisterScreen = props => {
         />
       </View>
 
-      <TouchableOpacity
+      <CustomButton
         style={styles.registerButton}
         onPress={() => {
           const userData = { userName: emailText, password: passwordText };
@@ -59,7 +60,7 @@ const RegisterScreen = props => {
         }}
       >
         <Text style={styles.loginText}>Sign Up</Text>
-      </TouchableOpacity>
+      </CustomButton>
 
       <TouchableOpacity
         onPress={() => {
@@ -112,12 +113,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   registerButton: {
-    width: '80%',
     backgroundColor: Colors.secondary,
-    borderRadius: 25,
-    height: 50,
-    alignItems: "center",
-    justifyContent: "center",
     marginTop: 20,
     marginBottom: 20,
   },

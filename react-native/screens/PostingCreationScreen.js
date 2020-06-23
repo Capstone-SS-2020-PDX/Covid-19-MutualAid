@@ -10,6 +10,7 @@ import { StyleSheet,
 import { AntDesign } from '@expo/vector-icons';
 
 import Center from '../components/Center';
+import CustomButton from '../components/CustomButton';
 import Colors from '../config/colors.js';
 
 const PostingCreationScreen = props => {
@@ -49,14 +50,11 @@ const PostingCreationScreen = props => {
         >
         </TextInput>
       </View>
-      <TouchableOpacity
-        style={styles.submitButton}
-        onPress={() => {
-          console.log('Posting Created!')
-        }}
+      <CustomButton
+        onPress={() => console.log('Posting Created!')}
       >
         <Text style={styles.buttonText}>Confirm</Text>
-      </TouchableOpacity>
+      </CustomButton>
     </Center>
 
   );
@@ -90,16 +88,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     padding: 10,
     borderRadius: 20,
-  },
-  submitButton: {
-    width: '80%',
-    backgroundColor: Colors.primary,
-    borderRadius: 25,
-    height: 50,
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 10,
-    elevation: 5,
   },
   buttonText: {
     color: Colors.light_shade1,
