@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, FlatList, Text, View, Button } from "react-native";
 
-import colors from '../config/colors.js';
+import Colors from '../config/colors.js';
 
 function PostingListScreen({ route, navigation }) {
   const { renderData } = route.params;
@@ -25,7 +25,7 @@ function PostingListScreen({ route, navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.light_shade2,
+    backgroundColor: Colors.light_shade2,
     alignItems: 'center',
     justifyContent: 'center',
   },
