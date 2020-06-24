@@ -6,7 +6,6 @@ import { View,
          TouchableOpacity,
          StyleSheet,
          Image,
-         Dimensions,
        } from 'react-native';
 
 import Center from '../components/Center';
@@ -14,6 +13,7 @@ import CustomButton from '../components/CustomButton';
 import { AuthContext } from '../providers/AuthProvider';
 
 import Colors from '../config/colors';
+import { windowHeight, windowWidth } from '../config/dimensions';
 
 const RegisterScreen = props => {
   const { navigation, route } = props;

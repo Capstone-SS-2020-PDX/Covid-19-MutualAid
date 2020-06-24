@@ -4,7 +4,6 @@ import { View,
          Button,
          TouchableOpacity,
          Image,
-         Dimensions,
          ScrollView,
          StyleSheet
        } from 'react-native';
@@ -14,6 +13,7 @@ import CustomButton from '../components/CustomButton';
 import EditPostingScreen from './EditPostingScreen';
 
 import Colors from '../config/colors';
+import { windowHeight, windowWidth } from '../config/dimensions';
 
 const PostingDetailScreen = props => {
   const picUrl = 'https://picsum.photos/id/237/200';
@@ -50,15 +50,17 @@ const PostingDetailScreen = props => {
   );
 };
 
+
 const styles = StyleSheet.create({
   screen: {
     justifyContent: 'space-between',
-    padding: 20,
+    padding: 10,
   },
   detailTitle: {
   },
   titleText: {
-    fontSize: 28,
+    // fontSize: 28,
+    fontSize: windowWidth / 18,
     textAlign: 'center',
     fontFamily: 'open-sans-bold',
   },
@@ -67,13 +69,13 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   imageContainer: {
-    width: Dimensions.get('window').width * 0.7,
-    height: Dimensions.get('window').width * 0.7,
-    borderRadius: Dimensions.get('window').width * 0.7 / 2,
+    width: windowWidth * 0.5,
+    height: windowWidth * 0.5,
+    borderRadius: windowWidth * 0.7 / 2,
     borderWidth: 3,
     borderColor: Colors.dark_shade1,
     overflow: 'hidden',
-    marginVertical: Dimensions.get('window').height / 26,
+    marginVertical: windowHeight / 25,
   },
   bodyText: {
     fontFamily: 'open-sans',

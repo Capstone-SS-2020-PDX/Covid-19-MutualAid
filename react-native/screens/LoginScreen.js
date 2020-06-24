@@ -4,7 +4,6 @@ import { View,
          TextInput,
          Button,
          Image,
-         Dimensions,
          StyleSheet,
          TouchableOpacity
        } from 'react-native';
@@ -15,6 +14,7 @@ import CustomButton from '../components/CustomButton';
 import { AuthContext } from '../providers/AuthProvider';
 
 import Colors from '../config/colors';
+import { windowHeight, windowWidth } from '../config/dimensions';
 
 const LoginScreen = props => {
   const { navigation, route } = props;
@@ -93,9 +93,9 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     // Dimesions.get as an example of responsive styling
-    width: Dimensions.get('window').width * 0.7,
-    height: Dimensions.get('window').width * 0.7,
-    marginBottom: Dimensions.get('window').height / 20,
+    width: windowWidth * 0.7,
+    height: windowWidth * 0.7,
+    marginBottom: windowHeight / 20,
     overflow: 'hidden',
   },
   image: {
