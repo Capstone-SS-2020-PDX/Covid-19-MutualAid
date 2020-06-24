@@ -3,6 +3,7 @@ import { View, Text, Button, FlatList, StyleSheet } from 'react-native';
 import faker from 'faker';
 
 import Center from '../components/Center';
+import Colors from '../config/colors';
 import PostingListItem from '../components/PostingListItem';
 
 const Search = props => {
@@ -23,7 +24,7 @@ const Search = props => {
   };
 
   return(
-    <Center>
+    <Center style={styles.screen}>
       <Button
         title='Search Postings'
         onPress={() => {
@@ -43,6 +44,9 @@ const Search = props => {
 };
 
 const styles = StyleSheet.create({
+  screen: {
+    backgroundColor: Colors.light_shade4,
+  },
   list: {
     width: '100%',
     margin: 10,

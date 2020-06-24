@@ -90,7 +90,7 @@ const Feed = props => {
 const styles = StyleSheet.create({
   screen: {
     height: '100%',
-    backgroundColor: Colors.light_shade2,
+    backgroundColor: Colors.light_shade4,
     alignItems: 'center',
   },
   searchContainer: {

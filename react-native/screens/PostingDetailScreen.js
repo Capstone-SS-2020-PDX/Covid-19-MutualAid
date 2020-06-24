@@ -54,7 +54,8 @@ const PostingDetailScreen = props => {
 const styles = StyleSheet.create({
   screen: {
     justifyContent: 'space-between',
-    padding: 10,
+    paddingHorizontal: 10,
+    backgroundColor: Colors.light_shade4,
   },
   detailTitle: {
   },

@@ -65,6 +65,7 @@ const styles = StyleSheet.create({
         height: 30,
         padding: 20,
         justifyContent: 'space-between',
+        backgroundColor: Colors.light_shade4,
     },
     titleText: {
         fontSize: 36,

@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
   screen: {
     paddingHorizontal: 20,
     paddingVertical: 10,
-    backgroundColor: Colors.light_shade2,
+    backgroundColor: Colors.light_shade4,
     alignItems: 'center',
     justifyContent: 'space-between',
   },
