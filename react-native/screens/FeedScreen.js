@@ -21,6 +21,7 @@ const Feed = props => {
   const { navigation } = props;
   const [isLoading, setIsLoading] = useState(true);
   const [postings, setPostings] = useState([]);
+  const [searchPostings, setSearchPostings] = useState([]);
   const [searchText, setSearchText] = useState('');
 
   useEffect(() => {
@@ -36,6 +37,7 @@ const Feed = props => {
       .then(json => {
         console.log(json.length);
         setPostings(json);
+        setSearchPostings(json);
       })
       .catch(error => console.error(error))
       .finally(() => {
@@ -43,6 +45,17 @@ const Feed = props => {
       });
   }, []);
 
+  const handleSearch = text => {
+    setSearchText(text);
+
+    let filteredPostings = postings.filter(posting =>
+      posting.title.toLowerCase().includes(text.toLowerCase())
+    );
+
+    setSearchPostings(filteredPostings);
+    console.log(searchText);
+    console.log(searchPostings);
+  }
 
   return(
     isLoading
@@ -53,7 +66,7 @@ const Feed = props => {
               style={styles.searchInput}
               placeholder='Search for an item'
               placeholderTextColor={Colors.dark_shade1}
-              onChangeText={text => setSearchText(text)}
+              onChangeText={text => handleSearch(text)}
             />
           </View>
           <Center>
@@ -65,7 +78,7 @@ const Feed = props => {
             {/* /> */}
             {
               <PostingList
-                postings={postings}
+                postings={searchPostings}
                 navigation={navigation}
               />
             }
