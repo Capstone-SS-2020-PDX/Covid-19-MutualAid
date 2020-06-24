@@ -14,10 +14,31 @@ import Center from '../components/Center';
 import CustomButton from '../components/CustomButton';
 import Colors from '../config/colors.js';
 
+const url = "https:cellular-virtue-277000.uc.r.appspot.com/postings/?format=json";
+
 const PostingCreationScreen = props => {
   const { navigation } = props;
   const [itemName, setItemName] = useState('');
   const [itemDescription, setItemDescription] = useState('');
+
+  const sendPostRequest = () => {
+    return fetch(url, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        title: itemName,
+        desc: itemDescription,
+      })
+    })
+    .then(response => response.json())
+    .then(json => {
+      console.log(json);
+    })
+    .catch(error => console.error(error));
+  }
 
   return (
     <Center style={styles.screen}>
@@ -52,7 +73,7 @@ const PostingCreationScreen = props => {
         </TextInput>
       </View>
       <CustomButton
-        onPress={() => console.log('Posting Created!')}
+        onPress={() => sendPostRequest()}
       >
         <Text style={styles.buttonText}>Confirm</Text>
       </CustomButton>
