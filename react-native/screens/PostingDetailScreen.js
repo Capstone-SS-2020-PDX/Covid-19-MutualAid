@@ -36,7 +36,7 @@ const PostingDetailScreen = props => {
         </View>
 
       <ScrollView style={styles.detailScroll}>
-        <Text style={styles.bodyText}>{route.params.body}</Text>
+        <Text style={styles.bodyText}>{route.params.description}</Text>
       </ScrollView>
 
         <CustomButton

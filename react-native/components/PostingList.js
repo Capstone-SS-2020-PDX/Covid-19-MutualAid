@@ -14,10 +14,14 @@ const PostingList = props => {
               onSelectPosting={() => {
                   navigation.navigate('PostingDetail', {
                     title: itemData.item.title,
-                    body: itemData.item.body,
+                    description: itemData.item.desc,
                     userId: itemData.item.userId,
                     id: itemData.item.id,
-                    /* name: itemData.item, */
+                    category: itemData.item.category,
+                    count: itemData.item.count,
+                    owner: itemData.item.owner,
+                    created_on: itemData.item.created_on,
+                    item_pic: itemData.item.item_pic,
                   });
               }}
             />

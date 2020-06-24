@@ -7,15 +7,13 @@ import { View,
          FlatList,
          ActivityIndicator
        } from 'react-native';
-import faker from 'faker';
 
 import Center from '../components/Center';
 import PostingList from '../components/PostingList';
 
 import Colors from '../config/colors';
 
-// const url = "https://cellular-virtue-277000.uc.r.appspot.com/postings/?format=json";
-const url = 'https://jsonplaceholder.typicode.com/posts';
+const url = "https:cellular-virtue-277000.uc.r.appspot.com/postings/?format=json";
 
 const Feed = props => {
   const { navigation } = props;
@@ -70,12 +68,6 @@ const Feed = props => {
             />
           </View>
           <Center>
-            {/* <FlatList */}
-            {/*   style={styles.list} */}
-            {/*   renderItem={renderPostingListItem} */}
-            {/*   keyExtractor={(product, i) => product + i} */}
-            {/*   data={Array.from(Array(50), () => faker.commerce.product())} */}
-            {/* /> */}
             {
               <PostingList
                 postings={searchPostings}
