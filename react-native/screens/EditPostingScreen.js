@@ -53,7 +53,7 @@ const EditPostingScreen = props => {
               onChangeText={text => setBodyText(text)}
               multiline={true}
             >
-              {route.params.body}
+              {route.params.description}
             </TextInput>
           </View>
         </Center>
