@@ -1,8 +1,9 @@
 import rest_framework as rf
 from rest_framework.decorators import action
 from django.contrib.auth import get_user
+from django.contrib.auth.models import User
 from .models import Posting, Community, UserProfile
-from .serializers import PostingSerializer, CommunitySerializer, UserProfileSerializer
+from .serializers import PostingSerializer, CommunitySerializer, UserProfileSerializer, UserSerializer
 from rest_framework import viewsets, permissions
 
 
@@ -44,3 +45,7 @@ class UserProfileViewSet(rf.viewsets.ModelViewSet):
         user = UserProfile.objects.filter(member_of__id=argument)
         serializer = UserProfileSerializer(userprofile, many=True)
         return rf.response.Response(serializer.data)
+        
+class UserViewSet(rf.viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
