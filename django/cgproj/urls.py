@@ -23,6 +23,7 @@ router = routers.DefaultRouter()
 router.register(r'communities', cgapi_views.CommunityViewSet)
 router.register(r'postings', cgapi_views.PostingViewSet)
 router.register(r'users', cgapi_views.UserProfileViewSet)
+router.register(r'auth', cgapi_views.UserViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
