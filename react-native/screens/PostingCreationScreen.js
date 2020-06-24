@@ -5,6 +5,7 @@ import { StyleSheet,
          View,
          Button,
          TouchableOpacity,
+         ScrollView,
          Dimensions,
        } from "react-native";
 import { AntDesign } from '@expo/vector-icons';
@@ -27,7 +28,7 @@ const PostingCreationScreen = props => {
         onPress={() => console.log('Add Image!')}
       >
         <AntDesign
-          size={150}
+          size={100}
           name='pluscircleo'
         />
       </TouchableOpacity>
@@ -46,7 +47,7 @@ const PostingCreationScreen = props => {
           style={styles.textInput}
           onChangeText={text => setItemDescription(text)}
           multiline={true}
-          numberOfLines={5}
+          numberOfLines={3}
         >
         </TextInput>
       </View>
@@ -63,7 +64,7 @@ const PostingCreationScreen = props => {
 const styles = StyleSheet.create({
   screen: {
     paddingHorizontal: 20,
-    paddingVertical: 30,
+    paddingVertical: 10,
     backgroundColor: Colors.light_shade2,
     alignItems: 'center',
     justifyContent: 'space-between',
