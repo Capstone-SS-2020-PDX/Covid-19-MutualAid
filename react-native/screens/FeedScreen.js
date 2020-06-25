@@ -37,7 +37,7 @@ const Feed = props => {
         setPostings(json);
         setSearchPostings(json);
       })
-      .catch(error => console.error(error))
+      .catch(error => console.log(error))
       .finally(() => {
         setIsLoading(false)
       });

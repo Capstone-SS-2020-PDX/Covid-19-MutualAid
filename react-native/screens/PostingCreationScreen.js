@@ -7,6 +7,9 @@ import { StyleSheet,
          TouchableOpacity,
          ScrollView,
          Dimensions,
+         ToastAndroid,
+         Platform,
+         AlertIOS,
        } from "react-native";
 import { AntDesign } from '@expo/vector-icons';
 
@@ -36,8 +39,24 @@ const PostingCreationScreen = props => {
     .then(response => response.json())
     .then(json => {
       console.log(json);
+      navigateToHomeStack();
     })
     .catch(error => console.error(error));
+  }
+
+  const notifyMessage = msg => {
+    if (Platform.OS === 'android') {
+      ToastAndroid.show(msg, ToastAndroid.SHORT)
+    } else {
+      AlertIOS.alert(msg);
+    }
+  }
+
+  const navigateToHomeStack = () => {
+    navigation.navigate('Home', {screen: 'Feed'})
+    notifyMessage("Success");
+
+    console.log("in navigateToHomeStack");
   }
 
   return (
