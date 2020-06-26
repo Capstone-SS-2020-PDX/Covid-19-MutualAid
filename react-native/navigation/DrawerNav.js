@@ -9,20 +9,20 @@ const Drawer = createDrawerNavigator();
 
 // Any screen you want the Drawer to be aware of you need to add as a Screen
 const DrawerNav = props => {
-    return(
-        <Drawer.Navigator
-          drawerContent={props => <DrawerContent {...props}/>}
-        >
-          <Drawer.Screen
-            name='Main'
-            component={NavTabs}
-          />
-          <Drawer.Screen
-            name='About'
-            component={AboutStack}
-          />
-        </Drawer.Navigator>
-    );
+  return(
+    <Drawer.Navigator
+      drawerContent={props => <DrawerContent {...props}/>}
+    >
+      <Drawer.Screen
+        name='Main'
+        component={NavTabs}
+      />
+      <Drawer.Screen
+        name='About'
+        component={AboutStack}
+      />
+    </Drawer.Navigator>
+  );
 }
 
 export default DrawerNav;
