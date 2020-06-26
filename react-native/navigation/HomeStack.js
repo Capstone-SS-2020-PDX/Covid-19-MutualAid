@@ -21,18 +21,6 @@ const HomeStack = props => {
   const FeedScreenOptions = {
     title: `Welcome ${currentUser.userName}`,
     ...headerOptions,
-    headerRight: () => {
-      return(
-        <TouchableOpacity
-          style={styles.headerRight}
-          onPress={() => {
-            logout();
-          }}
-        >
-        <Text style={styles.logoutButton}>Logout</Text>
-        </TouchableOpacity>
-      );
-    },
     headerLeft: () => {
       return(
         <TouchableOpacity
