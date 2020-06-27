@@ -91,7 +91,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 20,
     borderWidth: 1,
-    elevation: 5,
     shadowColor: "#000",
     shadowOffset: {
 	    width: 0,
@@ -99,6 +98,7 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
+    elevation: 5,
   },
   imageContainer: {
     // Dimesions.get as an example of responsive styling

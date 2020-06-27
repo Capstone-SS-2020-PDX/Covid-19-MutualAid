@@ -67,22 +67,15 @@ const Feed = props => {
               onChangeText={text => handleSearch(text)}
             />
           </View>
-          <Center>
-            {
-              <PostingList
-                postings={searchPostings}
-                navigation={navigation}
-              />
-            }
-          </Center>
+          <PostingList
+            postings={searchPostings}
+            navigation={navigation}
+          />
         </View>
   );
 };
 
 const styles = StyleSheet.create({
-  list: {
-    width: '100%'
-  },
   screen: {
     height: '100%',
     backgroundColor: Colors.light_shade4,
