@@ -18,11 +18,13 @@ const PostingListItem = props => {
           onPress={props.onSelectPosting}
         >
           <View style={styles.itemContent}>
-            <Image
-              style={styles.listImage}
-              resizeMode='contain'
-              source={{uri: 'https://source.unsplash.com/random/80x80'}}
-            />
+            <View style={styles.listImageContainer}>
+              <Image
+                style={styles.listImage}
+                resizeMode='contain'
+                source={{uri: 'https://source.unsplash.com/random/80x80'}}
+              />
+            </View>
             <View style={styles.itemTextContent}>
               <Text style={styles.itemTitleText}>
                 {props.title}
@@ -51,18 +53,23 @@ const styles = StyleSheet.create({
         borderColor: Colors.dark_shade1,
         borderTopWidth: 0.8,
         paddingVertical: 10,
-        paddingHorizontal: 20,
+        paddingHorizontal: 15,
 
     },
     itemContent: {
         flexDirection: 'row',
+        alignItems: 'center',
         justifyContent: 'space-between',
     },
     itemTextContent: {
+        width: '50%',
         alignContent: 'flex-start',
     },
+    listImageContainer: {
+        width: '25%',
+        marginRight: 10,
+    },
     listImage: {
-        width: 80,
         height: 80,
         borderWidth: 1,
         borderColor: Colors.dark_shade1,
@@ -70,6 +77,13 @@ const styles = StyleSheet.create({
     itemTitleText: {
         fontSize: 20,
         fontFamily: 'open-sans',
+    },
+    itemCommunityText: {
+        fontSize: 14,
+        fontFamily: 'open-sans',
+    },
+    postingTypeIconContainer: {
+        width: '25%',
     },
     postingTypeIconImage: {
         width: 80,
