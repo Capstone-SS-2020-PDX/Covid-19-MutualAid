@@ -67,14 +67,10 @@ const Feed = props => {
               onChangeText={text => handleSearch(text)}
             />
           </View>
-          <Center>
-            {
-              <PostingList
-                postings={searchPostings}
-                navigation={navigation}
-              />
-            }
-          </Center>
+          <PostingList
+            postings={searchPostings}
+            navigation={navigation}
+          />
         </View>
   );
 };
