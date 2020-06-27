@@ -4,7 +4,7 @@ from .models import Posting, Community, UserProfile, User
 class PostingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Posting
-        fields = ('id', 'title', 'desc', 'count', 'category', 'created_on', 'owner', 'in_community', 'item_pic')
+        fields = ('id', 'title', 'desc', 'count', 'category', 'created_on', 'owner', 'in_community', 'item_pic', 'request')
 
 class CommunitySerializer(serializers.ModelSerializer):
     class Meta:

@@ -42,6 +42,7 @@ class Posting(models.Model):
     owner = models.ForeignKey(UserProfile, on_delete=models.CASCADE, blank=True, null=True)
     in_community = models.ForeignKey(Community, on_delete=models.CASCADE, blank=True, null=True, related_name='posts')
     item_pic = models.ImageField(upload_to='pimg/', default='')
+    request = models.BooleanField(default=True)
     
     # Meta data about DB table
     class Meta:
