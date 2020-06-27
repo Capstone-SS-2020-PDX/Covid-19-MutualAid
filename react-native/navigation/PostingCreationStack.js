@@ -4,6 +4,7 @@ import { TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 import PostingCreationScreen from '../screens/PostingCreationScreen';
+import ImageUpload from '../components/ImageUpload';
 
 import headerOptions from '../config/headerOptions';
 
@@ -41,6 +42,10 @@ const PostingCreationStack = props => {
             name='PostingCreation'
             component={PostingCreationScreen}
             options={PostingCreationScreenOptions}
+          />
+          <Stack.Screen
+            name='ImageUploader'
+            component={ImageUpload}
           />
         </Stack.Navigator>
     );
