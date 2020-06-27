@@ -33,14 +33,14 @@ const LoginScreen = props => {
           fadeDuration={ 300 }
         />
       </View>
-      <View style={styles.inputView}>
-        <TextInput
-          style={styles.inputText}
-          placeholder='Email...'
-          placeholderTextColor={Colors.dark_shade1}
-          onChangeText={text => setEmailText(text)}
-        />
-      </View>
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.inputText}
+            placeholder='Email...'
+            placeholderTextColor={Colors.dark_shade1}
+            onChangeText={text => setEmailText(text)}
+          />
+        </View>
       <View style={styles.inputView}>
         <TextInput
           style={styles.inputText}
@@ -90,6 +90,15 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     justifyContent: "center",
     padding: 20,
+    borderWidth: 1,
+    elevation: 5,
+    shadowColor: "#000",
+    shadowOffset: {
+	    width: 0,
+	    height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
   imageContainer: {
     // Dimesions.get as an example of responsive styling

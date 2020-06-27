@@ -37,7 +37,7 @@ const Feed = props => {
         setPostings(json);
         setSearchPostings(json);
       })
-      .catch(error => console.error(error))
+      .catch(error => console.log(error))
       .finally(() => {
         setIsLoading(false)
       });
@@ -80,6 +80,9 @@ const Feed = props => {
 };
 
 const styles = StyleSheet.create({
+  list: {
+    width: '100%'
+  },
   screen: {
     height: '100%',
     backgroundColor: Colors.light_shade4,
