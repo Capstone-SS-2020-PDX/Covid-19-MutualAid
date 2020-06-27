@@ -16,7 +16,7 @@ expo install react-native-gesture-handler react-native-reanimated \
 
 export PATH=$PATH:~/.npm-global/bin
 
-cd..
+cd ..
 npm install expo-cli --global
 
 echo "Finished..."
