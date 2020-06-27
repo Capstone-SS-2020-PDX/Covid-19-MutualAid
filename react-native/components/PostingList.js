@@ -42,8 +42,6 @@ const PostingList = props => {
 const styles = StyleSheet.create({
   list: {
     width: '100%',
-    margin: 10,
-    padding: 10,
   },
 });
 

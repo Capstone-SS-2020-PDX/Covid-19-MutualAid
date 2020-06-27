@@ -76,9 +76,6 @@ const Feed = props => {
 };
 
 const styles = StyleSheet.create({
-  list: {
-    width: '100%'
-  },
   screen: {
     height: '100%',
     backgroundColor: Colors.light_shade4,

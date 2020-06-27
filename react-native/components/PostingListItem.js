@@ -2,10 +2,11 @@ import React from 'react';
 import { Text,
          View,
          StyleSheet,
-         TouchableOpacity
+         TouchableOpacity,
+         Image,
        } from 'react-native';
 
-import Center from './Center';
+import Colors from '../config/colors';
 
 const PostingListItem = props => {
     return(
@@ -23,12 +24,13 @@ const PostingListItem = props => {
 const styles = StyleSheet.create({
     listItem: {
         width: '100%',
-        borderColor: 'gray',
-        borderWidth: 1,
-        borderRadius: 5,
-        marginBottom: 15,
+        height: 100,
+        justifyContent: 'center',
+        borderColor: Colors.dark_shade1,
+        borderTopWidth: 0.8,
         paddingVertical: 10,
-        paddingHorizontal: 10,
+        paddingHorizontal: 20,
+
     },
     text: {
         fontSize: 20,
