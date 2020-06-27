@@ -16,6 +16,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { useHeaderHeight } from '@react-navigation/stack';
 import * as ImagePicker from 'expo-image-picker';
+import axios from 'axios';
 
 import { windowHeight, windowWidth } from '../config/dimensions';
 import Center from '../components/Center';
@@ -33,25 +34,48 @@ const PostingCreationScreen = props => {
 
   const height = useHeaderHeight();
 
+
+  const createFormData = () => {
+    const data = new FormData();
+
+    data.append('title', itemName);
+    data.append('desc', itemDescription);
+    data.append('item_pic', selectedImage);
+
+    return data;
+  };
+
   const sendPostRequest = () => {
-    return fetch(url, {
-      method: 'POST',
+    // return fetch(url, {
+    //   method: 'POST',
+    //   headers: {
+    //     'Accept': 'multipart/form-data',
+    //     'Content-type': 'multipart/form-data',
+    //   },
+      // body: JSON.stringify({
+      //   title: itemName,
+      //   desc: itemDescription,
+      //   item_pic: selectedImage.localUri,
+      // })
+    //   body: createFormData()
+    // })
+    //   .then(response => response.json())
+    //   .then(json => {
+    //     console.log(json);
+    //     navigateToHomeStack();
+    //   })
+    //   .catch(error => console.error(error));
+
+    axios.post(url, createFormData(), {
       headers: {
-        'Accept': 'application/json',
-        'Content-type': 'application/json',
-      },
-      body: JSON.stringify({
-        title: itemName,
-        desc: itemDescription,
-      })
+        'content-type': 'multipart/form-data'
+      }
     })
-    .then(response => response.json())
-    .then(json => {
-      console.log(json);
-      navigateToHomeStack();
-    })
-    .catch(error => console.error(error));
-  }
+         .then(res => {
+           console.log(res.data);
+         })
+         .catch(err => console.log(err))
+  };
 
   const openImagePickerAsync = async () => {
     let permissionResult = await ImagePicker.requestCameraRollPermissionsAsync();
@@ -66,11 +90,13 @@ const PostingCreationScreen = props => {
       quality: 0.5,
       aspect: [1,1],
     });
+
     if (pickerResult.cancelled === true) {
       return;
     }
 
-    setSelectedImage({ localUri: pickerResult.uri, remoteUri: null });
+    setSelectedImage({uri: pickerResult.uri, type: 'image/jpeg', name: 'photo.jpg'});
+    console.log(selectedImage);
   };
 
   const notifyMessage = msg => {
@@ -91,7 +117,7 @@ const PostingCreationScreen = props => {
   const renderImageSection = () => {
     if (selectedImage !== null) {
       return(
-        <Image source={{ uri: selectedImage.localUri }} style={styles.image} />
+        <Image source={{ uri: selectedImage.uri }} style={styles.image} />
       );
     } else {
       return(
@@ -102,7 +128,6 @@ const PostingCreationScreen = props => {
       );
     }
   }
-
 
   return (
     <Center style={styles.screen}>
