@@ -95,7 +95,10 @@ const PostingCreationScreen = props => {
       return;
     }
 
-    setSelectedImage({uri: pickerResult.uri, type: 'image/jpeg', name: 'photo.jpg'});
+    let imageName = (Math.random() * 1000).toString().concat('.jpg');
+    console.log(imageName);
+
+    setSelectedImage({uri: pickerResult.uri, type: 'image/jpeg', name: imageName});
     console.log(selectedImage);
   };
 
