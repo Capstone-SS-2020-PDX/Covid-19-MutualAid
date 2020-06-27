@@ -12,7 +12,9 @@ import { StyleSheet,
          AlertIOS,
        } from "react-native";
 import { AntDesign } from '@expo/vector-icons';
-
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { useHeaderHeight } from '@react-navigation/stack';
+import { windowHeight, windowWidth } from '../config/dimensions';
 import Center from '../components/Center';
 import CustomButton from '../components/CustomButton';
 import Colors from '../config/colors.js';
@@ -23,7 +25,7 @@ const PostingCreationScreen = props => {
   const { navigation } = props;
   const [itemName, setItemName] = useState('');
   const [itemDescription, setItemDescription] = useState('');
-
+  const height = useHeaderHeight();
   const sendPostRequest = () => {
     return fetch(url, {
       method: 'POST',
@@ -60,7 +62,15 @@ const PostingCreationScreen = props => {
   }
 
   return (
+    
     <Center style={styles.screen}>
+       <KeyboardAwareScrollView
+      style={styles}
+      resetScrollToCoords={{ x: 0, y: height }}
+      contentContainerStyle={styles.keyboardView}
+      scrollEnabled={true}
+    >
+      <View style={styles.imageContainer}>
       <Text style={styles.titleText}>
         List An Item
       </Text>
@@ -72,30 +82,34 @@ const PostingCreationScreen = props => {
           name='pluscircleo'
         />
       </TouchableOpacity>
+      </View>
       <View style={styles.inputContainer}>
         <Text style={styles.headerText}>Item Name</Text>
         <TextInput
           style={styles.textInput}
           onChangeText={text => setItemName(text)}
-          multiline={true}
+          multiline={false}
         >
         </TextInput>
-      </View>
-      <View style={styles.inputContainer}>
         <Text style={styles.headerText}>Item Description</Text>
         <TextInput
           style={styles.textInput}
           onChangeText={text => setItemDescription(text)}
           multiline={true}
           numberOfLines={3}
+          maxLength={180}
+          maxHeight={120}
         >
         </TextInput>
-      </View>
+        </View>
+
       <CustomButton
         onPress={() => sendPostRequest()}
+        style={{marginBottom: 10}}
       >
         <Text style={styles.buttonText}>Confirm</Text>
       </CustomButton>
+      </KeyboardAwareScrollView>
     </Center>
 
   );
@@ -109,6 +123,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
+  keyboardView: {
+    backgroundColor: Colors.light_shade4,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: windowWidth * 0.8,
+    height: windowHeight *0.7
+  },
   titleText: {
     fontSize: 40,
     fontWeight: 'bold',
@@ -116,6 +137,11 @@ const styles = StyleSheet.create({
   inputContainer: {
     width: '100%',
     alignItems: 'center',
+  },
+  imageContainer: {
+    width: '100%',
+    alignItems: 'center',
+    marginBottom: 20
   },
   headerText: {
     fontSize: 20,

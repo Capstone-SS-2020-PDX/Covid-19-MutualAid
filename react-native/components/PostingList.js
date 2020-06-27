@@ -34,6 +34,7 @@ const PostingList = props => {
       renderItem={renderPostingListItem}
       keyExtractor={(itemData, i) => i.toString()}
       data={postings}
+      showsVerticalScrollIndicator={false}
     />
   );
 };
