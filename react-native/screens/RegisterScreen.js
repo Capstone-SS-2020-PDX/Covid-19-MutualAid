@@ -25,31 +25,33 @@ const RegisterScreen = props => {
   return(
     <View style={styles.screen}>
       <Text style={styles.logo}>Register</Text>
-      <View style={styles.inputView}>
-        <TextInput
-          style={styles.inputText}
-          placeholder='Email...'
-          placeholderTextColor={Colors.dark_shade1}
-          onChangeText={text => setEmailText(text)}
-        />
-      </View>
-      <View style={styles.inputView}>
-        <TextInput
-          style={styles.inputText}
-          placeholder='Password...'
-          placeholderTextColor='#003f5c'
-          secureTextEntry
-          onChangeText={text => setPasswordText(text)}
-        />
-      </View>
-      <View style={styles.inputView}>
-        <TextInput
-          style={styles.inputText}
-          placeholder='Confirm Password...'
-          placeholderTextColor='#003f5c'
-          secureTextEntry
+      <View style={styles.inputContainer}>
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.inputText}
+            placeholder='Email...'
+            placeholderTextColor={Colors.placeholder_text}
+            onChangeText={text => setEmailText(text)}
+          />
+        </View>
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.inputText}
+            placeholder='Password...'
+            placeholderTextColor={Colors.placeholder_text}
+            secureTextEntry
+            onChangeText={text => setPasswordText(text)}
+          />
+        </View>
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.inputText}
+            placeholder='Confirm Password...'
+            placeholderTextColor={Colors.placeholder_text}
+            secureTextEntry
     /* onChangeText={text => setPasswordText(text)} */
-        />
+          />
+        </View>
       </View>
 
       <CustomButton
@@ -80,14 +82,26 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  inputView: {
+  inputContainer: {
     width: '80%',
-    backgroundColor: Colors.light_shade1,
+  },
+  inputView: {
+    backgroundColor: Colors.light_shade4,
     borderRadius: 25,
+    borderColor: Colors.placeholder_text,
+    borderWidth: 0.5,
     height: 50,
     marginBottom: 20,
     justifyContent: "center",
     padding: 20,
+    shadowColor: Colors.dark_shade1,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   inputText: {
     height: 50,

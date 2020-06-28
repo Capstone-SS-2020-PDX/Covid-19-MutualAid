@@ -33,6 +33,7 @@ const LoginScreen = props => {
           fadeDuration={ 300 }
         />
       </View>
+      <View style={styles.inputContainer}>
         <View style={styles.inputView}>
           <TextInput
             style={styles.inputText}
@@ -41,14 +42,15 @@ const LoginScreen = props => {
             onChangeText={text => setEmailText(text)}
           />
         </View>
-      <View style={styles.inputView}>
-        <TextInput
-          style={styles.inputText}
-          placeholder='Password...'
-          placeholderTextColor={Colors.placeholder_text}
-          secureTextEntry
-          onChangeText={text => setPasswordText(text)}
-        />
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.inputText}
+            placeholder='Password...'
+            placeholderTextColor={Colors.placeholder_text}
+            secureTextEntry
+            onChangeText={text => setPasswordText(text)}
+          />
+        </View>
       </View>
       <TouchableOpacity>
         <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
@@ -82,8 +84,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  inputView: {
+  inputContainer: {
     width: '80%',
+  },
+  inputView: {
     backgroundColor: Colors.light_shade4,
     borderRadius: 25,
     borderColor: Colors.placeholder_text,
@@ -94,8 +98,8 @@ const styles = StyleSheet.create({
     padding: 20,
     shadowColor: Colors.dark_shade1,
     shadowOffset: {
-	    width: 0,
-	    height: 2,
+      width: 0,
+      height: 2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
@@ -105,7 +109,7 @@ const styles = StyleSheet.create({
     // Dimesions.get as an example of responsive styling
     width: windowWidth * 0.7,
     height: windowWidth * 0.7,
-    marginBottom: windowHeight / 20,
+    marginBottom: windowHeight / 25,
     overflow: 'hidden',
   },
   image: {

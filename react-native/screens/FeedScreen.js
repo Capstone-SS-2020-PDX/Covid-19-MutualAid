@@ -60,12 +60,14 @@ const Feed = props => {
       ? <ActivityIndicator size='large'/>
       : <View style={styles.screen}>
           <View style={styles.searchContainer}>
-            <TextInput
-              style={styles.searchInput}
-              placeholder='Search for an item'
-              placeholderTextColor={Colors.dark_shade1}
-              onChangeText={text => handleSearch(text)}
-            />
+            <View style={styles.inputView}>
+              <TextInput
+                style={styles.inputText}
+                placeholder='Search for an item'
+                placeholderTextColor={Colors.placeholder_text}
+                onChangeText={text => handleSearch(text)}
+              />
+            </View>
           </View>
           <PostingList
             postings={searchPostings}
@@ -83,16 +85,27 @@ const styles = StyleSheet.create({
   },
   searchContainer: {
     width: '80%',
-    backgroundColor: Colors.light_shade1,
-    borderRadius: 25,
-    height: 40,
-    marginTop: 15,
-    marginBottom: 5,
-    justifyContent: 'center',
-    alignItems: 'center',
+    marginVertical: 15,
   },
-  searchInput: {
-    height: 30,
+  inputView: {
+    backgroundColor: Colors.light_shade4,
+    borderRadius: 25,
+    borderColor: Colors.placeholder_text,
+    borderWidth: 0.5,
+    justifyContent: "center",
+    paddingHorizontal: 20,
+    shadowColor: Colors.dark_shade1,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  inputText: {
+    height: 50,
+    color: Colors.dark_shade1,
   },
 });
 
