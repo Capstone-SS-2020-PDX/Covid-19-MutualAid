@@ -33,16 +33,17 @@ class PostingViewSet(ModelViewSet):
     def contact(self, request):
         if request.method == 'POST':
             post_id = request.data.get('postid', '')
-            send_to = request.data.get('addressto', '')
-            reply_to = request.data.get('addressfrom', '')
-            subject = "Common Goods test email"
+            recipient = request.data.get('addressto', '')
+            sender = request.data.get('addressfrom', '')
+            subj = "Common Goods test email"
             message = "Here's an email from Common Goods, about post %s!" % post_id
             send_mail(
-                subject,
-                message,
-                reply_to,
-                [send_to]
+                subject=subj,
+                body=message,
+                to=[recipient],
+                reply_to=sender
             )
+        return Response(request.data)
 
 class CommunityViewSet(ModelViewSet):
     """
