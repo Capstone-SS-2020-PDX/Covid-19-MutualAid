@@ -8,16 +8,21 @@ import { StyleSheet,
          ScrollView,
          Dimensions,
          ToastAndroid,
+         Image,
          Platform,
          AlertIOS,
        } from "react-native";
 import { AntDesign } from '@expo/vector-icons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { useHeaderHeight } from '@react-navigation/stack';
+import * as ImagePicker from 'expo-image-picker';
+import axios from 'axios';
+
 import { windowHeight, windowWidth } from '../config/dimensions';
 import Center from '../components/Center';
 import CustomButton from '../components/CustomButton';
 import Colors from '../config/colors.js';
+
 
 const url = "https:cellular-virtue-277000.uc.r.appspot.com/postings/?format=json";
 
@@ -25,26 +30,77 @@ const PostingCreationScreen = props => {
   const { navigation } = props;
   const [itemName, setItemName] = useState('');
   const [itemDescription, setItemDescription] = useState('');
+  const [selectedImage, setSelectedImage] = useState(null);
+
   const height = useHeaderHeight();
+
+
+  const createFormData = () => {
+    const data = new FormData();
+
+    data.append('title', itemName);
+    data.append('desc', itemDescription);
+    data.append('item_pic', selectedImage);
+
+    return data;
+  };
+
   const sendPostRequest = () => {
-    return fetch(url, {
-      method: 'POST',
+    // return fetch(url, {
+    //   method: 'POST',
+    //   headers: {
+    //     'Accept': 'multipart/form-data',
+    //     'Content-type': 'multipart/form-data',
+    //   },
+      // body: JSON.stringify({
+      //   title: itemName,
+      //   desc: itemDescription,
+      //   item_pic: selectedImage.localUri,
+      // })
+    //   body: createFormData()
+    // })
+    //   .then(response => response.json())
+    //   .then(json => {
+    //     console.log(json);
+    //     navigateToHomeStack();
+    //   })
+    //   .catch(error => console.error(error));
+
+    axios.post(url, createFormData(), {
       headers: {
-        'Accept': 'application/json',
-        'Content-type': 'application/json',
-      },
-      body: JSON.stringify({
-        title: itemName,
-        desc: itemDescription,
-      })
+        'content-type': 'multipart/form-data'
+      }
     })
-    .then(response => response.json())
-    .then(json => {
-      console.log(json);
-      navigateToHomeStack();
-    })
-    .catch(error => console.error(error));
-  }
+         .then(res => {
+           console.log(res.data);
+         })
+         .catch(err => console.log(err))
+  };
+
+  const openImagePickerAsync = async () => {
+    let permissionResult = await ImagePicker.requestCameraRollPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      alert('Permission to access camera roll is required!');
+      return;
+    }
+
+    let pickerResult = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      quality: 0.5,
+      aspect: [1,1],
+    });
+
+    if (pickerResult.cancelled === true) {
+      return;
+    }
+
+    let imageName = (Math.random() * 1000).toString().concat('.jpg');
+    console.log(imageName);
+
+    setSelectedImage({uri: pickerResult.uri, type: 'image/jpeg', name: imageName});
+    console.log(selectedImage);
+  };
 
   const notifyMessage = msg => {
     if (Platform.OS === 'android') {
@@ -61,54 +117,65 @@ const PostingCreationScreen = props => {
     console.log("in navigateToHomeStack");
   }
 
-  return (
-    
-    <Center style={styles.screen}>
-       <KeyboardAwareScrollView
-      style={styles}
-      resetScrollToCoords={{ x: 0, y: height }}
-      contentContainerStyle={styles.keyboardView}
-      scrollEnabled={true}
-    >
-      <View style={styles.imageContainer}>
-      <Text style={styles.titleText}>
-        List An Item
-      </Text>
-      <TouchableOpacity
-        onPress={() => console.log('Add Image!')}
-      >
+  const renderImageSection = () => {
+    if (selectedImage !== null) {
+      return(
+        <Image source={{ uri: selectedImage.uri }} style={styles.image} />
+      );
+    } else {
+      return(
         <AntDesign
           size={100}
           name='pluscircleo'
         />
-      </TouchableOpacity>
-      </View>
-      <View style={styles.inputContainer}>
-        <Text style={styles.headerText}>Item Name</Text>
-        <TextInput
-          style={styles.textInput}
-          onChangeText={text => setItemName(text)}
-          multiline={false}
-        >
-        </TextInput>
-        <Text style={styles.headerText}>Item Description</Text>
-        <TextInput
-          style={styles.textInput}
-          onChangeText={text => setItemDescription(text)}
-          multiline={true}
-          numberOfLines={3}
-          maxLength={180}
-          maxHeight={120}
-        >
-        </TextInput>
+      );
+    }
+  }
+
+  return (
+    <Center style={styles.screen}>
+      <KeyboardAwareScrollView
+        style={styles}
+        resetScrollToCoords={{ x: 0, y: height }}
+        contentContainerStyle={styles.keyboardView}
+        scrollEnabled={true}
+      >
+        <View style={styles.imageContainer}>
+          <Text style={styles.titleText}>
+            List An Item
+          </Text>
+          <TouchableOpacity
+            onPress={openImagePickerAsync}
+          >
+            {renderImageSection()}
+          </TouchableOpacity>
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.headerText}>Item Name</Text>
+          <TextInput
+            style={styles.textInput}
+            onChangeText={text => setItemName(text)}
+            multiline={false}
+          >
+          </TextInput>
+          <Text style={styles.headerText}>Item Description</Text>
+          <TextInput
+            style={styles.textInput}
+            onChangeText={text => setItemDescription(text)}
+            multiline={true}
+            numberOfLines={3}
+            maxLength={180}
+            maxHeight={120}
+          >
+          </TextInput>
         </View>
 
-      <CustomButton
-        onPress={() => sendPostRequest()}
-        style={{marginBottom: 10}}
-      >
-        <Text style={styles.buttonText}>Confirm</Text>
-      </CustomButton>
+        <CustomButton
+          onPress={() => sendPostRequest()}
+          style={{marginBottom: 10}}
+        >
+          <Text style={styles.buttonText}>Confirm</Text>
+        </CustomButton>
       </KeyboardAwareScrollView>
     </Center>
 
@@ -159,6 +226,10 @@ const styles = StyleSheet.create({
   buttonText: {
     color: Colors.light_shade1,
     fontSize: 24,
+  },
+  image: {
+    width: 200,
+    height: 200,
   }
 });
 
