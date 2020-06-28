@@ -23,8 +23,8 @@ import Center from '../components/Center';
 import CustomButton from '../components/CustomButton';
 import Colors from '../config/colors.js';
 
-
 const url = "https:cellular-virtue-277000.uc.r.appspot.com/postings/?format=json";
+
 
 const PostingCreationScreen = props => {
   const { navigation } = props;
@@ -37,7 +37,7 @@ const PostingCreationScreen = props => {
 
   const height = useHeaderHeight();
 
-
+  // Create the data object in correct format to be sent off the server
   const createFormData = () => {
     const data = new FormData();
 
@@ -48,6 +48,7 @@ const PostingCreationScreen = props => {
     return data;
   };
 
+  // handle sending the request
   const sendPostRequest = () => {
     return fetch(url, {
       method: 'POST',
@@ -71,6 +72,7 @@ const PostingCreationScreen = props => {
       });
   };
 
+  // Handles letting the user select an image from their library
   const openImagePickerAsync = async () => {
     let permissionResult = await ImagePicker.requestCameraRollPermissionsAsync();
 
@@ -96,6 +98,7 @@ const PostingCreationScreen = props => {
     console.log(selectedImage);
   };
 
+  // clears the input fields and state for the input
   const clearInputs = () => {
     setItemName('');
     setItemDescription('');
@@ -105,6 +108,7 @@ const PostingCreationScreen = props => {
     descriptionInputRef.current.clear();
   };
 
+  // Displays a notification message, style dependent on platform
   const notifyMessage = msg => {
     if (Platform.OS === 'android') {
       ToastAndroid.show(msg, ToastAndroid.SHORT)
@@ -113,11 +117,12 @@ const PostingCreationScreen = props => {
     }
   }
 
+  // Navigates to the Home Screen stack when called
   const navigateToHomeStack = () => {
     navigation.navigate('Home', {screen: 'Feed'})
-    console.log("in navigateToHomeStack");
   }
 
+  // Renders either the image returned from the image picker or a plus icon
   const renderImageSection = () => {
     if (selectedImage !== null) {
       return(
@@ -181,7 +186,6 @@ const PostingCreationScreen = props => {
         </CustomButton>
       </KeyboardAwareScrollView>
     </Center>
-
   );
 }
 

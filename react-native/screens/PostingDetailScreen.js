@@ -52,6 +52,7 @@ const PostingDetailScreen = props => {
       .finally(() => {});
   }
 
+
   return(
     <Center style={styles.screen}>
         <View style={styles.detailTitle}>
