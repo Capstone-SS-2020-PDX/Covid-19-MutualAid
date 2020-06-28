@@ -78,6 +78,7 @@ const Feed = props => {
                 placeholder='Search for an item'
                 placeholderTextColor={Colors.placeholder_text}
                 onChangeText={text => handleSearch(text)}
+                returnKeyType='done'
                 ref={searchInputRef}
               />
               <TouchableOpacity

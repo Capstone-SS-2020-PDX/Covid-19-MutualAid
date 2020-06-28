@@ -15,7 +15,7 @@ import EditPostingScreen from './EditPostingScreen';
 import Colors from '../config/colors';
 import { windowHeight, windowWidth } from '../config/dimensions';
 
-const url = '';
+const url = 'https://cellular-virtue-277000.uc.r.appspot.com/postings/contact/';
 
 const PostingDetailScreen = props => {
   const picUrl = 'https://picsum.photos/id/237/200';
@@ -25,18 +25,28 @@ const PostingDetailScreen = props => {
   const handleReachOut = () => {
     if (emailText.length > 0) {
       console.log('Sending email from ' + emailText + ' to post with id: ' + route.params.id);
+      sendEmail(emailText, route.params.id);
     } else {
       console.log('No email provided');
     }
   };
 
-  const sendEmail = (email, id) => {
+  const sendEmail = (fromEmail, id) => {
+    const toEmail = 'canadianfishturkey@gmail.com';
+    const request = { postid: id, addressfrom: fromEmail, addressto: toEmail };
+    const requestJSON = JSON.stringify(request);
+
     fetch(url, {
-      method: 'GET',
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-type': 'application/json',
+      },
+      body: requestJSON,
     })
-      .then(response => response.json())
-      .then(json => {
-        console.log('Response from sendEmail: ' + json);
+      .then(response => response.text())
+      .then(text => {
+        console.log('Response from sendEmail: ' + text);
       })
       .catch(error => console.log('Error from sendEmail: ' + error))
       .finally(() => {});
@@ -67,6 +77,8 @@ const PostingDetailScreen = props => {
           style={styles.inputText}
           placeholder='Enter your email...'
           placeholderTextColor={Colors.placeholder_text}
+          keyboardType='email-address'
+          returnKeyType='done'
           onChangeText={text => setEmailText(text)}
         />
       </View>
@@ -157,6 +169,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+  },
+  inputText: {
+    width: '90%',
+    color: Colors.dark_shade1,
   },
 });
 

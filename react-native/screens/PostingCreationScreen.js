@@ -56,9 +56,13 @@ const PostingCreationScreen = props => {
       .then(response => response.json())
       .then(json => {
         console.log(json);
+        notifyMessage('Posting Sucessfully Created!');
         navigateToHomeStack();
       })
-      .catch(error => console.error(error));
+      .catch(error => {
+        notifyMessage('Oops! Something went wrong...');
+        console.log(error)
+      });
   };
 
   const openImagePickerAsync = async () => {
@@ -96,8 +100,6 @@ const PostingCreationScreen = props => {
 
   const navigateToHomeStack = () => {
     navigation.navigate('Home', {screen: 'Feed'})
-    notifyMessage("Success");
-
     console.log("in navigateToHomeStack");
   }
 
