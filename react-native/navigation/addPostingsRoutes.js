@@ -50,7 +50,9 @@ export const addPostingsRoutes = (Stack, navigation) => {
             component={PostingDetailScreen}
             options={
                 ({route, navigation}) => ({
-                  headerTitle: route.params.title,
+                  headerTitle: route.params.request
+                    ? `Requesting ${route.params.title}`
+                    : `Offering ${route.params.title}`,
                     ...headerOptions,
                     headerRight: () => handleEdit(route),
                 })
