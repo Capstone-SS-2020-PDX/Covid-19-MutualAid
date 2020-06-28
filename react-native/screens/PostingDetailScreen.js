@@ -15,6 +15,8 @@ import EditPostingScreen from './EditPostingScreen';
 import Colors from '../config/colors';
 import { windowHeight, windowWidth } from '../config/dimensions';
 
+const url = '';
+
 const PostingDetailScreen = props => {
   const picUrl = 'https://picsum.photos/id/237/200';
   const { route, navigation } = props;
@@ -22,11 +24,23 @@ const PostingDetailScreen = props => {
 
   const handleReachOut = () => {
     if (emailText.length > 0) {
-      console.log('Sending email');
+      console.log('Sending email from ' + emailText + ' to post with id: ' + route.params.id);
     } else {
       console.log('No email provided');
     }
   };
+
+  const sendEmail = (email, id) => {
+    fetch(url, {
+      method: 'GET',
+    })
+      .then(response => response.json())
+      .then(json => {
+        console.log('Response from sendEmail: ' + json);
+      })
+      .catch(error => console.log('Error from sendEmail: ' + error))
+      .finally(() => {});
+  }
 
   return(
     <Center style={styles.screen}>
@@ -53,7 +67,6 @@ const PostingDetailScreen = props => {
           style={styles.inputText}
           placeholder='Enter your email...'
           placeholderTextColor={Colors.placeholder_text}
-          secureTextEntry
           onChangeText={text => setEmailText(text)}
         />
       </View>
