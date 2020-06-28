@@ -2,11 +2,26 @@ import rest_framework as rf
 from rest_framework.decorators import action
 from django.contrib.auth import get_user
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
 from .models import Posting, Community, UserProfile
 from .serializers import PostingSerializer, CommunitySerializer, UserProfileSerializer, UserSerializer
-from rest_framework import viewsets, permissions
+from .forms import ModelFormWithFileField
 
-
+def UserContact(request):
+    if request.method == 'GET':
+        user_id = request.query_params.get('userid', '')
+        send_to = request.query_params.get('addressto', '')
+        reply_to = request.query_params.get('addressfrom', '')
+        subject = "Common Goods test email"
+        message = "Here's an email from Common Goods, about user %s!" % user_id
+        send_mail(
+            subject,
+            message,
+            reply_to,
+            [send_to]
+        )
+        
+        
 class PostingViewSet(rf.viewsets.ModelViewSet):
     queryset = Posting.objects.all()
     serializer_class = PostingSerializer
