@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { StyleSheet,
          Text,
          TextInput,
@@ -32,6 +32,9 @@ const PostingCreationScreen = props => {
   const [itemDescription, setItemDescription] = useState('');
   const [selectedImage, setSelectedImage] = useState(null);
 
+  const nameInputRef = useRef(null);
+  const descriptionInputRef = useRef(null);
+
   const height = useHeaderHeight();
 
 
@@ -62,6 +65,9 @@ const PostingCreationScreen = props => {
       .catch(error => {
         notifyMessage('Oops! Something went wrong...');
         console.log(error)
+      })
+      .finally(() => {
+        clearInputs();
       });
   };
 
@@ -88,6 +94,15 @@ const PostingCreationScreen = props => {
 
     setSelectedImage({uri: pickerResult.uri, type: 'image/jpeg', name: imageName});
     console.log(selectedImage);
+  };
+
+  const clearInputs = () => {
+    setItemName('');
+    setItemDescription('');
+    setSelectedImage(null);
+
+    nameInputRef.current.clear();
+    descriptionInputRef.current.clear();
   };
 
   const notifyMessage = msg => {
@@ -142,6 +157,7 @@ const PostingCreationScreen = props => {
             style={styles.textInput}
             onChangeText={text => setItemName(text)}
             multiline={false}
+            ref={nameInputRef}
           >
           </TextInput>
           <Text style={styles.headerText}>Item Description</Text>
@@ -152,6 +168,7 @@ const PostingCreationScreen = props => {
             numberOfLines={3}
             maxLength={180}
             maxHeight={120}
+            ref={descriptionInputRef}
           >
           </TextInput>
         </View>
