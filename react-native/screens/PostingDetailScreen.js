@@ -1,13 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View,
          Text,
          Button,
          TouchableOpacity,
          Image,
          ScrollView,
-         StyleSheet
+         StyleSheet,
+         TextInput,
        } from 'react-native';
-
 import Center from '../components/Center';
 import CustomButton from '../components/CustomButton';
 import EditPostingScreen from './EditPostingScreen';
@@ -18,6 +18,15 @@ import { windowHeight, windowWidth } from '../config/dimensions';
 const PostingDetailScreen = props => {
   const picUrl = 'https://picsum.photos/id/237/200';
   const { route, navigation } = props;
+  const [emailText, setEmailText] = useState('');
+
+  const handleReachOut = () => {
+    if (emailText.length > 0) {
+      console.log('Sending email');
+    } else {
+      console.log('No email provided');
+    }
+  };
 
   return(
     <Center style={styles.screen}>
@@ -38,13 +47,24 @@ const PostingDetailScreen = props => {
       <ScrollView style={styles.detailScroll}>
         <Text style={styles.bodyText}>{route.params.description}</Text>
       </ScrollView>
+      <View style={styles.inputContainer}>
+      <View style={styles.inputView}>
+        <TextInput
+          style={styles.inputText}
+          placeholder='Enter your email...'
+          placeholderTextColor={Colors.placeholder_text}
+          secureTextEntry
+          onChangeText={text => setEmailText(text)}
+        />
+      </View>
+      </View>
 
-        <CustomButton
-          style={styles.reachOutButton}
-          onPress={() => console.log('Reach out pressed!')}
-        >
-          <Text style={styles.reachOutButtonText}>Reach Out!</Text>
-        </CustomButton>
+      <CustomButton
+        style={styles.reachOutButton}
+        onPress={handleReachOut}
+      >
+        <Text style={styles.reachOutButtonText}>Reach Out!</Text>
+      </CustomButton>
 
     </Center>
   );
@@ -99,6 +119,31 @@ const styles = StyleSheet.create({
   reachOutButtonText: {
     color: 'white',
     fontSize: 24,
+  },
+  inputContainer: {
+    width: '80%',
+  },
+  inputView: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+
+    backgroundColor: Colors.light_shade4,
+    borderRadius: 25,
+    borderColor: Colors.placeholder_text,
+    borderWidth: 0.5,
+    height: 50,
+    marginBottom: 20,
+    paddingHorizontal: 20,
+
+    shadowColor: Colors.dark_shade1,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
 });
 

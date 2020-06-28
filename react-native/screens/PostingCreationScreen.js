@@ -46,35 +46,19 @@ const PostingCreationScreen = props => {
   };
 
   const sendPostRequest = () => {
-    // return fetch(url, {
-    //   method: 'POST',
-    //   headers: {
-    //     'Accept': 'multipart/form-data',
-    //     'Content-type': 'multipart/form-data',
-    //   },
-      // body: JSON.stringify({
-      //   title: itemName,
-      //   desc: itemDescription,
-      //   item_pic: selectedImage.localUri,
-      // })
-    //   body: createFormData()
-    // })
-    //   .then(response => response.json())
-    //   .then(json => {
-    //     console.log(json);
-    //     navigateToHomeStack();
-    //   })
-    //   .catch(error => console.error(error));
-
-    axios.post(url, createFormData(), {
+    return fetch(url, {
+      method: 'POST',
       headers: {
-        'content-type': 'multipart/form-data'
-      }
+        'content-type': 'multipart/form-data',
+      },
+      body: createFormData(),
     })
-         .then(res => {
-           console.log(res.data);
-         })
-         .catch(err => console.log(err))
+      .then(response => response.json())
+      .then(json => {
+        console.log(json);
+        navigateToHomeStack();
+      })
+      .catch(error => console.error(error));
   };
 
   const openImagePickerAsync = async () => {
