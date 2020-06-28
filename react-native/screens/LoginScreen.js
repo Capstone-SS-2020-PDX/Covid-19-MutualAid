@@ -37,7 +37,7 @@ const LoginScreen = props => {
           <TextInput
             style={styles.inputText}
             placeholder='Email...'
-            placeholderTextColor={Colors.dark_shade1}
+            placeholderTextColor={Colors.placeholder_text}
             onChangeText={text => setEmailText(text)}
           />
         </View>
@@ -45,14 +45,14 @@ const LoginScreen = props => {
         <TextInput
           style={styles.inputText}
           placeholder='Password...'
-          placeholderTextColor='#003f5c'
+          placeholderTextColor={Colors.placeholder_text}
           secureTextEntry
           onChangeText={text => setPasswordText(text)}
         />
       </View>
-      {/* <TouchableOpacity> */}
-      {/*   <Text style={styles.forgotPasswordText}>Forgot Password?</Text> */}
-      {/* </TouchableOpacity> */}
+      <TouchableOpacity>
+        <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+      </TouchableOpacity>
 
       <CustomButton
         style={styles.loginButton}
@@ -84,14 +84,15 @@ const styles = StyleSheet.create({
   },
   inputView: {
     width: '80%',
-    backgroundColor: Colors.light_shade1,
+    backgroundColor: Colors.light_shade4,
     borderRadius: 25,
+    borderColor: Colors.placeholder_text,
+    borderWidth: 0.5,
     height: 50,
     marginBottom: 20,
     justifyContent: "center",
     padding: 20,
-    borderWidth: 1,
-    shadowColor: "#000",
+    shadowColor: Colors.dark_shade1,
     shadowOffset: {
 	    width: 0,
 	    height: 2,
@@ -116,7 +117,7 @@ const styles = StyleSheet.create({
     color: Colors.dark_shade1,
   },
   forgotPasswordText: {
-    color: Colors.contrast3,
+    color: Colors.contrast2,
     fontSize: 15,
   },
   loginText: {

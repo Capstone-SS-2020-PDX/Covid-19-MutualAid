@@ -10,6 +10,7 @@ const colors = {
     light_shade1: 'rgb(247, 255, 247)', // mint cream
     light_shade2: 'rgb(229, 232, 225)', // platinum
     light_shade3: 'rgb(217, 226, 216)', // timberwolf
-    light_shade4: 'rgb(255, 255, 255)' // white
+    light_shade4: 'rgb(255, 255, 255)', // white
+    placeholder_text: 'rgb(150,150,150)', // light gray
   };
  export default colors;
