@@ -7,6 +7,7 @@ import { View,
          StyleSheet,
          TouchableOpacity
        } from 'react-native';
+import { AntDesign } from '@expo/vector-icons';
 
 import { useInputState } from '../hooks/useInputState';
 import Center from '../components/Center';
@@ -35,14 +36,24 @@ const LoginScreen = props => {
       </View>
       <View style={styles.inputContainer}>
         <View style={styles.inputView}>
+          <AntDesign
+            name={'user'}
+            size={20}
+            style={styles.icon}
+          />
           <TextInput
             style={styles.inputText}
-            placeholder='Email...'
+            placeholder='User Name...'
             placeholderTextColor={Colors.placeholder_text}
             onChangeText={text => setEmailText(text)}
           />
         </View>
         <View style={styles.inputView}>
+          <AntDesign
+            name={'lock'}
+            size={20}
+            style={styles.icon}
+          />
           <TextInput
             style={styles.inputText}
             placeholder='Password...'
@@ -88,14 +99,18 @@ const styles = StyleSheet.create({
     width: '80%',
   },
   inputView: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+
     backgroundColor: Colors.light_shade4,
     borderRadius: 25,
     borderColor: Colors.placeholder_text,
     borderWidth: 0.5,
     height: 50,
     marginBottom: 20,
-    justifyContent: "center",
     padding: 20,
+
     shadowColor: Colors.dark_shade1,
     shadowOffset: {
       width: 0,
@@ -117,6 +132,7 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   inputText: {
+    width: '90%',
     height: 50,
     color: Colors.dark_shade1,
   },
@@ -136,6 +152,9 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.secondary,
     marginTop: 20,
     marginBottom: 20,
+  },
+  icon: {
+    width: '10%',
   },
 });
 
