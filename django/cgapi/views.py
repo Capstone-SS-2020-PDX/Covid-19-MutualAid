@@ -5,21 +5,6 @@ from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from .models import Posting, Community, UserProfile
 from .serializers import PostingSerializer, CommunitySerializer, UserProfileSerializer, UserSerializer
-from .forms import ModelFormWithFileField
-
-def UserContact(request):
-    if request.method == 'GET':
-        user_id = request.query_params.get('userid', '')
-        send_to = request.query_params.get('addressto', '')
-        reply_to = request.query_params.get('addressfrom', '')
-        subject = "Common Goods test email"
-        message = "Here's an email from Common Goods, about user %s!" % user_id
-        send_mail(
-            subject,
-            message,
-            reply_to,
-            [send_to]
-        )
         
         
 class PostingViewSet(rf.viewsets.ModelViewSet):
@@ -42,6 +27,21 @@ class PostingViewSet(rf.viewsets.ModelViewSet):
             return rf.response.Response(serializer.data)
         else:
             return rf.response.Response(status=400)
+            
+    @action(detail=True, methods=['GET'])
+    def contact(self, request):
+        if request.method == 'GET':
+            user_id = request.query_params.get('userid', '')
+            send_to = request.query_params.get('addressto', '')
+            reply_to = request.query_params.get('addressfrom', '')
+            subject = "Common Goods test email"
+            message = "Here's an email from Common Goods, about user %s!" % user_id
+            send_mail(
+                subject,
+                message,
+                reply_to,
+                [send_to]
+            )
 
 class CommunityViewSet(rf.viewsets.ModelViewSet):
     """
