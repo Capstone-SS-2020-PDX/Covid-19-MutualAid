@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { View,
          Text,
          TextInput,
          Button,
          StyleSheet,
          FlatList,
-         ActivityIndicator
+         ActivityIndicator,
+         TouchableOpacity,
        } from 'react-native';
+import { Ionicons, Feather } from '@expo/vector-icons';
 
 import Center from '../components/Center';
 import PostingList from '../components/PostingList';
@@ -21,6 +23,7 @@ const Feed = props => {
   const [postings, setPostings] = useState([]);
   const [searchPostings, setSearchPostings] = useState([]);
   const [searchText, setSearchText] = useState('');
+  const searchInputRef = useRef(null);
 
   useEffect(() => {
     fetch(url, {
@@ -51,21 +54,42 @@ const Feed = props => {
     );
 
     setSearchPostings(filteredPostings);
-    console.log(searchText);
-    console.log(searchPostings);
-  }
+  };
+
+  const handleClearSearchInput = () => {
+    setSearchText('');
+    setSearchPostings(postings);
+    searchInputRef.current.clear();
+  };
 
   return(
     isLoading
       ? <ActivityIndicator size='large'/>
       : <View style={styles.screen}>
           <View style={styles.searchContainer}>
-            <TextInput
-              style={styles.searchInput}
-              placeholder='Search for an item'
-              placeholderTextColor={Colors.dark_shade1}
-              onChangeText={text => handleSearch(text)}
-            />
+            <View style={styles.inputView}>
+              <Ionicons
+                name={'ios-search'}
+                size={23}
+                style={styles.inputIcon}
+              />
+              <TextInput
+                style={styles.inputText}
+                placeholder='Search for an item'
+                placeholderTextColor={Colors.placeholder_text}
+                onChangeText={text => handleSearch(text)}
+                ref={searchInputRef}
+              />
+              <TouchableOpacity
+                style={styles.inputIcon}
+                onPress={() => handleClearSearchInput()}
+              >
+                <Feather
+                  name={'x-circle'}
+                  size={20}
+                />
+              </TouchableOpacity>
+            </View>
           </View>
           <PostingList
             postings={searchPostings}
@@ -82,17 +106,36 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   searchContainer: {
-    width: '80%',
-    backgroundColor: Colors.light_shade1,
-    borderRadius: 25,
-    height: 40,
-    marginTop: 15,
-    marginBottom: 5,
+    width: '90%',
+    marginVertical: 15,
+  },
+  inputView: {
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+
+    backgroundColor: Colors.light_shade4,
+    borderRadius: 25,
+    borderColor: Colors.placeholder_text,
+    borderWidth: 0.5,
+    paddingLeft: 20,
+    paddingRight: 10,
+    shadowColor: Colors.dark_shade1,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
-  searchInput: {
-    height: 30,
+  inputText: {
+    height: 50,
+    width: '80%',
+    color: Colors.dark_shade1,
+  },
+  inputIcon: {
+    width: '10%',
   },
 });
 

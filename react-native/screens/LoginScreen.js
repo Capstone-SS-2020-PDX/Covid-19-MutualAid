@@ -7,6 +7,7 @@ import { View,
          StyleSheet,
          TouchableOpacity
        } from 'react-native';
+import { AntDesign } from '@expo/vector-icons';
 
 import { useInputState } from '../hooks/useInputState';
 import Center from '../components/Center';
@@ -33,26 +34,38 @@ const LoginScreen = props => {
           fadeDuration={ 300 }
         />
       </View>
+      <View style={styles.inputContainer}>
         <View style={styles.inputView}>
+          <AntDesign
+            name={'user'}
+            size={20}
+            style={styles.icon}
+          />
           <TextInput
             style={styles.inputText}
-            placeholder='Email...'
-            placeholderTextColor={Colors.dark_shade1}
+            placeholder='User Name...'
+            placeholderTextColor={Colors.placeholder_text}
             onChangeText={text => setEmailText(text)}
           />
         </View>
-      <View style={styles.inputView}>
-        <TextInput
-          style={styles.inputText}
-          placeholder='Password...'
-          placeholderTextColor='#003f5c'
-          secureTextEntry
-          onChangeText={text => setPasswordText(text)}
-        />
+        <View style={styles.inputView}>
+          <AntDesign
+            name={'lock'}
+            size={20}
+            style={styles.icon}
+          />
+          <TextInput
+            style={styles.inputText}
+            placeholder='Password...'
+            placeholderTextColor={Colors.placeholder_text}
+            secureTextEntry
+            onChangeText={text => setPasswordText(text)}
+          />
+        </View>
       </View>
-      {/* <TouchableOpacity> */}
-      {/*   <Text style={styles.forgotPasswordText}>Forgot Password?</Text> */}
-      {/* </TouchableOpacity> */}
+      <TouchableOpacity>
+        <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+      </TouchableOpacity>
 
       <CustomButton
         style={styles.loginButton}
@@ -82,19 +95,26 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  inputView: {
+  inputContainer: {
     width: '80%',
-    backgroundColor: Colors.light_shade1,
+  },
+  inputView: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+
+    backgroundColor: Colors.light_shade4,
     borderRadius: 25,
+    borderColor: Colors.placeholder_text,
+    borderWidth: 0.5,
     height: 50,
     marginBottom: 20,
-    justifyContent: "center",
-    padding: 20,
-    borderWidth: 1,
-    shadowColor: "#000",
+    paddingHorizontal: 20,
+
+    shadowColor: Colors.dark_shade1,
     shadowOffset: {
-	    width: 0,
-	    height: 2,
+      width: 0,
+      height: 2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
@@ -104,7 +124,7 @@ const styles = StyleSheet.create({
     // Dimesions.get as an example of responsive styling
     width: windowWidth * 0.7,
     height: windowWidth * 0.7,
-    marginBottom: windowHeight / 20,
+    marginBottom: windowHeight / 25,
     overflow: 'hidden',
   },
   image: {
@@ -112,11 +132,12 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   inputText: {
+    width: '90%',
     height: 50,
     color: Colors.dark_shade1,
   },
   forgotPasswordText: {
-    color: Colors.contrast3,
+    color: Colors.contrast2,
     fontSize: 15,
   },
   loginText: {
@@ -131,6 +152,9 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.secondary,
     marginTop: 20,
     marginBottom: 20,
+  },
+  icon: {
+    width: '10%',
   },
 });
 
