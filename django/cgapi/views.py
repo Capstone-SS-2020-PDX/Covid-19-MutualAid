@@ -29,14 +29,14 @@ class PostingViewSet(ModelViewSet):
         else:
             return Response(status=400)
             
-    @action(detail=True, methods=['GET'])
+    @action(detail=False, methods=['POST'])
     def contact(self, request):
-        if request.method == 'GET':
-            user_id = request.query_params.get('userid', '')
+        if request.method == 'POST':
+            post_id = request.query_params.get('postid', '')
             send_to = request.query_params.get('addressto', '')
             reply_to = request.query_params.get('addressfrom', '')
             subject = "Common Goods test email"
-            message = "Here's an email from Common Goods, about user %s!" % user_id
+            message = "Here's an email from Common Goods, about post %s!" % post_id
             send_mail(
                 subject,
                 message,
