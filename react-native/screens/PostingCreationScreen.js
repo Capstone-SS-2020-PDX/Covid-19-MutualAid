@@ -4,6 +4,7 @@ import { StyleSheet,
          TextInput,
          View,
          Button,
+         Switch,
          TouchableOpacity,
          ScrollView,
          Dimensions,
@@ -23,27 +24,37 @@ import Center from '../components/Center';
 import CustomButton from '../components/CustomButton';
 import Colors from '../config/colors.js';
 
-const url = "https:cellular-virtue-277000.uc.r.appspot.com/postings/?format=json";
 
+const url = "https:cellular-virtue-277000.uc.r.appspot.com/postings/?format=json";
 
 const PostingCreationScreen = props => {
   const { navigation } = props;
   const [itemName, setItemName] = useState('');
   const [itemDescription, setItemDescription] = useState('');
   const [selectedImage, setSelectedImage] = useState(null);
+  const [itemCount, setItemCount] = useState(1);
+  const [isRequestSwitchEnabled, setIsRequestSwitchEnabled] = useState(false);
+  const [isCategorySwitchEnabled, setIsCategorySwitchEnabled] = useState(false);
 
   const nameInputRef = useRef(null);
   const descriptionInputRef = useRef(null);
+  const itemCountInputRef = useRef(null);
 
   const height = useHeaderHeight();
 
   // Create the data object in correct format to be sent off the server
   const createFormData = () => {
+    const categoryValue = isCategorySwitchEnabled ? 'services' : 'goods';
+    const requestValue = isRequestSwitchEnabled ? true : false;
+
     const data = new FormData();
 
     data.append('title', itemName);
     data.append('desc', itemDescription);
     data.append('item_pic', selectedImage);
+    data.append('count', itemCount);
+    data.append('category', categoryValue);
+    data.append('request', requestValue);
 
     return data;
   };
@@ -103,9 +114,14 @@ const PostingCreationScreen = props => {
     setItemName('');
     setItemDescription('');
     setSelectedImage(null);
+    setItemCount(1);
+
+    setIsRequestSwitchEnabled(false);
+    setIsCategorySwitchEnabled(false);
 
     nameInputRef.current.clear();
     descriptionInputRef.current.clear();
+    itemCountInputRef.current.clear();
   };
 
   // Displays a notification message, style dependent on platform
@@ -131,52 +147,114 @@ const PostingCreationScreen = props => {
     } else {
       return(
         <AntDesign
-          size={100}
+          size={150}
           name='pluscircleo'
         />
       );
     }
   }
 
+  const toggleRequestSwitch = () => {
+    setIsRequestSwitchEnabled(previousState => !previousState);
+  };
+
+  const toggleCategorySwitch = () => {
+    setIsCategorySwitchEnabled(previousState => !previousState);
+  };
+
   return (
     <Center style={styles.screen}>
       <KeyboardAwareScrollView
-        style={styles}
         resetScrollToCoords={{ x: 0, y: height }}
         contentContainerStyle={styles.keyboardView}
         scrollEnabled={true}
       >
         <View style={styles.imageContainer}>
-          <Text style={styles.titleText}>
-            List An Item
-          </Text>
           <TouchableOpacity
             onPress={openImagePickerAsync}
           >
             {renderImageSection()}
           </TouchableOpacity>
         </View>
-        <View style={styles.inputContainer}>
-          <Text style={styles.headerText}>Item Name</Text>
-          <TextInput
-            style={styles.textInput}
-            onChangeText={text => setItemName(text)}
-            multiline={false}
-            ref={nameInputRef}
-          >
-          </TextInput>
-          <Text style={styles.headerText}>Item Description</Text>
-          <TextInput
-            style={styles.textInput}
-            onChangeText={text => setItemDescription(text)}
-            multiline={true}
-            numberOfLines={3}
-            maxLength={180}
-            maxHeight={120}
-            ref={descriptionInputRef}
-          >
-          </TextInput>
-        </View>
+          <View style={styles.inputContainer}>
+            <View style={styles.inputView}>
+              <TextInput
+                style={styles.inputText}
+                placeholder='Item Name...'
+                placeholderTextColor={Colors.placeholder_text}
+                maxLength={30}
+                returnKeyType='next'
+                onChangeText={text => setItemName(text)}
+                ref={nameInputRef}
+              />
+            </View>
+            <View style={styles.inputView}>
+              <TextInput
+                style={styles.inputText}
+                placeholder='Item Description...'
+                placeholderTextColor={Colors.placeholder_text}
+                keyboardType='email-address'
+                returnKeyType='done'
+                multiline={true}
+                numberOfLines={3}
+                onChangeText={text => setItemDescription(text)}
+                ref={descriptionInputRef}
+              />
+            </View>
+            <View style={styles.switchRow}>
+              <View style={styles.switchColumn}>
+                <Text style={styles.switchTitle}>Request?</Text>
+                <Switch
+                  onValueChange={toggleRequestSwitch}
+                  value={isRequestSwitchEnabled}
+                  trackColor={{ false: "#767577", true: Colors.primary }}
+                  thumbColor={isRequestSwitchEnabled ? Colors.secondary : "#f4f3f4"}
+                />
+              </View>
+              <View style={styles.switchColumn}>
+                <Text style={styles.switchTitle}>Count</Text>
+                <View style={styles.countInputView}>
+                  <TextInput
+                    style={styles.countInputText}
+                    keyboardType='numeric'
+                    returnKeyType='done'
+                    onChangeText={text => setItemCount(text)}
+                    ref={itemCountInputRef}
+                  />
+                </View>
+              </View>
+              <View style={styles.switchColumn}>
+                <Text style={styles.switchTitle}>Category</Text>
+                <Switch
+                  onValueChange={toggleCategorySwitch}
+                  value={isCategorySwitchEnabled}
+                  trackColor={{ false: "#767577", true: Colors.primary }}
+                  thumbColor={isCategorySwitchEnabled ? Colors.secondary : "#f4f3f4"}
+                />
+              </View>
+            </View>
+          </View>
+        {/* <View style={styles.inputContainer}> */}
+        {/*   <Text style={styles.headerText}>Item Name</Text> */}
+        {/*   <TextInput */}
+        {/*     style={styles.textInput} */}
+        {/*     onChangeText={text => setItemName(text)} */}
+        {/*     multiline={false} */}
+        {/*     ref={nameInputRef} */}
+        {/*   > */}
+        {/*   </TextInput> */}
+        {/*   <Text style={styles.headerText}>Item Description</Text> */}
+        {/*   <TextInput */}
+        {/*     style={styles.textInput} */}
+        {/*     onChangeText={text => setItemDescription(text)} */}
+        {/*     multiline={true} */}
+        {/*     numberOfLines={3} */}
+        {/*     maxLength={180} */}
+        {/*     maxHeight={120} */}
+        {/*     ref={descriptionInputRef} */}
+        {/*   > */}
+        {/*   </TextInput> */}
+        {/* </View> */}
 
         <CustomButton
           onPress={() => sendPostRequest()}
@@ -191,36 +269,22 @@ const PostingCreationScreen = props => {
 
 const styles = StyleSheet.create({
   screen: {
-    paddingHorizontal: 20,
-    paddingVertical: 10,
+    paddingVertical: 20,
     backgroundColor: Colors.light_shade4,
     alignItems: 'center',
     justifyContent: 'space-between',
   },
   keyboardView: {
+    width: windowWidth,
+    height: windowHeight * 0.75,
     backgroundColor: Colors.light_shade4,
     alignItems: 'center',
     justifyContent: 'space-between',
-    width: windowWidth * 0.8,
-    height: windowHeight *0.7
-  },
-  titleText: {
-    fontSize: 40,
-    fontWeight: 'bold',
-  },
-  inputContainer: {
-    width: '100%',
-    alignItems: 'center',
   },
   imageContainer: {
     width: '100%',
     alignItems: 'center',
-    marginBottom: 20
-  },
-  headerText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 10,
+    marginVertical: 20
   },
   textInput: {
     width: '100%',
@@ -237,7 +301,76 @@ const styles = StyleSheet.create({
   image: {
     width: 200,
     height: 200,
-  }
+  },
+  inputContainer: {
+    width: '80%',
+  },
+  inputView: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+
+    backgroundColor: Colors.light_shade4,
+    borderRadius: 25,
+    borderColor: Colors.placeholder_text,
+    borderWidth: 0.5,
+    height: 50,
+    marginBottom: 20,
+    paddingHorizontal: 20,
+
+    shadowColor: Colors.dark_shade1,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  inputText: {
+    width: '90%',
+    color: Colors.dark_shade1,
+  },
+  countInputView: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+
+    backgroundColor: Colors.light_shade4,
+    borderRadius: 25,
+    borderColor: Colors.placeholder_text,
+    borderWidth: 0.5,
+    height: 30,
+    marginBottom: 20,
+    paddingHorizontal: 20,
+
+    shadowColor: Colors.dark_shade1,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+
+  },
+  countInputText: {
+    color: Colors.dark_shade1,
+    textAlign: 'center',
+  },
+  switchRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginHorizontal: 20,
+    marginTop: 20,
+  },
+  switchColumn: {
+    alignItems: 'center',
+  },
+  switchTitle: {
+    fontSize: 16,
+    marginBottom: 10,
+  },
 });
 
 export default PostingCreationScreen;
