@@ -127,6 +127,7 @@ const PostingCreationScreen = props => {
         <AntDesign
           size={100}
           name='pluscircleo'
+          style={styles.image}
         />
       );
     }
@@ -134,6 +135,7 @@ const PostingCreationScreen = props => {
 
   return (
     <Center style={styles.screen}>
+      <ScrollView style={styles.scroll}>
       <KeyboardAwareScrollView
         style={styles}
         resetScrollToCoords={{ x: 0, y: height }}
@@ -168,15 +170,17 @@ const PostingCreationScreen = props => {
             maxHeight={120}
           >
           </TextInput>
+
+          <CustomButton
+            onPress={() => sendPostRequest()}
+            style={{marginBottom: 10}}
+          >
+            <Text style={styles.buttonText}>Confirm</Text>
+          </CustomButton>
         </View>
 
-        <CustomButton
-          onPress={() => sendPostRequest()}
-          style={{marginBottom: 10}}
-        >
-          <Text style={styles.buttonText}>Confirm</Text>
-        </CustomButton>
       </KeyboardAwareScrollView>
+      </ScrollView>
     </Center>
 
   );
@@ -189,26 +193,29 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.light_shade4,
     alignItems: 'center',
     justifyContent: 'space-between',
+    flex: 1
   },
   keyboardView: {
     backgroundColor: Colors.light_shade4,
     alignItems: 'center',
     justifyContent: 'space-between',
     width: windowWidth * 0.8,
-    height: windowHeight *0.7
+    height: windowHeight * 0.7,
+    flex: 1
   },
   titleText: {
-    fontSize: 40,
+    fontSize: 30,
     fontWeight: 'bold',
   },
   inputContainer: {
     width: '100%',
     alignItems: 'center',
+    marginTop: '2%',
   },
   imageContainer: {
-    width: '100%',
     alignItems: 'center',
-    marginBottom: 20
+    marginBottom: '10%',
+    flex: 1,
   },
   headerText: {
     fontSize: 20,
@@ -228,8 +235,11 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
   image: {
-    width: 200,
-    height: 200,
+    width: windowWidth/2,
+    borderWidth: 1,
+    borderColor: 'black',
+    aspectRatio: 1,
+    flex: 1
   }
 });
 
