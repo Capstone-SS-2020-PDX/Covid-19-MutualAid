@@ -13,11 +13,10 @@ import { StyleSheet,
          Platform,
          AlertIOS,
        } from "react-native";
-import { AntDesign } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { useHeaderHeight } from '@react-navigation/stack';
 import * as ImagePicker from 'expo-image-picker';
-import axios from 'axios';
 
 import { windowHeight, windowWidth } from '../config/dimensions';
 import Center from '../components/Center';
@@ -146,9 +145,9 @@ const PostingCreationScreen = props => {
       );
     } else {
       return(
-        <AntDesign
+        <FontAwesome5
           size={150}
-          name='pluscircleo'
+          name='images'
         />
       );
     }
@@ -205,6 +204,7 @@ const PostingCreationScreen = props => {
               <View style={styles.switchColumn}>
                 <Text style={styles.switchTitle}>Request?</Text>
                 <Switch
+                  style={styles.switch}
                   onValueChange={toggleRequestSwitch}
                   value={isRequestSwitchEnabled}
                   trackColor={{ false: "#767577", true: Colors.primary }}
@@ -226,6 +226,7 @@ const PostingCreationScreen = props => {
               <View style={styles.switchColumn}>
                 <Text style={styles.switchTitle}>Category</Text>
                 <Switch
+                  style={styles.switch}
                   onValueChange={toggleCategorySwitch}
                   value={isCategorySwitchEnabled}
                   trackColor={{ false: "#767577", true: Colors.primary }}
@@ -337,7 +338,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
 
     backgroundColor: Colors.light_shade4,
-    borderRadius: 25,
+    borderRadius: 10,
     borderColor: Colors.placeholder_text,
     borderWidth: 0.5,
     height: 30,
@@ -362,7 +363,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginHorizontal: 20,
-    marginTop: 20,
+    marginTop: 10,
   },
   switchColumn: {
     alignItems: 'center',
@@ -370,6 +371,9 @@ const styles = StyleSheet.create({
   switchTitle: {
     fontSize: 16,
     marginBottom: 10,
+  },
+  switch: {
+      transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }],
   },
 });
 
