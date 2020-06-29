@@ -59,6 +59,9 @@ const PostingDetailScreen = props => {
       .finally(() => {});
   }
 
+  const itemIcon = route.params.request ? require(requestedItemIconImage)
+        : require(offeredItemIconImage);
+
   return(
     <Center style={styles.screen}>
       <View style={styles.detailTitleContainer}>
@@ -66,7 +69,7 @@ const PostingDetailScreen = props => {
           <Image
             style={styles.postingTypeIconImage}
             resizeMode='contain'
-            source={require(offeredItemIconImage)}
+            source={itemIcon}
           />
         </View>
         <Text style={styles.detailTitleText}>{route.params.title}</Text>
@@ -154,18 +157,14 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.light_shade4,
   },
   detailTitleContainer: {
+    width: '90%',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 10,
   },
   detailTitleText: {
-    fontSize: 30,
-    fontFamily: 'open-sans-bold',
-  },
-  titleText: {
-    fontSize: windowWidth / 18,
-    textAlign: 'center',
+    fontSize: windowWidth / 15,
     fontFamily: 'open-sans-bold',
   },
   postingTypeIconContainer: {
