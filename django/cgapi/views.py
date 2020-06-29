@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.contrib.auth import get_user
 from django.contrib.auth.models import User
-from django.core.mail import send_mail
+from django.core.mail import EmailMessage
 from .models import Posting, Community, UserProfile
 from .serializers import PostingSerializer, CommunitySerializer, UserProfileSerializer, UserSerializer
         
@@ -37,12 +37,13 @@ class PostingViewSet(ModelViewSet):
             sender = request.data.get('addressfrom', '')
             subj = "Common Goods test email"
             message = "Here's an email from Common Goods, about post %s!" % post_id
-            send_mail(
+            email = EmailMessage(
                 subject=subj,
                 body=message,
                 to=[recipient],
-                reply_to=sender
+                reply_to=[sender]
             )
+            email.send()
         return Response(request.data)
 
 class CommunityViewSet(ModelViewSet):
