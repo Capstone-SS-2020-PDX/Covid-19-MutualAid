@@ -18,9 +18,11 @@ import { windowHeight, windowWidth } from '../config/dimensions';
 const url = 'https://cellular-virtue-277000.uc.r.appspot.com/postings/contact/';
 
 const PostingDetailScreen = props => {
-  const picUrl = 'https://picsum.photos/id/237/200';
   const { route, navigation } = props;
   const [emailText, setEmailText] = useState('');
+  const [postingImage, setPostingImage] = useState(null);
+
+  const picUrl = route.params.item_pic;
 
   const handleReachOut = () => {
     if (emailText.length > 0) {
@@ -35,8 +37,7 @@ const PostingDetailScreen = props => {
     const toEmail = 'canadianfishturkey@gmail.com';
     const request = { postid: id, addressfrom: fromEmail, addressto: toEmail };
     const requestJSON = JSON.stringify(request);
-
-    fetch(url, {
+fetch(url, {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -51,7 +52,6 @@ const PostingDetailScreen = props => {
       .catch(error => console.log('Error from sendEmail: ' + error))
       .finally(() => {});
   }
-
 
   return(
     <Center style={styles.screen}>
@@ -118,10 +118,8 @@ const styles = StyleSheet.create({
   imageContainer: {
     width: windowWidth * 0.5,
     height: windowWidth * 0.5,
-    borderRadius: windowWidth * 0.7 / 2,
-    borderWidth: 3,
+    borderWidth: 1,
     borderColor: Colors.dark_shade1,
-    overflow: 'hidden',
     marginVertical: windowHeight / 25,
   },
   bodyText: {
