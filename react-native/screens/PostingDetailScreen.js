@@ -13,6 +13,8 @@ import { View,
 import Center from '../components/Center';
 import CustomButton from '../components/CustomButton';
 import EditPostingScreen from './EditPostingScreen';
+const offeredItemIconImage = '../assets/offered_item.png';
+const requestedItemIconImage = '../assets/requested_item.png';
 
 import Colors from '../config/colors';
 import { windowHeight, windowWidth } from '../config/dimensions';
@@ -59,24 +61,44 @@ const PostingDetailScreen = props => {
 
   return(
     <Center style={styles.screen}>
-      <View style={styles.detailTitle}>
-        <Text style={styles.titleText}>{route.params.title}</Text>
+      <View style={styles.detailTitleContainer}>
+        <View style={styles.postingTypeIconContainer}>
+          <Image
+            style={styles.postingTypeIconImage}
+            resizeMode='contain'
+            source={require(offeredItemIconImage)}
+          />
+        </View>
+        <Text style={styles.detailTitleText}>{route.params.title}</Text>
       </View>
 
-      <View style={styles.detailImageRow}>
-        <View style={styles.imageContainer}>
-          <Image
-            style={styles.itemImage}
-            resizeMode='cover'
-            source={{uri: picUrl}}
-          />
+      <View style={styles.imageContainer}>
+        <Image
+          style={styles.itemImage}
+          resizeMode='cover'
+          source={{uri: picUrl}}
+        />
+      </View>
+      <View style={styles.detailRow}>
+        <View style={styles.detailContainer}>
+          <Text style={styles.detailText}>Category: {route.params.category}</Text>
+          <Text style={styles.detailText}>Amount: {route.params.count}</Text>
+          <Text style={styles.detailText}>Created on: {route.params.created_on}</Text>
         </View>
       </View>
 
-      <ScrollView style={styles.detailScroll}>
-        <Text style={styles.bodyText}>{route.params.description}</Text>
-      </ScrollView>
+        <ScrollView style={styles.descriptionScroll}>
+          <Text style={styles.bodyText}>{route.params.description}</Text>
+        </ScrollView>
 
+      <CustomButton
+        style={styles.reachOutButton}
+        onPress={() => {
+          setIsModalVisible(true);
+        }}
+      >
+        <Text style={styles.reachOutButtonText}>Reach Out!</Text>
+      </CustomButton>
       <Modal
         visible={isModalVisible}
         animationType='slide'
@@ -120,17 +142,6 @@ const PostingDetailScreen = props => {
           </TouchableOpacity>
         </View>
       </Modal>
-
-
-      <CustomButton
-        style={styles.reachOutButton}
-        onPress={() => {
-          setIsModalVisible(true);
-        }}
-      >
-        <Text style={styles.reachOutButtonText}>Reach Out!</Text>
-      </CustomButton>
-
     </Center>
   );
 };
@@ -142,28 +153,63 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     backgroundColor: Colors.light_shade4,
   },
-  detailTitle: {
+  detailTitleContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  detailTitleText: {
+    fontSize: 30,
+    fontFamily: 'open-sans-bold',
   },
   titleText: {
     fontSize: windowWidth / 18,
     textAlign: 'center',
     fontFamily: 'open-sans-bold',
   },
+  postingTypeIconContainer: {
+    marginHorizontal: 10,
+  },
+  postingTypeIconImage: {
+    width: 80,
+    height: 80,
+  },
   itemImage: {
     width: '100%',
     height: '100%',
   },
+  detailRow: {
+    flexDirection: 'row',
+  },
+  detailText: {
+    fontSize: 18,
+  },
   imageContainer: {
     width: windowWidth * 0.5,
     height: windowWidth * 0.5,
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: Colors.dark_shade1,
-    marginVertical: windowHeight / 25,
+    marginVertical: windowHeight / 50,
+  },
+  detailContainer: {
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    marginBottom: windowHeight / 50,
   },
   bodyText: {
     fontFamily: 'open-sans',
+    fontSize: 16,
   },
-  detailScroll: {
+  descriptionContainer: {
+  },
+  descriptionScroll: {
+    width: '100%',
+    borderWidth: 0.5,
+    borderColor: 'black',
+    borderRadius: 10,
+    padding: 10,
+    marginVertical: 10,
   },
   reachOutButtonContainer: {
     width: '80%',
