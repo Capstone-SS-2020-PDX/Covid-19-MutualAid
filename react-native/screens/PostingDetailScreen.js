@@ -7,7 +7,9 @@ import { View,
          ScrollView,
          StyleSheet,
          TextInput,
+         Modal,
        } from 'react-native';
+
 import Center from '../components/Center';
 import CustomButton from '../components/CustomButton';
 import EditPostingScreen from './EditPostingScreen';
@@ -15,12 +17,13 @@ import EditPostingScreen from './EditPostingScreen';
 import Colors from '../config/colors';
 import { windowHeight, windowWidth } from '../config/dimensions';
 
-const url = 'https://cellular-virtue-277000.uc.r.appspot.com/postings/contact/';
+const emailUrl = 'https://cellular-virtue-277000.uc.r.appspot.com/postings/contact/';
 
 const PostingDetailScreen = props => {
   const { route, navigation } = props;
   const [emailText, setEmailText] = useState('');
   const [postingImage, setPostingImage] = useState(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const picUrl = route.params.item_pic;
 
@@ -37,7 +40,8 @@ const PostingDetailScreen = props => {
     const toEmail = 'canadianfishturkey@gmail.com';
     const request = { postid: id, addressfrom: fromEmail, addressto: toEmail };
     const requestJSON = JSON.stringify(request);
-fetch(url, {
+
+    fetch(emailUrl, {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -55,39 +59,74 @@ fetch(url, {
 
   return(
     <Center style={styles.screen}>
-        <View style={styles.detailTitle}>
-          <Text style={styles.titleText}>{route.params.title}</Text>
-        </View>
+      <View style={styles.detailTitle}>
+        <Text style={styles.titleText}>{route.params.title}</Text>
+      </View>
 
-        <View style={styles.detailImageRow}>
-          <View style={styles.imageContainer}>
-            <Image
-              style={styles.itemImage}
-              resizeMode='cover'
-              source={{uri: picUrl}}
-            />
-          </View>
+      <View style={styles.detailImageRow}>
+        <View style={styles.imageContainer}>
+          <Image
+            style={styles.itemImage}
+            resizeMode='cover'
+            source={{uri: picUrl}}
+          />
         </View>
+      </View>
 
       <ScrollView style={styles.detailScroll}>
         <Text style={styles.bodyText}>{route.params.description}</Text>
       </ScrollView>
-      <View style={styles.inputContainer}>
-      <View style={styles.inputView}>
-        <TextInput
-          style={styles.inputText}
-          placeholder='Enter your email...'
-          placeholderTextColor={Colors.placeholder_text}
-          keyboardType='email-address'
-          returnKeyType='done'
-          onChangeText={text => setEmailText(text)}
-        />
-      </View>
-      </View>
+
+      <Modal
+        visible={isModalVisible}
+        animationType='slide'
+        onRequestClose={() => console.log('modal closing')}
+        onDismiss={() => console.log('modal dismissed')}
+      >
+        <View style={styles.reachOutModalViewContainer}>
+          <View style={styles.modalTitleContainer}>
+            <Text style={styles.modalTitle}>
+              Enter your email to get in contact!
+            </Text>
+          </View>
+          <View style={styles.inputContainer}>
+            <View style={styles.inputView}>
+              <TextInput
+                style={styles.inputText}
+                placeholder='Enter your email...'
+                placeholderTextColor={Colors.placeholder_text}
+                keyboardType='email-address'
+                returnKeyType='done'
+                onChangeText={text => setEmailText(text)}
+              />
+            </View>
+          </View>
+          <CustomButton
+            style={styles.confirmButton}
+            onPress={() => {
+              handleReachOut();
+              setIsModalVisible(!isModalVisible);
+            }}
+          >
+            <Text style={styles.reachOutButtonText}>Confirm</Text>
+          </CustomButton>
+          <TouchableOpacity
+            onPress={() => {
+              console.log('reach out cancelled');
+              setIsModalVisible(!isModalVisible);
+            }}
+          >
+            <Text style={styles.cancelText}>Cancel</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+
 
       <CustomButton
         style={styles.reachOutButton}
-        onPress={handleReachOut}
+        onPress={() => {
+          setIsModalVisible(true);
+        }}
       >
         <Text style={styles.reachOutButtonText}>Reach Out!</Text>
       </CustomButton>
@@ -106,7 +145,6 @@ const styles = StyleSheet.create({
   detailTitle: {
   },
   titleText: {
-    // fontSize: 28,
     fontSize: windowWidth / 18,
     textAlign: 'center',
     fontFamily: 'open-sans-bold',
@@ -172,6 +210,28 @@ const styles = StyleSheet.create({
   inputText: {
     width: '90%',
     color: Colors.dark_shade1,
+  },
+  reachOutModalViewContainer: {
+    height: '90%',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    margin: 10,
+    padding: 10,
+    backgroundColor: "white",
+  },
+  confirmButton: {
+    marginBottom: 20,
+  },
+  modalTitleContainer: {
+    marginBottom: 200,
+  },
+  modalTitle: {
+    fontSize: 40,
+    textAlign: 'center',
+  },
+  cancelText: {
+    color: Colors.contrast2,
+    fontSize: 20,
   },
 });
 

@@ -9,7 +9,6 @@ const PostingList = props => {
     const renderPostingListItem = itemData => {
         return(
             <PostingListItem
-            /* title={itemData.item} */
               title={itemData.item.title}
               onSelectPosting={() => {
                   navigation.navigate('PostingDetail', {
