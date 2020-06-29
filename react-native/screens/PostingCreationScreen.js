@@ -235,27 +235,6 @@ const PostingCreationScreen = props => {
               </View>
             </View>
           </View>
-        {/* <View style={styles.inputContainer}> */}
-        {/*   <Text style={styles.headerText}>Item Name</Text> */}
-        {/*   <TextInput */}
-        {/*     style={styles.textInput} */}
-        {/*     onChangeText={text => setItemName(text)} */}
-        {/*     multiline={false} */}
-        {/*     ref={nameInputRef} */}
-        {/*   > */}
-        {/*   </TextInput> */}
-        {/*   <Text style={styles.headerText}>Item Description</Text> */}
-        {/*   <TextInput */}
-        {/*     style={styles.textInput} */}
-        {/*     onChangeText={text => setItemDescription(text)} */}
-        {/*     multiline={true} */}
-        {/*     numberOfLines={3} */}
-        {/*     maxLength={180} */}
-        {/*     maxHeight={120} */}
-        {/*     ref={descriptionInputRef} */}
-        {/*   > */}
-        {/*   </TextInput> */}
-        {/* </View> */}
 
         <CustomButton
           onPress={() => sendPostRequest()}
