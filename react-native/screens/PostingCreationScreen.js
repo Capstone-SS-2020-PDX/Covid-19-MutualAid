@@ -250,7 +250,6 @@ const PostingCreationScreen = props => {
 
 const styles = StyleSheet.create({
   screen: {
-    paddingVertical: 20,
     backgroundColor: Colors.light_shade4,
     alignItems: 'center',
     justifyContent: 'flex-start',
@@ -266,7 +265,7 @@ const styles = StyleSheet.create({
   imageContainer: {
     width: '100%',
     alignItems: 'center',
-    marginVertical: 20
+    marginVertical: 10
   },
   textInput: {
     width: '100%',
@@ -281,8 +280,9 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
   image: {
-    width: 200,
-    height: 200,
+    width: windowWidth/3,
+    height: windowHeight/4,
+    aspectRatio: 1,
     borderColor: 'black',
     borderWidth: 1
   },
