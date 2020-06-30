@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { StyleSheet,
          Text,
          TextInput,
          View,
          Button,
+         Switch,
          TouchableOpacity,
          ScrollView,
          Dimensions,
@@ -12,11 +13,10 @@ import { StyleSheet,
          Platform,
          AlertIOS,
        } from "react-native";
-import { AntDesign } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { useHeaderHeight } from '@react-navigation/stack';
 import * as ImagePicker from 'expo-image-picker';
-import axios from 'axios';
 
 import { windowHeight, windowWidth } from '../config/dimensions';
 import Center from '../components/Center';
@@ -31,52 +31,58 @@ const PostingCreationScreen = props => {
   const [itemName, setItemName] = useState('');
   const [itemDescription, setItemDescription] = useState('');
   const [selectedImage, setSelectedImage] = useState(null);
+  const [itemCount, setItemCount] = useState(1);
+  const [isRequestSwitchEnabled, setIsRequestSwitchEnabled] = useState(false);
+  const [isCategorySwitchEnabled, setIsCategorySwitchEnabled] = useState(false);
+
+  const nameInputRef = useRef(null);
+  const descriptionInputRef = useRef(null);
+  const itemCountInputRef = useRef(null);
 
   const height = useHeaderHeight();
 
-
+  // Create the data object in correct format to be sent off the server
   const createFormData = () => {
+    const categoryValue = isCategorySwitchEnabled ? 'services' : 'goods';
+    const requestValue = isRequestSwitchEnabled ? true : false;
+
     const data = new FormData();
 
     data.append('title', itemName);
     data.append('desc', itemDescription);
     data.append('item_pic', selectedImage);
+    data.append('count', itemCount);
+    data.append('category', categoryValue);
+    data.append('request', requestValue);
 
     return data;
   };
 
+  // handle sending the request
   const sendPostRequest = () => {
-    // return fetch(url, {
-    //   method: 'POST',
-    //   headers: {
-    //     'Accept': 'multipart/form-data',
-    //     'Content-type': 'multipart/form-data',
-    //   },
-      // body: JSON.stringify({
-      //   title: itemName,
-      //   desc: itemDescription,
-      //   item_pic: selectedImage.localUri,
-      // })
-    //   body: createFormData()
-    // })
-    //   .then(response => response.json())
-    //   .then(json => {
-    //     console.log(json);
-    //     navigateToHomeStack();
-    //   })
-    //   .catch(error => console.error(error));
-
-    axios.post(url, createFormData(), {
+    return fetch(url, {
+      method: 'POST',
       headers: {
-        'content-type': 'multipart/form-data'
-      }
+        'content-type': 'multipart/form-data',
+      },
+      body: createFormData(),
     })
-         .then(res => {
-           console.log(res.data);
-         })
-         .catch(err => console.log(err))
+      .then(response => response.json())
+      .then(json => {
+        console.log(json);
+        notifyMessage('Posting Sucessfully Created!');
+        navigateToHomeStack();
+      })
+      .catch(error => {
+        notifyMessage('Oops! Something went wrong...');
+        console.log(error)
+      })
+      .finally(() => {
+        clearInputs();
+      });
   };
 
+  // Handles letting the user select an image from their library
   const openImagePickerAsync = async () => {
     let permissionResult = await ImagePicker.requestCameraRollPermissionsAsync();
 
@@ -102,6 +108,22 @@ const PostingCreationScreen = props => {
     console.log(selectedImage);
   };
 
+  // clears the input fields and state for the input
+  const clearInputs = () => {
+    setItemName('');
+    setItemDescription('');
+    setSelectedImage(null);
+    setItemCount(1);
+
+    setIsRequestSwitchEnabled(false);
+    setIsCategorySwitchEnabled(false);
+
+    nameInputRef.current.clear();
+    descriptionInputRef.current.clear();
+    itemCountInputRef.current.clear();
+  };
+
+  // Displays a notification message, style dependent on platform
   const notifyMessage = msg => {
     if (Platform.OS === 'android') {
       ToastAndroid.show(msg, ToastAndroid.SHORT)
@@ -110,13 +132,12 @@ const PostingCreationScreen = props => {
     }
   }
 
+  // Navigates to the Home Screen stack when called
   const navigateToHomeStack = () => {
     navigation.navigate('Home', {screen: 'Feed'})
-    notifyMessage("Success");
-
-    console.log("in navigateToHomeStack");
   }
 
+  // Renders either the image returned from the image picker or a plus icon
   const renderImageSection = () => {
     if (selectedImage !== null) {
       return(
@@ -124,103 +145,128 @@ const PostingCreationScreen = props => {
       );
     } else {
       return(
-        <AntDesign
-          size={100}
-          name='pluscircleo'
-          style={styles.image}
+        <FontAwesome5
+          size={150}
+          name='images'
         />
       );
     }
   }
 
+  const toggleRequestSwitch = () => {
+    setIsRequestSwitchEnabled(previousState => !previousState);
+  };
+
+  const toggleCategorySwitch = () => {
+    setIsCategorySwitchEnabled(previousState => !previousState);
+  };
+
   return (
     <Center style={styles.screen}>
-      <ScrollView style={styles.scroll}>
       <KeyboardAwareScrollView
-        style={styles}
         resetScrollToCoords={{ x: 0, y: height }}
         contentContainerStyle={styles.keyboardView}
         scrollEnabled={true}
       >
         <View style={styles.imageContainer}>
-          <Text style={styles.titleText}>
-            List An Item
-          </Text>
           <TouchableOpacity
             onPress={openImagePickerAsync}
           >
             {renderImageSection()}
           </TouchableOpacity>
         </View>
-        <View style={styles.inputContainer}>
-          <Text style={styles.headerText}>Item Name</Text>
-          <TextInput
-            style={styles.textInput}
-            onChangeText={text => setItemName(text)}
-            multiline={false}
-          >
-          </TextInput>
-          <Text style={styles.headerText}>Item Description</Text>
-          <TextInput
-            style={styles.textInput}
-            onChangeText={text => setItemDescription(text)}
-            multiline={true}
-            numberOfLines={3}
-            maxLength={180}
-            maxHeight={120}
-          >
-          </TextInput>
+          <View style={styles.inputContainer}>
+            <View style={styles.inputView}>
+              <TextInput
+                style={styles.inputText}
+                placeholder='Item Name...'
+                placeholderTextColor={Colors.placeholder_text}
+                maxLength={30}
+                returnKeyType='next'
+                onChangeText={text => setItemName(text)}
+                ref={nameInputRef}
+              />
+            </View>
+            <View style={styles.inputView}>
+              <TextInput
+                style={styles.inputText}
+                placeholder='Item Description...'
+                placeholderTextColor={Colors.placeholder_text}
+                keyboardType='email-address'
+                returnKeyType='done'
+                multiline={true}
+                numberOfLines={3}
+                onChangeText={text => setItemDescription(text)}
+                ref={descriptionInputRef}
+              />
+            </View>
+            <View style={styles.switchRow}>
+              <View style={styles.switchColumn}>
+                <Text style={styles.switchTitle}>Request?</Text>
+                <Switch
+                  style={styles.switch}
+                  onValueChange={toggleRequestSwitch}
+                  value={isRequestSwitchEnabled}
+                  trackColor={{ false: "#767577", true: Colors.primary }}
+                  thumbColor={isRequestSwitchEnabled ? Colors.secondary : "#f4f3f4"}
+                />
+              </View>
+              <View style={styles.switchColumn}>
+                <Text style={styles.switchTitle}>Count</Text>
+                <View style={styles.countInputView}>
+                  <TextInput
+                    style={styles.countInputText}
+                    keyboardType='numeric'
+                    returnKeyType='done'
+                    onChangeText={text => setItemCount(text)}
+                    ref={itemCountInputRef}
+                  />
+                </View>
+              </View>
+              <View style={styles.switchColumn}>
+                <Text style={styles.switchTitle}>Category</Text>
+                <Switch
+                  style={styles.switch}
+                  onValueChange={toggleCategorySwitch}
+                  value={isCategorySwitchEnabled}
+                  trackColor={{ false: "#767577", true: Colors.primary }}
+                  thumbColor={isCategorySwitchEnabled ? Colors.secondary : "#f4f3f4"}
+                />
+              </View>
+            </View>
 
-          <CustomButton
-            onPress={() => sendPostRequest()}
-            style={{marginBottom: 10}}
-          >
-            <Text style={styles.buttonText}>Confirm</Text>
-          </CustomButton>
+        <CustomButton
+          onPress={() => sendPostRequest()}
+          style={{ marginBottom: 10, alignSelf: 'center'}}
+        >
+          <Text style={styles.buttonText}>Confirm</Text>
+        </CustomButton>
         </View>
 
       </KeyboardAwareScrollView>
-      </ScrollView>
     </Center>
-
   );
 }
 
 const styles = StyleSheet.create({
   screen: {
-    paddingHorizontal: 20,
-    paddingVertical: 10,
+    paddingVertical: 20,
     backgroundColor: Colors.light_shade4,
     alignItems: 'center',
-    justifyContent: 'space-between',
-    flex: 1
+    justifyContent: 'flex-start',
+    flexGrow: 1,
   },
   keyboardView: {
+    width: windowWidth,
+    height: windowHeight,
     backgroundColor: Colors.light_shade4,
     alignItems: 'center',
-    justifyContent: 'space-between',
-    width: windowWidth * 0.8,
-    height: windowHeight * 0.7,
-    flex: 1
-  },
-  titleText: {
-    fontSize: 30,
-    fontWeight: 'bold',
-  },
-  inputContainer: {
-    width: '100%',
-    alignItems: 'center',
-    marginTop: '2%',
+    justifyContent: 'flex-start',
   },
   imageContainer: {
+    width: '100%',
     alignItems: 'center',
-    marginBottom: '10%',
-    flex: 1,
-  },
-  headerText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 10,
+    marginVertical: 20
   },
   textInput: {
     width: '100%',
@@ -235,12 +281,83 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
   image: {
-    width: windowWidth/2,
-    borderWidth: 1,
+    width: 200,
+    height: 200,
     borderColor: 'black',
-    aspectRatio: 1,
-    flex: 1
-  }
+    borderWidth: 1
+  },
+  inputContainer: {
+    width: '80%',
+  },
+  inputView: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+
+    backgroundColor: Colors.light_shade4,
+    borderRadius: 25,
+    borderColor: Colors.placeholder_text,
+    borderWidth: 0.5,
+    height: 50,
+    marginBottom: 20,
+    paddingHorizontal: 20,
+
+    shadowColor: Colors.dark_shade1,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  inputText: {
+    width: '90%',
+    color: Colors.dark_shade1,
+  },
+  countInputView: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+
+    backgroundColor: Colors.light_shade4,
+    borderRadius: 10,
+    borderColor: Colors.placeholder_text,
+    borderWidth: 0.5,
+    height: 30,
+    marginBottom: 20,
+    paddingHorizontal: 20,
+
+    shadowColor: Colors.dark_shade1,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+
+  },
+  countInputText: {
+    color: Colors.dark_shade1,
+    textAlign: 'center',
+  },
+  switchRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginHorizontal: 20,
+    marginBottom: -10
+  },
+  switchColumn: {
+    alignItems: 'center',
+  },
+  switchTitle: {
+    fontSize: 16,
+    marginBottom: 10,
+  },
+  switch: {
+      transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }],
+  },
 });
 
 export default PostingCreationScreen;
