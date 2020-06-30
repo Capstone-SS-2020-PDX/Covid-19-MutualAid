@@ -62,15 +62,16 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     itemTextContent: {
-        width: '50%',
+        width: '55%',
         alignContent: 'flex-start',
     },
     listImageContainer: {
-        width: '25%',
-        marginRight: 10,
+        width: '20%',
+        marginRight: 20,
     },
     listImage: {
         height: 80,
+        width: 80,
         borderWidth: 1,
         borderColor: Colors.dark_shade1,
     },

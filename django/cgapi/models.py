@@ -29,7 +29,7 @@ class UserProfile(models.Model):
         ordering = ['id']
 
     def __str__(self):
-        return self.username
+        return self.user.username
 
 User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])
 
@@ -43,6 +43,7 @@ class Posting(models.Model):
     in_community = models.ForeignKey(Community, on_delete=models.CASCADE, blank=True, null=True, related_name='posts')
     item_pic = models.ImageField(upload_to='pimg/', default='')
     request = models.BooleanField(default=True)
+    email = models.CharField(max_length=50, blank=True, null=True)
     
     # Meta data about DB table
     class Meta:

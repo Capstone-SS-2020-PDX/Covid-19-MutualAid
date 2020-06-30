@@ -280,11 +280,13 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
   image: {
+
     width: windowWidth/3,
     height: windowHeight/4,
     aspectRatio: 1,
     borderColor: 'black',
     borderWidth: 1
+
   },
   inputContainer: {
     width: '80%',
@@ -347,6 +349,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginHorizontal: 20,
     marginBottom: -10
+
   },
   switchColumn: {
     alignItems: 'center',
