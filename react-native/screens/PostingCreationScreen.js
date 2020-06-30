@@ -234,14 +234,15 @@ const PostingCreationScreen = props => {
                 />
               </View>
             </View>
-          </View>
 
         <CustomButton
           onPress={() => sendPostRequest()}
-          style={{marginBottom: 10}}
+          style={{ marginBottom: 10, alignSelf: 'center'}}
         >
           <Text style={styles.buttonText}>Confirm</Text>
         </CustomButton>
+        </View>
+
       </KeyboardAwareScrollView>
     </Center>
   );
@@ -249,22 +250,22 @@ const PostingCreationScreen = props => {
 
 const styles = StyleSheet.create({
   screen: {
-    paddingVertical: 20,
     backgroundColor: Colors.light_shade4,
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
+    flexGrow: 1,
   },
   keyboardView: {
     width: windowWidth,
-    height: windowHeight * 0.75,
+    height: windowHeight,
     backgroundColor: Colors.light_shade4,
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
   },
   imageContainer: {
     width: '100%',
     alignItems: 'center',
-    marginVertical: 20
+    marginVertical: 10
   },
   textInput: {
     width: '100%',
@@ -279,8 +280,13 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
   image: {
-    width: 200,
-    height: 200,
+
+    width: windowWidth/3,
+    height: windowHeight/4,
+    aspectRatio: 1,
+    borderColor: 'black',
+    borderWidth: 1
+
   },
   inputContainer: {
     width: '80%',
@@ -342,7 +348,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginHorizontal: 20,
-    marginTop: 10,
+    marginBottom: -10
+
   },
   switchColumn: {
     alignItems: 'center',
