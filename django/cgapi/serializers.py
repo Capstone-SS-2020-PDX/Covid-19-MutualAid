@@ -1,7 +1,9 @@
 from rest_framework import serializers
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from .models import Posting, Community, UserProfile, User
 
 class PostingSerializer(serializers.ModelSerializer):
+    parser_classes = (MultiPartParser, FormParser, JSONParser)
     class Meta:
         model = Posting
         fields = ('id', 'title', 'desc', 'count', 'category', 'created_on', 'owner', 'in_community', 'item_pic', 'request')
@@ -14,11 +16,9 @@ class CommunitySerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = '__all__'
+        fields = ('username', 'first_name', 'last_name', 'email', 'groups', 'is_active', 'date_joined', 'last_login')
 
 class UserProfileSerializer(serializers.ModelSerializer):
-    qs = User.objects.all()
-    user = serializers.RelatedField(queryset=qs)
     class Meta:
-        model = UserProfile
+        model = UserProfile	
         fields = ('id', 'user', 'profile_text', 'created_on', 'home', 'member_of', 'phone_number', 'profile_pic')
