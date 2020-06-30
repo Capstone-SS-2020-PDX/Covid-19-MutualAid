@@ -19,7 +19,6 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('username', 'first_name', 'last_name', 'email', 'groups', 'is_active', 'date_joined', 'last_login')
 
 class UserProfileSerializer(serializers.ModelSerializer):
-    related_user = UserSerializer(source='user')
     class Meta:
         model = UserProfile	
-        fields = ('id', 'related_user', 'profile_text', 'created_on', 'home', 'member_of', 'phone_number', 'profile_pic')
+        fields = ('id', 'user', 'profile_text', 'created_on', 'home', 'member_of', 'phone_number', 'profile_pic')
