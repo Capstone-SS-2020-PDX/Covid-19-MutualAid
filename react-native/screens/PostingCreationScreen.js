@@ -17,7 +17,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { useHeaderHeight } from '@react-navigation/stack';
 import * as ImagePicker from 'expo-image-picker';
-
+import * as ImageEditor from "@react-native-community/image-editor";
 import { windowHeight, windowWidth } from '../config/dimensions';
 import Center from '../components/Center';
 import CustomButton from '../components/CustomButton';
@@ -100,12 +100,33 @@ const PostingCreationScreen = props => {
     if (pickerResult.cancelled === true) {
       return;
     }
+    else {
+      let imageName = (Math.random() * 1000).toString().concat('.jpg');
+      console.log(imageName);
 
-    let imageName = (Math.random() * 1000).toString().concat('.jpg');
-    console.log(imageName);
+      let resizedImage = new Promise((resolve, reject) => {
+        ImageEditor.cropImage(pickerResult.uri, {
+        offset: { x: 0, y: 0 },
+        size: { width: 1000, height: 1000 },
+        resizeMode: 'contain',
+      },
+      (uri) => resolve(uri),
+      () => reject(),
+      );
+    });
 
-    setSelectedImage({uri: pickerResult.uri, type: 'image/jpeg', name: imageName});
-    console.log(selectedImage);
+    console.log('passed resize');
+
+    resizedImage.then(function(uri) {
+      console.log('resize success')
+      setSelectedImage({uri: uri, type: 'image/jpeg', name: imageName})
+    },
+      function() {
+        console.log('resize failed')
+      }
+    );
+      console.log(selectedImage);
+    }
   };
 
   // clears the input fields and state for the input
