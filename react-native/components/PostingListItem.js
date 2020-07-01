@@ -12,6 +12,9 @@ const PostingListItem = props => {
     const offeredItemIconImage = '../assets/offered_item.png';
     const requestedItemIconImage = '../assets/requested_item.png';
 
+    const itemIcon = props.request ? require(requestedItemIconImage)
+        : require(offeredItemIconImage);
+
     return(
         <TouchableOpacity
           style={{ ...styles.listItem, ...props.style }}
@@ -37,7 +40,7 @@ const PostingListItem = props => {
               <Image
                 style={styles.postingTypeIconImage}
                 resizeMode='contain'
-                source={require(offeredItemIconImage)}
+                source={itemIcon}
               />
             </View>
           </View>
