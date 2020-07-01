@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 import AboutScreen from '../screens/AboutScreen';
 import headerOptions from '../config/headerOptions';
+import Colors from '../config/colors';
 
 const Stack = createStackNavigator();
 
@@ -25,6 +26,7 @@ const AboutStack = props => {
                   <Ionicons
                     name='md-menu'
                     size={30}
+                    color={Colors.light_shade4}
                   />
                 </TouchableOpacity>
             );

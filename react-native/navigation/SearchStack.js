@@ -7,6 +7,7 @@ import SearchScreen from '../screens/SearchScreen';
 import { AuthContext } from '../providers/AuthProvider';
 import { addPostingsRoutes } from './addPostingsRoutes';
 
+import Colors from '../config/colors';
 import headerOptions from '../config/headerOptions';
 
 const Stack = createStackNavigator();
@@ -28,6 +29,7 @@ const SearchStack = props => {
           <Ionicons
             name='md-menu'
             size={30}
+            color={Colors.light_shade4}
           />
         </TouchableOpacity>
       );
