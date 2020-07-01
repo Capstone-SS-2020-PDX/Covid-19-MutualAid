@@ -17,7 +17,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { useHeaderHeight } from '@react-navigation/stack';
 import * as ImagePicker from 'expo-image-picker';
-import * as ImageEditor from "@react-native-community/image-editor";
+import * as ImageManipulator from 'expo-image-manipulator';
 import { windowHeight, windowWidth } from '../config/dimensions';
 import Center from '../components/Center';
 import CustomButton from '../components/CustomButton';
@@ -95,38 +95,23 @@ const PostingCreationScreen = props => {
       allowsEditing: true,
       quality: 0.5,
       aspect: [1,1],
+      resizeMethod: 'contain'
     });
 
     if (pickerResult.cancelled === true) {
       return;
     }
-    else {
-      let imageName = (Math.random() * 1000).toString().concat('.jpg');
-      console.log(imageName);
 
-      let resizedImage = await new Promise((resolve, reject) => {
-        ImageEditor.cropImage(pickerResult.uri, {
-        offset: { x: 0, y: 0 },
-        size: { width: 1000, height: 1000 },
-        resizeMode: 'contain',
-      },
-      (uri) => resolve(uri),
-      () => reject(),
-      );
-    });
+    let imageName = (Math.random() * 1000).toString().concat('.jpg');
+    console.log(imageName);
 
-    console.log('passed resize');
+    let resizedImage = await ImageManipulator.manipulateAsync(
+      pickerResult.uri,
+      [{resize:{width: 1000 }}]
+    )
 
-    resizedImage.then(function(uri) {
-      console.log('resize success')
-      setSelectedImage({uri: uri, type: 'image/jpeg', name: imageName})
-    },
-      function() {
-        console.log('resize failed')
-      }
-    );
-      console.log(selectedImage);
-    }
+    setSelectedImage({uri: resizedImage.uri, type: 'image/jpeg', name: imageName});
+    console.log(selectedImage);
   };
 
   // clears the input fields and state for the input
@@ -301,13 +286,11 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
   image: {
-
     width: windowWidth/3,
     height: windowHeight/4,
     aspectRatio: 1,
     borderColor: 'black',
     borderWidth: 1
-
   },
   inputContainer: {
     width: '80%',
@@ -370,7 +353,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginHorizontal: 20,
     marginBottom: -10
-
   },
   switchColumn: {
     alignItems: 'center',
