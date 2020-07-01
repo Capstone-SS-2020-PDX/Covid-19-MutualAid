@@ -32,6 +32,7 @@ const HomeStack = props => {
           <Ionicons
             name='md-menu'
             size={30}
+            color={Colors.light_shade4}
           />
         </TouchableOpacity>
       );

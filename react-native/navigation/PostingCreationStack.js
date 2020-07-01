@@ -6,6 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 import PostingCreationScreen from '../screens/PostingCreationScreen';
 import ImageUpload from '../components/ImageUpload';
 
+import Colors from '../config/colors';
 import headerOptions from '../config/headerOptions';
 
 
@@ -28,6 +29,7 @@ const PostingCreationStack = props => {
                   <Ionicons
                     name='md-menu'
                     size={30}
+                    color={Colors.light_shade4}
                   />
                 </TouchableOpacity>
             );
