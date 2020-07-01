@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, FlatList } from 'react-native';
+import { View, StyleSheet, FlatList } from 'react-native';
 
 import PostingListItem from '../components/PostingListItem';
 
@@ -8,6 +8,7 @@ const PostingList = props => {
 
     const renderPostingListItem = itemData => {
         return(
+          <View style={styles.list}>
             <PostingListItem
               title={itemData.item.title}
               request={itemData.item.request}
@@ -26,6 +27,7 @@ const PostingList = props => {
                   });
               }}
             />
+          </View>
         );
     };
 

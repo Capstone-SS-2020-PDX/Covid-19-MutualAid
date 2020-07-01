@@ -28,7 +28,7 @@ const PostingListItem = props => {
                 source={{uri: 'https://source.unsplash.com/random/80x80'}}
               />
             </View>
-            <View style={styles.itemTextContent}>
+            <View style={styles.itemTextContainer}>
               <Text style={styles.itemTitleText}>
                 {props.title}
               </Text>
@@ -56,21 +56,21 @@ const styles = StyleSheet.create({
         borderColor: Colors.dark_shade1,
         borderTopWidth: 0.8,
         paddingVertical: 10,
-        paddingHorizontal: 15,
-
     },
     itemContent: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
+        justifyContent: 'space-around',
     },
-    itemTextContent: {
+    itemTextContainer: {
         width: '55%',
         alignContent: 'flex-start',
+        paddingHorizontal: 5,
     },
     listImageContainer: {
         width: '20%',
         marginRight: 20,
+        marginLeft: 10,
     },
     listImage: {
         height: 80,
@@ -87,11 +87,11 @@ const styles = StyleSheet.create({
         fontFamily: 'open-sans',
     },
     postingTypeIconContainer: {
-        width: '25%',
+        width: '22%',
     },
     postingTypeIconImage: {
-        width: 80,
-        height: 80,
+        width: 70,
+        height: 70,
     },
 });
 
