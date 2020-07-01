@@ -59,8 +59,8 @@ const NavTabs = props => {
       tabBarOptions={{
         activeTintColor: Colors.contrast1,
         inactiveTintColor: Colors.light_shade4,
-        activeBackgroundColor: Colors.secondary,
-        inactiveBackgroundColor: Colors.secondary,
+        activeBackgroundColor: Colors.primary,
+        inactiveBackgroundColor: Colors.primary,
       }}
     >
 
