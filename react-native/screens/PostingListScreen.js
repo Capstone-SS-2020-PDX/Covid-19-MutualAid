@@ -14,6 +14,7 @@ import Center from '../components/Center';
 import PostingList from '../components/PostingList';
 
 import Colors from '../config/colors';
+import { windowWidth, windowHeight } from '../config/dimensions';
 
 const url = "https:cellular-virtue-277000.uc.r.appspot.com/postings/?format=json";
 
@@ -108,7 +109,7 @@ const styles = StyleSheet.create({
   },
   searchContainer: {
     width: '90%',
-    marginVertical: 15,
+    marginVertical: windowHeight / 80,
   },
   inputView: {
     flexDirection: 'row',
