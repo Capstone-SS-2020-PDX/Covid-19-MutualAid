@@ -104,7 +104,7 @@ const PostingCreationScreen = props => {
       let imageName = (Math.random() * 1000).toString().concat('.jpg');
       console.log(imageName);
 
-      let resizedImage = new Promise((resolve, reject) => {
+      let resizedImage = await new Promise((resolve, reject) => {
         ImageEditor.cropImage(pickerResult.uri, {
         offset: { x: 0, y: 0 },
         size: { width: 1000, height: 1000 },
