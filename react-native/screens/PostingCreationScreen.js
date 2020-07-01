@@ -208,7 +208,7 @@ const PostingCreationScreen = props => {
                   onValueChange={toggleRequestSwitch}
                   value={isRequestSwitchEnabled}
                   trackColor={{ false: "#767577", true: Colors.primary }}
-                  thumbColor={isRequestSwitchEnabled ? Colors.secondary : "#f4f3f4"}
+                  thumbColor={isRequestSwitchEnabled ? Colors.primary : "#f4f3f4"}
                 />
               </View>
               <View style={styles.switchColumn}>
@@ -230,7 +230,7 @@ const PostingCreationScreen = props => {
                   onValueChange={toggleCategorySwitch}
                   value={isCategorySwitchEnabled}
                   trackColor={{ false: "#767577", true: Colors.primary }}
-                  thumbColor={isCategorySwitchEnabled ? Colors.secondary : "#f4f3f4"}
+                  thumbColor={isCategorySwitchEnabled ? Colors.primary : "#f4f3f4"}
                 />
               </View>
             </View>
