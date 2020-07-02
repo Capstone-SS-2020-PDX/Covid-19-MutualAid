@@ -51,8 +51,10 @@ export const addPostingsRoutes = (Stack, navigation) => {
             options={
                 ({route, navigation}) => ({
                   headerTitle: route.params.request
-                    ? `Requesting ${route.params.title}`
-                    : `Offering ${route.params.title}`,
+                    /* ? `Request: ${route.params.title}` */
+                    /* : `Offer: ${route.params.title}`, */
+                    ? 'Request Detail'
+                    : 'Offer Detail',
                     ...headerOptions,
                     headerRight: () => handleEdit(route),
                 })
