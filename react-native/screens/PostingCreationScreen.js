@@ -18,6 +18,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { useHeaderHeight } from '@react-navigation/stack';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
+
 import { windowHeight, windowWidth } from '../config/dimensions';
 import Center from '../components/Center';
 import CustomButton from '../components/CustomButton';
@@ -107,7 +108,12 @@ const PostingCreationScreen = props => {
 
     let resizedImage = await ImageManipulator.manipulateAsync(
       pickerResult.uri,
-      [{resize:{width: 1000 }}]
+      [
+        { resize: {
+          width: 1000
+        }},
+      ],
+        { compress: 0.5 },
     )
 
     setSelectedImage({uri: resizedImage.uri, type: 'image/jpeg', name: imageName});
