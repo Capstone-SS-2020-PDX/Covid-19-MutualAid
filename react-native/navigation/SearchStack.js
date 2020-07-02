@@ -1,14 +1,9 @@
-import React, { useContext } from 'react';
-import { Text, Button, TouchableOpacity, StyleSheet } from 'react-native';
+import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import { Ionicons } from '@expo/vector-icons';
 
 import SearchScreen from '../screens/SearchScreen';
-import { AuthContext } from '../providers/AuthProvider';
 import { addPostingsRoutes } from './addPostingsRoutes';
-
-import Colors from '../config/colors';
-import { headerOptions } from '../config/navigation-options';
+import { headerOptions, drawerMenuIcon } from '../config/navigation-options';
 
 const Stack = createStackNavigator();
 
@@ -18,22 +13,7 @@ const SearchStack = props => {
   const SearchScreenOptions = {
     title: 'Search for a posting',
     ...headerOptions,
-    headerLeft: () => {
-      return(
-        <TouchableOpacity
-          style={styles.drawerIcon}
-          onPress={() => {
-            navigation.toggleDrawer();
-          }}
-        >
-          <Ionicons
-            name='md-menu'
-            size={30}
-            color={Colors.light_shade4}
-          />
-        </TouchableOpacity>
-      );
-    },
+    headerLeft: drawerMenuIcon.bind(this, navigation),
   }
 
   return(
@@ -47,11 +27,5 @@ const SearchStack = props => {
     </Stack.Navigator>
   );
 };
-
-const styles = StyleSheet.create({
-  drawerIcon: {
-    paddingLeft: 15,
-  },
-});
 
 export default SearchStack;
