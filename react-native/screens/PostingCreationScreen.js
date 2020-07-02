@@ -36,12 +36,12 @@ const PostingCreationScreen = props => {
   const [itemCount, setItemCount] = useState(1);
   const [isRequestSwitchEnabled, setIsRequestSwitchEnabled] = useState(false);
   const [isCategorySwitchEnabled, setIsCategorySwitchEnabled] = useState(false);
+  const [emailText, setEmailText] = useState('');
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const nameInputRef = useRef(null);
   const descriptionInputRef = useRef(null);
   const itemCountInputRef = useRef(null);
-  const [emailText, setEmailText] = useState('');
-  const [isModalVisible, setIsModalVisible] = useState(false);
 
 
   const height = useHeaderHeight();
@@ -60,6 +60,7 @@ const PostingCreationScreen = props => {
     data.append('category', categoryValue);
     data.append('request', requestValue);
     data.append('email', emailText)
+
     return data;
   };
 
@@ -118,7 +119,7 @@ const PostingCreationScreen = props => {
           width: 1000
         }},
       ],
-        { compress: 0.5 },
+      { compress: 0.5 },
     )
 
     setSelectedImage({uri: resizedImage.uri, type: 'image/jpeg', name: imageName});
@@ -193,121 +194,125 @@ const PostingCreationScreen = props => {
             {renderImageSection()}
           </TouchableOpacity>
         </View>
-          <View style={styles.inputContainer}>
-            <View style={styles.inputView}>
-              <TextInput
-                style={styles.inputText}
-                placeholder='Item Name...'
-                placeholderTextColor={Colors.placeholder_text}
-                maxLength={30}
-                returnKeyType='next'
-                onChangeText={text => setItemName(text)}
-                ref={nameInputRef}
+        <View style={styles.inputContainer}>
+          <View style={styles.inputView}>
+            <TextInput
+              style={styles.inputText}
+              placeholder='Item Name...'
+              placeholderTextColor={Colors.placeholder_text}
+              maxLength={30}
+              returnKeyType='next'
+              onChangeText={text => setItemName(text)}
+              ref={nameInputRef}
+            />
+          </View>
+          <View style={styles.inputView}>
+            <TextInput
+              style={styles.inputText}
+              placeholder='Item Description...'
+              placeholderTextColor={Colors.placeholder_text}
+              keyboardType='email-address'
+              returnKeyType='done'
+              multiline={true}
+              numberOfLines={3}
+              onChangeText={text => setItemDescription(text)}
+              ref={descriptionInputRef}
+            />
+          </View>
+          <View style={styles.switchRow}>
+            <View style={styles.switchColumn}>
+              <Text style={styles.switchTitle}>Request?</Text>
+              <Switch
+                style={styles.switch}
+                onValueChange={toggleRequestSwitch}
+                value={isRequestSwitchEnabled}
+                trackColor={{ false: "#767577", true: Colors.primary }}
+                thumbColor={isRequestSwitchEnabled ? Colors.primary : "#f4f3f4"}
               />
             </View>
-            <View style={styles.inputView}>
-              <TextInput
-                style={styles.inputText}
-                placeholder='Item Description...'
-                placeholderTextColor={Colors.placeholder_text}
-                keyboardType='email-address'
-                returnKeyType='done'
-                multiline={true}
-                numberOfLines={3}
-                onChangeText={text => setItemDescription(text)}
-                ref={descriptionInputRef}
-              />
-            </View>
-            <View style={styles.switchRow}>
-              <View style={styles.switchColumn}>
-                <Text style={styles.switchTitle}>Request?</Text>
-                <Switch
-                  style={styles.switch}
-                  onValueChange={toggleRequestSwitch}
-                  value={isRequestSwitchEnabled}
-                  trackColor={{ false: "#767577", true: Colors.primary }}
-                  thumbColor={isRequestSwitchEnabled ? Colors.primary : "#f4f3f4"}
+            <View style={styles.switchColumn}>
+              <Text style={styles.switchTitle}>Count</Text>
+              <View style={styles.countInputView}>
+                <TextInput
+                  style={styles.countInputText}
+                  keyboardType='numeric'
+                  returnKeyType='done'
+                  onChangeText={text => setItemCount(text)}
+                  ref={itemCountInputRef}
                 />
               </View>
-              <View style={styles.switchColumn}>
-                <Text style={styles.switchTitle}>Count</Text>
-                <View style={styles.countInputView}>
+            </View>
+            <View style={styles.switchColumn}>
+              <Text style={styles.switchTitle}>Category</Text>
+              <Switch
+                style={styles.switch}
+                onValueChange={toggleCategorySwitch}
+                value={isCategorySwitchEnabled}
+                trackColor={{ false: "#767577", true: Colors.primary }}
+                thumbColor={isCategorySwitchEnabled ? Colors.primary : "#f4f3f4"}
+              />
+            </View>
+          </View>
+
+          <CustomButton
+            style={styles.createPostingButton}
+            onPress={() => {
+              setIsModalVisible(true);
+            }}
+            style={{ marginBottom: 10, alignSelf: 'center'}}
+          >
+            <Text style={styles.buttonText}>Create Posting</Text>
+          </CustomButton>
+
+
+          <Modal
+            visible={isModalVisible}
+            animationType='slide'
+            onRequestClose={() => console.log('modal closing')}
+            onDismiss={() => console.log('modal dismissed')}
+          >
+            <View style={styles.postingModalViewContainer}>
+              <View style={styles.modalTitleContainer}>
+                <Text style={styles.modalTitle}>
+                  Enter your email to complete the post!
+                </Text>
+              </View>
+              <View style={styles.inputContainer}>
+                <View style={styles.inputView}>
                   <TextInput
-                    style={styles.countInputText}
-                    keyboardType='numeric'
+                    style={styles.inputText}
+                    placeholder='Enter your email...'
+                    placeholderTextColor={Colors.placeholder_text}
+                    keyboardType='email-address'
                     returnKeyType='done'
-                    onChangeText={text => setItemCount(text)}
-                    ref={itemCountInputRef}
+                    onChangeText={text => setEmailText(text)}
                   />
                 </View>
               </View>
-              <View style={styles.switchColumn}>
-                <Text style={styles.switchTitle}>Category</Text>
-                <Switch
-                  style={styles.switch}
-                  onValueChange={toggleCategorySwitch}
-                  value={isCategorySwitchEnabled}
-                  trackColor={{ false: "#767577", true: Colors.primary }}
-                  thumbColor={isCategorySwitchEnabled ? Colors.primary : "#f4f3f4"}
-                />
-              </View>
-            </View>
+              <CustomButton
+                style={styles.confirmButton}
+                onPress={() => {
+                  if(emailText.length > 0) {
+                    setIsModalVisible(!isModalVisible);
+                    sendPostRequest()
+                  } else {
+                    console.log('No Email Provided')
+                  }}
+                }
+              >
 
-        <CustomButton
-          style={styles.reachOutButton}
-          onPress={() => {
-            setIsModalVisible(true);
-          }}
-          style={{ marginBottom: 10, alignSelf: 'center'}}
-        >
-          <Text style={styles.buttonText}>Confirm</Text>
-        </CustomButton>
-        <Modal
-        visible={isModalVisible}
-        animationType='slide'
-        onRequestClose={() => console.log('modal closing')}
-        onDismiss={() => console.log('modal dismissed')}
-      >
-        <View style={styles.reachOutModalViewContainer}>
-          <View style={styles.modalTitleContainer}>
-            <Text style={styles.modalTitle}>
-              Enter your email to complete the post!
-            </Text>
-          </View>
-          <View style={styles.inputContainer}>
-            <View style={styles.inputView}>
-              <TextInput
-                style={styles.inputText}
-                placeholder='Enter your email...'
-                placeholderTextColor={Colors.placeholder_text}
-                keyboardType='email-address'
-                returnKeyType='done'
-                onChangeText={text => setEmailText(text)}
-              />
+                <Text style={styles.createPostingButtonText}>Confirm</Text>
+              </CustomButton>
+              <TouchableOpacity
+                onPress={() => {
+                  console.log('email entry cancelled');
+                  setIsModalVisible(!isModalVisible);
+                }}
+              >
+                <Text style={styles.cancelText}>Cancel</Text>
+              </TouchableOpacity>
             </View>
-          </View>
-          <CustomButton
-            style={styles.confirmButton}
-            onPress={() => {
-              if(emailText.length > 0) {
-                setIsModalVisible(!isModalVisible);
-                sendPostRequest()
-              } else {
-                console.log('No Email Provided')
-              }}
-            }>
-            <Text style={styles.reachOutButtonText}>Confirm</Text>
-          </CustomButton>
-          <TouchableOpacity
-            onPress={() => {
-              console.log('email entry cancelled');
-              setIsModalVisible(!isModalVisible);
-            }}
-          >
-            <Text style={styles.cancelText}>Cancel</Text>
-          </TouchableOpacity>
-        </View>
-      </Modal>
+          </Modal>
         </View>
 
       </KeyboardAwareScrollView>
@@ -425,7 +430,7 @@ const styles = StyleSheet.create({
   switch: {
       transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }],
   },
-  reachOutModalViewContainer: {
+  postingModalViewContainer: {
     height: '90%',
     alignItems: 'center',
     justifyContent: 'flex-end',
@@ -436,12 +441,20 @@ const styles = StyleSheet.create({
   confirmButton: {
     marginBottom: 20,
   },
+  createPostingButtonText: {
+    color: 'white',
+    fontSize: 24,
+  },
   modalTitleContainer: {
     marginBottom: 200,
   },
   modalTitle: {
     fontSize: 40,
     textAlign: 'center',
+  },
+  cancelText: {
+    color: Colors.contrast2,
+    fontSize: 20,
   },
 });
 

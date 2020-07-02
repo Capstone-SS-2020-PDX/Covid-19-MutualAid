@@ -39,7 +39,7 @@ const PostingDetailScreen = props => {
   };
 
   const sendEmail = (fromEmail, id) => {
-    const toEmail = 'canadianfishturkey@gmail.com';
+    const toEmail = 'ehaake@pdx.edu';
     const request = { postid: id, addressfrom: fromEmail, addressto: toEmail };
     const requestJSON = JSON.stringify(request);
 
@@ -102,6 +102,8 @@ const PostingDetailScreen = props => {
       >
         <Text style={styles.reachOutButtonText}>Reach Out!</Text>
       </CustomButton>
+
+
       <Modal
         visible={isModalVisible}
         animationType='slide'
