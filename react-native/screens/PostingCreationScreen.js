@@ -17,6 +17,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { useHeaderHeight } from '@react-navigation/stack';
 import * as ImagePicker from 'expo-image-picker';
+import * as ImageManipulator from 'expo-image-manipulator';
 
 import { windowHeight, windowWidth } from '../config/dimensions';
 import Center from '../components/Center';
@@ -95,6 +96,7 @@ const PostingCreationScreen = props => {
       allowsEditing: true,
       quality: 0.5,
       aspect: [1,1],
+      resizeMethod: 'contain'
     });
 
     if (pickerResult.cancelled === true) {
@@ -104,7 +106,17 @@ const PostingCreationScreen = props => {
     let imageName = (Math.random() * 1000).toString().concat('.jpg');
     console.log(imageName);
 
-    setSelectedImage({uri: pickerResult.uri, type: 'image/jpeg', name: imageName});
+    let resizedImage = await ImageManipulator.manipulateAsync(
+      pickerResult.uri,
+      [
+        { resize: {
+          width: 1000
+        }},
+      ],
+        { compress: 0.5 },
+    )
+
+    setSelectedImage({uri: resizedImage.uri, type: 'image/jpeg', name: imageName});
     console.log(selectedImage);
   };
 
@@ -280,13 +292,11 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
   image: {
-
     width: windowWidth/3,
     height: windowHeight/4,
     aspectRatio: 1,
     borderColor: 'black',
     borderWidth: 1
-
   },
   inputContainer: {
     width: '80%',
@@ -349,7 +359,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginHorizontal: 20,
     marginBottom: -10
-
   },
   switchColumn: {
     alignItems: 'center',
