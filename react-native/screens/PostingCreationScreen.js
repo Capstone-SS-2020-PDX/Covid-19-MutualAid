@@ -5,6 +5,7 @@ import { StyleSheet,
          View,
          Button,
          Switch,
+         ActivityIndicator,
          TouchableOpacity,
          ScrollView,
          Dimensions,
@@ -80,9 +81,17 @@ const PostingCreationScreen = props => {
         console.log(error)
       })
       .finally(() => {
-        clearInputs();
-        setIsProcessing(false);
+        resetFormState();
       });
+  };
+
+  const handlePostCreation = () => {
+    if(!isProcessing) {
+      setIsProcessing(true);
+      sendPostRequest()
+    } else {
+      console.log('processing, please wait');
+    }
   };
 
   // Handles letting the user select an image from their library
@@ -115,7 +124,7 @@ const PostingCreationScreen = props => {
           width: 1000
         }},
       ],
-        { compress: 0.5 },
+      { compress: 0.5 },
     )
 
     setSelectedImage({uri: resizedImage.uri, type: 'image/jpeg', name: imageName});
@@ -123,11 +132,12 @@ const PostingCreationScreen = props => {
   };
 
   // clears the input fields and state for the input
-  const clearInputs = () => {
+  const resetFormState = () => {
     setItemName('');
     setItemDescription('');
     setSelectedImage(null);
     setItemCount(1);
+    setIsProcessing(false);
 
     setIsRequestSwitchEnabled(false);
     setIsCategorySwitchEnabled(false);
@@ -189,79 +199,75 @@ const PostingCreationScreen = props => {
             {renderImageSection()}
           </TouchableOpacity>
         </View>
-          <View style={styles.inputContainer}>
-            <View style={styles.inputView}>
-              <TextInput
-                style={styles.inputText}
-                placeholder='Item Name...'
-                placeholderTextColor={Colors.placeholder_text}
-                maxLength={30}
-                returnKeyType='next'
-                onChangeText={text => setItemName(text)}
-                ref={nameInputRef}
+        <View style={styles.inputContainer}>
+          <View style={styles.inputView}>
+            <TextInput
+              style={styles.inputText}
+              placeholder='Item Name...'
+              placeholderTextColor={Colors.placeholder_text}
+              maxLength={30}
+              returnKeyType='next'
+              onChangeText={text => setItemName(text)}
+              ref={nameInputRef}
+            />
+          </View>
+          <View style={styles.inputView}>
+            <TextInput
+              style={styles.inputText}
+              placeholder='Item Description...'
+              placeholderTextColor={Colors.placeholder_text}
+              keyboardType='email-address'
+              returnKeyType='done'
+              multiline={true}
+              numberOfLines={3}
+              onChangeText={text => setItemDescription(text)}
+              ref={descriptionInputRef}
+            />
+          </View>
+          <View style={styles.switchRow}>
+            <View style={styles.switchColumn}>
+              <Text style={styles.switchTitle}>Request?</Text>
+              <Switch
+                style={styles.switch}
+                onValueChange={toggleRequestSwitch}
+                value={isRequestSwitchEnabled}
+                trackColor={{ false: "#767577", true: Colors.primary }}
+                thumbColor={isRequestSwitchEnabled ? Colors.primary : "#f4f3f4"}
               />
             </View>
-            <View style={styles.inputView}>
-              <TextInput
-                style={styles.inputText}
-                placeholder='Item Description...'
-                placeholderTextColor={Colors.placeholder_text}
-                keyboardType='email-address'
-                returnKeyType='done'
-                multiline={true}
-                numberOfLines={3}
-                onChangeText={text => setItemDescription(text)}
-                ref={descriptionInputRef}
-              />
-            </View>
-            <View style={styles.switchRow}>
-              <View style={styles.switchColumn}>
-                <Text style={styles.switchTitle}>Request?</Text>
-                <Switch
-                  style={styles.switch}
-                  onValueChange={toggleRequestSwitch}
-                  value={isRequestSwitchEnabled}
-                  trackColor={{ false: "#767577", true: Colors.primary }}
-                  thumbColor={isRequestSwitchEnabled ? Colors.primary : "#f4f3f4"}
-                />
-              </View>
-              <View style={styles.switchColumn}>
-                <Text style={styles.switchTitle}>Count</Text>
-                <View style={styles.countInputView}>
-                  <TextInput
-                    style={styles.countInputText}
-                    keyboardType='numeric'
-                    returnKeyType='done'
-                    onChangeText={text => setItemCount(text)}
-                    ref={itemCountInputRef}
-                  />
-                </View>
-              </View>
-              <View style={styles.switchColumn}>
-                <Text style={styles.switchTitle}>Category</Text>
-                <Switch
-                  style={styles.switch}
-                  onValueChange={toggleCategorySwitch}
-                  value={isCategorySwitchEnabled}
-                  trackColor={{ false: "#767577", true: Colors.primary }}
-                  thumbColor={isCategorySwitchEnabled ? Colors.primary : "#f4f3f4"}
+            <View style={styles.switchColumn}>
+              <Text style={styles.switchTitle}>Count</Text>
+              <View style={styles.countInputView}>
+                <TextInput
+                  style={styles.countInputText}
+                  keyboardType='numeric'
+                  returnKeyType='done'
+                  onChangeText={text => setItemCount(text)}
+                  ref={itemCountInputRef}
                 />
               </View>
             </View>
+            <View style={styles.switchColumn}>
+              <Text style={styles.switchTitle}>Category</Text>
+              <Switch
+                style={styles.switch}
+                onValueChange={toggleCategorySwitch}
+                value={isCategorySwitchEnabled}
+                trackColor={{ false: "#767577", true: Colors.primary }}
+                thumbColor={isCategorySwitchEnabled ? Colors.primary : "#f4f3f4"}
+              />
+            </View>
+          </View>
 
-        <CustomButton
-          onPress={() => {
-            if(!isProcessing) {
-              setIsProcessing(true);
-              sendPostRequest()
-            } else {
-              console.log('processing, please wait');
-            }
-          }}
-          style={{ marginBottom: 10, alignSelf: 'center'}}
-        >
-          <Text style={styles.buttonText}>Confirm</Text>
-        </CustomButton>
+          { isProcessing
+            ? <ActivityIndicator size='large' color={Colors.primary}/>
+            : <CustomButton
+                onPress={handlePostCreation}
+                style={{ marginBottom: 10, alignSelf: 'center'}}
+              >
+                <Text style={styles.buttonText}>Confirm</Text>
+              </CustomButton>
+          }
         </View>
 
       </KeyboardAwareScrollView>
