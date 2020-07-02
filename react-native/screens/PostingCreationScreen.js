@@ -260,7 +260,9 @@ const PostingCreationScreen = props => {
           </View>
 
           { isProcessing
-            ? <ActivityIndicator size='large' color={Colors.primary}/>
+            ? <View style={styles.activityIndicator}>
+                <ActivityIndicator size='large' color={Colors.primary}/>
+              </View>
             : <CustomButton
                 onPress={handlePostCreation}
                 style={{ marginBottom: 10, alignSelf: 'center'}}
@@ -385,6 +387,9 @@ const styles = StyleSheet.create({
   switch: {
       transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }],
   },
+  activityIndicator: {
+    marginTop: windowHeight / 40,
+  }
 });
 
 export default PostingCreationScreen;
