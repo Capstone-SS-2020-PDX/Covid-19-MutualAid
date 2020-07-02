@@ -35,7 +35,8 @@ const PostingCreationScreen = props => {
   const [itemCount, setItemCount] = useState(1);
   const [isRequestSwitchEnabled, setIsRequestSwitchEnabled] = useState(false);
   const [isCategorySwitchEnabled, setIsCategorySwitchEnabled] = useState(false);
-  const [processing, setProcessing] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+
   const nameInputRef = useRef(null);
   const descriptionInputRef = useRef(null);
   const itemCountInputRef = useRef(null);
@@ -80,7 +81,7 @@ const PostingCreationScreen = props => {
       })
       .finally(() => {
         clearInputs();
-        setProcessing(false);
+        setIsProcessing(false);
       });
   };
 
@@ -250,8 +251,8 @@ const PostingCreationScreen = props => {
 
         <CustomButton
           onPress={() => {
-            if(!processing) {
-              setProcessing(true);
+            if(!isProcessing) {
+              setIsProcessing(true);
               sendPostRequest()
             } else {
               console.log('processing, please wait');
