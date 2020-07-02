@@ -8,7 +8,7 @@ import { AuthContext } from '../providers/AuthProvider';
 import { addPostingsRoutes } from './addPostingsRoutes';
 
 import Colors from '../config/colors';
-import headerOptions from '../config/headerOptions';
+import { headerOptions } from '../config/navigation-options';
 
 const Stack = createStackNavigator();
 

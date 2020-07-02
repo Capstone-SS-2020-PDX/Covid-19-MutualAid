@@ -4,7 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { Ionicons } from '@expo/vector-icons';
 
 import AboutScreen from '../screens/AboutScreen';
-import headerOptions from '../config/headerOptions';
+import { headerOptions } from '../config/navigation-options';
 import Colors from '../config/colors';
 
 const Stack = createStackNavigator();

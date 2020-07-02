@@ -5,7 +5,7 @@ import PostingDetailScreen from '../screens/PostingDetailScreen';
 import EditPostingScreen from '../screens/EditPostingScreen';
 
 import Colors from '../config/colors';
-import headerOptions  from '../config/headerOptions';
+import { headerOptions }  from '../config/navigation-options';
 
 // Combine multiple screen routes that can be shown on different...
 // Navigation stacks.

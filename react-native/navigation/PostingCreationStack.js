@@ -7,7 +7,7 @@ import PostingCreationScreen from '../screens/PostingCreationScreen';
 import ImageUpload from '../components/ImageUpload';
 
 import Colors from '../config/colors';
-import headerOptions from '../config/headerOptions';
+import { headerOptions } from '../config/navigation-options';
 
 
 const Stack = createStackNavigator();
