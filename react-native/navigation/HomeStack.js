@@ -4,7 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { Ionicons } from '@expo/vector-icons';
 
-import FeedScreen from '../screens/FeedScreen';
+import PostingListScreen from '../screens/PostingListScreen';
 
 import { AuthContext } from '../providers/AuthProvider';
 import { addPostingsRoutes } from './addPostingsRoutes';
@@ -18,7 +18,7 @@ const HomeStack = props => {
   const { navigation } = props;
   const { logout, currentUser } = useContext(AuthContext);
 
-  const FeedScreenOptions = {
+  const PostingListScreenOptions = {
     title: `Welcome ${currentUser.userName}`,
     ...headerOptions,
     headerLeft: () => {
@@ -45,8 +45,8 @@ const HomeStack = props => {
     >
       <Stack.Screen
         name='Feed'
-        component={FeedScreen}
-        options={FeedScreenOptions}
+        component={PostingListScreen}
+        options={PostingListScreenOptions}
       />
       {addPostingsRoutes(Stack, navigation)}
     </Stack.Navigator>
