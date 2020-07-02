@@ -12,6 +12,7 @@ import { StyleSheet,
          Image,
          Platform,
          AlertIOS,
+         Modal
        } from "react-native";
 import { FontAwesome5 } from '@expo/vector-icons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -39,6 +40,9 @@ const PostingCreationScreen = props => {
   const nameInputRef = useRef(null);
   const descriptionInputRef = useRef(null);
   const itemCountInputRef = useRef(null);
+  const [emailText, setEmailText] = useState('');
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
 
   const height = useHeaderHeight();
 
@@ -55,7 +59,7 @@ const PostingCreationScreen = props => {
     data.append('count', itemCount);
     data.append('category', categoryValue);
     data.append('request', requestValue);
-
+    data.append('email', emailText)
     return data;
   };
 
@@ -71,6 +75,7 @@ const PostingCreationScreen = props => {
       .then(response => response.json())
       .then(json => {
         console.log(json);
+        console.log(emailText);
         notifyMessage('Posting Sucessfully Created!');
         navigateToHomeStack();
       })
@@ -126,6 +131,7 @@ const PostingCreationScreen = props => {
     setItemDescription('');
     setSelectedImage(null);
     setItemCount(1);
+    setEmailText('');
 
     setIsRequestSwitchEnabled(false);
     setIsCategorySwitchEnabled(false);
@@ -248,11 +254,60 @@ const PostingCreationScreen = props => {
             </View>
 
         <CustomButton
-          onPress={() => sendPostRequest()}
+          style={styles.reachOutButton}
+          onPress={() => {
+            setIsModalVisible(true);
+          }}
           style={{ marginBottom: 10, alignSelf: 'center'}}
         >
           <Text style={styles.buttonText}>Confirm</Text>
         </CustomButton>
+        <Modal
+        visible={isModalVisible}
+        animationType='slide'
+        onRequestClose={() => console.log('modal closing')}
+        onDismiss={() => console.log('modal dismissed')}
+      >
+        <View style={styles.reachOutModalViewContainer}>
+          <View style={styles.modalTitleContainer}>
+            <Text style={styles.modalTitle}>
+              Enter your email to complete the post!
+            </Text>
+          </View>
+          <View style={styles.inputContainer}>
+            <View style={styles.inputView}>
+              <TextInput
+                style={styles.inputText}
+                placeholder='Enter your email...'
+                placeholderTextColor={Colors.placeholder_text}
+                keyboardType='email-address'
+                returnKeyType='done'
+                onChangeText={text => setEmailText(text)}
+              />
+            </View>
+          </View>
+          <CustomButton
+            style={styles.confirmButton}
+            onPress={() => {
+              if(emailText.length > 0) {
+                setIsModalVisible(!isModalVisible);
+                sendPostRequest()
+              } else {
+                console.log('No Email Provided')
+              }}
+            }>
+            <Text style={styles.reachOutButtonText}>Confirm</Text>
+          </CustomButton>
+          <TouchableOpacity
+            onPress={() => {
+              console.log('email entry cancelled');
+              setIsModalVisible(!isModalVisible);
+            }}
+          >
+            <Text style={styles.cancelText}>Cancel</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
         </View>
 
       </KeyboardAwareScrollView>
@@ -369,6 +424,24 @@ const styles = StyleSheet.create({
   },
   switch: {
       transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }],
+  },
+  reachOutModalViewContainer: {
+    height: '90%',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    margin: 10,
+    padding: 10,
+    backgroundColor: "white",
+  },
+  confirmButton: {
+    marginBottom: 20,
+  },
+  modalTitleContainer: {
+    marginBottom: 200,
+  },
+  modalTitle: {
+    fontSize: 40,
+    textAlign: 'center',
   },
 });
 
