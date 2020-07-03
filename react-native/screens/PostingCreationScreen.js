@@ -291,43 +291,45 @@ const PostingCreationScreen = props => {
                 Enter your email to complete the post!
               </Text>
             </View>
-            <View style={styles.inputContainer}>
-              <View style={styles.inputView}>
-                <TextInput
-                  style={styles.inputText}
-                  placeholder='Enter your email...'
-                  placeholderTextColor={Colors.placeholder_text}
-                  keyboardType='email-address'
-                  returnKeyType='done'
-                  onChangeText={text => setEmailText(text)}
-                />
-              </View>
-            </View>
 
             { isProcessing
               ? <View style={styles.activityIndicator}>
                   <ActivityIndicator size='large' color={Colors.primary}/>
                 </View>
-              : <CustomButton
-                onPress={handlePostCreation}
-                style={{ marginBottom: 10, alignSelf: 'center'}}
-                >
-                  <Text style={styles.buttonText}>Confirm</Text>
-                </CustomButton>
+              : <>
+                  <View style={styles.inputContainer}>
+                    <View style={styles.inputView}>
+                      <TextInput
+                        style={styles.inputText}
+                        placeholder='Enter your email...'
+                        placeholderTextColor={Colors.placeholder_text}
+                        keyboardType='email-address'
+                        returnKeyType='done'
+                        onChangeText={text => setEmailText(text)}
+                      />
+                    </View>
+                  </View>
+                  <CustomButton
+                    onPress={handlePostCreation}
+                    style={{ marginBottom: 10, alignSelf: 'center'}}
+                  >
+                    <Text style={styles.buttonText}>Confirm</Text>
+                  </CustomButton>
+                  <TouchableOpacity
+                    onPress={() => {
+                      console.log('email entry cancelled');
+                      setIsModalVisible(!isModalVisible);
+                    }}
+                  >
+                    <Text style={styles.cancelText}>Cancel</Text>
+                  </TouchableOpacity>
+                </>
             }
 
-            <TouchableOpacity
-              onPress={() => {
-                console.log('email entry cancelled');
-                setIsModalVisible(!isModalVisible);
-              }}
-            >
-              <Text style={styles.cancelText}>Cancel</Text>
-            </TouchableOpacity>
           </View>
         </Modal>
 
-    </KeyboardAwareScrollView>
+      </KeyboardAwareScrollView>
     </Center>
   );
 }

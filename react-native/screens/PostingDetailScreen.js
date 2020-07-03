@@ -33,6 +33,7 @@ const PostingDetailScreen = props => {
     if (emailText.length > 0) {
       console.log('Sending email from ' + emailText + ' to post with id: ' + route.params.id);
       sendEmail(emailText, route.params.id);
+      setIsModalVisible(!isModalVisible);
     } else {
       console.log('No email provided');
     }
@@ -134,7 +135,6 @@ const PostingDetailScreen = props => {
             style={styles.confirmButton}
             onPress={() => {
               handleReachOut();
-              setIsModalVisible(!isModalVisible);
             }}
           >
             <Text style={styles.reachOutButtonText}>Confirm</Text>
