@@ -19,6 +19,7 @@ import CustomButton from '../components/CustomButton';
 import EditPostingScreen from './EditPostingScreen';
 const offeredItemIconImage = '../assets/offered_item.png';
 const requestedItemIconImage = '../assets/requested_item.png';
+const itemPlaceHolder = '../assets/image_place_holder.jpg';
 
 import Colors from '../config/colors';
 import { windowHeight, windowWidth } from '../config/dimensions';
@@ -117,7 +118,8 @@ const PostingDetailScreen = props => {
           <Image
             style={styles.itemImage}
             resizeMode='cover'
-            source={picUrl!=null?{uri: picUrl}: null}
+            source={picUrl != null?{uri:picUrl}
+            : require(itemPlaceHolder)}
           />
         </View>
 
