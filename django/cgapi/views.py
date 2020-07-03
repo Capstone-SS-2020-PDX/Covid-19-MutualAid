@@ -39,7 +39,7 @@ class PostingViewSet(ModelViewSet):
             post_desc = getattr(related_post, 'desc')
             sender = request.data.get('addressfrom', '')
             subj = "Common Goods test email"
-            message = "Hey there! Somebody's interested in your post:\n Title:%s \nDescription:%s \n" % post_title, post_desc
+            message = "Hey there! Somebody's interested in your post:\nTitle: %s \nDescription: %s \n" % (post_title, post_desc)
             email = EmailMessage(
                 subject=subj,
                 body=message,
