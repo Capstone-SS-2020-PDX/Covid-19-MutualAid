@@ -100,22 +100,22 @@ const PostingCreationScreen = props => {
 
   // Handles letting the user select an image from their library
   const openCameraAsync = async () => {
-    let cameraResult = await ImagePicker.requestCameraPermissionsAsync();
-    let libraryResult = await ImagePicker.requestCameraRollPermissionsAsync();
+    let cameraPermission = await ImagePicker.requestCameraPermissionsAsync();
+    let libraryPermission = await ImagePicker.requestCameraRollPermissionsAsync();
 
-    if (!cameraResult.granted  || !libraryResult.granted) {
+    if (!cameraPermission.granted  || !libraryPermission.granted) {
       alert('Permission to access camera and library is required!');
       return;
     }
 
-    let pickerResult = await ImagePicker.launchCameraAsync({
+    let cameraResult = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
       quality: 0.5,
       aspect: [1,1],
       resizeMethod: 'contain'
     });
 
-    if (pickerResult.cancelled === true) {
+    if (cameraResult.cancelled === true) {
       return;
     }
 
@@ -123,7 +123,7 @@ const PostingCreationScreen = props => {
     console.log(imageName);
 
     let resizedImage = await ImageManipulator.manipulateAsync(
-      pickerResult.uri,
+      cameraResult.uri,
       [
         { resize: {
           width: 1000
