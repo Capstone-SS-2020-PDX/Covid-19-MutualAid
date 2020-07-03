@@ -8,16 +8,14 @@ import { StyleSheet,
          TouchableOpacity,
          ScrollView,
          Dimensions,
-         ToastAndroid,
          Image,
-         Platform,
-         AlertIOS,
        } from "react-native";
 import { FontAwesome5 } from '@expo/vector-icons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { useHeaderHeight } from '@react-navigation/stack';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
+import { WToast } from 'react-native-smart-tip'
 
 import { windowHeight, windowWidth } from '../config/dimensions';
 import Center from '../components/Center';
@@ -137,11 +135,17 @@ const PostingCreationScreen = props => {
 
   // Displays a notification message, style dependent on platform
   const notifyMessage = msg => {
-    if (Platform.OS === 'android') {
-      ToastAndroid.show(msg, ToastAndroid.SHORT)
-    } else {
-      AlertIOS.alert(msg);
-    }
+    const toastOptions = {
+      data: msg,
+      textColor: Colors.light_shade4,
+      backgroundColor: Colors.dark_shade1,
+      position: WToast.position.CENTER,
+      duration: WToast.duration.SHORT,
+      position: WToast.position.CENTER,
+      // icon: <ActivityIndicator color='#fff' size={'large'}/>
+	  }
+
+    WToast.show(toastOptions)
   }
 
   // Navigates to the Home Screen stack when called
