@@ -86,6 +86,7 @@ const PostingCreationScreen = props => {
       .then(json => {
         console.log(json);
         notifyMessage('Posting Sucessfully Created!');
+        resetFormState();
         navigateToHomeStack();
       })
       .catch(error => {
@@ -93,7 +94,6 @@ const PostingCreationScreen = props => {
         console.log(error)
       })
       .finally(() => {
-        resetFormState();
       });
   };
 
@@ -149,9 +149,10 @@ const PostingCreationScreen = props => {
     nameInputRef.current.clear();
     descriptionInputRef.current.clear();
     itemCountInputRef.current.clear();
+
+    setIsModalVisible(false);
   };
 
-  // Displays a notification message, style dependent on platform
   const notifyMessage = msg => {
     const toastOptions = {
       data: msg,
@@ -306,6 +307,7 @@ const PostingCreationScreen = props => {
                         keyboardType='email-address'
                         returnKeyType='done'
                         onChangeText={text => setEmailText(text)}
+                        value={emailText}
                       />
                     </View>
                   </View>
@@ -472,7 +474,7 @@ const styles = StyleSheet.create({
   },
   activityIndicator: {
     marginTop: windowHeight / 40,
-  }
+  },
 });
 
 export default PostingCreationScreen;

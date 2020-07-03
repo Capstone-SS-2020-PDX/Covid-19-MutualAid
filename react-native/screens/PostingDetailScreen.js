@@ -8,7 +8,9 @@ import { View,
          StyleSheet,
          TextInput,
          Modal,
+         ActivityIndicator,
        } from 'react-native';
+import { WToast } from 'react-native-smart-tip'
 
 import Center from '../components/Center';
 import CustomButton from '../components/CustomButton';
@@ -26,22 +28,22 @@ const PostingDetailScreen = props => {
   const [emailText, setEmailText] = useState('');
   const [postingImage, setPostingImage] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const picUrl = route.params.item_pic;
 
   const handleReachOut = () => {
     if (emailText.length > 0) {
       console.log('Sending email from ' + emailText + ' to post with id: ' + route.params.id);
+      setIsProcessing(true);
       sendEmail(emailText, route.params.id);
-      setIsModalVisible(!isModalVisible);
     } else {
       console.log('No email provided');
     }
   };
 
   const sendEmail = (fromEmail, id) => {
-    const toEmail = 'canadianfishturkey@gmail.com';
-    const request = { postid: id, addressfrom: fromEmail, addressto: toEmail };
+    const request = { postid: id, addressfrom: fromEmail };
     const requestJSON = JSON.stringify(request);
 
     fetch(emailUrl, {
@@ -55,9 +57,42 @@ const PostingDetailScreen = props => {
       .then(response => response.text())
       .then(text => {
         console.log('Response from sendEmail: ' + text);
+        notifyMessage('Email sent successfully!');
+        resetFormState();
+        navigateToHomeStack();
       })
-      .catch(error => console.log('Error from sendEmail: ' + error))
-      .finally(() => {});
+      .catch(error => {
+        console.log('Error from sendEmail: ' + error)
+        notifyMessage('Oops! something went wrong...');
+      })
+      .finally(() => {
+      });
+  }
+
+  const resetFormState = () => {
+    setIsProcessing(false);
+    setEmailText('');
+    setIsModalVisible(!isModalVisible);
+
+  };
+ 
+  // Navigates to the Home Screen stack when called
+  const navigateToHomeStack = () => {
+    navigation.navigate('Home', {screen: 'Feed'})
+  }
+
+  const notifyMessage = msg => {
+    const toastOptions = {
+      data: msg,
+      textColor: Colors.light_shade4,
+      backgroundColor: Colors.dark_shade1,
+      position: WToast.position.CENTER,
+      duration: WToast.duration.SHORT,
+      position: WToast.position.CENTER,
+      // icon: <ActivityIndicator color='#fff' size={'large'}/>
+    }
+
+    WToast.show(toastOptions)
   }
 
   const itemIcon = route.params.request ? require(requestedItemIconImage)
@@ -119,34 +154,44 @@ const PostingDetailScreen = props => {
               Enter your email to get in contact!
             </Text>
           </View>
-          <View style={styles.inputContainer}>
-            <View style={styles.inputView}>
-              <TextInput
-                style={styles.inputText}
-                placeholder='Enter your email...'
-                placeholderTextColor={Colors.placeholder_text}
-                keyboardType='email-address'
-                returnKeyType='done'
-                onChangeText={text => setEmailText(text)}
-              />
-            </View>
-          </View>
-          <CustomButton
-            style={styles.confirmButton}
-            onPress={() => {
-              handleReachOut();
-            }}
-          >
-            <Text style={styles.reachOutButtonText}>Confirm</Text>
-          </CustomButton>
-          <TouchableOpacity
-            onPress={() => {
-              console.log('reach out cancelled');
-              setIsModalVisible(!isModalVisible);
-            }}
-          >
-            <Text style={styles.cancelText}>Cancel</Text>
-          </TouchableOpacity>
+
+          { isProcessing
+            ? <View style={styles.activityIndicator}>
+                <ActivityIndicator size='large' color={Colors.primary}/>
+              </View>
+            : <>
+
+                <View style={styles.inputContainer}>
+                  <View style={styles.inputView}>
+                    <TextInput
+                      style={styles.inputText}
+                      placeholder='Enter your email...'
+                      placeholderTextColor={Colors.placeholder_text}
+                      keyboardType='email-address'
+                      returnKeyType='done'
+                      onChangeText={text => setEmailText(text)}
+                      value={emailText}
+                    />
+                  </View>
+                </View>
+                <CustomButton
+                  style={styles.confirmButton}
+                  onPress={() => {
+                    handleReachOut();
+                  }}
+                >
+                  <Text style={styles.reachOutButtonText}>Confirm</Text>
+                </CustomButton>
+                <TouchableOpacity
+                  onPress={() => {
+                    console.log('reach out cancelled');
+                    setIsModalVisible(!isModalVisible);
+                  }}
+                >
+                  <Text style={styles.cancelText}>Cancel</Text>
+                </TouchableOpacity>
+              </>
+          }
         </View>
       </Modal>
     </>
@@ -160,8 +205,8 @@ const PostingDetailScreen = props => {
           {screenContent}
         </ScrollView>
     : <Center style={styles.screen}>
-        {screenContent}
-      </Center>
+      {screenContent}
+    </Center>
   );
 };
 
@@ -294,6 +339,9 @@ const styles = StyleSheet.create({
   cancelText: {
     color: Colors.contrast2,
     fontSize: 20,
+  },
+  activityIndicator: {
+    marginTop: windowHeight / 40,
   },
 });
 
