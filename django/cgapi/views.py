@@ -33,10 +33,13 @@ class PostingViewSet(ModelViewSet):
     def contact(self, request):
         if request.method == 'POST':
             post_id = request.data.get('postid', '')
-            recipient = request.data.get('addressto', '')
+            related_post = Posting.objects.get(pk=post_id)
+            recipient = getattr(related_post, 'email')
+            post_title = getattr(related_post, 'title')
+            post_desc = getattr(related_post, 'desc')
             sender = request.data.get('addressfrom', '')
             subj = "Common Goods test email"
-            message = "Here's an email from Common Goods, about post %s!" % post_id
+            message = "Hey there! Somebody's interested in your post:\n Title:%s \nDescription:%s \n" % post_title, post_desc
             email = EmailMessage(
                 subject=subj,
                 body=message,
