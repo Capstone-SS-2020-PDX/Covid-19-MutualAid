@@ -39,8 +39,7 @@ const PostingDetailScreen = props => {
   };
 
   const sendEmail = (fromEmail, id) => {
-    const toEmail = 'ehaake@pdx.edu';
-    const request = { postid: id, addressfrom: fromEmail, addressto: toEmail };
+    const request = { postid: id, addressfrom: fromEmail };
     const requestJSON = JSON.stringify(request);
 
     fetch(emailUrl, {
