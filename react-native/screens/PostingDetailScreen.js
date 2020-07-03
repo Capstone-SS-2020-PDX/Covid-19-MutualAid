@@ -104,6 +104,8 @@ const PostingDetailScreen = props => {
       >
         <Text style={styles.reachOutButtonText}>Reach Out!</Text>
       </CustomButton>
+
+
       <Modal
         visible={isModalVisible}
         animationType='slide'
