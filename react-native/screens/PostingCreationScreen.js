@@ -10,6 +10,7 @@ import { StyleSheet,
          Dimensions,
          Image,
          Modal,
+         ActivityIndicator,
        } from "react-native";
 import { FontAwesome5 } from '@expo/vector-icons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -43,6 +44,16 @@ const PostingCreationScreen = props => {
   const itemCountInputRef = useRef(null);
 
   const height = useHeaderHeight();
+
+
+  const handlePostCreation = () => {
+    if(!isProcessing) {
+      setIsProcessing(true);
+      sendPostRequest()
+    } else {
+      console.log('processing, please wait');
+    }
+  };
 
   // Create the data object in correct format to be sent off the server
   const createFormData = () => {
@@ -82,7 +93,7 @@ const PostingCreationScreen = props => {
         console.log(error)
       })
       .finally(() => {
-        clearInputs();
+        resetFormState();
       });
   };
 
@@ -124,12 +135,13 @@ const PostingCreationScreen = props => {
   };
 
   // clears the input fields and state for the input
-  const clearInputs = () => {
+  const resetFormState = () => {
     setItemName('');
     setItemDescription('');
     setSelectedImage(null);
     setItemCount(1);
     setEmailText('');
+    setIsProcessing(false);
 
     setIsRequestSwitchEnabled(false);
     setIsCategorySwitchEnabled(false);
@@ -291,20 +303,19 @@ const PostingCreationScreen = props => {
                 />
               </View>
             </View>
-            <CustomButton
-              style={styles.confirmButton}
-              onPress={() => {
-                if(emailText.length > 0) {
-                  setIsModalVisible(!isModalVisible);
-                  sendPostRequest()
-                } else {
-                  console.log('No Email Provided');
-                }}
-              }
-            >
 
-              <Text style={styles.createPostingButtonText}>Confirm</Text>
-            </CustomButton>
+            { isProcessing
+              ? <View style={styles.activityIndicator}>
+                  <ActivityIndicator size='large' color={Colors.primary}/>
+                </View>
+              : <CustomButton
+                onPress={handlePostCreation}
+                style={{ marginBottom: 10, alignSelf: 'center'}}
+                >
+                  <Text style={styles.buttonText}>Confirm</Text>
+                </CustomButton>
+            }
+
             <TouchableOpacity
               onPress={() => {
                 console.log('email entry cancelled');
@@ -457,6 +468,9 @@ const styles = StyleSheet.create({
     color: Colors.contrast2,
     fontSize: 20,
   },
+  activityIndicator: {
+    marginTop: windowHeight / 40,
+  }
 });
 
 export default PostingCreationScreen;
