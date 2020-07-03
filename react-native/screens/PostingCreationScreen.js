@@ -287,7 +287,7 @@ const PostingCreationScreen = props => {
               style={styles.inputText}
               placeholder='Item Description...'
               placeholderTextColor={Colors.placeholder_text}
-              keyboardType='email-address'
+              keyboardType='default'
               returnKeyType='done'
               multiline={true}
               maxLength={255}
