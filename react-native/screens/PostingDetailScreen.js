@@ -10,6 +10,8 @@ import { View,
          Modal,
          ActivityIndicator,
        } from 'react-native';
+
+import {RFValue, RFPercentage} from "react-native-responsive-fontsize";
 import { WToast } from 'react-native-smart-tip'
 
 import Center from '../components/Center';
@@ -230,12 +232,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   detailTitleText: {
-    marginLeft: windowWidth / 35,
+    maxWidth: '75%',
+    marginLeft: windowWidth / 128,
     fontSize: windowWidth / 14,
     fontFamily: 'open-sans-bold',
+    fontSize: RFPercentage(5),
   },
   postingTypeIconContainer: {
-    marginHorizontal: 8,
+    marginLeft: 8,
   },
   postingTypeIconImage: {
     width: 80,
