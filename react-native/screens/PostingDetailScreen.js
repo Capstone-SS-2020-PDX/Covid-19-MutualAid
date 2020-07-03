@@ -15,6 +15,7 @@ import { WToast } from 'react-native-smart-tip'
 import Center from '../components/Center';
 import CustomButton from '../components/CustomButton';
 import EditPostingScreen from './EditPostingScreen';
+
 const offeredItemIconImage = '../assets/offered_item.png';
 const requestedItemIconImage = '../assets/requested_item.png';
 
@@ -73,7 +74,6 @@ const PostingDetailScreen = props => {
     setIsProcessing(false);
     setEmailText('');
     setIsModalVisible(!isModalVisible);
-
   };
  
   // Navigates to the Home Screen stack when called
@@ -101,13 +101,6 @@ const PostingDetailScreen = props => {
   const screenContent = (
     <>
       <View style={styles.detailTitleContainer}>
-        <View style={styles.postingTypeIconContainer}>
-          <Image
-            style={styles.postingTypeIconImage}
-            resizeMode='contain'
-            source={itemIcon}
-          />
-        </View>
         <Text style={styles.detailTitleText}>{route.params.title}</Text>
        </View>
 
@@ -115,7 +108,7 @@ const PostingDetailScreen = props => {
           <Image
             style={styles.itemImage}
             resizeMode='cover'
-            source={picUrl!=null?{uri: picUrl}: null}
+            source={picUrl != null ? {uri: picUrl}: null}
           />
         </View>
 
@@ -233,6 +226,7 @@ const styles = StyleSheet.create({
     marginLeft: windowWidth / 35,
     fontSize: windowWidth / 14,
     fontFamily: 'open-sans-bold',
+    marginTop: 10,
   },
   postingTypeIconContainer: {
     marginHorizontal: 8,
