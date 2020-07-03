@@ -11,6 +11,7 @@ import { StyleSheet,
          Image,
          Modal,
          ActivityIndicator,
+         Alert,
        } from "react-native";
 import { FontAwesome5 } from '@expo/vector-icons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -95,6 +96,44 @@ const PostingCreationScreen = props => {
       })
       .finally(() => {
       });
+  };
+
+  // Handles letting the user select an image from their library
+  const openCameraAsync = async () => {
+    let cameraResult = await ImagePicker.requestCameraPermissionsAsync();
+    let libraryResult = await ImagePicker.requestCameraRollPermissionsAsync();
+
+    if (!cameraResult.granted  || !libraryResult.granted) {
+      alert('Permission to access camera and library is required!');
+      return;
+    }
+
+    let pickerResult = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      quality: 0.5,
+      aspect: [1,1],
+      resizeMethod: 'contain'
+    });
+
+    if (pickerResult.cancelled === true) {
+      return;
+    }
+
+    let imageName = (Math.random() * 1000).toString().concat('.jpg');
+    console.log(imageName);
+
+    let resizedImage = await ImageManipulator.manipulateAsync(
+      pickerResult.uri,
+      [
+        { resize: {
+          width: 1000
+        }},
+      ],
+      { compress: 0.5 },
+    )
+
+    setSelectedImage({uri: resizedImage.uri, type: 'image/jpeg', name: imageName});
+    console.log(selectedImage);
   };
 
   // Handles letting the user select an image from their library
@@ -195,7 +234,28 @@ const PostingCreationScreen = props => {
   const toggleCategorySwitch = () => {
     setIsCategorySwitchEnabled(previousState => !previousState);
   };
-
+  const selectImageOption = () => {
+    Alert.alert(
+      "Image Upload",
+      "Upload a picture from your camera roll, or take one with your camera",
+      [
+        {
+          text:"Cancel",
+          style: "cancel"
+        },
+        
+        {
+          text: "Open Camera",
+          onPress: () => openCameraAsync()
+        },
+        {
+          text: "Camera Roll",
+          onPress: () => openImagePickerAsync()
+        }
+      ],
+      { onDismiss: () => {} }
+    )
+  }
   return (
     <Center style={styles.screen}>
       <KeyboardAwareScrollView
@@ -205,7 +265,7 @@ const PostingCreationScreen = props => {
       >
         <View style={styles.imageContainer}>
           <TouchableOpacity
-            onPress={openImagePickerAsync}
+            onPress={selectImageOption}
           >
             {renderImageSection()}
           </TouchableOpacity>
