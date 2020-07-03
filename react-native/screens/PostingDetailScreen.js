@@ -79,7 +79,7 @@ const PostingDetailScreen = props => {
           <Image
             style={styles.itemImage}
             resizeMode='cover'
-            source={{uri: picUrl}}
+            source={picUrl!=null?{uri: picUrl}: null}
           />
         </View>
 
