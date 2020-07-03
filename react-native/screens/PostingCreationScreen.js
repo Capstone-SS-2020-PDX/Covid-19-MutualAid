@@ -193,7 +193,7 @@ const PostingCreationScreen = props => {
                 style={styles.inputText}
                 placeholder='Item Name...'
                 placeholderTextColor={Colors.placeholder_text}
-                maxLength={30}
+                maxLength={25}
                 returnKeyType='next'
                 onChangeText={text => setItemName(text)}
                 ref={nameInputRef}
@@ -207,6 +207,7 @@ const PostingCreationScreen = props => {
                 keyboardType='email-address'
                 returnKeyType='done'
                 multiline={true}
+                maxLength={255}
                 numberOfLines={3}
                 onChangeText={text => setItemDescription(text)}
                 ref={descriptionInputRef}

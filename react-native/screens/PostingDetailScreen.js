@@ -62,8 +62,8 @@ const PostingDetailScreen = props => {
   const itemIcon = route.params.request ? require(requestedItemIconImage)
         : require(offeredItemIconImage);
 
-  return(
-    <Center style={styles.screen}>
+  const screenContent = (
+    <>
       <View style={styles.detailTitleContainer}>
         <View style={styles.postingTypeIconContainer}>
           <Image
@@ -73,26 +73,28 @@ const PostingDetailScreen = props => {
           />
         </View>
         <Text style={styles.detailTitleText}>{route.params.title}</Text>
-      </View>
+       </View>
 
-      <View style={styles.imageContainer}>
-        <Image
-          style={styles.itemImage}
-          resizeMode='cover'
-          source={{uri: picUrl}}
-        />
-      </View>
-      <View style={styles.detailRow}>
-        <View style={styles.detailContainer}>
-          <Text style={styles.detailText}>Category: {route.params.category}</Text>
-          <Text style={styles.detailText}>Amount: {route.params.count}</Text>
-          <Text style={styles.detailText}>Created on: {route.params.created_on}</Text>
+        <View style={styles.imageContainer}>
+          <Image
+            style={styles.itemImage}
+            resizeMode='cover'
+            source={picUrl!=null?{uri: picUrl}: null}
+          />
         </View>
+
+      <View style={styles.detailContainer}>
+        <Text style={styles.detailText}>
+          Created on: <Text style={styles.boldText}>{route.params.created_on}{'  '}</Text>
+          Available: <Text style={styles.boldText}>{route.params.count}</Text>
+        </Text>
       </View>
 
+      <View style={styles.descriptionContainer}>
         <ScrollView style={styles.descriptionScroll}>
           <Text style={styles.bodyText}>{route.params.description}</Text>
         </ScrollView>
+      </View>
 
       <CustomButton
         style={styles.reachOutButton}
@@ -145,73 +147,87 @@ const PostingDetailScreen = props => {
           </TouchableOpacity>
         </View>
       </Modal>
-    </Center>
+    </>
+  )
+
+  return(
+    windowHeight < 650
+      ? <ScrollView
+          contentContainerStyle={styles.scrollScreen}
+        >
+          {screenContent}
+        </ScrollView>
+    : <Center style={styles.screen}>
+        {screenContent}
+      </Center>
   );
 };
 
 
 const styles = StyleSheet.create({
+  scrollScreen: {
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 10,
+    backgroundColor: Colors.light_shade4,
+  },
   screen: {
     justifyContent: 'space-between',
     paddingHorizontal: 10,
     backgroundColor: Colors.light_shade4,
   },
   detailTitleContainer: {
-    width: '90%',
+    width: '100%',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 10,
   },
   detailTitleText: {
-    fontSize: windowWidth / 15,
+    marginLeft: windowWidth / 35,
+    fontSize: windowWidth / 14,
     fontFamily: 'open-sans-bold',
   },
   postingTypeIconContainer: {
-    marginHorizontal: 10,
+    marginHorizontal: 8,
   },
   postingTypeIconImage: {
     width: 80,
     height: 80,
   },
-  itemImage: {
-    width: '100%',
-    height: '100%',
-  },
   detailRow: {
     flexDirection: 'row',
   },
   detailText: {
-    fontSize: 18,
+    fontSize: windowWidth / 32,
+  },
+  boldText: {
+    fontWeight: 'bold',
   },
   imageContainer: {
-    width: windowWidth * 0.5,
-    height: windowWidth * 0.5,
+    width: windowWidth / 1.5,
+    height: windowWidth / 1.5,
+    marginTop: 10,
     borderWidth: 2,
     borderColor: Colors.dark_shade1,
-    marginVertical: windowHeight / 50,
+  },
+  itemImage: {
+    width: '100%',
+    height: '100%',
+  },
+  descriptionContainer: {
+    width: '100%',
+  },
+  descriptionScroll: {
+    padding: 5,
   },
   detailContainer: {
-    justifyContent: 'space-around',
     alignItems: 'center',
-    marginBottom: windowHeight / 50,
+    marginBottom: windowHeight / 200,
   },
   bodyText: {
     fontFamily: 'open-sans',
-    fontSize: 16,
-  },
-  descriptionContainer: {
-  },
-  descriptionScroll: {
-    width: '100%',
-    borderWidth: 0.5,
-    borderColor: 'black',
-    borderRadius: 10,
-    padding: 10,
-    marginVertical: 10,
-  },
-  reachOutButtonContainer: {
-    width: '80%',
+    fontSize: windowWidth / 25,
+    textAlign: 'center',
   },
   reachOutButton: {
     backgroundColor: Colors.primary,
@@ -219,12 +235,11 @@ const styles = StyleSheet.create({
     height: 50,
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 30,
     marginBottom: 20,
     elevation: 5,
   },
   reachOutButtonText: {
-    color: 'white',
+    color: Colors.light_shade4,
     fontSize: 24,
   },
   inputContainer: {
