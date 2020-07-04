@@ -10,6 +10,8 @@ import { View,
          Modal,
          ActivityIndicator,
        } from 'react-native';
+
+import {RFValue, RFPercentage} from "react-native-responsive-fontsize";
 import { WToast } from 'react-native-smart-tip'
 
 import Center from '../components/Center';
@@ -18,6 +20,7 @@ import EditPostingScreen from './EditPostingScreen';
 
 const offeredItemIconImage = '../assets/offered_item.png';
 const requestedItemIconImage = '../assets/requested_item.png';
+const itemPlaceHolder = '../assets/image_place_holder.jpg';
 
 import Colors from '../config/colors';
 import { windowHeight, windowWidth } from '../config/dimensions';
@@ -108,7 +111,10 @@ const PostingDetailScreen = props => {
           <Image
             style={styles.itemImage}
             resizeMode='cover'
-            source={picUrl != null ? {uri: picUrl}: null}
+
+            source={picUrl != null?{uri:picUrl}
+            : require(itemPlaceHolder)}
+
           />
         </View>
 
@@ -223,13 +229,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   detailTitleText: {
-    marginLeft: windowWidth / 35,
-    fontSize: windowWidth / 14,
+    maxWidth: '75%',
+    marginLeft: windowWidth / 128,
     fontFamily: 'open-sans-bold',
+    fontSize: RFPercentage(5),
     marginTop: 10,
   },
   postingTypeIconContainer: {
-    marginHorizontal: 8,
+    marginLeft: 8,
   },
   postingTypeIconImage: {
     width: 80,

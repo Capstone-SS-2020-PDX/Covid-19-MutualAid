@@ -11,9 +11,12 @@ import Colors from '../config/colors';
 const PostingListItem = props => {
     const offeredItemIconImage = '../assets/offered_item.png';
     const requestedItemIconImage = '../assets/requested_item.png';
+    const itemPlaceHolder = '../assets/image_place_holder.jpg';
 
     const itemIcon = props.request ? require(requestedItemIconImage)
         : require(offeredItemIconImage);
+
+    const picUrl = props.item_pic;
 
     return(
         <TouchableOpacity
@@ -25,7 +28,8 @@ const PostingListItem = props => {
               <Image
                 style={styles.listImage}
                 resizeMode='contain'
-                source={{uri: 'https://source.unsplash.com/random/80x80'}}
+                source={picUrl != null?{uri:picUrl}
+                : require(itemPlaceHolder)}
               />
             </View>
             <View style={styles.itemTextContainer}>

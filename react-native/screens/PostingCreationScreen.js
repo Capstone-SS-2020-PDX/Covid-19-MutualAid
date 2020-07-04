@@ -11,6 +11,7 @@ import { StyleSheet,
          Image,
          Modal,
          ActivityIndicator,
+         Alert,
        } from "react-native";
 import { FontAwesome5 } from '@expo/vector-icons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -19,10 +20,10 @@ import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { WToast } from 'react-native-smart-tip'
 
-import { windowHeight, windowWidth } from '../config/dimensions';
 import Center from '../components/Center';
 import CustomButton from '../components/CustomButton';
 import Colors from '../config/colors.js';
+import { windowHeight, windowWidth } from '../config/dimensions';
 
 
 const url = "https:cellular-virtue-277000.uc.r.appspot.com/postings/?format=json";
@@ -95,6 +96,44 @@ const PostingCreationScreen = props => {
       })
       .finally(() => {
       });
+  };
+
+  // Handles letting the user select an image from their library
+  const openCameraAsync = async () => {
+    let cameraPermission = await ImagePicker.requestCameraPermissionsAsync();
+    let libraryPermission = await ImagePicker.requestCameraRollPermissionsAsync();
+
+    if (!cameraPermission.granted  || !libraryPermission.granted) {
+      alert('Permission to access camera and library is required!');
+      return;
+    }
+
+    let cameraResult = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      quality: 0.5,
+      aspect: [1,1],
+      resizeMethod: 'contain'
+    });
+
+    if (cameraResult.cancelled === true) {
+      return;
+    }
+
+    let imageName = (Math.random() * 1000).toString().concat('.jpg');
+    console.log(imageName);
+
+    let resizedImage = await ImageManipulator.manipulateAsync(
+      cameraResult.uri,
+      [
+        { resize: {
+          width: 1000
+        }},
+      ],
+      { compress: 0.5 },
+    )
+
+    setSelectedImage({uri: resizedImage.uri, type: 'image/jpeg', name: imageName});
+    console.log(selectedImage);
   };
 
   // Handles letting the user select an image from their library
@@ -196,6 +235,28 @@ const PostingCreationScreen = props => {
     setIsCategorySwitchEnabled(previousState => !previousState);
   };
 
+  const selectImageOption = () => {
+    Alert.alert(
+      "Image Upload",
+      "Choose an image from your library, or take one with your camera.",
+      [
+        {
+          text:"Cancel",
+          style: "cancel"
+        },
+        {
+          text: "Camera",
+          onPress: () => openCameraAsync()
+        },
+        {
+          text: "Library",
+          onPress: () => openImagePickerAsync()
+        }
+      ],
+      { onDismiss: () => {} }
+    )
+  }
+
   return (
     <Center style={styles.screen}>
       <KeyboardAwareScrollView
@@ -205,7 +266,7 @@ const PostingCreationScreen = props => {
       >
         <View style={styles.imageContainer}>
           <TouchableOpacity
-            onPress={openImagePickerAsync}
+            onPress={selectImageOption}
           >
             {renderImageSection()}
           </TouchableOpacity>
@@ -227,7 +288,7 @@ const PostingCreationScreen = props => {
               style={styles.inputText}
               placeholder='Item Description...'
               placeholderTextColor={Colors.placeholder_text}
-              keyboardType='email-address'
+              keyboardType='default'
               returnKeyType='done'
               multiline={true}
               maxLength={255}
