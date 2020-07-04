@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useMemo } from 'react';
 import { ActivityIndicator, AsyncStorage } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
@@ -8,29 +8,36 @@ import RegisterScreen from '../screens/RegisterScreen';
 import AuthStack from './AuthStack';
 import NavTabs from './NavTabs';
 import DrawerNav from './DrawerNav';
+import Center from '../components/Center';
 
 import { AuthContext } from '../providers/AuthProvider';
 
 const Stack = createStackNavigator();
 
 const Routes = () => {
-    const { currentUser, login } = useContext(AuthContext);
-    const [isLoading, setIsLoading] = useState(false);
+    const { autoLogin, login, isLoading, userToken } = useContext(AuthContext);
+    // const [isLoading, setIsLoading] = useState(true);
 
     // Check if the user is logged in
     useEffect(() => {
-        // Currently placeholder using localStorage
-        // Eventually will need to be replaced with an API call...
-        // to authenticate the user
-        AsyncStorage.getItem('currentUser').then(userString => {
-            if (userString) {
-                login();
+        setTimeout(() => {
+            // setIsLoading(false);
+        }, 1000)
+
+        // Attempt to grab an existing user token and if it exists,
+        // login the user automatically
+        AsyncStorage.getItem('userToken').then(userToken => {
+            if (userToken) {
+                console.log('User Token exists! : ' + userToken);
+                autoLogin(userToken);
+            } else {
+                console.log('No existing User token');
             }
-            setIsLoading(false);
+            // setIsLoading(false);
         }).catch(error => {
             console.log(error);
         });
-    }, []);
+    }, [isLoading]);
 
     // If current loading (waiting for API return)..
     // render activity indicator, otherwise show the UI
@@ -50,7 +57,7 @@ const Routes = () => {
         return(
             <NavigationContainer>
               {/* { currentUser ? <NavTabs /> : <AuthStack /> } */}
-              { currentUser ? <DrawerNav /> : <AuthStack /> }
+              { userToken ? <DrawerNav /> : <AuthStack /> }
             </NavigationContainer>
         );
     }

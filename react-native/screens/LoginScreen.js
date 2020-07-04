@@ -70,8 +70,8 @@ const LoginScreen = props => {
       <CustomButton
         style={styles.loginButton}
         onPress={() => {
-          const userData = { userName: emailText, password: passwordText };
-          login(userData);
+          /* const userData = { userName: emailText, password: passwordText }; */
+          login(emailText, passwordText);
         }}
       >
         <Text style={styles.loginText}>LOGIN</Text>
