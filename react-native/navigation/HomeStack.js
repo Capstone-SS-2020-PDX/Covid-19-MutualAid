@@ -16,7 +16,8 @@ const HomeStack = props => {
   const { currentUser } = useContext(AuthContext);
 
   const PostingListScreenOptions = {
-    title: `Welcome ${currentUser.userName}`,
+    // title: `Welcome ${currentUser.userName}`,
+    headerTitle: `Welcome ${currentUser.userName}`,
     ...headerOptions,
     headerLeft: drawerMenuIcon.bind(this, navigation),
   };
