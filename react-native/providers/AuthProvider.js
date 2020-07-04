@@ -9,7 +9,7 @@ export const AuthContext = createContext({});
 
 export const AuthProvider = props => {
     const initialLoginState = {
-        isLoading: false,
+        isLoading: true,
         userName: null,
         userToken: null,
     };

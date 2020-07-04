@@ -16,14 +16,9 @@ const Stack = createStackNavigator();
 
 const Routes = () => {
     const { autoLogin, login, isLoading, userToken } = useContext(AuthContext);
-    // const [isLoading, setIsLoading] = useState(true);
 
     // Check if the user is logged in
     useEffect(() => {
-        setTimeout(() => {
-            // setIsLoading(false);
-        }, 1000)
-
         // Attempt to grab an existing user token and if it exists,
         // login the user automatically
         AsyncStorage.getItem('userToken').then(userToken => {
@@ -32,12 +27,13 @@ const Routes = () => {
                 autoLogin(userToken);
             } else {
                 console.log('No existing User token');
+                autoLogin(null);
             }
             // setIsLoading(false);
         }).catch(error => {
             console.log(error);
         });
-    }, [isLoading]);
+    }, []);
 
     // If current loading (waiting for API return)..
     // render activity indicator, otherwise show the UI
