@@ -1,16 +1,19 @@
 import React from 'react';
-import { Text, Button, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, Button, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { HeaderBackButton } from '@react-navigation/stack';
+
 
 import PostingDetailScreen from '../screens/PostingDetailScreen';
 import EditPostingScreen from '../screens/EditPostingScreen';
 
 import Colors from '../config/colors';
 import { headerOptions }  from '../config/navigation-options';
+import CustomHeaderTitle from '../components/CustomHeaderTitle';
 
 // Combine multiple screen routes that can be shown on different...
 // Navigation stacks.
 export const addPostingsRoutes = (Stack, navigation) => {
-
     const handleDone = route => {
         return(
             <TouchableOpacity
@@ -50,13 +53,10 @@ export const addPostingsRoutes = (Stack, navigation) => {
             component={PostingDetailScreen}
             options={
                 ({route, navigation}) => ({
-                  headerTitle: route.params.request
-                    /* ? `Request: ${route.params.title}` */
-                    /* : `Offer: ${route.params.title}`, */
-                    ? 'Request Detail'
-                    : 'Offer Detail',
-                    ...headerOptions,
-                    headerRight: () => handleEdit(route),
+                  headerTitle: props => <CustomHeaderTitle request={route.params.request}/>,
+                  ...headerOptions,
+                  headerBackTitle: 'Back',
+                  /* headerRight: () => handleEdit(route), */
                 })
             }
           />
@@ -64,11 +64,11 @@ export const addPostingsRoutes = (Stack, navigation) => {
             name='EditPosting'
             component={EditPostingScreen}
             options={
-                ({route, navigation}) => ({
-                    headerTitle: `Editing ${route.params.id}`,
-                    ...headerOptions,
-                    headerRight: () => handleDone(route),
-                })
+              ({route, navigation}) => ({
+                headerTitle: `Editing ${route.params.id}`,
+                ...headerOptions,
+                headerRight: () => handleDone(route),
+              })
             }
           />
         </>
@@ -76,15 +76,15 @@ export const addPostingsRoutes = (Stack, navigation) => {
 }
 
 const styles = StyleSheet.create({
-    headerRight: {
-        paddingRight: 15,
-    },
-    doneButtonText: {
-        color: Colors.contrast1,
-        fontSize: 20,
-    },
-    headerRightEditText: {
-        color: Colors.contrast1,
-        fontSize: 20,
-    },
+  headerRight: {
+    paddingRight: 15,
+  },
+  doneButtonText: {
+    color: Colors.contrast1,
+    fontSize: 20,
+  },
+  headerRightEditText: {
+    color: Colors.contrast1,
+    fontSize: 20,
+  },
 });
