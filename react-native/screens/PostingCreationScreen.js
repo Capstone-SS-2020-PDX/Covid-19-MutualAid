@@ -20,10 +20,10 @@ import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { WToast } from 'react-native-smart-tip'
 
-import { windowHeight, windowWidth } from '../config/dimensions';
 import Center from '../components/Center';
 import CustomButton from '../components/CustomButton';
 import Colors from '../config/colors.js';
+import { windowHeight, windowWidth } from '../config/dimensions';
 
 
 const url = "https:cellular-virtue-277000.uc.r.appspot.com/postings/?format=json";
@@ -234,28 +234,29 @@ const PostingCreationScreen = props => {
   const toggleCategorySwitch = () => {
     setIsCategorySwitchEnabled(previousState => !previousState);
   };
+
   const selectImageOption = () => {
     Alert.alert(
       "Image Upload",
-      "Upload a picture from your camera roll, or take one with your camera",
+      "Choose an image from your library, or take one with your camera.",
       [
         {
           text:"Cancel",
           style: "cancel"
         },
-        
         {
-          text: "Open Camera",
+          text: "Camera",
           onPress: () => openCameraAsync()
         },
         {
-          text: "Camera Roll",
+          text: "Library",
           onPress: () => openImagePickerAsync()
         }
       ],
       { onDismiss: () => {} }
     )
   }
+
   return (
     <Center style={styles.screen}>
       <KeyboardAwareScrollView
