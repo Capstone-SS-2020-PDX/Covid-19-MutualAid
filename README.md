@@ -14,18 +14,16 @@ For Linux bash scripts exist to automatically install dependencies.
 Run `make install` in the root of the repo, follow the instructions then run `make install2`
 
 
-#### Set Up Git Pre-push hook!
-In order for automatic `pytest` and `jest` and Postman suites to run before `git push` please run the following in the root of the repo:
-
-`ln -s pre-push.sh .git/hooks/pre-push`
-
-This will ensure that the `pre-push.sh` script actually runs before a push.
-You will need to install pytest, jest and newman locally as well.
+#### Testing
+All testing is performed manually with emulators and browsers during our rapid development phase.
 
 #### Deploy and Test
 Deployment is handled by our development team.
 
+Several make commands are available to run in the root of the repo.
+
 `make server` will run local postgres and django docker containers.
+
 `make js` will run the expo emulator locally. This is configured to point to our deployed API by default.
 
 ## Team
