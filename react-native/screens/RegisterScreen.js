@@ -21,6 +21,7 @@ const RegisterScreen = props => {
   const { register } = useContext(AuthContext);
 
   const [emailText, setEmailText] = useState('');
+  const [userNameText, setUserNameText] = useState('');
   const [passwordText, setPasswordText] = useState('');
 
   return(
@@ -50,7 +51,7 @@ const RegisterScreen = props => {
             style={styles.inputText}
             placeholder='User Name...'
             placeholderTextColor={Colors.placeholder_text}
-            onChangeText={text => setEmailText(text)}
+            onChangeText={text => setUserNameText(text)}
           />
         </View>
         <View style={styles.inputView}>
@@ -86,7 +87,7 @@ const RegisterScreen = props => {
       <CustomButton
         style={styles.registerButton}
         onPress={() => {
-          const userData = { userName: emailText, password: passwordText };
+          const userData = { username: userNameText, password: passwordText, email: emailText };
           register(userData);
         }}
       >

@@ -1,13 +1,13 @@
 import React, { createContext, useState, useReducer } from 'react';
 import { AsyncStorage } from 'react-native';
 
-// Placeholder Auth Provider using React Context.
-// Provides userName and login/logout functionality to Global App Context
+// Provides userName, token and login/logout functionality to Global App Context
 // Allows the app to know which user is using it and to handle login/logout
 
 export const AuthContext = createContext({});
 
 export const AuthProvider = props => {
+
     const initialLoginState = {
         isLoading: true,
         userName: null,
@@ -46,18 +46,62 @@ export const AuthProvider = props => {
         }
     };
 
-
     const [loginState, dispatch] = useReducer(loginReducer, initialLoginState);
+
+    const performAuthRequest = (requestType, userData) => {
+        const loginUrl = 'https://cellular-virtue-277000.uc.r.appspot.com/token/';
+        const registerUrl = 'https://cellular-virtue-277000.uc.r.appspot.com/register/';
+
+        const isLogin = requestType === 'login';
+
+        const url = isLogin ? loginUrl : registerUrl;
+        console.log(url);
+        // const loginData = {username: userName, password: password};
+        // const registerData = {username: userName, password: password};
+
+        // const payloadData = isLogin ? JSON.stringify(loginData) : JSON.stringify(registerData);
+        const payloadData = JSON.stringify(userData);
+        console.log('Outgoing payload: ' + payloadData);
+       
+        let token = null;
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-type': 'application/json',
+            },
+            body: payloadData,
+        })
+            .then(response => response.json())
+            .then(json => {
+                console.log('Server Response: ' + JSON.stringify(json));
+                token = json.token;
+                console.log("token: " + token);
+                dispatch({ type: 'LOGIN', userName: userData.userName, token: token})
+            })
+            .catch(error => {
+                console.log(error);
+            })
+            .finally(() => {
+
+            });
+
+        return token;
+    };
 
     const handleAutoLogin = userToken => {
         dispatch({ type: 'RETRIEVE_TOKEN', token: userToken })
     };
 
-    const handleLogin = (userName, password) => {
-        let userToken = null;
-      
-        if (userName === 'user' && password === 'password') {
-            userToken = 'usertoken-askdjf';
+    const handleLogin = async userData => {
+
+        let userToken = await performAuthRequest('login', userData);
+        console.log("inside HandleLogin: " + userToken);
+       
+        // if (userName === 'user' && password === 'password') {
+        if (userToken) {
+            // userToken = 'usertoken-askdjf';
 
             AsyncStorage.setItem('userToken', userToken).then(() => {
                 console.log('AsyncStorage: set usertoken as ' + userToken);
@@ -65,12 +109,12 @@ export const AuthProvider = props => {
                 console.log(error);
             });
 
-            console.log('AuthProvider: User is valid');
+            console.log('AuthProvider: Token Acquired!');
         } else {
-            console.log('AuthProvider: User is not valid');
+            console.log('AuthProvider: ERROR: token not acquired');
         }
 
-        dispatch({ type: 'LOGIN', userName: userName, token: userToken })
+        // dispatch({ type: 'LOGIN', userName: userData.userName, token: userData.userToken })
     };
 
     const handleLogout = () => {
@@ -82,20 +126,27 @@ export const AuthProvider = props => {
     };
 
     const handleRegister = userData => {
+        let userToken = performAuthRequest('register', userData);
+
+        if (userToken) {
+            // console.log('Handle Register: token received!');
+        } else {
+            // console.log('Handle Register: ERROR no token received!');
+        }
         // AsyncStorage.setItem('currentUser', JSON.stringify(userData));
     };
 
     return (
         <AuthContext.Provider
           value={{
-                   isLoading: loginState.isLoading,
-                   userToken: loginState.userToken,
-                   userName: loginState.userName,
-                   autoLogin: handleAutoLogin,
-                   login: handleLogin,
-                   logout: handleLogout,
-                   register: handleRegister,
-                 }}
+              isLoading: loginState.isLoading,
+              userToken: loginState.userToken,
+              userName: loginState.userName,
+              autoLogin: handleAutoLogin,
+              login: handleLogin,
+              logout: handleLogout,
+              register: handleRegister,
+          }}
         >
           {props.children}
         </AuthContext.Provider>

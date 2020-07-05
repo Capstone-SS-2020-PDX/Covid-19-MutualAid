@@ -24,6 +24,13 @@ const LoginScreen = props => {
   const [emailText, setEmailText] = useState('');
   const [passwordText, setPasswordText] = useState('');
 
+  const [loginData, setLoginData] = useState({
+    userName: '',
+    password: '',
+    isValidUser: true,
+    isValidPassword: true,
+  });
+
   return(
     <View style={styles.screen}>
       <View style={ styles.imageContainer }>
@@ -70,8 +77,8 @@ const LoginScreen = props => {
       <CustomButton
         style={styles.loginButton}
         onPress={() => {
-          /* const userData = { userName: emailText, password: passwordText }; */
-          login(emailText, passwordText);
+          const userData = { username: emailText, password: passwordText };
+          login(userData);
         }}
       >
         <Text style={styles.loginText}>LOGIN</Text>
