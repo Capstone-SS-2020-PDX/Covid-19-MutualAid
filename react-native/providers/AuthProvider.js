@@ -11,7 +11,7 @@ export const AuthProvider = props => {
     const initialLoginState = {
         isLoading: true,
         username: null,
-        userToken: null,
+        token: null,
     };
 
     const loginReducer = (previousState, action) => {
@@ -19,28 +19,28 @@ export const AuthProvider = props => {
             case 'RETRIEVE_TOKEN':
                 return {
                     ...previousState,
-                    userToken: action.token,
+                    token: action.token,
                     isLoading: false,
                 };
             case 'LOGIN':
                 return {
                     ...previousState,
                     username: action.username,
-                    userToken: action.token,
+                    token: action.token,
                     isLoading: false,
                 };
             case 'LOGOUT':
                 return {
                     ...previousState,
                     username: null,
-                    userToken: null,
+                    token: null,
                     isLoading: false,
                 };
             case 'REGISTER':
                 return {
                     ...previousState,
                     username: action.username,
-                    userToken: action.token,
+                    token: action.token,
                     isLoading: false,
                 };
         }
@@ -52,7 +52,7 @@ export const AuthProvider = props => {
         const loginUrl = 'https://cellular-virtue-277000.uc.r.appspot.com/token/';
         const registerUrl = 'https://cellular-virtue-277000.uc.r.appspot.com/register/';
 
-        const isLogin = requestType === 'login';
+        const isLogin = requestType === 'LOGIN';
 
         const url = isLogin ? loginUrl : registerUrl;
         console.log(url);
@@ -77,44 +77,52 @@ export const AuthProvider = props => {
             .then(json => {
                 console.log('Server Response: ' + JSON.stringify(json));
                 token = json.token;
-                console.log("token: " + token);
             })
             .catch(error => {
                 console.log(error);
             })
             .finally(() => {
                 dispatch({ type: requestType, username: userData.username, token: token})
+
+                if (token) {
+                    AsyncStorage.setItem('token', token).then(() => {
+                        console.log('AsyncStorage: set token as ' + token);
+                    }).catch(error => {
+                        console.log(error);
+                    });
+
+                }
             });
 
         return token;
     };
 
-    const handleAutoLogin = userToken => {
-        dispatch({ type: 'RETRIEVE_TOKEN', token: userToken })
+    const handleAutoLogin = token => {
+        dispatch({ type: 'RETRIEVE_TOKEN', token: token })
     };
 
     const handleLogin = async userData => {
 
-        let userToken = await performAuthRequest('LOGIN', userData);
+        let token = await performAuthRequest('LOGIN', userData);
 
-        if (userToken) {
+        // if (token) {
 
-            AsyncStorage.setItem('userToken', userToken).then(() => {
-                console.log('AsyncStorage: set usertoken as ' + userToken);
-            }).catch(error => {
-                console.log(error);
-            });
+        //     AsyncStorage.setItem('token', token).then(() => {
+        //         console.log('AsyncStorage: set usertoken as ' + token);
+        //     }).catch(error => {
+        //         console.log(error);
+        //     });
 
-            console.log('AuthProvider: Token Acquired!');
-        } else {
-            console.log('AuthProvider: ERROR: token not acquired');
-        }
+        //     console.log('AuthProvider: Token Acquired!');
+        // } else {
+        //     console.log('AuthProvider: ERROR: token not acquired');
+        // }
 
-        dispatch({ type: 'LOGIN', username: userData.username, token: userData.userToken })
+        // dispatch({ type: 'LOGIN', username: userData.username, token: userData.token })
     };
 
     const handleLogout = () => {
-        AsyncStorage.removeItem('userToken').catch(error => {
+        AsyncStorage.removeItem('token').catch(error => {
             console.log(error);
         });
 
@@ -122,9 +130,9 @@ export const AuthProvider = props => {
     };
 
     const handleRegister = userData => {
-        let userToken = performAuthRequest('register', userData);
+        let token = performAuthRequest('REGISTER', userData);
 
-        if (userToken) {
+        if (token) {
             // console.log('Handle Register: token received!');
         } else {
             // console.log('Handle Register: ERROR no token received!');
@@ -136,7 +144,7 @@ export const AuthProvider = props => {
         <AuthContext.Provider
           value={{
               isLoading: loginState.isLoading,
-              userToken: loginState.userToken,
+              token: loginState.token,
               username: loginState.username,
               autoLogin: handleAutoLogin,
               login: handleLogin,

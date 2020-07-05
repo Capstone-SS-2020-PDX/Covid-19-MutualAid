@@ -13,7 +13,7 @@ const Stack = createStackNavigator();
 
 const HomeStack = props => {
   const { navigation } = props;
-  const { userName } = useContext(AuthContext);
+  const { username } = useContext(AuthContext);
 
   const PostingListScreenOptions = {
     // title: `Welcome ${currentUser.userName}`,

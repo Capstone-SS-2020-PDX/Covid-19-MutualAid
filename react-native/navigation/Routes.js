@@ -15,16 +15,16 @@ import { AuthContext } from '../providers/AuthProvider';
 const Stack = createStackNavigator();
 
 const Routes = () => {
-    const { autoLogin, login, isLoading, userToken } = useContext(AuthContext);
-
+    const { autoLogin, login, isLoading, token } = useContext(AuthContext);
+   
     // Check if the user is logged in
     useEffect(() => {
         // Attempt to grab an existing user token and if it exists,
         // login the user automatically
-        AsyncStorage.getItem('userToken').then(userToken => {
-            if (userToken) {
-                console.log('User Token exists! : ' + userToken);
-                autoLogin(userToken);
+        AsyncStorage.getItem('token').then(token => {
+            if (token) {
+                console.log('User Token exists! : ' + token);
+                autoLogin(token);
             } else {
                 console.log('No existing User token');
                 autoLogin(null);
@@ -53,7 +53,7 @@ const Routes = () => {
         return(
             <NavigationContainer>
               {/* { currentUser ? <NavTabs /> : <AuthStack /> } */}
-              { userToken ? <DrawerNav /> : <AuthStack /> }
+              { token ? <DrawerNav /> : <AuthStack /> }
             </NavigationContainer>
         );
     }
