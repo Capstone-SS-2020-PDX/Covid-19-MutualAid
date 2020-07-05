@@ -22,11 +22,12 @@ const Routes = () => {
         // Attempt to grab an existing user token and if it exists,
         // login the user automatically
         AsyncStorage.getItem('token').then(token => {
+            console.log('Attempting to fetch token from AsyncStorage...');
             if (token) {
-                console.log('User Token exists! : ' + token);
+                console.log('Token exists! : ' + token);
                 autoLogin(token);
             } else {
-                console.log('No existing User token');
+                console.log('No existing token');
                 autoLogin(null);
             }
             // setIsLoading(false);

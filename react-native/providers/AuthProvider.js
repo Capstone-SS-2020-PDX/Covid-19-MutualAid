@@ -48,18 +48,8 @@ export const AuthProvider = props => {
 
     const [loginState, dispatch] = useReducer(loginReducer, initialLoginState);
 
-    const performAuthRequest = (requestType, userData) => {
-        const loginUrl = 'https://cellular-virtue-277000.uc.r.appspot.com/token/';
-        const registerUrl = 'https://cellular-virtue-277000.uc.r.appspot.com/register/';
+    const performAuthRequest = (requestType, userData, url) => {
 
-        const isLogin = requestType === 'LOGIN';
-
-        const url = isLogin ? loginUrl : registerUrl;
-        console.log(url);
-        // const loginData = {username: username, password: password};
-        // const registerData = {username: username, password: password};
-
-        // const payloadData = isLogin ? JSON.stringify(loginData) : JSON.stringify(registerData);
         const payloadData = JSON.stringify(userData);
         console.log('Outgoing payload: ' + payloadData);
        
@@ -90,35 +80,18 @@ export const AuthProvider = props => {
                     }).catch(error => {
                         console.log(error);
                     });
-
                 }
             });
 
-        return token;
     };
 
     const handleAutoLogin = token => {
         dispatch({ type: 'RETRIEVE_TOKEN', token: token })
     };
 
-    const handleLogin = async userData => {
-
-        let token = await performAuthRequest('LOGIN', userData);
-
-        // if (token) {
-
-        //     AsyncStorage.setItem('token', token).then(() => {
-        //         console.log('AsyncStorage: set usertoken as ' + token);
-        //     }).catch(error => {
-        //         console.log(error);
-        //     });
-
-        //     console.log('AuthProvider: Token Acquired!');
-        // } else {
-        //     console.log('AuthProvider: ERROR: token not acquired');
-        // }
-
-        // dispatch({ type: 'LOGIN', username: userData.username, token: userData.token })
+    const handleLogin = userData => {
+        const loginUrl = 'https://cellular-virtue-277000.uc.r.appspot.com/token/';
+        performAuthRequest('LOGIN', userData, loginUrl);
     };
 
     const handleLogout = () => {
@@ -130,14 +103,8 @@ export const AuthProvider = props => {
     };
 
     const handleRegister = userData => {
-        let token = performAuthRequest('REGISTER', userData);
-
-        if (token) {
-            // console.log('Handle Register: token received!');
-        } else {
-            // console.log('Handle Register: ERROR no token received!');
-        }
-        // AsyncStorage.setItem('currentUser', JSON.stringify(userData));
+        const registerUrl = 'https://cellular-virtue-277000.uc.r.appspot.com/register/';
+        let token = performAuthRequest('REGISTER', userData, registerUrl);
     };
 
     return (
