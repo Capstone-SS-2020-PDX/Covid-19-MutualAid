@@ -3,6 +3,7 @@ import { StyleSheet,
          Text,
          TextInput,
          View,
+         KeyboardAvoidingView,
          Button,
          Switch,
          TouchableOpacity,
@@ -359,7 +360,7 @@ const PostingCreationScreen = props => {
                   <ActivityIndicator size='large' color={Colors.primary}/>
                 </View>
               : <>
-                  <View style={styles.inputContainer}>
+                  <KeyboardAvoidingView behavior={'padding'} style={styles.inputContainer}>
                     <View style={styles.inputView}>
                       <TextInput
                         style={styles.inputText}
@@ -371,7 +372,7 @@ const PostingCreationScreen = props => {
                         value={emailText}
                       />
                     </View>
-                  </View>
+                  </KeyboardAvoidingView>
                   <CustomButton
                     onPress={handlePostCreation}
                     style={{ marginBottom: 10, alignSelf: 'center'}}

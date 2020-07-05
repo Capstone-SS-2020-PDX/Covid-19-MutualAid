@@ -1,11 +1,13 @@
 import React, { useState, useContext } from 'react';
 import { View,
+         KeyboardAvoidingView,
          Text,
          TextInput,
          Button,
          TouchableOpacity,
          StyleSheet,
          Image,
+         Platform
        } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 
@@ -27,7 +29,7 @@ const RegisterScreen = props => {
   return(
     <View style={styles.screen}>
       <Text style={styles.logo}>Register</Text>
-      <View style={styles.inputContainer}>
+      <KeyboardAvoidingView behavior={'padding'} style={styles.inputContainer}>
         <View style={styles.inputView}>
           <AntDesign
             name={'mail'}
@@ -82,7 +84,7 @@ const RegisterScreen = props => {
     /* onChangeText={text => setPasswordText(text)} */
           />
         </View>
-      </View>
+      </KeyboardAvoidingView>
 
       <CustomButton
         style={styles.registerButton}

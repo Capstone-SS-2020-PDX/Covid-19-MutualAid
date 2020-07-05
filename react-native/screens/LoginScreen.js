@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { View,
+         KeyboardAvoidingView,
          Text,
          TextInput,
          Button,
@@ -41,7 +42,7 @@ const LoginScreen = props => {
           fadeDuration={ 300 }
         />
       </View>
-      <View style={styles.inputContainer}>
+      <KeyboardAvoidingView behavior={'padding'} style={styles.inputContainer}>
         <View style={styles.inputView}>
           <AntDesign
             name={'user'}
@@ -69,7 +70,7 @@ const LoginScreen = props => {
             onChangeText={text => setPasswordText(text)}
           />
         </View>
-      </View>
+      </KeyboardAvoidingView>
       <TouchableOpacity>
         <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
       </TouchableOpacity>
