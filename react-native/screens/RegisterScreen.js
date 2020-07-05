@@ -29,7 +29,7 @@ const RegisterScreen = props => {
   return(
     <View style={styles.screen}>
       <Text style={styles.logo}>Register</Text>
-      <KeyboardAvoidingView behavior='padding' style={styles.inputContainer}>
+      <KeyboardAvoidingView behavior={'padding'} style={styles.inputContainer}>
         <View style={styles.inputView}>
           <AntDesign
             name={'mail'}
@@ -88,6 +88,7 @@ const RegisterScreen = props => {
     /* onChangeText={text => setPasswordText(text)} */
           />
         </View>
+      </KeyboardAvoidingView>
 
       <CustomButton
         style={styles.registerButton}
@@ -106,7 +107,6 @@ const RegisterScreen = props => {
       >
         <Text style={styles.registerText}>Back to Login</Text>
       </TouchableOpacity>
-      </KeyboardAvoidingView>
     </View>
   );
 }
@@ -120,7 +120,6 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     width: '80%',
-    alignItems: 'center',
   },
   inputView: {
     flexDirection: 'row',
