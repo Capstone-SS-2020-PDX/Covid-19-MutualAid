@@ -367,6 +367,7 @@ const PostingCreationScreen = props => {
                         placeholder='Enter your email...'
                         placeholderTextColor={Colors.placeholder_text}
                         keyboardType='email-address'
+                        autoCapitalize='none'
                         returnKeyType='done'
                         onChangeText={text => setEmailText(text)}
                         value={emailText}

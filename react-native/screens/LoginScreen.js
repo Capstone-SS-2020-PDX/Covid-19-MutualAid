@@ -53,6 +53,7 @@ const LoginScreen = props => {
             style={styles.inputText}
             placeholder='User Name...'
             placeholderTextColor={Colors.placeholder_text}
+            autoCapitalize='none'
             onChangeText={text => setEmailText(text)}
           />
         </View>

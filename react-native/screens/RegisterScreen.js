@@ -39,6 +39,7 @@ const RegisterScreen = props => {
           <TextInput
             style={styles.inputText}
             placeholder='Email...'
+            autoCapitalize='none'
             placeholderTextColor={Colors.placeholder_text}
             onChangeText={text => setEmailText(text)}
           />
@@ -52,6 +53,7 @@ const RegisterScreen = props => {
           <TextInput
             style={styles.inputText}
             placeholder='User Name...'
+            autoCapitalize='none'
             placeholderTextColor={Colors.placeholder_text}
             onChangeText={text => setUserNameText(text)}
           />

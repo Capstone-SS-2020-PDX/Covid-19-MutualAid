@@ -167,6 +167,7 @@ const PostingDetailScreen = props => {
                       style={styles.inputText}
                       placeholder='Enter your email...'
                       placeholderTextColor={Colors.placeholder_text}
+                      autoCapitalize='none'
                       keyboardType='email-address'
                       returnKeyType='done'
                       onChangeText={text => setEmailText(text)}
