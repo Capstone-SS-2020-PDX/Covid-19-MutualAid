@@ -1,6 +1,11 @@
 import React, { createContext, useState, useReducer } from 'react';
 import { AsyncStorage } from 'react-native';
 
+const AUTO_LOGIN = 'AUTO_LOGIN';
+const LOGIN = 'LOGIN';
+const LOGOUT = 'LOGOUT';
+const REGISTER = 'REGISTER';
+
 // Provides username, token and login/logout functionality to Global App Context
 // Allows the app to know which user is using it and to handle login/logout
 
@@ -16,27 +21,27 @@ export const AuthProvider = props => {
 
     const loginReducer = (previousState, action) => {
         switch(action.type) {
-            case 'RETRIEVE_TOKEN':
+            case AUTO_LOGIN:
                 return {
                     ...previousState,
                     token: action.token,
                     isLoading: false,
                 };
-            case 'LOGIN':
+            case LOGIN:
                 return {
                     ...previousState,
                     username: action.username,
                     token: action.token,
                     isLoading: false,
                 };
-            case 'LOGOUT':
+            case LOGOUT:
                 return {
                     ...previousState,
                     username: null,
                     token: null,
                     isLoading: false,
                 };
-            case 'REGISTER':
+            case REGISTER:
                 return {
                     ...previousState,
                     username: action.username,
@@ -86,12 +91,12 @@ export const AuthProvider = props => {
     };
 
     const handleAutoLogin = token => {
-        dispatch({ type: 'RETRIEVE_TOKEN', token: token })
+        dispatch({ type: AUTO_LOGIN, token: token })
     };
 
     const handleLogin = userData => {
         const loginUrl = 'https://cellular-virtue-277000.uc.r.appspot.com/token/';
-        performAuthRequest('LOGIN', userData, loginUrl);
+        performAuthRequest(LOGIN, userData, loginUrl);
     };
 
     const handleLogout = () => {
@@ -99,12 +104,12 @@ export const AuthProvider = props => {
             console.log(error);
         });
 
-        dispatch({ type: 'LOGOUT' })
+        dispatch({ type: LOGOUT })
     };
 
     const handleRegister = userData => {
         const registerUrl = 'https://cellular-virtue-277000.uc.r.appspot.com/register/';
-        let token = performAuthRequest('REGISTER', userData, registerUrl);
+        performAuthRequest(REGISTER, userData, registerUrl);
     };
 
     return (
