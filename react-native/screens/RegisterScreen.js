@@ -7,9 +7,11 @@ import { View,
          TouchableOpacity,
          StyleSheet,
          Image,
-         Platform
+         Platform,
+         ActivityIndicator,
        } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
+import { WModal } from 'react-native-smart-tip';
 
 import Center from '../components/Center';
 import CustomButton from '../components/CustomButton';
@@ -20,11 +22,37 @@ import { windowHeight, windowWidth } from '../config/dimensions';
 
 const RegisterScreen = props => {
   const { navigation, route } = props;
-  const { register } = useContext(AuthContext);
+  const { register, isLoading, setIsLoading } = useContext(AuthContext);
 
   const [emailText, setEmailText] = useState('');
   const [userNameText, setUserNameText] = useState('');
   const [passwordText, setPasswordText] = useState('');
+
+  const showLoadingModal = () => {
+    const modalOpts = {
+      data: 'Loading',
+      textColor: '#fff',
+      backgroundColor: '#444444',
+      position: WModal.position.CENTER,
+      icon: <ActivityIndicator color='#fff' size={'large'}/>
+    }
+
+    WModal.show(modalOpts)
+  };
+
+  const hideLoadingModal = () => {
+    WModal.hide();
+  };
+
+  const attemptRegister = () =>{
+    showLoadingModal();
+    setTimeout(() => {
+      hideLoadingModal()
+    }, 600);
+
+    const userData = { username: userNameText, password: passwordText, email: emailText };
+    register(userData);
+  };
 
   return(
     <View style={styles.screen}>
@@ -93,8 +121,7 @@ const RegisterScreen = props => {
       <CustomButton
         style={styles.registerButton}
         onPress={() => {
-          const userData = { username: userNameText, password: passwordText, email: emailText };
-          register(userData);
+          attemptRegister();
         }}
       >
         <Text style={styles.loginText}>Sign Up</Text>
