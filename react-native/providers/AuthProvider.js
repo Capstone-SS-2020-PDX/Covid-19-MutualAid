@@ -5,6 +5,7 @@ const AUTO_LOGIN = 'AUTO_LOGIN';
 const LOGIN = 'LOGIN';
 const LOGOUT = 'LOGOUT';
 const REGISTER = 'REGISTER';
+const SET_IS_LOADING = 'SET_IS_LOADING';
 
 // Provides username, token and login/logout functionality to Global App Context
 // Allows the app to know which user is using it and to handle login/logout
@@ -47,6 +48,11 @@ export const AuthProvider = props => {
                     username: action.username,
                     token: action.token,
                     isLoading: false,
+                };
+            case SET_IS_LOADING:
+                return {
+                    ...previousState,
+                    isLoading: action.isLoading,
                 };
         }
     };
@@ -112,10 +118,15 @@ export const AuthProvider = props => {
         performAuthRequest(REGISTER, userData, registerUrl);
     };
 
+    const setIsLoading = value => {
+        dispatch({ type: SET_IS_LOADING, isLoading: value });
+    };
+
     return (
         <AuthContext.Provider
           value={{
               isLoading: loginState.isLoading,
+              setIsLoading: setIsLoading,
               token: loginState.token,
               username: loginState.username,
               autoLogin: handleAutoLogin,

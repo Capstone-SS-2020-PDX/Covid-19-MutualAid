@@ -7,9 +7,11 @@ import { View,
          TouchableOpacity,
          StyleSheet,
          Image,
-         Platform
+         Platform,
+         ActivityIndicator,
        } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
+import { WModal } from 'react-native-smart-tip';
 
 import Center from '../components/Center';
 import CustomButton from '../components/CustomButton';
@@ -17,14 +19,25 @@ import { AuthContext } from '../providers/AuthProvider';
 
 import Colors from '../config/colors';
 import { windowHeight, windowWidth } from '../config/dimensions';
+import { showModal, hideModal } from '../components/CustomModal';
 
 const RegisterScreen = props => {
   const { navigation, route } = props;
-  const { register } = useContext(AuthContext);
+  const { register, isLoading, setIsLoading } = useContext(AuthContext);
 
   const [emailText, setEmailText] = useState('');
   const [userNameText, setUserNameText] = useState('');
   const [passwordText, setPasswordText] = useState('');
+
+  const attemptRegister = () =>{
+    showModal();
+    setTimeout(() => {
+      hideModal();
+    }, 600);
+
+    const userData = { username: userNameText, password: passwordText, email: emailText };
+    register(userData);
+  };
 
   return(
     <View style={styles.screen}>
@@ -93,8 +106,7 @@ const RegisterScreen = props => {
       <CustomButton
         style={styles.registerButton}
         onPress={() => {
-          const userData = { username: userNameText, password: passwordText, email: emailText };
-          register(userData);
+          attemptRegister();
         }}
       >
         <Text style={styles.loginText}>Sign Up</Text>

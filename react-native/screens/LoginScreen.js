@@ -6,11 +6,13 @@ import { View,
          Button,
          Image,
          StyleSheet,
-         TouchableOpacity
+         TouchableOpacity,
+         ActivityIndicator,
        } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
+import { WModal } from 'react-native-smart-tip';
 
-import { useInputState } from '../hooks/useInputState';
+import { showModal, hideModal } from '../components/CustomModal';
 import Center from '../components/Center';
 import CustomButton from '../components/CustomButton';
 import { AuthContext } from '../providers/AuthProvider';
@@ -20,8 +22,8 @@ import { windowHeight, windowWidth } from '../config/dimensions';
 
 const LoginScreen = props => {
   const { navigation, route } = props;
-  const { login } = useContext(AuthContext);
-  // const [value, handleChange, reset] = useInputState("");
+  const { login, isLoading, setIsLoading } = useContext(AuthContext);
+
   const [emailText, setEmailText] = useState('');
   const [passwordText, setPasswordText] = useState('');
 
@@ -31,6 +33,16 @@ const LoginScreen = props => {
     isValidUser: true,
     isValidPassword: true,
   });
+
+  const attemptLogin = () => {
+    showModal();
+    setTimeout(() => {
+      hideModal();
+    }, 600);
+   
+    const userData = { username: emailText, password: passwordText };
+    login(userData);
+  };
 
   return(
     <View style={styles.screen}>
@@ -79,8 +91,7 @@ const LoginScreen = props => {
       <CustomButton
         style={styles.loginButton}
         onPress={() => {
-          const userData = { username: emailText, password: passwordText };
-          login(userData);
+          attemptLogin();
         }}
       >
         <Text style={styles.loginText}>LOGIN</Text>
