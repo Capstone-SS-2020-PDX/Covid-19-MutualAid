@@ -86,6 +86,14 @@ export const AuthProvider = props => {
                         console.log(error);
                     });
                 }
+
+                if (userData.username) {
+                    AsyncStorage.setItem('username', userData.username).then(() => {
+                        console.log('AsyncStorage: set username as ' + userData.username);
+                    }).catch(error => {
+                        console.log(error);
+                    });
+                }
             });
 
     };
