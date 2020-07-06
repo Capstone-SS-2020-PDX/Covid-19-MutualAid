@@ -1,4 +1,4 @@
-import React, { createContext, useState, useReducer } from 'react';
+import React, { createContext, useState, useReducer, useContext } from 'react';
 import { AsyncStorage } from 'react-native';
 
 const AUTO_LOGIN = 'AUTO_LOGIN';
@@ -78,7 +78,6 @@ export const AuthProvider = props => {
                 console.log(error);
             })
             .finally(() => {
-                dispatch({ type: requestType, username: userData.username, token: token})
 
                 if (token) {
                     AsyncStorage.setItem('token', token).then(() => {
@@ -95,15 +94,16 @@ export const AuthProvider = props => {
                         console.log(error);
                     });
                 }
-            });
 
+                dispatch({ type: requestType, username: userData.username, token: token})
+            });
     };
 
     const handleAutoLogin = token => {
         let username;
 
         AsyncStorage.getItem('username').then(retrievedUserName => {
-            console.log("in auto login finding username: " + retrievedUserName);
+            console.log("AutoLogin fetching username from local storage: " + retrievedUserName);
             username = retrievedUserName;
         }).catch(error => console.log(error));
 

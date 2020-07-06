@@ -14,6 +14,7 @@ import { AntDesign } from '@expo/vector-icons';
 import Center from '../components/Center';
 import CustomButton from '../components/CustomButton';
 import { AuthContext } from '../providers/AuthProvider';
+import { UserContext } from '../providers/UserProvider';
 
 import Colors from '../config/colors';
 import { windowHeight, windowWidth } from '../config/dimensions';
@@ -21,6 +22,7 @@ import { windowHeight, windowWidth } from '../config/dimensions';
 const RegisterScreen = props => {
   const { navigation, route } = props;
   const { register } = useContext(AuthContext);
+  const { user, setUser } = useContext(UserContext);
 
   const [emailText, setEmailText] = useState('');
   const [userNameText, setUserNameText] = useState('');
@@ -95,6 +97,7 @@ const RegisterScreen = props => {
         onPress={() => {
           const userData = { username: userNameText, password: passwordText, email: emailText };
           register(userData);
+          setUser({ ...user, username: userNameText, email: emailText })
         }}
       >
         <Text style={styles.loginText}>Sign Up</Text>

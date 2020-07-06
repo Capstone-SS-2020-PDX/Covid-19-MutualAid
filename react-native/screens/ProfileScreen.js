@@ -6,11 +6,12 @@ import {
 } from 'react-native';
 
 import { AuthContext } from '../providers/AuthProvider';
+import { UserContext } from '../providers/UserProvider';
 
 const url = "https:cellular-virtue-277000.uc.r.appspot.com/auth/?format=json";
 const ProfileScreen = props => {
-    const { username } = useContext(AuthContext);
-
+    // const { username } = useContext(AuthContext);
+    const { user } = useContext(UserContext);
 
     useEffect(() => {
         fetch(url, {
@@ -34,9 +35,8 @@ const ProfileScreen = props => {
 
     return(
         <View style={styles.screen}>
-          <Text>
-            {username}
-          </Text>
+          <Text>User Name: {user.username}</Text>
+          <Text>email: {user.email}</Text>
         </View>
     );
 };
