@@ -1,11 +1,13 @@
 import React, { useState, useContext } from 'react';
 import { View,
+         KeyboardAvoidingView,
          Text,
          TextInput,
          Button,
          TouchableOpacity,
          StyleSheet,
          Image,
+         Platform
        } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 
@@ -21,12 +23,13 @@ const RegisterScreen = props => {
   const { register } = useContext(AuthContext);
 
   const [emailText, setEmailText] = useState('');
+  const [userNameText, setUserNameText] = useState('');
   const [passwordText, setPasswordText] = useState('');
 
   return(
     <View style={styles.screen}>
       <Text style={styles.logo}>Register</Text>
-      <View style={styles.inputContainer}>
+      <KeyboardAvoidingView behavior={'padding'} style={styles.inputContainer}>
         <View style={styles.inputView}>
           <AntDesign
             name={'mail'}
@@ -36,6 +39,9 @@ const RegisterScreen = props => {
           <TextInput
             style={styles.inputText}
             placeholder='Email...'
+            autoCapitalize='none'
+            autoCorrect={false}
+            keyboardType='email-address'
             placeholderTextColor={Colors.placeholder_text}
             onChangeText={text => setEmailText(text)}
           />
@@ -49,8 +55,9 @@ const RegisterScreen = props => {
           <TextInput
             style={styles.inputText}
             placeholder='User Name...'
+            autoCapitalize='none'
             placeholderTextColor={Colors.placeholder_text}
-            onChangeText={text => setEmailText(text)}
+            onChangeText={text => setUserNameText(text)}
           />
         </View>
         <View style={styles.inputView}>
@@ -81,12 +88,12 @@ const RegisterScreen = props => {
     /* onChangeText={text => setPasswordText(text)} */
           />
         </View>
-      </View>
+      </KeyboardAvoidingView>
 
       <CustomButton
         style={styles.registerButton}
         onPress={() => {
-          const userData = { userName: emailText, password: passwordText };
+          const userData = { username: userNameText, password: passwordText, email: emailText };
           register(userData);
         }}
       >

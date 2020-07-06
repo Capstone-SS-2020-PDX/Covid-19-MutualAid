@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { View,
+         KeyboardAvoidingView,
          Text,
          TextInput,
          Button,
@@ -24,6 +25,13 @@ const LoginScreen = props => {
   const [emailText, setEmailText] = useState('');
   const [passwordText, setPasswordText] = useState('');
 
+  const [loginData, setLoginData] = useState({
+    userName: '',
+    password: '',
+    isValidUser: true,
+    isValidPassword: true,
+  });
+
   return(
     <View style={styles.screen}>
       <View style={ styles.imageContainer }>
@@ -34,7 +42,7 @@ const LoginScreen = props => {
           fadeDuration={ 300 }
         />
       </View>
-      <View style={styles.inputContainer}>
+      <KeyboardAvoidingView behavior={'padding'} style={styles.inputContainer}>
         <View style={styles.inputView}>
           <AntDesign
             name={'user'}
@@ -45,6 +53,7 @@ const LoginScreen = props => {
             style={styles.inputText}
             placeholder='User Name...'
             placeholderTextColor={Colors.placeholder_text}
+            autoCapitalize='none'
             onChangeText={text => setEmailText(text)}
           />
         </View>
@@ -62,7 +71,7 @@ const LoginScreen = props => {
             onChangeText={text => setPasswordText(text)}
           />
         </View>
-      </View>
+      </KeyboardAvoidingView>
       <TouchableOpacity>
         <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
       </TouchableOpacity>
@@ -70,7 +79,7 @@ const LoginScreen = props => {
       <CustomButton
         style={styles.loginButton}
         onPress={() => {
-          const userData = { userName: emailText, password: passwordText };
+          const userData = { username: emailText, password: passwordText };
           login(userData);
         }}
       >

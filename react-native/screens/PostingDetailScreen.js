@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View,
+         KeyboardAvoidingView,
          Text,
          Button,
          TouchableOpacity,
@@ -160,19 +161,20 @@ const PostingDetailScreen = props => {
               </View>
             : <>
 
-                <View style={styles.inputContainer}>
+                <KeyboardAvoidingView behavior={'padding'} style={styles.inputContainer}>
                   <View style={styles.inputView}>
                     <TextInput
                       style={styles.inputText}
                       placeholder='Enter your email...'
                       placeholderTextColor={Colors.placeholder_text}
+                      autoCapitalize='none'
                       keyboardType='email-address'
                       returnKeyType='done'
                       onChangeText={text => setEmailText(text)}
                       value={emailText}
                     />
                   </View>
-                </View>
+                </KeyboardAvoidingView>
                 <CustomButton
                   style={styles.confirmButton}
                   onPress={() => {

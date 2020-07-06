@@ -78,6 +78,7 @@ const Feed = props => {
                 style={styles.inputText}
                 placeholder='Search for an item'
                 placeholderTextColor={Colors.placeholder_text}
+                autoCapitalize='none'
                 onChangeText={text => handleSearch(text)}
                 returnKeyType='done'
                 ref={searchInputRef}

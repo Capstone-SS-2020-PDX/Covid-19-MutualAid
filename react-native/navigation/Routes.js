@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useMemo } from 'react';
 import { ActivityIndicator, AsyncStorage } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
@@ -8,25 +8,29 @@ import RegisterScreen from '../screens/RegisterScreen';
 import AuthStack from './AuthStack';
 import NavTabs from './NavTabs';
 import DrawerNav from './DrawerNav';
+import Center from '../components/Center';
 
 import { AuthContext } from '../providers/AuthProvider';
 
 const Stack = createStackNavigator();
 
 const Routes = () => {
-    const { currentUser, login } = useContext(AuthContext);
-    const [isLoading, setIsLoading] = useState(false);
-
+    const { autoLogin, login, isLoading, token } = useContext(AuthContext);
+   
     // Check if the user is logged in
     useEffect(() => {
-        // Currently placeholder using localStorage
-        // Eventually will need to be replaced with an API call...
-        // to authenticate the user
-        AsyncStorage.getItem('currentUser').then(userString => {
-            if (userString) {
-                login();
+        // Attempt to grab an existing user token and if it exists,
+        // login the user automatically
+        AsyncStorage.getItem('token').then(token => {
+            console.log('Attempting to fetch token from AsyncStorage...');
+            if (token) {
+                console.log('Token exists! : ' + token);
+                autoLogin(token);
+            } else {
+                console.log('No existing token');
+                autoLogin(null);
             }
-            setIsLoading(false);
+            // setIsLoading(false);
         }).catch(error => {
             console.log(error);
         });
@@ -50,7 +54,7 @@ const Routes = () => {
         return(
             <NavigationContainer>
               {/* { currentUser ? <NavTabs /> : <AuthStack /> } */}
-              { currentUser ? <DrawerNav /> : <AuthStack /> }
+              { token ? <DrawerNav /> : <AuthStack /> }
             </NavigationContainer>
         );
     }
