@@ -19,6 +19,7 @@ import { AuthContext } from '../providers/AuthProvider';
 
 import Colors from '../config/colors';
 import { windowHeight, windowWidth } from '../config/dimensions';
+import { showModal, hideModal } from '../components/CustomModal';
 
 const RegisterScreen = props => {
   const { navigation, route } = props;
@@ -28,26 +29,10 @@ const RegisterScreen = props => {
   const [userNameText, setUserNameText] = useState('');
   const [passwordText, setPasswordText] = useState('');
 
-  const showLoadingModal = () => {
-    const modalOpts = {
-      data: 'Loading',
-      textColor: '#fff',
-      backgroundColor: '#444444',
-      position: WModal.position.CENTER,
-      icon: <ActivityIndicator color='#fff' size={'large'}/>
-    }
-
-    WModal.show(modalOpts)
-  };
-
-  const hideLoadingModal = () => {
-    WModal.hide();
-  };
-
   const attemptRegister = () =>{
-    showLoadingModal();
+    showModal();
     setTimeout(() => {
-      hideLoadingModal()
+      hideModal();
     }, 600);
 
     const userData = { username: userNameText, password: passwordText, email: emailText };

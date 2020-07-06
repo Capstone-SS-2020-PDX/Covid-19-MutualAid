@@ -12,7 +12,7 @@ import { View,
 import { AntDesign } from '@expo/vector-icons';
 import { WModal } from 'react-native-smart-tip';
 
-import { useInputState } from '../hooks/useInputState';
+import { showModal, hideModal } from '../components/CustomModal';
 import Center from '../components/Center';
 import CustomButton from '../components/CustomButton';
 import { AuthContext } from '../providers/AuthProvider';
@@ -23,7 +23,7 @@ import { windowHeight, windowWidth } from '../config/dimensions';
 const LoginScreen = props => {
   const { navigation, route } = props;
   const { login, isLoading, setIsLoading } = useContext(AuthContext);
-  // const [value, handleChange, reset] = useInputState("");
+
   const [emailText, setEmailText] = useState('');
   const [passwordText, setPasswordText] = useState('');
 
@@ -34,26 +34,10 @@ const LoginScreen = props => {
     isValidPassword: true,
   });
 
-  const showLoadingModal = () => {
-    const modalOpts = {
-      data: 'Loading',
-      textColor: '#fff',
-      backgroundColor: '#444444',
-      position: WModal.position.CENTER,
-      icon: <ActivityIndicator color='#fff' size={'large'}/>
-    }
-
-    WModal.show(modalOpts)
-  };
-
-  const hideLoadingModal = () => {
-    WModal.hide();
-  };
-
   const attemptLogin = () => {
-    showLoadingModal();
+    showModal();
     setTimeout(() => {
-      hideLoadingModal()
+      hideModal();
     }, 600);
    
     const userData = { username: emailText, password: passwordText };
