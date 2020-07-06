@@ -24,6 +24,7 @@ export const AuthProvider = props => {
             case AUTO_LOGIN:
                 return {
                     ...previousState,
+                    username: action.username,
                     token: action.token,
                     isLoading: false,
                 };
@@ -99,7 +100,14 @@ export const AuthProvider = props => {
     };
 
     const handleAutoLogin = token => {
-        dispatch({ type: AUTO_LOGIN, token: token })
+        let username;
+
+        AsyncStorage.getItem('username').then(retrievedUserName => {
+            console.log("in auto login finding username: " + retrievedUserName);
+            username = retrievedUserName;
+        }).catch(error => console.log(error));
+
+        dispatch({ type: AUTO_LOGIN, token, username })
     };
 
     const handleLogin = userData => {
