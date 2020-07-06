@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { View, Text, Button, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { HeaderBackButton } from '@react-navigation/stack';
@@ -6,15 +6,24 @@ import { HeaderBackButton } from '@react-navigation/stack';
 
 import PostingDetailScreen from '../screens/PostingDetailScreen';
 import EditPostingScreen from '../screens/EditPostingScreen';
-
+import Menu, { MenuItem } from 'react-native-material-menu';
+import { Entypo } from '@expo/vector-icons';
 import Colors from '../config/colors';
 import { headerOptions }  from '../config/navigation-options';
 import CustomHeaderTitle from '../components/CustomHeaderTitle';
+
+//edit code:
+//
+// console.log(`Editing ${route.params.id}`);
+//  navigation.navigate('EditPosting', {
+//    ...route.params
+//  });
 
 // Combine multiple screen routes that can be shown on different...
 // Navigation stacks.
 export const addPostingsRoutes = (Stack, navigation) => {
     const handleDone = route => {
+
         return(
             <TouchableOpacity
               style={styles.headerRight}
@@ -30,19 +39,29 @@ export const addPostingsRoutes = (Stack, navigation) => {
         );
     }
 
-    const handleEdit = route => {
+
+    const handleMenu = route => {
+
+        const menu = useRef();      
+        const showMenu = () => menu.current.show();
+
         return(
-            <TouchableOpacity
-              style={styles.headerRight}
-              onPress={() => {
-                  console.log(`Editing ${route.params.id}`);
-                  navigation.navigate('EditPosting', {
-                      ...route.params
-                  });
-              }}
-            >
-              <Text style={styles.headerRightEditText}>Edit</Text>
-            </TouchableOpacity>
+            <View>
+            <Menu
+                ref={menu}
+                button={ 
+                    <Entypo name="dots-three-horizontal" 
+                        size={24} 
+                        onPress={showMenu}>
+                    </Entypo>
+            }>
+                <MenuItem onPress={
+                    navigation.navigate('EditPosting', {...route.params})
+                    }>
+                    Edit Post</MenuItem>
+               <MenuItem onPress={console.log('Report Button')}>Report Post</MenuItem> 
+            </Menu>
+            </View>
         );
     };
 
@@ -56,7 +75,7 @@ export const addPostingsRoutes = (Stack, navigation) => {
                   headerTitle: props => <CustomHeaderTitle request={route.params.request}/>,
                   ...headerOptions,
                   headerBackTitle: 'Back',
-                  /* headerRight: () => handleEdit(route), */
+                  headerRight: () => handleMenu(route)
                 })
             }
           />
