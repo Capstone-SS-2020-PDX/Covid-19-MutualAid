@@ -8,11 +8,8 @@ import { StyleSheet,
          Switch,
          TouchableOpacity,
          ScrollView,
-         Dimensions,
-         Image,
          Modal,
          ActivityIndicator,
-         Alert,
        } from "react-native";
 import { FontAwesome5 } from '@expo/vector-icons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -25,15 +22,16 @@ import Center from '../components/Center';
 import CustomButton from '../components/CustomButton';
 import Colors from '../config/colors.js';
 import { windowHeight, windowWidth } from '../config/dimensions';
+import CustomImagePicker from '../components/CustomImagePicker';
 
 
 const url = "https:cellular-virtue-277000.uc.r.appspot.com/postings/?format=json";
 
 const PostingCreationScreen = props => {
   const { navigation } = props;
+  const [selectedImage, setSelectedImage] = useState(null);
   const [itemName, setItemName] = useState('');
   const [itemDescription, setItemDescription] = useState('');
-  const [selectedImage, setSelectedImage] = useState(null);
   const [itemCount, setItemCount] = useState(1);
   const [isRequestSwitchEnabled, setIsRequestSwitchEnabled] = useState(false);
   const [isCategorySwitchEnabled, setIsCategorySwitchEnabled] = useState(false);
@@ -46,7 +44,6 @@ const PostingCreationScreen = props => {
   const itemCountInputRef = useRef(null);
 
   const height = useHeaderHeight();
-
 
   const handlePostCreation = () => {
     if(!isProcessing) {
@@ -99,80 +96,6 @@ const PostingCreationScreen = props => {
       });
   };
 
-  // Handles letting the user select an image from their library
-  const openCameraAsync = async () => {
-    let cameraPermission = await ImagePicker.requestCameraPermissionsAsync();
-    let libraryPermission = await ImagePicker.requestCameraRollPermissionsAsync();
-
-    if (!cameraPermission.granted  || !libraryPermission.granted) {
-      alert('Permission to access camera and library is required!');
-      return;
-    }
-
-    let cameraResult = await ImagePicker.launchCameraAsync({
-      allowsEditing: true,
-      quality: 0.5,
-      aspect: [1,1],
-      resizeMethod: 'contain'
-    });
-
-    if (cameraResult.cancelled === true) {
-      return;
-    }
-
-    let imageName = (Math.random() * 1000).toString().concat('.jpg');
-    console.log(imageName);
-
-    let resizedImage = await ImageManipulator.manipulateAsync(
-      cameraResult.uri,
-      [
-        { resize: {
-          width: 1000
-        }},
-      ],
-      { compress: 0.5 },
-    )
-
-    setSelectedImage({uri: resizedImage.uri, type: 'image/jpeg', name: imageName});
-    console.log(selectedImage);
-  };
-
-  // Handles letting the user select an image from their library
-  const openImagePickerAsync = async () => {
-    let permissionResult = await ImagePicker.requestCameraRollPermissionsAsync();
-
-    if (permissionResult.granted === false) {
-      alert('Permission to access camera roll is required!');
-      return;
-    }
-
-    let pickerResult = await ImagePicker.launchImageLibraryAsync({
-      allowsEditing: true,
-      quality: 0.5,
-      aspect: [1,1],
-      resizeMethod: 'contain'
-    });
-
-    if (pickerResult.cancelled === true) {
-      return;
-    }
-
-    let imageName = (Math.random() * 1000).toString().concat('.jpg');
-    console.log(imageName);
-
-    let resizedImage = await ImageManipulator.manipulateAsync(
-      pickerResult.uri,
-      [
-        { resize: {
-          width: 1000
-        }},
-      ],
-      { compress: 0.5 },
-    )
-
-    setSelectedImage({uri: resizedImage.uri, type: 'image/jpeg', name: imageName});
-    console.log(selectedImage);
-  };
 
   // clears the input fields and state for the input
   const resetFormState = () => {
@@ -214,18 +137,6 @@ const PostingCreationScreen = props => {
 
   // Renders either the image returned from the image picker or an icon
   const renderImageSection = () => {
-    if (selectedImage !== null) {
-      return(
-        <Image source={{ uri: selectedImage.uri }} style={styles.image} />
-      );
-    } else {
-      return(
-        <FontAwesome5
-          size={150}
-          name='images'
-        />
-      );
-    }
   }
 
   const toggleRequestSwitch = () => {
@@ -236,27 +147,10 @@ const PostingCreationScreen = props => {
     setIsCategorySwitchEnabled(previousState => !previousState);
   };
 
-  const selectImageOption = () => {
-    Alert.alert(
-      "Image Upload",
-      "Choose an image from your library, or take one with your camera.",
-      [
-        {
-          text:"Cancel",
-          style: "cancel"
-        },
-        {
-          text: "Camera",
-          onPress: () => openCameraAsync()
-        },
-        {
-          text: "Library",
-          onPress: () => openImagePickerAsync()
-        }
-      ],
-      { onDismiss: () => {} }
-    )
-  }
+  const selectImage = imageData => {
+    console.log(imageData);
+    setSelectedImage(imageData);
+  };
 
   return (
     <Center style={styles.screen}>
@@ -266,11 +160,12 @@ const PostingCreationScreen = props => {
         scrollEnabled={true}
       >
         <View style={styles.imageContainer}>
-          <TouchableOpacity
-            onPress={selectImageOption}
-          >
-            {renderImageSection()}
-          </TouchableOpacity>
+
+          <CustomImagePicker
+            iconName='images'
+            onSelectImage={selectImage}
+          />
+
         </View>
         <View style={styles.inputContainer}>
           <View style={styles.inputView}>
@@ -429,13 +324,6 @@ const styles = StyleSheet.create({
   buttonText: {
     color: Colors.light_shade1,
     fontSize: 24,
-  },
-  image: {
-    width: windowWidth/3,
-    height: windowHeight/4,
-    aspectRatio: 1,
-    borderColor: 'black',
-    borderWidth: 1
   },
   inputContainer: {
     width: '80%',
