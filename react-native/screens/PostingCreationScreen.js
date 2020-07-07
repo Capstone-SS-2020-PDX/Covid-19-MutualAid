@@ -47,7 +47,6 @@ const PostingCreationScreen = props => {
 
   const height = useHeaderHeight();
 
-
   const handlePostCreation = () => {
     if(!isProcessing) {
       setIsProcessing(true);

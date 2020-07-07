@@ -9,7 +9,6 @@ import {
 import { AuthContext } from '../providers/AuthProvider';
 import { UserContext } from '../providers/UserProvider';
 
-const url = "https:cellular-virtue-277000.uc.r.appspot.com/auth/?format=json";
 const ProfileScreen = props => {
     const { navigation } = props;
     const { user, updateUser } = useContext(UserContext);
