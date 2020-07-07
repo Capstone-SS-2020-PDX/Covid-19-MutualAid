@@ -28,7 +28,7 @@ const Feed = props => {
 
   const fetchPostings = () => {
     setIsLoading(true);
-
+   
     fetch(url, {
       method: 'GET',
       headers: {
@@ -68,10 +68,16 @@ const Feed = props => {
     searchInputRef.current.clear();
   };
 
+  const PostingListSection = isLoading ? <ActivityIndicator size='large'/>
+          : <PostingList
+            postings={searchPostings}
+            navigation={navigation}
+            isLoading={isLoading}
+            onRefresh={fetchPostings}
+          />
+
   return(
-    isLoading
-      ? <ActivityIndicator size='large'/>
-      : <View style={styles.screen}>
+       <View style={styles.screen}>
           <View style={styles.searchContainer}>
             <View style={styles.inputView}>
               <Ionicons
@@ -99,12 +105,7 @@ const Feed = props => {
               </TouchableOpacity>
             </View>
           </View>
-          <PostingList
-            postings={searchPostings}
-            navigation={navigation}
-            isLoading={isLoading}
-            onRefresh={fetchPostings}
-          />
+         {PostingListSection}
         </View>
   );
 };
