@@ -26,7 +26,9 @@ const Feed = props => {
   const [searchText, setSearchText] = useState('');
   const searchInputRef = useRef(null);
 
-  useEffect(() => {
+  const fetchPostings = () => {
+    setIsLoading(true);
+
     fetch(url, {
       method: 'GET',
       headers: {
@@ -44,6 +46,10 @@ const Feed = props => {
       .finally(() => {
         setIsLoading(false)
       });
+  };
+
+  useEffect(() => {
+    fetchPostings();
   }, []);
 
   const handleSearch = text => {
@@ -96,6 +102,8 @@ const Feed = props => {
           <PostingList
             postings={searchPostings}
             navigation={navigation}
+            isLoading={isLoading}
+            onRefresh={fetchPostings}
           />
         </View>
   );
