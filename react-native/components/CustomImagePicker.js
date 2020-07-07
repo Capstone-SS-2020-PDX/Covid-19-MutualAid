@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Image, TouchableOpacity, Alert, StyleSheet } from 'react-native';
 
 import { FontAwesome5 } from '@expo/vector-icons';
@@ -10,6 +10,10 @@ import { windowHeight, windowWidth } from '../config/dimensions';
 
 const CustomImagePicker = props => {
   const [selectedImage, setSelectedImage] = useState(null);
+
+    useEffect(() => {
+        props.onSelectImage(selectedImage);
+    }, [selectedImage]);
 
     // Handles letting the user select an image from their library
     const openCameraAsync = async () => {
@@ -44,7 +48,6 @@ const CustomImagePicker = props => {
         )
 
         setSelectedImage({uri: resizedImage.uri, type: 'image/jpeg', name: imageName});
-        props.onSelectImage(selectedImage);
     };
 
     // Handles letting the user select an image from their library
@@ -58,7 +61,6 @@ const CustomImagePicker = props => {
 
         let pickerResult = await ImagePicker.launchImageLibraryAsync({
             allowsEditing: true,
-            quality: 0.5,
             aspect: [1,1],
             resizeMethod: 'contain'
         });
@@ -79,7 +81,6 @@ const CustomImagePicker = props => {
         )
 
         setSelectedImage({uri: resizedImage.uri, type: 'image/jpeg', name: imageName});
-        props.onSelectImage(selectedImage);
     };
 
     const selectImageOption = () => {
