@@ -26,7 +26,7 @@ class Community(models.Model):
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True, related_name='profile')
     profile_text = models.CharField(max_length=160)
-    member_of = models.ManyToManyField(Community, related_name='members')
+    member_of = models.ManyToManyField(Community, related_name='members', blank=True, null=True)
     home = models.ForeignKey(Community, on_delete=models.CASCADE, blank=True, null=True)
     phone_number = models.CharField(max_length=17, blank=True)
     created_on = models.DateField(default=date.today)
@@ -49,7 +49,6 @@ class Posting(models.Model):
     in_community = models.ForeignKey(Community, on_delete=models.CASCADE, blank=True, null=True, related_name='posts')
     item_pic = models.ImageField(upload_to='pimg/', default='')
     request = models.BooleanField(default=True)
-    email = models.CharField(max_length=50, blank=True, null=True)
     
     # Meta data about DB table
     class Meta:
