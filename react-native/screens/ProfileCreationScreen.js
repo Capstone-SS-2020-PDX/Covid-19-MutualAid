@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
     View,
     Text,
@@ -9,10 +9,12 @@ import {
 
 import { UserContext } from '../providers/UserProvider';
 
-const AccountCreationScreen = props => {
+const ProfileCreationScreen = props => {
+    const { user } = useContext(UserContext);
+
     return(
         <View>
-          <Text>Account Creation Screen</Text>
+          <Text>{user.username}'s Account Creation Screen</Text>
         </View>
     );
 };
@@ -25,4 +27,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default AccountCreationScreen;
+export default ProfileCreationScreen;
