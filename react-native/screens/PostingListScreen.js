@@ -37,7 +37,6 @@ const Feed = props => {
     })
       .then(response => response.json())
       .then(json => {
-        console.log(json.length);
         setPostings(json);
         setSearchPostings(json);
       })

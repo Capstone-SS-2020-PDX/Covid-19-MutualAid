@@ -121,6 +121,8 @@ export const AuthProvider = props => {
     };
 
     const handleLogout = () => {
+        console.log("Logging out...");
+
         AsyncStorage.removeItem('token').catch(error => {
             console.log(error);
         });

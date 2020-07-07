@@ -28,7 +28,7 @@ export const UserProvider = props => {
         // console.log(json);
         const ownData = userJson.filter(userJson => userJson.username === username)
         updateUser(ownData[0]);
-        console.log("Sucessfully initialized User Context with username: " + user.username);
+        console.log("Sucessfully initialized User Context with username: " + username);
       })
       .catch(error => console.log(error))
       .finally(() => {
