@@ -6,7 +6,7 @@ import { HeaderBackButton } from '@react-navigation/stack';
 
 import PostingDetailScreen from '../screens/PostingDetailScreen';
 import EditPostingScreen from '../screens/EditPostingScreen';
-import Menu, { MenuItem } from 'react-native-material-menu';
+import ModalDropdown from 'react-native-modal-dropdown';
 import { Entypo } from '@expo/vector-icons';
 import Colors from '../config/colors';
 import { headerOptions }  from '../config/navigation-options';
@@ -22,6 +22,7 @@ import CustomHeaderTitle from '../components/CustomHeaderTitle';
 // Combine multiple screen routes that can be shown on different...
 // Navigation stacks.
 export const addPostingsRoutes = (Stack, navigation) => {
+
     const handleDone = route => {
 
         return(
@@ -39,28 +40,28 @@ export const addPostingsRoutes = (Stack, navigation) => {
         );
     }
 
+    const handleButtons = (index) => {
+        console.log(index);
+        if(index === 0) {
+            navigation.navigate('EditPosting', {...route.params});
+        }
+        else if(index === 1) {
+            console.log('Report Post');
+        }
+        else{
+            console.log('default');
+        }
+    }
 
     const handleMenu = route => {
 
-        const menu = useRef();      
-        const showMenu = () => menu.current.show();
-
         return(
             <View>
-            <Menu
-                ref={menu}
-                button={ 
-                    <Entypo name="dots-three-horizontal" 
-                        size={24} 
-                        onPress={showMenu}>
-                    </Entypo>
-            }>
-                <MenuItem onPress={
-                    navigation.navigate('EditPosting', {...route.params})
-                    }>
-                    Edit Post</MenuItem>
-               <MenuItem onPress={console.log('Report Button')}>Report Post</MenuItem> 
-            </Menu>
+            <ModalDropdown
+                defaultValue={'...'}
+                options={[ 'Edit Post', 'Report Post']}
+                onSelect={(index) => handleButtons(index)}
+            />
             </View>
         );
     };
