@@ -83,7 +83,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 if os.getenv('GAE_APPLICATION', None):
     DATABASES = {
         'default': {
-                'ENGINE': 'django.contrib.gis.db.backends.postgis',
+                'ENGINE': 'django.db.backends.postgresql',
                 'HOST': '/cloudsql/cellular-virtue-277000:us-central1:cgtest',
                 'USER': 'postgres',
                 'NAME': 'postgres',
