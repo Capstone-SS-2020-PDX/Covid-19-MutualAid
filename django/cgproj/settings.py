@@ -83,40 +83,29 @@ CORS_ORIGIN_ALLOW_ALL = True
 if os.getenv('GAE_APPLICATION', None):
     DATABASES = {
         'default': {
-                'ENGINE': 'django.db.backends.postgresql',
+                'ENGINE': 'django.contrib.gis.db.backends.postgis',
                 'HOST': '/cloudsql/cellular-virtue-277000:us-central1:cgtest',
                 'USER': 'postgres',
                 'NAME': 'postgres',
                 'PASSWORD': os.getenv('POSTGRES_DB_PASSWORD'),
                 }
         }
-else:
-    DATABASES = {
-        'default': {
-                'ENGINE': 'django.db.backends.postgresql',
-                'HOST': '/cloud_sql/cellular-virtue-277000:us-central1:cgtest/',
-                'PORT': '5432',
-                'USER': 'postgres',
-                'NAME': 'postgres',
-                'PASSWORD': 'testpassword',
-                }
-        }
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
+#    {
+#        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+#    },
+#    {
+#        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+#    },
 #    {
 #        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
 #    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+#    {
+#        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+#    },
 ]
 
 
