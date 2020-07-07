@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
     View,
     Text,
@@ -11,32 +11,17 @@ import { UserContext } from '../providers/UserProvider';
 const url = "https:cellular-virtue-277000.uc.r.appspot.com/auth/?format=json";
 const ProfileScreen = props => {
     // const { username } = useContext(AuthContext);
-    const { user } = useContext(UserContext);
-
-    useEffect(() => {
-        fetch(url, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-                'Content-type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-            }
-        })
-            .then(response => response.json())
-            .then(json => {
-                console.log(json);
-            })
-            .catch(error => console.log(error))
-            .finally(() => {
-
-            });
-    }, []);
-
+    const { user, updateUser } = useContext(UserContext);
 
     return(
         <View style={styles.screen}>
+          <Text>First Name: {user.first_name}</Text>
+          <Text>Last Name: {user.last_name}</Text>
           <Text>User Name: {user.username}</Text>
           <Text>email: {user.email}</Text>
+          <Text>Is Active: {user.is_active ? 'true' : 'false'}</Text>
+          <Text>Date Joined: {user.date_joined}</Text>
+          <Text>Last Login: {user.last_login}</Text>
         </View>
     );
 };

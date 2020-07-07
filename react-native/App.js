@@ -26,11 +26,11 @@ const App = () =>  {
     );
   } else {
     return (
-      <AuthProvider>
-        <UserProvider>
+      <UserProvider>
+        <AuthProvider>
           <Routes />
-        </UserProvider>
-      </AuthProvider>
+        </AuthProvider>
+      </UserProvider>
     );
   }
 }

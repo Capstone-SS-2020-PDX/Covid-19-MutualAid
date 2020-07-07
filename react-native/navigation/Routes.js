@@ -17,7 +17,7 @@ const Stack = createStackNavigator();
 
 const Routes = () => {
     const { autoLogin, login, isLoading, token } = useContext(AuthContext);
-    const { user, setUser } = useContext(UserContext);
+    const { user, initUser } = useContext(UserContext);
    
     // Check if the user is logged in
     useEffect(() => {

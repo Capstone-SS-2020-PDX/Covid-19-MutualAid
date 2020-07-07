@@ -1,5 +1,6 @@
 import React, { createContext, useState, useReducer, useContext } from 'react';
 import { AsyncStorage } from 'react-native';
+import { UserContext } from './UserProvider';
 
 const AUTO_LOGIN = 'AUTO_LOGIN';
 const LOGIN = 'LOGIN';
@@ -12,6 +13,7 @@ const REGISTER = 'REGISTER';
 export const AuthContext = createContext({});
 
 export const AuthProvider = props => {
+    const { initUser, removeUser } = useContext(UserContext);
 
     const initialLoginState = {
         isLoading: true,
@@ -90,6 +92,7 @@ export const AuthProvider = props => {
                 if (userData.username) {
                     AsyncStorage.setItem('username', userData.username).then(() => {
                         console.log('AsyncStorage: set username as ' + userData.username);
+                        initUser(userData.username);
                     }).catch(error => {
                         console.log(error);
                     });
@@ -105,6 +108,8 @@ export const AuthProvider = props => {
         AsyncStorage.getItem('username').then(retrievedUserName => {
             console.log("AutoLogin fetching username from local storage: " + retrievedUserName);
             username = retrievedUserName;
+
+            initUser(username);
         }).catch(error => console.log(error));
 
         dispatch({ type: AUTO_LOGIN, token, username })
@@ -119,6 +124,12 @@ export const AuthProvider = props => {
         AsyncStorage.removeItem('token').catch(error => {
             console.log(error);
         });
+
+        AsyncStorage.removeItem('username').catch(error => {
+            console.log(error);
+        });
+
+        removeUser();
 
         dispatch({ type: LOGOUT })
     };

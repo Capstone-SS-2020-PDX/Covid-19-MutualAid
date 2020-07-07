@@ -22,7 +22,7 @@ import { windowHeight, windowWidth } from '../config/dimensions';
 const LoginScreen = props => {
   const { navigation, route } = props;
   const { login } = useContext(AuthContext);
-  const { user, setUser } = useContext(UserContext);
+  const { user, updateUser } = useContext(UserContext);
   // const [value, handleChange, reset] = useInputState("");
   const [emailText, setEmailText] = useState('');
   const [passwordText, setPasswordText] = useState('');
@@ -83,7 +83,7 @@ const LoginScreen = props => {
         onPress={() => {
           const userData = { username: emailText, password: passwordText };
           login(userData);
-          setUser({ ...user, username: emailText });
+          updateUser({ username: emailText });
         }}
       >
         <Text style={styles.loginText}>LOGIN</Text>
