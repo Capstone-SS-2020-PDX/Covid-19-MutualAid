@@ -4,6 +4,8 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 
 import ProfileScreen from '../screens/ProfileScreen';
 import ProfileEditScreen from '../screens/ProfileEditScreen';
+import ProfileCreationScreen from '../screens/ProfileCreationScreen';
+
 import { headerOptions, drawerMenuIcon } from '../config/navigation-options';
 
 
@@ -24,6 +26,12 @@ const ProfileStack = props => {
         // headerLeft: drawerMenuIcon.bind(this, navigation),
     };
 
+    const ProfileCreationScreenOptions = {
+        headerTitle: 'Create Profile',
+        ...headerOptions,
+        // headerLeft: drawerMenuIcon.bind(this, navigation),
+    };
+
     return(
         <Stack.Navigator
           initialRouteName='Profile'
@@ -37,6 +45,11 @@ const ProfileStack = props => {
             name='EditProfile'
             component={ProfileEditScreen}
             options={ProfileEditScreenOptions}
+          />
+          <Stack.Screen
+            name='CreateProfile'
+            component={ProfileCreationScreen}
+            options={ProfileCreationScreenOptions}
           />
         </Stack.Navigator>
     );
