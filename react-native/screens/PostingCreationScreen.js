@@ -135,10 +135,6 @@ const PostingCreationScreen = props => {
     navigation.navigate('Home', {screen: 'Feed'})
   }
 
-  // Renders either the image returned from the image picker or an icon
-  const renderImageSection = () => {
-  }
-
   const toggleRequestSwitch = () => {
     setIsRequestSwitchEnabled(previousState => !previousState);
   };
@@ -148,7 +144,7 @@ const PostingCreationScreen = props => {
   };
 
   const selectImage = imageData => {
-    console.log(imageData);
+    console.log("In selectImage: " + JSON.stringify(imageData));
     setSelectedImage(imageData);
   };
 
@@ -173,7 +169,7 @@ const PostingCreationScreen = props => {
               style={styles.inputText}
               placeholder='Item Name...'
               placeholderTextColor={Colors.placeholder_text}
-              maxLength={25}
+              maxLength={35}
               returnKeyType='next'
               onChangeText={text => setItemName(text)}
               ref={nameInputRef}
