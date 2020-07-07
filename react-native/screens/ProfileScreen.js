@@ -16,6 +16,7 @@ const ProfileScreen = props => {
 
     return(
         <View style={styles.screen}>
+          <Text style={styles.text}>ID: {user.id}</Text>
           <Text style={styles.text}>First Name: {user.first_name}</Text>
           <Text style={styles.text}>Last Name: {user.last_name}</Text>
           <Text style={styles.text}>User Name: {user.username}</Text>

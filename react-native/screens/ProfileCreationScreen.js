@@ -29,16 +29,20 @@ const ProfileCreationScreen = props => {
     const handleProfileCreation = () => {
         // console.log(formValue);
 
-        let userData = user;
-        userData.first_name = formValue.first_name;
-        userData.last_name = formValue.last_name;
-        userData.Profile = {profile_text: formValue.profile_text};
-        console.log("user Data: " + JSON.stringify(userData));
-        // sendRequest(JSON.stringify(userData));
+        // let userData = user;
+        // userData.first_name = formValue.first_name;
+        // userData.last_name = formValue.last_name;
+        // userData.Profile = {profile_text: formValue.profile_text};
+        // console.log("user Data: " + JSON.stringify(userData));
+
+        let profileData = { user: user.id, profile_text: formValue.profile_text }
+
+        sendRequest(JSON.stringify(profileData));
     };
 
     const sendRequest = payload => {
-        const url = "https:cellular-virtue-277000.uc.r.appspot.com/auth/";
+        const url = "https:cellular-virtue-277000.uc.r.appspot.com/users/1/";
+        console.log(payload);
 
         return fetch(url, {
             method: 'PUT',

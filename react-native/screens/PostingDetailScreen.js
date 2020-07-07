@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { View,
          KeyboardAvoidingView,
          Text,
@@ -8,7 +8,6 @@ import { View,
          ScrollView,
          StyleSheet,
          TextInput,
-         Modal,
          ActivityIndicator,
        } from 'react-native';
 
@@ -25,26 +24,23 @@ const itemPlaceHolder = '../assets/image_place_holder.jpg';
 
 import Colors from '../config/colors';
 import { windowHeight, windowWidth } from '../config/dimensions';
+import { UserContext } from '../providers/UserProvider';
 
 const emailUrl = 'https://cellular-virtue-277000.uc.r.appspot.com/postings/contact/';
 
 const PostingDetailScreen = props => {
+  const { user } = useContext(UserContext);
   const { route, navigation } = props;
   const [emailText, setEmailText] = useState('');
   const [postingImage, setPostingImage] = useState(null);
-  const [isModalVisible, setIsModalVisible] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
 
   const picUrl = route.params.item_pic;
 
   const handleReachOut = () => {
-    if (emailText.length > 0) {
-      console.log('Sending email from ' + emailText + ' to post with id: ' + route.params.id);
-      setIsProcessing(true);
-      sendEmail(emailText, route.params.id);
-    } else {
-      console.log('No email provided');
-    }
+    console.log('Sending email from ' + emailText + ' to post with id: ' + route.params.id);
+    setIsProcessing(true);
+    sendEmail(user.email, route.params.id);
   };
 
   const sendEmail = (fromEmail, id) => {
@@ -77,9 +73,8 @@ const PostingDetailScreen = props => {
   const resetFormState = () => {
     setIsProcessing(false);
     setEmailText('');
-    setIsModalVisible(!isModalVisible);
   };
- 
+
   // Navigates to the Home Screen stack when called
   const navigateToHomeStack = () => {
     navigation.navigate('Home', {screen: 'Feed'})
@@ -106,18 +101,18 @@ const PostingDetailScreen = props => {
     <>
       <View style={styles.detailTitleContainer}>
         <Text style={styles.detailTitleText}>{route.params.title}</Text>
-       </View>
+      </View>
 
-        <View style={styles.imageContainer}>
-          <Image
-            style={styles.itemImage}
-            resizeMode='cover'
+      <View style={styles.imageContainer}>
+        <Image
+          style={styles.itemImage}
+          resizeMode='cover'
 
-            source={picUrl != null?{uri:picUrl}
-            : require(itemPlaceHolder)}
+          source={picUrl != null?{uri:picUrl}
+                  : require(itemPlaceHolder)}
 
-          />
-        </View>
+        />
+      </View>
 
       <View style={styles.detailContainer}>
         <Text style={styles.detailText}>
@@ -135,79 +130,26 @@ const PostingDetailScreen = props => {
       <CustomButton
         style={styles.reachOutButton}
         onPress={() => {
-          setIsModalVisible(true);
+          handleReachOut();
         }}
       >
         <Text style={styles.reachOutButtonText}>Reach Out!</Text>
       </CustomButton>
 
 
-      <Modal
-        visible={isModalVisible}
-        animationType='slide'
-        onRequestClose={() => console.log('modal closing')}
-        onDismiss={() => console.log('modal dismissed')}
-      >
-        <View style={styles.reachOutModalViewContainer}>
-          <View style={styles.modalTitleContainer}>
-            <Text style={styles.modalTitle}>
-              Enter your email to get in contact!
-            </Text>
-          </View>
-
-          { isProcessing
-            ? <View style={styles.activityIndicator}>
-                <ActivityIndicator size='large' color={Colors.primary}/>
-              </View>
-            : <>
-
-                <KeyboardAvoidingView behavior={'padding'} style={styles.inputContainer}>
-                  <View style={styles.inputView}>
-                    <TextInput
-                      style={styles.inputText}
-                      placeholder='Enter your email...'
-                      placeholderTextColor={Colors.placeholder_text}
-                      autoCapitalize='none'
-                      keyboardType='email-address'
-                      returnKeyType='done'
-                      onChangeText={text => setEmailText(text)}
-                      value={emailText}
-                    />
-                  </View>
-                </KeyboardAvoidingView>
-                <CustomButton
-                  style={styles.confirmButton}
-                  onPress={() => {
-                    handleReachOut();
-                  }}
-                >
-                  <Text style={styles.reachOutButtonText}>Confirm</Text>
-                </CustomButton>
-                <TouchableOpacity
-                  onPress={() => {
-                    console.log('reach out cancelled');
-                    setIsModalVisible(!isModalVisible);
-                  }}
-                >
-                  <Text style={styles.cancelText}>Cancel</Text>
-                </TouchableOpacity>
-              </>
-          }
-        </View>
-      </Modal>
     </>
   )
 
   return(
     windowHeight < 650
       ? <ScrollView
-          contentContainerStyle={styles.scrollScreen}
-        >
-          {screenContent}
-        </ScrollView>
+             contentContainerStyle={styles.scrollScreen}
+  >
+    {screenContent}
+  </ScrollView>
     : <Center style={styles.screen}>
-      {screenContent}
-    </Center>
+                                     {screenContent}
+                                   </Center>
   );
 };
 
@@ -321,23 +263,8 @@ const styles = StyleSheet.create({
     width: '90%',
     color: Colors.dark_shade1,
   },
-  reachOutModalViewContainer: {
-    height: '90%',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    margin: 10,
-    padding: 10,
-    backgroundColor: "white",
-  },
   confirmButton: {
     marginBottom: 20,
-  },
-  modalTitleContainer: {
-    marginBottom: 200,
-  },
-  modalTitle: {
-    fontSize: 40,
-    textAlign: 'center',
   },
   cancelText: {
     color: Colors.contrast2,
