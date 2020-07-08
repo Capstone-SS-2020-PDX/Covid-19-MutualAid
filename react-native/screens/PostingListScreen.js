@@ -15,8 +15,8 @@ import PostingList from '../components/PostingList';
 
 import Colors from '../config/colors';
 import { windowWidth, windowHeight } from '../config/dimensions';
+import { postings_url } from '../config/urls';
 
-const url = "https:cellular-virtue-277000.uc.r.appspot.com/postings/?format=json";
 
 const Feed = props => {
   const { navigation } = props;
@@ -29,7 +29,7 @@ const Feed = props => {
   const fetchPostings = () => {
     setIsLoading(true);
    
-    fetch(url, {
+    fetch(postings_url, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
