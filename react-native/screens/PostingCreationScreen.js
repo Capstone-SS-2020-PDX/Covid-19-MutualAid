@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext } from "react";
 import { StyleSheet,
          Text,
          TextInput,
@@ -8,7 +8,8 @@ import { StyleSheet,
          Switch,
          TouchableOpacity,
          ScrollView,
-         Modal,
+         Dimensions,
+         Image,
          ActivityIndicator,
        } from "react-native";
 import { FontAwesome5 } from '@expo/vector-icons';
@@ -22,6 +23,7 @@ import Center from '../components/Center';
 import CustomButton from '../components/CustomButton';
 import Colors from '../config/colors.js';
 import { windowHeight, windowWidth } from '../config/dimensions';
+import { UserContext, UserProvider } from '../providers/UserProvider';
 import CustomImagePicker from '../components/CustomImagePicker';
 
 
@@ -29,14 +31,14 @@ const url = "https:cellular-virtue-277000.uc.r.appspot.com/postings/?format=json
 
 const PostingCreationScreen = props => {
   const { navigation } = props;
+  const { user } = useContext(UserContext);
+
   const [selectedImage, setSelectedImage] = useState(null);
   const [itemName, setItemName] = useState('');
   const [itemDescription, setItemDescription] = useState('');
   const [itemCount, setItemCount] = useState(1);
   const [isRequestSwitchEnabled, setIsRequestSwitchEnabled] = useState(false);
   const [isCategorySwitchEnabled, setIsCategorySwitchEnabled] = useState(false);
-  const [emailText, setEmailText] = useState('');
-  const [isModalVisible, setIsModalVisible] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
 
   const nameInputRef = useRef(null);
@@ -69,9 +71,9 @@ const PostingCreationScreen = props => {
     data.append('desc', itemDescription);
     data.append('item_pic', selectedImage);
     data.append('count', itemCount);
+    data.append('owner', user.id);
     data.append('category', categoryValue);
     data.append('request', requestValue);
-    data.append('email', emailText);
 
     return data;
   };
@@ -107,7 +109,6 @@ const PostingCreationScreen = props => {
     setItemDescription('');
     setSelectedImage(null);
     setItemCount(1);
-    setEmailText('');
     setIsProcessing(false);
 
     setIsRequestSwitchEnabled(false);
@@ -117,7 +118,6 @@ const PostingCreationScreen = props => {
     descriptionInputRef.current.clear();
     itemCountInputRef.current.clear();
 
-    setIsModalVisible(false);
   };
 
   const notifyMessage = msg => {
@@ -231,65 +231,12 @@ const PostingCreationScreen = props => {
           </View>
 
           <CustomButton
-            onPress={() => setIsModalVisible(true)}
+            onPress={() => handlePostCreation()}
             style={{ marginBottom: 10, alignSelf: 'center'}}
           >
             <Text style={styles.buttonText}>Confirm</Text>
           </CustomButton>
         </View>
-
-
-        <Modal
-          visible={isModalVisible}
-          animationType='slide'
-          onRequestClose={() => console.log('modal closing')}
-          onDismiss={() => console.log('modal dismissed')}
-        >
-          <View style={styles.postingModalViewContainer}>
-            <View style={styles.modalTitleContainer}>
-              <Text style={styles.modalTitle}>
-                Enter your email to complete the post!
-              </Text>
-            </View>
-
-            { isProcessing
-              ? <View style={styles.activityIndicator}>
-                  <ActivityIndicator size='large' color={Colors.primary}/>
-                </View>
-              : <>
-                  <KeyboardAvoidingView behavior={'padding'} style={styles.inputContainer}>
-                    <View style={styles.inputView}>
-                      <TextInput
-                        style={styles.inputText}
-                        placeholder='Enter your email...'
-                        placeholderTextColor={Colors.placeholder_text}
-                        keyboardType='email-address'
-                        autoCapitalize='none'
-                        returnKeyType='done'
-                        onChangeText={text => setEmailText(text)}
-                        value={emailText}
-                      />
-                    </View>
-                  </KeyboardAvoidingView>
-                  <CustomButton
-                    onPress={handlePostCreation}
-                    style={{ marginBottom: 10, alignSelf: 'center'}}
-                  >
-                    <Text style={styles.buttonText}>Confirm</Text>
-                  </CustomButton>
-                  <TouchableOpacity
-                    onPress={() => {
-                      console.log('email entry cancelled');
-                      setIsModalVisible(!isModalVisible);
-                    }}
-                  >
-                    <Text style={styles.cancelText}>Cancel</Text>
-                  </TouchableOpacity>
-                </>
-            }
-
-          </View>
-        </Modal>
 
       </KeyboardAwareScrollView>
     </Center>
@@ -399,27 +346,12 @@ const styles = StyleSheet.create({
   switch: {
       transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }],
   },
-  postingModalViewContainer: {
-    height: '90%',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    margin: 10,
-    padding: 10,
-    backgroundColor: "white",
-  },
   confirmButton: {
     marginBottom: 20,
   },
   createPostingButtonText: {
     color: 'white',
     fontSize: 24,
-  },
-  modalTitleContainer: {
-    marginBottom: 200,
-  },
-  modalTitle: {
-    fontSize: 40,
-    textAlign: 'center',
   },
   cancelText: {
     color: Colors.contrast2,

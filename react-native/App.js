@@ -4,6 +4,7 @@ import { AppLoading } from 'expo';
 
 import Routes from './navigation/Routes';
 import { AuthProvider } from './providers/AuthProvider';
+import { UserProvider } from './providers/UserProvider';
 
 const App = () =>  {
   const [isFontLoaded, setIsFontLoaded] = useState(false);
@@ -25,9 +26,11 @@ const App = () =>  {
     );
   } else {
     return (
-      <AuthProvider>
-        <Routes />
-      </AuthProvider>
+      <UserProvider>
+        <AuthProvider>
+          <Routes />
+        </AuthProvider>
+      </UserProvider>
     );
   }
 }

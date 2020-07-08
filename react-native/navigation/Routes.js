@@ -11,11 +11,13 @@ import DrawerNav from './DrawerNav';
 import Center from '../components/Center';
 
 import { AuthContext } from '../providers/AuthProvider';
+import { UserContext } from '../providers/UserProvider';
 
 const Stack = createStackNavigator();
 
 const Routes = () => {
     const { autoLogin, login, isLoading, token } = useContext(AuthContext);
+    const { user, initUser } = useContext(UserContext);
    
     // Check if the user is logged in
     useEffect(() => {

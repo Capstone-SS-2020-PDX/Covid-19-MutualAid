@@ -26,7 +26,9 @@ const Feed = props => {
   const [searchText, setSearchText] = useState('');
   const searchInputRef = useRef(null);
 
-  useEffect(() => {
+  const fetchPostings = () => {
+    setIsLoading(true);
+   
     fetch(url, {
       method: 'GET',
       headers: {
@@ -37,7 +39,6 @@ const Feed = props => {
     })
       .then(response => response.json())
       .then(json => {
-        console.log(json.length);
         setPostings(json);
         setSearchPostings(json);
       })
@@ -45,6 +46,10 @@ const Feed = props => {
       .finally(() => {
         setIsLoading(false)
       });
+  };
+
+  useEffect(() => {
+    fetchPostings();
   }, []);
 
   const handleSearch = text => {
@@ -63,10 +68,16 @@ const Feed = props => {
     searchInputRef.current.clear();
   };
 
+  const PostingListSection = isLoading ? <ActivityIndicator size='large'/>
+          : <PostingList
+            postings={searchPostings}
+            navigation={navigation}
+            isLoading={isLoading}
+            onRefresh={fetchPostings}
+          />
+
   return(
-    isLoading
-      ? <ActivityIndicator size='large'/>
-      : <View style={styles.screen}>
+       <View style={styles.screen}>
           <View style={styles.searchContainer}>
             <View style={styles.inputView}>
               <Ionicons
@@ -94,10 +105,7 @@ const Feed = props => {
               </TouchableOpacity>
             </View>
           </View>
-          <PostingList
-            postings={searchPostings}
-            navigation={navigation}
-          />
+         {PostingListSection}
         </View>
   );
 };

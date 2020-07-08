@@ -1,9 +1,9 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
+import { MaterialCommunityIcons, Ionicons, FontAwesome } from '@expo/vector-icons';
 
 import HomeStack from './HomeStack';
-import SearchStack from './SearchStack';
+import ProfileStack from './ProfileStack';
 import PostingCreationStack from '../navigation/PostingCreationStack';
 
 import Colors from '../config/colors';
@@ -41,12 +41,12 @@ const NavTabs = props => {
                 color={color}
               />
             );
-          } else if (route.name === 'Search') {
+          } else if (route.name === 'Profile') {
             iconName = focused
-              ? 'md-search'
-              : 'ios-search';
+              ? 'user'
+              : 'user-o';
             return (
-              <Ionicons
+              <FontAwesome
                 name={iconName}
                 size={size}
                 color={color}
@@ -76,8 +76,8 @@ const NavTabs = props => {
         options={{}}
       />
       <NavbarTabs.Screen
-        name='Search'
-        component={SearchStack}
+        name='Profile'
+        component={ProfileStack}
         options={{}}
       />
     </NavbarTabs.Navigator>

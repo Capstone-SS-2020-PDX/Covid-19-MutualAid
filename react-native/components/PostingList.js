@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, FlatList } from 'react-native';
+import { View, StyleSheet, FlatList, RefreshControl } from 'react-native';
 
 import PostingListItem from '../components/PostingListItem';
 
@@ -39,6 +39,12 @@ const PostingList = props => {
       keyExtractor={(itemData, i) => i.toString()}
       data={postings}
       showsVerticalScrollIndicator={false}
+      refreshControl={
+        <RefreshControl
+          refreshing={props.isLoading}
+          onRefresh={props.onRefresh}
+        />
+      }
     />
   );
 };

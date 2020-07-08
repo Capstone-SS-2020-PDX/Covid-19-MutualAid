@@ -1,5 +1,6 @@
-import React, { createContext, useState, useReducer } from 'react';
+import React, { createContext, useState, useReducer, useContext } from 'react';
 import { AsyncStorage } from 'react-native';
+import { UserContext } from './UserProvider';
 
 const AUTO_LOGIN = 'AUTO_LOGIN';
 const LOGIN = 'LOGIN';
@@ -13,6 +14,7 @@ const SET_IS_LOADING = 'SET_IS_LOADING';
 export const AuthContext = createContext({});
 
 export const AuthProvider = props => {
+    const { initUser, removeUser } = useContext(UserContext);
 
     const initialLoginState = {
         isLoading: true,
@@ -25,6 +27,7 @@ export const AuthProvider = props => {
             case AUTO_LOGIN:
                 return {
                     ...previousState,
+                    username: action.username,
                     token: action.token,
                     isLoading: false,
                 };
@@ -83,7 +86,6 @@ export const AuthProvider = props => {
                 console.log(error);
             })
             .finally(() => {
-                dispatch({ type: requestType, username: userData.username, token: token})
 
                 if (token) {
                     AsyncStorage.setItem('token', token).then(() => {
@@ -92,12 +94,31 @@ export const AuthProvider = props => {
                         console.log(error);
                     });
                 }
-            });
 
+                if (userData.username) {
+                    AsyncStorage.setItem('username', userData.username).then(() => {
+                        console.log('AsyncStorage: set username as ' + userData.username);
+                        initUser(userData.username);
+                    }).catch(error => {
+                        console.log(error);
+                    });
+                }
+
+                dispatch({ type: requestType, username: userData.username, token: token})
+            });
     };
 
     const handleAutoLogin = token => {
-        dispatch({ type: AUTO_LOGIN, token: token })
+        let username;
+
+        AsyncStorage.getItem('username').then(retrievedUserName => {
+            console.log("AutoLogin fetching username from local storage: " + retrievedUserName);
+            username = retrievedUserName;
+
+            initUser(username);
+        }).catch(error => console.log(error));
+
+        dispatch({ type: AUTO_LOGIN, token, username })
     };
 
     const handleLogin = userData => {
@@ -106,9 +127,17 @@ export const AuthProvider = props => {
     };
 
     const handleLogout = () => {
+        console.log("Logging out...");
+
         AsyncStorage.removeItem('token').catch(error => {
             console.log(error);
         });
+
+        AsyncStorage.removeItem('username').catch(error => {
+            console.log(error);
+        });
+
+        removeUser();
 
         dispatch({ type: LOGOUT })
     };
