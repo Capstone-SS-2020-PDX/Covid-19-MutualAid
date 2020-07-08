@@ -11,9 +11,6 @@ import { windowHeight, windowWidth } from '../config/dimensions';
 const CustomImagePicker = (props) => {
     var selectedImage = props.getImage();
 
-
-    console.log('Custom Image Props:');
-    console.log({props});
     useEffect(() => {
         props.onSelectImage(selectedImage);
     }, [selectedImage]);

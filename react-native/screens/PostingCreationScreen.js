@@ -105,7 +105,6 @@ const PostingCreationScreen = props => {
   const resetFormState = () => {
     setItemName('');
     setItemDescription('');
-    console.log('image gone? maybe?')
     setSelectedImage(null);
     setItemCount(1);
     setEmailText('');
