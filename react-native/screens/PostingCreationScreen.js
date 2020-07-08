@@ -54,6 +54,10 @@ const PostingCreationScreen = props => {
     }
   };
 
+  const getImage = () => {
+    return selectedImage
+  };
+
   // Create the data object in correct format to be sent off the server
   const createFormData = () => {
     const categoryValue = isCategorySwitchEnabled ? 'services' : 'goods';
@@ -160,6 +164,8 @@ const PostingCreationScreen = props => {
           <CustomImagePicker
             iconName='images'
             onSelectImage={selectImage}
+            getImage={getImage}
+            setImage={setSelectedImage}
           />
 
         </View>
