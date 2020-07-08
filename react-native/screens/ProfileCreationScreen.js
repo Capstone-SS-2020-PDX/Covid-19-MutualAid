@@ -11,10 +11,12 @@ import { UserContext } from '../providers/UserProvider';
 import CustomButton from '../components/CustomButton';
 import Colors from '../config/colors';
 import { windowHeight, windowWidth } from '../config/dimensions';
+import CustomImagePicker from '../components/CustomImagePicker';
 
 const ProfileCreationScreen = props => {
     const { user } = useContext(UserContext);
     const { navigation } = props;
+    const [selectedImage, setSelectedImage] = useState(null);
 
     const [formValue, setFormValue] = useState({});
 
@@ -24,6 +26,10 @@ const ProfileCreationScreen = props => {
 
     const updateForm = (text, input) => {
         setFormValue({ ...formValue, [input]: text });
+    };
+
+    const getImage = () => {
+      return selectedImage
     };
 
     const handleProfileCreation = () => {
@@ -36,6 +42,7 @@ const ProfileCreationScreen = props => {
         // console.log("user Data: " + JSON.stringify(userData));
 
         let profileData = { user: user.id, profile_text: formValue.profile_text }
+        profileData.append('user_pic', selectedImage);
 
         sendRequest(JSON.stringify(profileData));
     };
@@ -72,9 +79,24 @@ const ProfileCreationScreen = props => {
         profileTextRef.current.clear();
     };
 
+    const selectImage = imageData => {
+      console.log("In selectImage: " + JSON.stringify(imageData));
+      setSelectedImage(imageData);
+    };
+
     return(
         <View style={styles.screen}>
           <Text style={styles.screenTitle}>Create Your Profile</Text>
+          <View style={styles.imageContainer}>
+
+          <CustomImagePicker
+            iconName='images'
+            onSelectImage={selectImage}
+            getImage={getImage}
+            setImage={setSelectedImage}
+          />
+
+        </View>
           <View style={styles.inputContainer}>
             <View style={styles.inputView}>
               <TextInput
@@ -95,6 +117,17 @@ const ProfileCreationScreen = props => {
                 maxLength={25}
                 returnKeyType='next'
                 onChangeText={text => updateForm(text, 'last_name')}
+                ref={lastNameRef}
+              />
+            </View>
+            <View style={styles.inputView}>
+              <TextInput
+                style={styles.inputText}
+                placeholder='Email...'
+                placeholderTextColor={Colors.placeholder_text}
+                maxLength={25}
+                returnKeyType='next'
+                onChangeText={text => updateForm(text, 'email')}
                 ref={lastNameRef}
               />
             </View>
@@ -133,6 +166,11 @@ const styles = StyleSheet.create({
         fontSize: 36,
         textAlign: 'center',
     },
+    imageContainer: {
+      width: '100%',
+      alignItems: 'center',
+      marginVertical: 10
+    },
     inputContainer: {
         width: '80%',
     },
@@ -146,7 +184,7 @@ const styles = StyleSheet.create({
         borderColor: Colors.placeholder_text,
         borderWidth: 0.5,
         height: 50,
-        marginBottom: 20,
+        marginBottom: 10,
         paddingHorizontal: 20,
 
         shadowColor: Colors.dark_shade1,
