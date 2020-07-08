@@ -94,3 +94,10 @@ def register_user(request):
         }
         return Response(content)
     return Response(data=serializer.errors)    
+
+@api_view(('GET',))
+def username_available(request):
+    argument = request.query_params.get('username', '')
+    if User.objects.filter(username=argument).exists():
+        return Response(status=409)
+    return Response(status=200) 
