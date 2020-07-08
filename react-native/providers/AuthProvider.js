@@ -147,6 +147,27 @@ export const AuthProvider = props => {
         performAuthRequest(REGISTER, userData, registerUrl);
     };
 
+
+    const handleCheckUsername = username => {
+        const usernameUrl = 'https://cellular-virtue-277000.uc.r.appspot.com/check-username/?username=' + username;
+
+        fetch(usernameUrl, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-type': 'application/json',
+            },
+        }).then(response => response.status)
+          .then(status => {
+              console.log('Server Response: ' + status);
+          }).catch(error => {
+              console.log(error);
+          }).finally(() => {
+
+          });
+
+    };
+
     const setIsLoading = value => {
         dispatch({ type: SET_IS_LOADING, isLoading: value });
     };
@@ -162,6 +183,7 @@ export const AuthProvider = props => {
               login: handleLogin,
               logout: handleLogout,
               register: handleRegister,
+              checkUsername: handleCheckUsername,
           }}
         >
           {props.children}
