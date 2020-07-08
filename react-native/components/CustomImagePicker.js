@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, } from 'react';
 import { View, Image, TouchableOpacity, Alert, StyleSheet } from 'react-native';
 
 import { FontAwesome5 } from '@expo/vector-icons';
@@ -8,9 +8,12 @@ import * as ImageManipulator from 'expo-image-manipulator';
 import { windowHeight, windowWidth } from '../config/dimensions';
 
 
-const CustomImagePicker = props => {
-  const [selectedImage, setSelectedImage] = useState(null);
+const CustomImagePicker = (props) => {
+    var selectedImage = props.getImage();
 
+
+    console.log('Custom Image Props:');
+    console.log({props});
     useEffect(() => {
         props.onSelectImage(selectedImage);
     }, [selectedImage]);
@@ -47,7 +50,7 @@ const CustomImagePicker = props => {
             { compress: 0.5 },
         )
 
-        setSelectedImage({uri: resizedImage.uri, type: 'image/jpeg', name: imageName});
+        props.setImage({uri: resizedImage.uri, type: 'image/jpeg', name: imageName});
     };
 
     // Handles letting the user select an image from their library
@@ -80,7 +83,7 @@ const CustomImagePicker = props => {
             { compress: 0.5 },
         )
 
-        setSelectedImage({uri: resizedImage.uri, type: 'image/jpeg', name: imageName});
+        props.setImage({uri: resizedImage.uri, type: 'image/jpeg', name: imageName});
     };
 
     const selectImageOption = () => {
@@ -108,7 +111,7 @@ const CustomImagePicker = props => {
     return(
         <TouchableOpacity onPress={selectImageOption}>
 
-          { selectedImage
+          { selectedImage 
             ? <Image source={{ uri: selectedImage.uri }} style={styles.image} />
             : <FontAwesome5
                 size={150}
@@ -118,7 +121,7 @@ const CustomImagePicker = props => {
 
         </TouchableOpacity>
     );
-}
+};
 
 const styles = StyleSheet.create({
     image: {
