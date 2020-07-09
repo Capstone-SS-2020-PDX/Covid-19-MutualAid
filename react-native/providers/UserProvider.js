@@ -1,6 +1,7 @@
 import React, { createContext, useState, useContext } from 'react';
+import { users_url } from '../config/urls';
 
-const url = "https:cellular-virtue-277000.uc.r.appspot.com/auth/?format=json";
+// const url = "https:cellular-virtue-277000.uc.r.appspot.com/auth/?format=json";
 
 export const UserContext = createContext(null);
 
@@ -15,7 +16,7 @@ export const UserProvider = props => {
   const initUser = username => {
     console.log("Initializing User Context with username: " + username);
 
-    fetch(url, {
+    fetch(users_url, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
@@ -26,12 +27,13 @@ export const UserProvider = props => {
       .then(response => response.json())
       .then(userJson => {
         const ownData = userJson.filter(userJson => userJson.username === username)
-        updateUser(ownData[0]);
-        console.log("Sucessfully initialized User Context with username: " + username);
+        if (ownData[0]) {
+          updateUser(ownData[0]);
+          console.log("Sucessfully initialized User Context with username: " + username);
+        }
       })
       .catch(error => console.log(error))
       .finally(() => {
-
       });
   };
 

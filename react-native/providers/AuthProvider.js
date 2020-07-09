@@ -2,6 +2,8 @@ import React, { createContext, useState, useReducer, useContext } from 'react';
 import { AsyncStorage } from 'react-native';
 import { UserContext } from './UserProvider';
 
+import { login_url, register_url, check_username_url } from '../config/urls';
+
 const AUTO_LOGIN = 'AUTO_LOGIN';
 const LOGIN = 'LOGIN';
 const LOGOUT = 'LOGOUT';
@@ -65,9 +67,11 @@ export const AuthProvider = props => {
     const performAuthRequest = (requestType, userData, url) => {
 
         const payloadData = JSON.stringify(userData);
-        console.log('Outgoing payload: ' + payloadData);
+        console.log('Attempting ' + requestType + ': Outgoing payload: ' + payloadData);
+        // console.log(url);
        
         let token = null;
+        let user = userData;
 
         fetch(url, {
             method: 'POST',
@@ -77,10 +81,16 @@ export const AuthProvider = props => {
             },
             body: payloadData,
         })
-            .then(response => response.json())
+            .then(response => {
+                console.log("Response status: " + response.status);
+                return response.json();
+            })
             .then(json => {
                 console.log('Server Response: ' + JSON.stringify(json));
                 token = json.token;
+                // if (json.user) {
+                //     user = json.user;
+                // }
             })
             .catch(error => {
                 console.log(error);
@@ -95,10 +105,10 @@ export const AuthProvider = props => {
                     });
                 }
 
-                if (userData.username) {
-                    AsyncStorage.setItem('username', userData.username).then(() => {
-                        console.log('AsyncStorage: set username as ' + userData.username);
-                        initUser(userData.username);
+                if (user) {
+                    AsyncStorage.setItem('username', user.username).then(() => {
+                        console.log('AsyncStorage: set username as ' + user.username);
+                        initUser(user.username);
                     }).catch(error => {
                         console.log(error);
                     });
@@ -111,19 +121,19 @@ export const AuthProvider = props => {
     const handleAutoLogin = token => {
         let username;
 
-        AsyncStorage.getItem('username').then(retrievedUserName => {
-            console.log("AutoLogin fetching username from local storage: " + retrievedUserName);
-            username = retrievedUserName;
+        AsyncStorage.getItem('username').then(retrievedUsername => {
+            console.log("AutoLogin fetching user from local storage: " + retrievedUsername);
+            console.log("in handleAutoLogin, username: " + retrievedUsername);
 
-            initUser(username);
+            initUser(retrievedUsername);
+            dispatch({ type: AUTO_LOGIN, token, username: retrievedUsername })
         }).catch(error => console.log(error));
 
-        dispatch({ type: AUTO_LOGIN, token, username })
     };
 
     const handleLogin = userData => {
-        const loginUrl = 'https://cellular-virtue-277000.uc.r.appspot.com/token/';
-        performAuthRequest(LOGIN, userData, loginUrl);
+        // const loginUrl = 'https://cellular-virtue-277000.uc.r.appspot.com/token/';
+        performAuthRequest(LOGIN, userData, login_url);
     };
 
     const handleLogout = () => {
@@ -133,7 +143,7 @@ export const AuthProvider = props => {
             console.log(error);
         });
 
-        AsyncStorage.removeItem('username').catch(error => {
+        AsyncStorage.removeItem('user').catch(error => {
             console.log(error);
         });
 
@@ -143,8 +153,35 @@ export const AuthProvider = props => {
     };
 
     const handleRegister = userData => {
-        const registerUrl = 'https://cellular-virtue-277000.uc.r.appspot.com/register/';
-        performAuthRequest(REGISTER, userData, registerUrl);
+        // const registerUrl = 'https://cellular-virtue-277000.uc.r.appspot.com/register/';
+
+        performAuthRequest(REGISTER, userData, register_url);
+    };
+
+
+    const handleCheckUsername = username => {
+        // const usernameUrl = 'https://cellular-virtue-277000.uc.r.appspot.com/check-username/?username=' + username;
+        const usernameUrl = check_username_url + username;
+
+        fetch(usernameUrl, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-type': 'application/json',
+            },
+        }).then(response => response.status)
+          .then(status => {
+              if (status === 200) {
+                  console.log('Username available!');
+              } else {
+                  console.log('Username NOT available!');
+              }
+          }).catch(error => {
+              console.log(error);
+          }).finally(() => {
+
+          });
+
     };
 
     const setIsLoading = value => {
@@ -162,6 +199,7 @@ export const AuthProvider = props => {
               login: handleLogin,
               logout: handleLogout,
               register: handleRegister,
+              checkUsername: handleCheckUsername,
           }}
         >
           {props.children}

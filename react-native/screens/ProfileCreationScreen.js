@@ -9,8 +9,10 @@ import {
 
 import { UserContext } from '../providers/UserProvider';
 import CustomButton from '../components/CustomButton';
+
 import Colors from '../config/colors';
 import { windowHeight, windowWidth } from '../config/dimensions';
+import { users_url, profiles_url } from '../config/urls';
 
 const ProfileCreationScreen = props => {
     const { user } = useContext(UserContext);
@@ -27,25 +29,27 @@ const ProfileCreationScreen = props => {
     };
 
     const handleProfileCreation = () => {
-        // console.log(formValue);
+        const userUrl = users_url + user.id + '/';
+        // const profileUrl = "https:cellular-virtue-277000.uc.r.appspot.com/profiles/" + user.profile + '/';
 
-        // let userData = user;
-        // userData.first_name = formValue.first_name;
-        // userData.last_name = formValue.last_name;
-        // userData.Profile = {profile_text: formValue.profile_text};
-        // console.log("user Data: " + JSON.stringify(userData));
+        let userData = user;
+        userData.first_name = formValue.first_name;
+        userData.last_name = formValue.last_name;
+        // userData.profile = { profile_text: formValue.profile_text };
 
         let profileData = { user: user.id, profile_text: formValue.profile_text }
+        // let profileData = { profile_text: formValue.profile_text }
+        // sendRequest(JSON.stringify(userData), userUrl, 'PUT');
 
-        sendRequest(JSON.stringify(profileData));
+        // sendRequest(JSON.stringify(profileData), profileUrl, 'POST');
+        sendRequest(JSON.stringify(profileData), profiles_url, 'POST');
     };
 
-    const sendRequest = payload => {
-        const url = "https:cellular-virtue-277000.uc.r.appspot.com/users/1/";
+    const sendRequest = (payload, url, method) => {
         console.log(payload);
 
         return fetch(url, {
-            method: 'PUT',
+            method: method,
             headers: {
                 // 'content-type': 'multipart/form-data',
                 'Accept': 'application/json',
@@ -53,7 +57,7 @@ const ProfileCreationScreen = props => {
             },
             body: payload,
         })
-            .then(response => response.json())
+            .then(response => response.text())
             .then(json => {
                 console.log(json);
             })

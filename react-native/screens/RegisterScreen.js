@@ -24,7 +24,7 @@ import { showModal, hideModal } from '../components/CustomModal';
 
 const RegisterScreen = props => {
   const { navigation, route } = props;
-  const { register, isLoading, setIsLoading } = useContext(AuthContext);
+  const { register, isLoading, setIsLoading, checkUsername } = useContext(AuthContext);
 
   const [emailText, setEmailText] = useState('');
   const [userNameText, setUserNameText] = useState('');
@@ -71,6 +71,9 @@ const RegisterScreen = props => {
             placeholder='User Name...'
             autoCapitalize='none'
             placeholderTextColor={Colors.placeholder_text}
+            onBlur={() => {
+              checkUsername(userNameText);
+            }}
             onChangeText={text => setUserNameText(text)}
           />
         </View>

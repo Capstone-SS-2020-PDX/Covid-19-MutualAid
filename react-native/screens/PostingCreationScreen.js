@@ -21,13 +21,15 @@ import { WToast } from 'react-native-smart-tip'
 
 import Center from '../components/Center';
 import CustomButton from '../components/CustomButton';
-import Colors from '../config/colors.js';
-import { windowHeight, windowWidth } from '../config/dimensions';
-import { UserContext, UserProvider } from '../providers/UserProvider';
 import CustomImagePicker from '../components/CustomImagePicker';
 
+import Colors from '../config/colors.js';
+import { windowHeight, windowWidth } from '../config/dimensions';
+import { postings_url } from '../config/urls';
 
-const url = "https:cellular-virtue-277000.uc.r.appspot.com/postings/?format=json";
+import { UserContext, UserProvider } from '../providers/UserProvider';
+
+// const url = "https:cellular-virtue-277000.uc.r.appspot.com/postings/?format=json";
 
 const PostingCreationScreen = props => {
   const { navigation } = props;
@@ -80,7 +82,7 @@ const PostingCreationScreen = props => {
 
   // handle sending the request
   const sendPostRequest = () => {
-    return fetch(url, {
+    return fetch(postings_url, {
       method: 'POST',
       headers: {
         'content-type': 'multipart/form-data',
@@ -101,7 +103,6 @@ const PostingCreationScreen = props => {
       .finally(() => {
       });
   };
-
 
   // clears the input fields and state for the input
   const resetFormState = () => {

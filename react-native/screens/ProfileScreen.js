@@ -11,7 +11,7 @@ import { UserContext } from '../providers/UserProvider';
 
 const ProfileScreen = props => {
     const { navigation } = props;
-    const { user, updateUser } = useContext(UserContext);
+    const { user } = useContext(UserContext);
 
     return(
         <View style={styles.screen}>
