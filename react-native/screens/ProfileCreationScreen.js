@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 
 import { UserContext } from '../providers/UserProvider';
+import CustomImagePicker from '../components/CustomImagePicker';
 import CustomButton from '../components/CustomButton';
 
 import Colors from '../config/colors';
@@ -19,6 +20,7 @@ const ProfileCreationScreen = props => {
     const { navigation } = props;
 
     const [formValue, setFormValue] = useState({});
+    const [selectedImage, setSelectedImage] = useState(null);
 
     const firstNameRef = useRef(null);
     const lastNameRef = useRef(null);
@@ -29,7 +31,9 @@ const ProfileCreationScreen = props => {
     };
 
     const handleProfileCreation = () => {
-        const userUrl = users_url + user.id + '/';
+        const userPutUrl = users_url + user.id + '/';
+        // const profilePatchUrl = profiles_url + user.profileId + '/';
+        const profilePatchUrl = profiles_url + '3/';
         // const profileUrl = "https:cellular-virtue-277000.uc.r.appspot.com/profiles/" + user.profile + '/';
 
         let userData = user;
@@ -37,12 +41,21 @@ const ProfileCreationScreen = props => {
         userData.last_name = formValue.last_name;
         // userData.profile = { profile_text: formValue.profile_text };
 
-        let profileData = { user: user.id, profile_text: formValue.profile_text }
+        let updatedProfileData = { user: user.id, profile_text: formValue.profile_text }
         // let profileData = { profile_text: formValue.profile_text }
-        // sendRequest(JSON.stringify(userData), userUrl, 'PUT');
+        // sendRequest(JSON.stringify(userData), userPutUrl, 'PUT');
 
-        // sendRequest(JSON.stringify(profileData), profileUrl, 'POST');
-        sendRequest(JSON.stringify(profileData), profiles_url, 'POST');
+        // sendRequest(JSON.stringify(updatedProfileData), profiles_url, 'PATCH');
+        sendRequest(updatedProfileData, profilePatchUrl, 'PATCH');
+    };
+
+    const createFormData = () => {
+        const data = new FormData();
+
+        data.append('profile_pic', selectedImage);
+        data.append('profile_text', formValue.profile_text);
+
+        return data;
     };
 
     const sendRequest = (payload, url, method) => {
@@ -51,11 +64,12 @@ const ProfileCreationScreen = props => {
         return fetch(url, {
             method: method,
             headers: {
-                // 'content-type': 'multipart/form-data',
-                'Accept': 'application/json',
-                'Content-type': 'application/json',
+                'Content-type': 'multipart/form-data',
+                // 'Accept': 'application/json',
+                // 'Content-type': 'application/json',
             },
-            body: payload,
+            // body: payload,
+            body: createFormData(),
         })
             .then(response => response.text())
             .then(json => {
@@ -76,9 +90,27 @@ const ProfileCreationScreen = props => {
         profileTextRef.current.clear();
     };
 
+    const getImage = () => {
+        return selectedImage;
+    };
+
+    const selectImage = imageData => {
+        console.log("In selectImage: " + JSON.stringify(imageData));
+        setSelectedImage(imageData);
+    };
+
     return(
         <View style={styles.screen}>
-          <Text style={styles.screenTitle}>Create Your Profile</Text>
+          <View style={styles.imageContainer}>
+
+            <CustomImagePicker
+              iconName='images'
+              onSelectImage={selectImage}
+              getImage={getImage}
+              setImage={setSelectedImage}
+            />
+
+          </View>
           <View style={styles.inputContainer}>
             <View style={styles.inputView}>
               <TextInput
@@ -137,6 +169,11 @@ const styles = StyleSheet.create({
         fontSize: 36,
         textAlign: 'center',
     },
+    imageContainer: {
+        width: '100%',
+        alignItems: 'center',
+        marginVertical: 10
+    },
     inputContainer: {
         width: '80%',
     },
@@ -150,7 +187,7 @@ const styles = StyleSheet.create({
         borderColor: Colors.placeholder_text,
         borderWidth: 0.5,
         height: 50,
-        marginBottom: 20,
+        marginBottom: 10,
         paddingHorizontal: 20,
 
         shadowColor: Colors.dark_shade1,
