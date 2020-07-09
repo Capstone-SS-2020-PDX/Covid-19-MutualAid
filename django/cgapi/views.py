@@ -90,8 +90,9 @@ def register_user(request):
         usr.save()
         auth_token = Token.objects.get(user=usr).key
         content = {
-            'user': usr,
+            'user': serializer.data,
             'token': auth_token,
+            'profile': usr.profile.id
         }
         return Response(content)
     return Response(data=serializer.errors)   
