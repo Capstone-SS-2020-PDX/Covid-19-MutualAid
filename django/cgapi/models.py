@@ -37,7 +37,10 @@ class UserProfile(models.Model):
         ordering = ['id']
 
     def __str__(self):
-        return self.user.username
+        try:
+            return self.user.username
+        except:
+            return ''
 
 class Posting(models.Model):
     title = models.CharField(max_length=50)

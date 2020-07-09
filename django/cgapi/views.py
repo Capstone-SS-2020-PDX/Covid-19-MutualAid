@@ -8,6 +8,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.views import APIView
 from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.views import ObtainAuthToken
 from django.contrib.auth import get_user
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
@@ -89,15 +90,29 @@ def register_user(request):
         usr.save()
         auth_token = Token.objects.get(user=usr).key
         content = {
-            'user': serializer.validated_data,
+            'user': usr,
             'token': auth_token,
         }
         return Response(content)
-    return Response(data=serializer.errors)    
-
+    return Response(data=serializer.errors)   
+    
 @api_view(('GET',))
 def username_available(request):
     argument = request.query_params.get('username', '')
     if User.objects.filter(username=argument).exists():
         return Response(status=409)
     return Response(status=200) 
+    
+    
+class CustomAuthToken(ObtainAuthToken):
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        user_serializer = UserSerializer(user)
+        token, created = Token.objects.get_or_create(user=user)
+        return Response({
+            'token': token.key,
+            'user': user_serializer.data,
+            'profile': user.profile.id
+        })
