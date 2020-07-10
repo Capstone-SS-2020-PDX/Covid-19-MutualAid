@@ -16,7 +16,6 @@ import { showModal, hideModal } from '../components/CustomModal';
 import Center from '../components/Center';
 import CustomButton from '../components/CustomButton';
 import { AuthContext } from '../providers/AuthProvider';
-import { UserContext } from '../providers/UserProvider';
 
 import Colors from '../config/colors';
 import { windowHeight, windowWidth } from '../config/dimensions';
@@ -24,7 +23,6 @@ import { windowHeight, windowWidth } from '../config/dimensions';
 const LoginScreen = props => {
   const { navigation, route } = props;
   const { login } = useContext(AuthContext);
-  const { user } = useContext(UserContext);
   // const [value, handleChange, reset] = useInputState("");
 
   const [emailText, setEmailText] = useState('');
@@ -43,8 +41,8 @@ const LoginScreen = props => {
       hideModal();
     }, 600);
    
-    const userData = { username: emailText, password: passwordText };
-    login(userData);
+    const loginData = { username: emailText, password: passwordText };
+    login(loginData);
   };
 
   return(

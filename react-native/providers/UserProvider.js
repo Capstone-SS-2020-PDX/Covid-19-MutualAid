@@ -1,4 +1,5 @@
 import React, { createContext, useState, useContext } from 'react';
+import { AsyncStorage } from 'react-native';
 import { users_url } from '../config/urls';
 
 // const url = "https:cellular-virtue-277000.uc.r.appspot.com/auth/?format=json";
@@ -7,48 +8,34 @@ export const UserContext = createContext(null);
 
 export const UserProvider = props => {
 
-  const [user, setUser] = useState({});
+  const [userData, setUserData] = useState({});
 
-  const updateUser = updatedUser => {
-    setUser({ ...user, ...updatedUser });
+  const updateUserData = updatedUserData => {
+    setUserData({ ...userData, ...updatedUserData });
   };
 
-  const initUser = username => {
-    console.log("Initializing User Context with username: " + username);
+  const initUserData = data => {
+    console.log("Initializing User Context with username: " + data.user.username);
 
-    fetch(users_url, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Content-type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-      }
-    })
-      .then(response => response.json())
-      .then(userJson => {
-        const ownData = userJson.filter(userJson => userJson.username === username)
-        if (ownData[0]) {
-          updateUser(ownData[0]);
-          console.log("Sucessfully initialized User Context with username: " + username);
-        }
-      })
-      .catch(error => console.log(error))
-      .finally(() => {
-      });
+    updateUserData(data);
   };
 
-  const removeUser = () => {
-    console.log("Removing user " + user.username + " from UserContext...");
-    setUser(null);
+  const removeUserData = () => {
+    console.log("Removing user from UserContext...");
+
+    setUserData(null);
+    AsyncStorage.removeItem('loginData').catch(error => {
+      console.log(error);
+    });
   };
 
   return(
     <UserContext.Provider
       value={{
-        user,
-        updateUser,
-        initUser,
-        removeUser,
+        userData: userData,
+        updateUserData,
+        initUserData,
+        removeUserData,
       }}
     >
       {props.children}

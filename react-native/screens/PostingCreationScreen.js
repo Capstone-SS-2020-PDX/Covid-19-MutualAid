@@ -33,7 +33,7 @@ import { UserContext, UserProvider } from '../providers/UserProvider';
 
 const PostingCreationScreen = props => {
   const { navigation } = props;
-  const { user } = useContext(UserContext);
+  const { userData } = useContext(UserContext);
 
   const [selectedImage, setSelectedImage] = useState(null);
   const [itemName, setItemName] = useState('');
@@ -73,7 +73,7 @@ const PostingCreationScreen = props => {
     data.append('desc', itemDescription);
     data.append('item_pic', selectedImage);
     data.append('count', itemCount);
-    data.append('owner', user.id);
+    data.append('owner', userData.user.id);
     data.append('category', categoryValue);
     data.append('request', requestValue);
 

@@ -16,7 +16,7 @@ const SET_IS_LOADING = 'SET_IS_LOADING';
 export const AuthContext = createContext({});
 
 export const AuthProvider = props => {
-    const { initUser, removeUser } = useContext(UserContext);
+    const { initUserData, removeUserData } = useContext(UserContext);
 
     const initialLoginState = {
         isLoading: true,
@@ -68,10 +68,8 @@ export const AuthProvider = props => {
 
         const payloadData = JSON.stringify(userData);
         console.log('Attempting ' + requestType + ': Outgoing payload: ' + payloadData);
-        // console.log(url);
-       
-        let token = null;
-        let user = userData;
+
+        let loginData = null;
 
         fetch(url, {
             method: 'POST',
@@ -87,80 +85,62 @@ export const AuthProvider = props => {
             })
             .then(json => {
                 console.log('Server Response: ' + JSON.stringify(json));
-                token = json.token;
-                // if (json.user) {
-                //     user = json.user;
-                // }
+                loginData = json;
             })
             .catch(error => {
                 console.log(error);
             })
             .finally(() => {
 
-                if (token) {
-                    AsyncStorage.setItem('token', token).then(() => {
-                        console.log('AsyncStorage: set token as ' + token);
+                if (loginData) {
+                    AsyncStorage.setItem('loginData', JSON.stringify(loginData)).then(() => {
+                        console.log('AsyncStorage: setting loginData as: ' + JSON.stringify(loginData))
+                        initUserData(loginData);
+                        dispatch({ type: requestType, username: userData.username, token: loginData.token})
                     }).catch(error => {
                         console.log(error);
                     });
                 }
-
-                if (user) {
-                    AsyncStorage.setItem('username', user.username).then(() => {
-                        console.log('AsyncStorage: set username as ' + user.username);
-                        initUser(user.username);
-                    }).catch(error => {
-                        console.log(error);
-                    });
-                }
-
-                dispatch({ type: requestType, username: userData.username, token: token})
             });
     };
 
-    const handleAutoLogin = token => {
-        let username;
+    const handleAutoLogin = () => {
+        AsyncStorage.getItem('loginData').then(loginData => {
+            console.log('Attempting to fetch token from AsyncStorage...');
 
-        AsyncStorage.getItem('username').then(retrievedUsername => {
-            console.log("AutoLogin fetching user from local storage: " + retrievedUsername);
-            console.log("in handleAutoLogin, username: " + retrievedUsername);
-
-            initUser(retrievedUsername);
-            dispatch({ type: AUTO_LOGIN, token, username: retrievedUsername })
-        }).catch(error => console.log(error));
+            loginData = JSON.parse(loginData);
+            if (loginData.token) {
+                console.log('Token exists! : ' + loginData.token);
+                console.log('User exists! : ' + loginData.user.username);
+                dispatch({ type: AUTO_LOGIN, token: loginData.token, username: loginData.user.username })
+                initUserData(loginData);
+            } else {
+                console.log('No existing token');
+                dispatch({ type: AUTO_LOGIN, token: null, username: null })
+            }
+        }).catch(error => {
+            console.log(error);
+        });
 
     };
 
     const handleLogin = userData => {
-        // const loginUrl = 'https://cellular-virtue-277000.uc.r.appspot.com/token/';
         performAuthRequest(LOGIN, userData, login_url);
     };
 
     const handleLogout = () => {
         console.log("Logging out...");
 
-        AsyncStorage.removeItem('token').catch(error => {
-            console.log(error);
-        });
-
-        AsyncStorage.removeItem('user').catch(error => {
-            console.log(error);
-        });
-
-        removeUser();
-
+        removeUserData();
         dispatch({ type: LOGOUT })
     };
 
     const handleRegister = userData => {
-        // const registerUrl = 'https://cellular-virtue-277000.uc.r.appspot.com/register/';
-
         performAuthRequest(REGISTER, userData, register_url);
     };
 
 
     const handleCheckUsername = username => {
-        // const usernameUrl = 'https://cellular-virtue-277000.uc.r.appspot.com/check-username/?username=' + username;
         const usernameUrl = check_username_url + username;
 
         fetch(usernameUrl, {
@@ -184,8 +164,8 @@ export const AuthProvider = props => {
 
     };
 
-    const setIsLoading = value => {
-        dispatch({ type: SET_IS_LOADING, isLoading: value });
+    const setIsLoading = loadingStatus => {
+        dispatch({ type: SET_IS_LOADING, isLoading: loadingStatus });
     };
 
     return (

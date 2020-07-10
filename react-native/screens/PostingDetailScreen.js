@@ -29,7 +29,7 @@ import { UserContext } from '../providers/UserProvider';
 const emailUrl = 'https://cellular-virtue-277000.uc.r.appspot.com/postings/contact/';
 
 const PostingDetailScreen = props => {
-  const { user } = useContext(UserContext);
+  const { userData } = useContext(UserContext);
   const { route, navigation } = props;
   const [emailText, setEmailText] = useState('');
   const [postingImage, setPostingImage] = useState(null);
@@ -40,7 +40,7 @@ const PostingDetailScreen = props => {
   const handleReachOut = () => {
     console.log('Sending email from ' + emailText + ' to post with id: ' + route.params.id);
     setIsProcessing(true);
-    sendEmail(user.email, route.params.id);
+    sendEmail(userData.user.email, route.params.id);
   };
 
   const sendEmail = (fromEmail, id) => {

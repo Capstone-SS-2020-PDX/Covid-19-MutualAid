@@ -15,10 +15,12 @@ const Stack = createStackNavigator();
 const HomeStack = props => {
   const { navigation } = props;
   const { username } = useContext(AuthContext);
-  const { user } = useContext(UserContext);
+  const { userData } = useContext(UserContext);
+
+  const userName = userData.user ? userData.user.username : '';
 
   const PostingListScreenOptions = {
-    headerTitle: `Welcome ${username}`,
+    headerTitle: `Welcome ${userName}`,
     ...headerOptions,
     headerLeft: drawerMenuIcon.bind(this, navigation),
   };

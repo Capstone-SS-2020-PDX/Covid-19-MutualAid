@@ -23,19 +23,20 @@ const Routes = () => {
     useEffect(() => {
         // Attempt to grab an existing user token and if it exists,
         // login the user automatically
-        AsyncStorage.getItem('token').then(token => {
-            console.log('Attempting to fetch token from AsyncStorage...');
-            if (token) {
-                console.log('Token exists! : ' + token);
-                autoLogin(token);
-            } else {
-                console.log('No existing token');
-                autoLogin(null);
-            }
-            // setIsLoading(false);
-        }).catch(error => {
-            console.log(error);
-        });
+        // AsyncStorage.getItem('loginData').then(loginData => {
+        //     console.log('Attempting to fetch token from AsyncStorage...');
+        //     if (loginData.token) {
+        //         console.log('Token exists! : ' + loginData.token);
+        //         autoLogin(loginData.token);
+        //     } else {
+        //         console.log('No existing token');
+        //         autoLogin(null);
+        //     }
+        //     // setIsLoading(false);
+        // }).catch(error => {
+        //     console.log(error);
+        // });
+        autoLogin();
     }, []);
 
     // If current loading (waiting for API return)..

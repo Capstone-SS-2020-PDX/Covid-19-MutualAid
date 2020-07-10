@@ -16,7 +16,7 @@ import { windowHeight, windowWidth } from '../config/dimensions';
 import { users_url, profiles_url } from '../config/urls';
 
 const ProfileCreationScreen = props => {
-    const { user } = useContext(UserContext);
+    const { userData } = useContext(UserContext);
     const { navigation } = props;
 
     const [formValue, setFormValue] = useState({});
@@ -31,17 +31,17 @@ const ProfileCreationScreen = props => {
     };
 
     const handleProfileCreation = () => {
-        const userPutUrl = users_url + user.id + '/';
+        const userPutUrl = users_url + userData.user.id + '/';
         // const profilePatchUrl = profiles_url + user.profileId + '/';
         const profilePatchUrl = profiles_url + '3/';
         // const profileUrl = "https:cellular-virtue-277000.uc.r.appspot.com/profiles/" + user.profile + '/';
 
-        let userData = user;
-        userData.first_name = formValue.first_name;
-        userData.last_name = formValue.last_name;
+        let updatedUserData = userData;
+        updatedUserData.first_name = formValue.first_name;
+        updatedUserData.last_name = formValue.last_name;
         // userData.profile = { profile_text: formValue.profile_text };
 
-        let updatedProfileData = { user: user.id, profile_text: formValue.profile_text }
+        let updatedProfileData = { user: userData.user.id, profile_text: formValue.profile_text }
         // let profileData = { profile_text: formValue.profile_text }
         // sendRequest(JSON.stringify(userData), userPutUrl, 'PUT');
 
@@ -52,7 +52,10 @@ const ProfileCreationScreen = props => {
     const createFormData = () => {
         const data = new FormData();
 
-        data.append('profile_pic', selectedImage);
+        if (selectedImage) {
+            data.append('profile_pic', selectedImage);
+        }
+
         data.append('profile_text', formValue.profile_text);
 
         return data;
