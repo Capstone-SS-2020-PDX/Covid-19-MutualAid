@@ -43,7 +43,7 @@ const DrawerContent = props => {
       <DrawerContentScrollView {...props}>
         <View style={styles.drawerContent}>
           <View style={styles.userInfoSection}>
-            <View style={styles.avatarContainer}>
+            <TouchableOpacity style={styles.avatarContainer} onPress={() => navigation.navigate('Profile')}>
               <Avatar.Image
                 source={picUrl !== null
                         ? {uri:picUrl}
@@ -55,7 +55,7 @@ const DrawerContent = props => {
                 <Title style={styles.name}>{fullName}</Title>
                 <Caption style={styles.caption}>{userData.user.username}</Caption>
               </View>
-            </View>
+            </TouchableOpacity>
             <View style={styles.statsSection}>
               <View style={styles.section}>
                 <Caption style={styles.caption}>Member Since: </Caption>
