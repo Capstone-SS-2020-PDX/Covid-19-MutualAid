@@ -16,7 +16,7 @@ import { windowHeight, windowWidth } from '../config/dimensions';
 import { users_url, profiles_url } from '../config/urls';
 
 const ProfileCreationScreen = props => {
-    const { userData } = useContext(UserContext);
+    const { userData, updateProfile } = useContext(UserContext);
     const { navigation } = props;
 
     const [formValue, setFormValue] = useState({});
@@ -35,8 +35,8 @@ const ProfileCreationScreen = props => {
         const profilePatchUrl = profiles_url + userData.profile + '/';
 
         let updatedUserData = userData;
-        updatedUserData.first_name = formValue.first_name;
-        updatedUserData.last_name = formValue.last_name;
+        updatedUserData.user.first_name = formValue.first_name;
+        updatedUserData.user.last_name = formValue.last_name;
 
         sendUpdateUserRequest(JSON.stringify(updatedUserData), userPatchUrl, 'PATCH');
         sendUpdateProfileRequest(profilePatchUrl, 'PATCH');
@@ -55,7 +55,6 @@ const ProfileCreationScreen = props => {
     };
 
     const sendUpdateProfileRequest = (url, method) => {
-
         return fetch(url, {
             method: method,
             headers: {
@@ -71,6 +70,7 @@ const ProfileCreationScreen = props => {
                 console.log(error)
             })
             .finally(() => {
+                fetchProfile();
             });
     };
 
@@ -86,6 +86,30 @@ const ProfileCreationScreen = props => {
             .then(response => response.text())
             .then(json => {
                 console.log(json);
+            })
+            .catch(error => {
+                console.log(error)
+            })
+            .finally(() => {
+            });
+    };
+
+    const fetchProfile = () => {
+        const url = profiles_url + userData.profile + '/';
+
+        return fetch(url, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-type': 'application/json',
+            },
+        })
+            .then(response => response.json())
+            .then(json => {
+                console.log("Return from fetchProfile: ");
+                console.log(json);
+                    console.log('Updating profile');
+                    updateProfile(json);
             })
             .catch(error => {
                 console.log(error)

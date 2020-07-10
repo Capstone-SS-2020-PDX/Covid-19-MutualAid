@@ -14,6 +14,13 @@ export const UserProvider = props => {
     setUserData({ ...userData, ...updatedUserData });
   };
 
+  const updateProfile = newProfileData => {
+    setUserData({
+      ...userData,
+      profile: newProfileData,
+    });
+  }
+
   const initUserData = data => {
     console.log("Initializing User Context with username: " + data.user.username);
 
@@ -34,6 +41,7 @@ export const UserProvider = props => {
       value={{
         userData: userData,
         updateUserData,
+        updateProfile,
         initUserData,
         removeUserData,
       }}
