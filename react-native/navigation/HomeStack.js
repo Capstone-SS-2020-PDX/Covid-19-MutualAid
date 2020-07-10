@@ -17,10 +17,10 @@ const HomeStack = props => {
   const { username } = useContext(AuthContext);
   const { userData } = useContext(UserContext);
 
-  const userName = userData.user ? userData.user.username : '';
+  // const userName = userData.user ? userData.user.username : '';
 
   const PostingListScreenOptions = {
-    headerTitle: `Welcome ${userName}`,
+    headerTitle: `Welcome ${username}`,
     ...headerOptions,
     headerLeft: drawerMenuIcon.bind(this, navigation),
   };

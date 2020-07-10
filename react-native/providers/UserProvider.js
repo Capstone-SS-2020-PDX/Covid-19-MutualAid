@@ -21,8 +21,9 @@ export const UserProvider = props => {
     });
   }
 
-  const fetchProfile = () => {
-    const url = profiles_url + userData.profile + '/';
+  const fetchProfile = (data) => {
+    const url = profiles_url + data.profile + '/';
+    console.log("fetching profile with id: " + data.profile);
 
     return fetch(url, {
       method: 'GET',
@@ -33,7 +34,8 @@ export const UserProvider = props => {
     })
       .then(response => response.json())
       .then(json => {
-        updateProfileData(json);
+        const updatedUserData = { ...data, profileData: json }
+        updateUserData(updatedUserData);
       })
       .catch(error => {
         console.log(error)
@@ -43,10 +45,8 @@ export const UserProvider = props => {
   };
 
   const initUserData = data => {
-    console.log("Initializing User Context with username: " + data.user.username);
-
-    updateUserData(data);
-    fetchProfile();
+    // console.log("Initializing User Context with data: " + JSON.stringify(data));
+    fetchProfile(data);
   };
 
   const removeUserData = () => {
