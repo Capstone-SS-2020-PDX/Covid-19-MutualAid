@@ -31,22 +31,15 @@ const ProfileCreationScreen = props => {
     };
 
     const handleProfileCreation = () => {
-        const userPutUrl = users_url + userData.user.id + '/';
-        // const profilePatchUrl = profiles_url + user.profileId + '/';
-        const profilePatchUrl = profiles_url + '3/';
-        // const profileUrl = "https:cellular-virtue-277000.uc.r.appspot.com/profiles/" + user.profile + '/';
+        const userPatchUrl = users_url + userData.user.id + '/';
+        const profilePatchUrl = profiles_url + userData.profile + '/';
 
         let updatedUserData = userData;
         updatedUserData.first_name = formValue.first_name;
         updatedUserData.last_name = formValue.last_name;
-        // userData.profile = { profile_text: formValue.profile_text };
 
-        let updatedProfileData = { user: userData.user.id, profile_text: formValue.profile_text }
-        // let profileData = { profile_text: formValue.profile_text }
-        // sendRequest(JSON.stringify(userData), userPutUrl, 'PUT');
-
-        // sendRequest(JSON.stringify(updatedProfileData), profiles_url, 'PATCH');
-        sendRequest(updatedProfileData, profilePatchUrl, 'PATCH');
+        sendUpdateUserRequest(JSON.stringify(updatedUserData), userPatchUrl, 'PATCH');
+        sendUpdateProfileRequest(profilePatchUrl, 'PATCH');
     };
 
     const createFormData = () => {
@@ -61,17 +54,13 @@ const ProfileCreationScreen = props => {
         return data;
     };
 
-    const sendRequest = (payload, url, method) => {
-        console.log(payload);
+    const sendUpdateProfileRequest = (url, method) => {
 
         return fetch(url, {
             method: method,
             headers: {
                 'Content-type': 'multipart/form-data',
-                // 'Accept': 'application/json',
-                // 'Content-type': 'application/json',
             },
-            // body: payload,
             body: createFormData(),
         })
             .then(response => response.text())
@@ -83,6 +72,27 @@ const ProfileCreationScreen = props => {
             })
             .finally(() => {
             });
+    };
+
+    const sendUpdateUserRequest = (payload, url, method) => {
+        return fetch(url, {
+            method: method,
+            headers: {
+                'Accept': 'application/json',
+                'Content-type': 'application/json',
+            },
+            body: payload,
+        })
+            .then(response => response.text())
+            .then(json => {
+                console.log(json);
+            })
+            .catch(error => {
+                console.log(error)
+            })
+            .finally(() => {
+            });
+
     };
 
     const clearInputs = () => {
