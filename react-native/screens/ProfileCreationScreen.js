@@ -4,6 +4,7 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
+    KeyboardAvoidingView,
     StyleSheet,
 } from 'react-native';
 
@@ -150,9 +151,9 @@ const ProfileCreationScreen = props => {
               getImage={getImage}
               setImage={setSelectedImage}
             />
-
           </View>
-          <View style={styles.inputContainer}>
+
+          <KeyboardAvoidingView style={styles.inputContainer} behavior='height'>
             <View style={styles.inputView}>
               <TextInput
                 style={styles.inputText}
@@ -182,12 +183,12 @@ const ProfileCreationScreen = props => {
                 placeholderTextColor={Colors.placeholder_text}
                 maxLength={255}
                 multiline={true}
-                returnKeyType='next'
+                returnKeyType='go'
                 onChangeText={text => updateForm(text, 'profile_text')}
                 ref={profileTextRef}
               />
             </View>
-          </View>
+          </KeyboardAvoidingView>
           <CustomButton
             onPress={handleProfileCreation}
             style={{ marginBottom: 10, alignSelf: 'center'}}

@@ -5,7 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
-import ProfileCreationScreen from '../screens/ProfileCreationScreen';
+import ProfileCreationStack from '../navigation/ProfileCreationStack';
 import AuthStack from './AuthStack';
 import NavTabs from './NavTabs';
 import DrawerNav from './DrawerNav';
@@ -42,8 +42,12 @@ const Routes = () => {
         // Main App Components is nested within DrawerNav
         return(
             <NavigationContainer>
-              { token ? <DrawerNav /> : <AuthStack /> }
-              {/* { hasProfile ? <AuthStack /> : <ProfileCreationScreen />} */}
+              {
+                  !token
+                      ? <AuthStack />
+                      : (!hasProfile ? <ProfileCreationStack /> : <DrawerNav />)
+              }
+              {/* { token ? <DrawerNav/> : <AuthStack />} */}
             </NavigationContainer>
         );
     }

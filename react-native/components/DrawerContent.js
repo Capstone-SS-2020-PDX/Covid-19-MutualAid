@@ -29,9 +29,17 @@ const DrawerContent = props => {
   const { logout } = useContext(AuthContext);
   const { userData } = useContext(UserContext);
 
-  const picUrl = userData.profileData.profile_pic ? userData.profileData.profile_pic : null;
-  const fullName = userData.user.first_name + ' ' + userData.user.last_name.charAt(0);
-  const memberSince = prettifyDate(userData.user.date_joined);
+  let picUrl = null;
+  let fullName = '';
+  let memberSince = '';
+  let username = '';
+
+  if (userData.profileData) {
+    picUrl = userData.profileData ? userData.profileData.profile_pic : null;
+    fullName = userData.user.first_name + ' ' + userData.user.last_name.charAt(0);
+    memberSince = prettifyDate(userData.user.date_joined);
+    username =  userData.user.username;
+  }
 
   const handleLogout = () => {
     navigation.toggleDrawer();
@@ -53,7 +61,7 @@ const DrawerContent = props => {
               />
               <View style={styles.avatarCaptionContainer}>
                 <Title style={styles.name}>{fullName}</Title>
-                <Caption style={styles.caption}>{userData.user.username}</Caption>
+                <Caption style={styles.caption}>{username}</Caption>
               </View>
             </TouchableOpacity>
             <View style={styles.statsSection}>

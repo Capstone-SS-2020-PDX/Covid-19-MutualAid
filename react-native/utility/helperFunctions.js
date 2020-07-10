@@ -1,6 +1,4 @@
 export const prettifyDate = dateToMakePretty => {
-    // console.log("in getDate");
-    // console.log(dateToMakePretty);
     var prettyDate = dateToMakePretty.slice(0,10)
     var prettyDate = prettyDate.split("-").reverse().join("-");
 

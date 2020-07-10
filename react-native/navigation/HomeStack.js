@@ -1,6 +1,5 @@
 import React, { useContext, useEffect } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import { createDrawerNavigator } from '@react-navigation/drawer';
 
 import PostingListScreen from '../screens/PostingListScreen';
 

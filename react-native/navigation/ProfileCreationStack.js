@@ -6,6 +6,8 @@ import ProfileCreationScreen from '../screens/ProfileCreationScreen';
 
 import { headerOptions, drawerMenuIcon } from '../config/navigation-options';
 
+const Stack = createStackNavigator();
+
 const ProfileCreationStack = props => {
     const { navigation } = props;
 
@@ -15,6 +17,7 @@ const ProfileCreationStack = props => {
         // headerLeft: drawerMenuIcon.bind(this, navigation),
     };
 
+    return(
         <Stack.Navigator
           initialRouteName='CreateProfile'
         >
@@ -29,6 +32,7 @@ const ProfileCreationStack = props => {
           {/*   options={JoinCommunityScreenOptions} */}
           {/* /> */}
         </Stack.Navigator>
+    );
 
 }
 
