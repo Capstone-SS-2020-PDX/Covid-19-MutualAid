@@ -8,6 +8,8 @@ import {
 } from 'react-native';
 
 import { UserContext } from '../providers/UserProvider';
+import { AuthContext } from '../providers/AuthProvider';
+
 import CustomImagePicker from '../components/CustomImagePicker';
 import CustomButton from '../components/CustomButton';
 
@@ -16,8 +18,9 @@ import { windowHeight, windowWidth } from '../config/dimensions';
 import { users_url, profiles_url } from '../config/urls';
 
 const ProfileCreationScreen = props => {
-    const { userData, updateProfileData } = useContext(UserContext);
     const { navigation } = props;
+    const { userData, updateProfileData } = useContext(UserContext);
+    const { hasProfile, addProfile } = useContext(AuthContext);
 
     const [formValue, setFormValue] = useState({});
     const [selectedImage, setSelectedImage] = useState(null);
@@ -115,6 +118,7 @@ const ProfileCreationScreen = props => {
                 console.log(error)
             })
             .finally(() => {
+                addProfile();
             });
 
     };

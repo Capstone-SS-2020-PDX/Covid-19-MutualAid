@@ -5,6 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
+import ProfileCreationScreen from '../screens/ProfileCreationScreen';
 import AuthStack from './AuthStack';
 import NavTabs from './NavTabs';
 import DrawerNav from './DrawerNav';
@@ -16,7 +17,7 @@ import { UserContext } from '../providers/UserProvider';
 const Stack = createStackNavigator();
 
 const Routes = () => {
-    const { autoLogin, login, isLoading, token } = useContext(AuthContext);
+    const { autoLogin, login, isLoading, token, hasProfile } = useContext(AuthContext);
     const { user, initUser } = useContext(UserContext);
    
     // Check if the user is logged in
@@ -41,8 +42,8 @@ const Routes = () => {
         // Main App Components is nested within DrawerNav
         return(
             <NavigationContainer>
-              {/* { currentUser ? <NavTabs /> : <AuthStack /> } */}
               { token ? <DrawerNav /> : <AuthStack /> }
+              {/* { hasProfile ? <AuthStack /> : <ProfileCreationScreen />} */}
             </NavigationContainer>
         );
     }

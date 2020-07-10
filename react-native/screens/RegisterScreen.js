@@ -45,7 +45,6 @@ const RegisterScreen = props => {
 
       const userData = { username: userNameText, password: passwordText, email: emailText };
       register(userData);
-
     }
   };
 

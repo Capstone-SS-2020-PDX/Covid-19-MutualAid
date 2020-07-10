@@ -9,6 +9,7 @@ const LOGIN = 'LOGIN';
 const LOGOUT = 'LOGOUT';
 const REGISTER = 'REGISTER';
 const SET_IS_LOADING = 'SET_IS_LOADING';
+const ADD_PROFILE = 'ADD_PROFILE';
 
 // Provides username, token and login/logout functionality to Global App Context
 // Allows the app to know which user is using it and to handle login/logout
@@ -22,6 +23,7 @@ export const AuthProvider = props => {
         isLoading: true,
         username: null,
         token: null,
+        hasProfile: true,
     };
 
     const loginReducer = (previousState, action) => {
@@ -53,12 +55,18 @@ export const AuthProvider = props => {
                     username: action.username,
                     token: action.token,
                     isLoading: false,
+                    hasProfile: false,
                 };
             case SET_IS_LOADING:
                 return {
                     ...previousState,
                     isLoading: action.isLoading,
                 };
+            case ADD_PROFILE:
+                return {
+                    ...previousState,
+                    hasProfile: true,
+                }
         }
     };
 
@@ -138,7 +146,6 @@ export const AuthProvider = props => {
         performAuthRequest(REGISTER, userData, register_url);
     };
 
-
     const handleCheckUsername = username => {
         const usernameUrl = check_username_url + username;
 
@@ -163,6 +170,10 @@ export const AuthProvider = props => {
 
     };
 
+    const addProfile = () => {
+        dispatch({ type: ADD_PROFILE });
+    }
+
     const setIsLoading = loadingStatus => {
         dispatch({ type: SET_IS_LOADING, isLoading: loadingStatus });
     };
@@ -174,10 +185,12 @@ export const AuthProvider = props => {
               setIsLoading: setIsLoading,
               token: loginState.token,
               username: loginState.username,
+              hasProfile: loginState.hasProfile,
               autoLogin: handleAutoLogin,
               login: handleLogin,
               logout: handleLogout,
               register: handleRegister,
+              addProfile: addProfile,
               checkUsername: handleCheckUsername,
           }}
         >

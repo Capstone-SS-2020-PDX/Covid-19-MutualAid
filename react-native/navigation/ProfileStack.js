@@ -26,11 +26,6 @@ const ProfileStack = props => {
         // headerLeft: drawerMenuIcon.bind(this, navigation),
     };
 
-    const ProfileCreationScreenOptions = {
-        headerTitle: 'Create Profile',
-        ...headerOptions,
-        // headerLeft: drawerMenuIcon.bind(this, navigation),
-    };
 
     return(
         <Stack.Navigator
@@ -45,11 +40,6 @@ const ProfileStack = props => {
             name='EditProfile'
             component={ProfileEditScreen}
             options={ProfileEditScreenOptions}
-          />
-          <Stack.Screen
-            name='CreateProfile'
-            component={ProfileCreationScreen}
-            options={ProfileCreationScreenOptions}
           />
         </Stack.Navigator>
     );

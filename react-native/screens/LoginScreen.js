@@ -25,24 +25,24 @@ const LoginScreen = props => {
   const { login } = useContext(AuthContext);
   // const [value, handleChange, reset] = useInputState("");
 
-  const [emailText, setEmailText] = useState('');
-  const [passwordText, setPasswordText] = useState('');
-
-  const [loginData, setLoginData] = useState({
-    userName: '',
-    password: '',
-    isValidUser: true,
-    isValidPassword: true,
-  });
+  const [emailText, setEmailText] = useState(null);
+  const [passwordText, setPasswordText] = useState(null);
 
   const attemptLogin = () => {
-    showModal();
-    setTimeout(() => {
-      hideModal();
-    }, 600);
-   
-    const loginData = { username: emailText, password: passwordText };
-    login(loginData);
+    if (!emailText || !passwordText) {
+      showModal('VALIDATION_ERROR');
+      setTimeout(() => {
+        hideModal();
+      }, 900);
+    } else {
+      showModal('LOADING');
+      setTimeout(() => {
+        hideModal();
+      }, 900);
+
+      const loginData = { username: emailText, password: passwordText };
+      login(loginData);
+    }
   };
 
   return(

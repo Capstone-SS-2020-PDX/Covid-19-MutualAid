@@ -31,6 +31,8 @@ export function showModal(type) {
         case 'VALIDATION_ERROR':
             options = validationErrorOptions;
             break;
+        default:
+            options = loadingOptions;
     }
     WModal.show(options);
 };
