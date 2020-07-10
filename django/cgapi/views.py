@@ -88,11 +88,13 @@ def register_user(request):
         usr = serializer.save()
         usr.set_password(usrpw)
         usr.save()
+        profile_data = UserProfile.objects.get(pk=usr.profile.id)
+        profile_serializer = UserProfileSerializer(profile_data)
         auth_token = Token.objects.get(user=usr).key
         content = {
             'user': serializer.data,
             'token': auth_token,
-            'profile': usr.profile.id
+            'profile': profile_serializer.data
         }
         return Response(content)
     return Response(data=serializer.errors)   
@@ -111,9 +113,11 @@ class CustomAuthToken(ObtainAuthToken):
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
         user_serializer = UserSerializer(user)
+        profile_data = UserProfile.objects.get(pk=user.profile.id)
+        profile_serializer = UserProfileSerializer(profile_data)
         token, created = Token.objects.get_or_create(user=user)
         return Response({
             'token': token.key,
             'user': user_serializer.data,
-            'profile': user.profile.id
+            'profile': profile_serializer.data
         })
