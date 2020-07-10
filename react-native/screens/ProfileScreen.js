@@ -13,15 +13,16 @@ import { UserContext } from '../providers/UserProvider';
 
 import Colors from '../config/colors';
 import { windowHeight, windowWidth } from '../config/dimensions';
+import { prettifyDate } from '../utility/helperFunctions';
 
 const itemPlaceHolder = '../assets/image_place_holder.jpg';
 
 const ProfileScreen = props => {
   const { navigation } = props;
-  const { userData, updateProfileData } = useContext(UserContext);
+  const { userData } = useContext(UserContext);
 
   const picUrl = userData.profileData.profile_pic ? userData.profileData.profile_pic : null;
-  console.log('userdata: ' + JSON.stringify(userData));
+  // console.log('userdata: ' + JSON.stringify(userData));
 
 
   return(
@@ -43,20 +44,17 @@ const ProfileScreen = props => {
             </View>
 
             <View style={styles.userDetailSection}>
-              <Text style={styles.text}>ID: {userData.user.id}</Text>
-              <Text style={styles.text}>First Name: {userData.user.first_name}</Text>
-              <Text style={styles.text}>Last Name: {userData.user.last_name}</Text>
-              <Text style={styles.text}>User Name: {userData.user.username}</Text>
-              <Text style={styles.text}>email: {userData.user.email}</Text>
-              <Text style={styles.text}>Is Active: {userData.user.is_active ? 'true' : 'false'}</Text>
-              <Text style={styles.text}>Date Joined: {userData.user.date_joined}</Text>
+              <Text style={styles.username}>{userData.user.username}</Text>
+              <Text style={styles.text}>{userData.user.first_name} {userData.user.last_name}</Text>
+              <Text style={styles.text}>{userData.user.email}</Text>
+              <Text style={styles.text}>Member Since: {prettifyDate(userData.user.date_joined)}</Text>
             </View>
           </>
         : null
       }
       <Button
-        title="Profile Creation"
-        onPress={() => navigation.navigate('CreateProfile')}
+        title="Edit Your Profile"
+        onPress={() => navigation.navigate('EditProfile')}
       />
     </View>
   );
@@ -74,6 +72,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 18,
+    fontFamily: 'open-sans',
   },
   imageContainer: {
     width: windowWidth / 1.8,
@@ -85,6 +84,11 @@ const styles = StyleSheet.create({
   itemImage: {
     width: '100%',
     height: '100%',
+  },
+  username: {
+    fontSize: 25,
+    fontFamily: 'open-sans-bold',
+    alignSelf: 'center',
   },
 });
 
