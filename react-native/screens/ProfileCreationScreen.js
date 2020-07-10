@@ -16,7 +16,7 @@ import { windowHeight, windowWidth } from '../config/dimensions';
 import { users_url, profiles_url } from '../config/urls';
 
 const ProfileCreationScreen = props => {
-    const { userData, updateProfile } = useContext(UserContext);
+    const { userData, updateProfileData } = useContext(UserContext);
     const { navigation } = props;
 
     const [formValue, setFormValue] = useState({});
@@ -109,7 +109,7 @@ const ProfileCreationScreen = props => {
                 console.log("Return from fetchProfile: ");
                 console.log(json);
                     console.log('Updating profile');
-                    updateProfile(json);
+                    updateProfileData(json);
             })
             .catch(error => {
                 console.log(error)

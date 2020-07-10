@@ -18,10 +18,11 @@ const itemPlaceHolder = '../assets/image_place_holder.jpg';
 
 const ProfileScreen = props => {
   const { navigation } = props;
-  const { userData } = useContext(UserContext);
+  const { userData, updateProfileData } = useContext(UserContext);
 
-  const picUrl = userData.profile.profile_pic ? userData.profile.profile_pic : null;
+  const picUrl = userData.profileData.profile_pic ? userData.profileData.profile_pic : null;
   console.log('userdata: ' + JSON.stringify(userData));
+
 
   return(
     <View style={styles.screen}>

@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext } from 'react';
 import { AsyncStorage } from 'react-native';
-import { users_url } from '../config/urls';
+import { users_url, profiles_url } from '../config/urls';
 
 // const url = "https:cellular-virtue-277000.uc.r.appspot.com/auth/?format=json";
 
@@ -14,17 +14,39 @@ export const UserProvider = props => {
     setUserData({ ...userData, ...updatedUserData });
   };
 
-  const updateProfile = newProfileData => {
+  const updateProfileData = newProfileData => {
     setUserData({
       ...userData,
-      profile: newProfileData,
+      profileData: newProfileData,
     });
   }
+
+  const fetchProfile = () => {
+    const url = profiles_url + userData.profile + '/';
+
+    return fetch(url, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-type': 'application/json',
+      },
+    })
+      .then(response => response.json())
+      .then(json => {
+        updateProfileData(json);
+      })
+      .catch(error => {
+        console.log(error)
+      })
+      .finally(() => {
+      });
+  };
 
   const initUserData = data => {
     console.log("Initializing User Context with username: " + data.user.username);
 
     updateUserData(data);
+    fetchProfile();
   };
 
   const removeUserData = () => {
@@ -41,7 +63,7 @@ export const UserProvider = props => {
       value={{
         userData: userData,
         updateUserData,
-        updateProfile,
+        updateProfileData,
         initUserData,
         removeUserData,
       }}
