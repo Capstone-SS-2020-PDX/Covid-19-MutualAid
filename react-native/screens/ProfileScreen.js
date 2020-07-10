@@ -3,6 +3,7 @@ import {
   View,
   Text,
   Button,
+  Image,
   StyleSheet,
   ActivityIndicator,
 } from 'react-native';
@@ -10,22 +11,44 @@ import {
 import { AuthContext } from '../providers/AuthProvider';
 import { UserContext } from '../providers/UserProvider';
 
+import Colors from '../config/colors';
+import { windowHeight, windowWidth } from '../config/dimensions';
+
+const itemPlaceHolder = '../assets/image_place_holder.jpg';
+
 const ProfileScreen = props => {
   const { navigation } = props;
   const { userData } = useContext(UserContext);
+
+  const picUrl = null;
 
   return(
     <View style={styles.screen}>
       {
         userData.user ?
           <>
-            <Text style={styles.text}>ID: {userData.user.id}</Text>
-            <Text style={styles.text}>First Name: {userData.user.first_name}</Text>
-            <Text style={styles.text}>Last Name: {userData.user.last_name}</Text>
-            <Text style={styles.text}>User Name: {userData.user.username}</Text>
-            <Text style={styles.text}>email: {userData.user.email}</Text>
-            <Text style={styles.text}>Is Active: {userData.user.is_active ? 'true' : 'false'}</Text>
-            <Text style={styles.text}>Date Joined: {userData.user.date_joined}</Text>
+            <View style={styles.imageContainer}>
+              <Image
+                style={styles.itemImage}
+                resizeMode='cover'
+
+                source={picUrl !== null
+                        ? {uri:picUrl}
+                        : require(itemPlaceHolder)
+                       }
+
+              />
+            </View>
+
+            <View style={styles.userDetailSection}>
+              <Text style={styles.text}>ID: {userData.user.id}</Text>
+              <Text style={styles.text}>First Name: {userData.user.first_name}</Text>
+              <Text style={styles.text}>Last Name: {userData.user.last_name}</Text>
+              <Text style={styles.text}>User Name: {userData.user.username}</Text>
+              <Text style={styles.text}>email: {userData.user.email}</Text>
+              <Text style={styles.text}>Is Active: {userData.user.is_active ? 'true' : 'false'}</Text>
+              <Text style={styles.text}>Date Joined: {userData.user.date_joined}</Text>
+            </View>
           </>
         : null
       }
@@ -40,11 +63,26 @@ const ProfileScreen = props => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
+    justifyContent: 'space-around',
+    alignItems: 'center',
+  },
+  userDetailSection: {
     justifyContent: 'center',
     alignItems: 'center',
   },
   text: {
     fontSize: 18,
+  },
+  imageContainer: {
+    width: windowWidth / 1.8,
+    height: windowWidth / 1.8,
+    marginTop: 10,
+    borderWidth: 2,
+    borderColor: Colors.dark_shade1,
+  },
+  itemImage: {
+    width: '100%',
+    height: '100%',
   },
 });
 
