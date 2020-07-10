@@ -41,14 +41,12 @@ const ProfileCreationScreen = props => {
         // userData.Profile = {profile_text: formValue.profile_text};
         // console.log("user Data: " + JSON.stringify(userData));
 
-        let profileData = { user: user.id, profile_text: formValue.profile_text }
-        profileData.append('user_pic', selectedImage);
-
+        let profileData = { user: user.id, profile_text: formValue.profile_text, profile_pic: selectedImage}
         sendRequest(JSON.stringify(profileData));
     };
 
     const sendRequest = payload => {
-        const url = "https:cellular-virtue-277000.uc.r.appspot.com/users/1/";
+        const url = "https:cellular-virtue-277000.uc.r.appspot.com/profiles/1/";
         console.log(payload);
 
         return fetch(url, {

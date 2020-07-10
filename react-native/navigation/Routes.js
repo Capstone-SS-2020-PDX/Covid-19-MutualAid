@@ -56,7 +56,7 @@ const Routes = () => {
         return(
             <NavigationContainer>
               {/* { currentUser ? <NavTabs /> : <AuthStack /> } */}
-              { !token ? <DrawerNav /> : <AuthStack /> }
+              { token ? <DrawerNav /> : <AuthStack /> }
             </NavigationContainer>
         );
     }

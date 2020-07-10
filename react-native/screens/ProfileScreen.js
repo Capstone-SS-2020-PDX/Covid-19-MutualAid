@@ -14,7 +14,7 @@ import CustomButton from '../components/CustomButton';
 
 const ProfileScreen = props => {
     const { navigation } = props;
-    //const { user, updateUser } = useContext(UserContext);
+    const { user, updateUser } = useContext(UserContext);
 
 
     const getDate = (user) => {
@@ -23,8 +23,8 @@ const ProfileScreen = props => {
         var date = user.date_joined.slice(0,10)
         var date = date.split("-").reverse().join("-");
 
-        var month = date.slice(0,2);
-        var day = date.slice(3,5);
+        var day = date.slice(0,2);
+        var month = date.slice(3,5);
         var year = date.slice(6,10);
 
         switch(month) {
@@ -69,27 +69,21 @@ const ProfileScreen = props => {
         return date;
     }
 
-    const date = "July 8, 2020";
-    const first_name = "Michael";
-    const last_name = "Jenkins";
-    const username = "michael";
-    const email = "michaeltj11@gmail.com";
-    const is_active = true;
-    const id = 42069;
+    const date = getDate(user);
 
     return(
         <View style={styles.screen}>
             <View style={styles.textView}>
-                <Text style={styles.username}>{username}</Text>
+                <Text style={styles.username}>{user.username}</Text>
                 <Text style={styles.label}>Name: </Text>
-                <Text style={styles.text}>{first_name + " " + last_name}</Text>
+                <Text style={styles.text}>{user.first_name + " " + user.last_name}</Text>
                 <Text style={styles.label}>email: </Text>
-                <Text style={styles.text}>{email}</Text>
+                <Text style={styles.text}>{user.email}</Text>
                 <Text style={styles.label}>Member Since: </Text>
                 <Text style={styles.text}>{date}</Text>
                 <Text style={styles.label}>ID: </Text>
-                <Text style={styles.text}>{id}</Text>
-                <Text style={styles.text}>{is_active ? 'Active User' : 'Inactive User'}</Text>
+                <Text style={styles.text}>{user.id}</Text>
+                <Text style={styles.text}>{user.is_active ? 'Active User' : 'Inactive User'}</Text>
             </View>
             <CustomButton
                 style={styles.profileCreationButton}
