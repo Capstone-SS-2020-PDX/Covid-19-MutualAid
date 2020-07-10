@@ -107,9 +107,8 @@ export const AuthProvider = props => {
     const handleAutoLogin = () => {
         AsyncStorage.getItem('loginData').then(loginData => {
             console.log('Attempting to fetch token from AsyncStorage...');
-
-            loginData = JSON.parse(loginData);
-            if (loginData.token) {
+            if (loginData) {
+                loginData = JSON.parse(loginData);
                 console.log('Token exists! : ' + loginData.token);
                 console.log('User exists! : ' + loginData.user.username);
                 dispatch({ type: AUTO_LOGIN, token: loginData.token, username: loginData.user.username })
