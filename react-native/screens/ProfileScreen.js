@@ -44,6 +44,7 @@ const ProfileScreen = props => {
               <Text style={styles.text}>{user.user.first_name} {user.user.last_name}</Text>
               <Text style={styles.text}>{user.user.email}</Text>
               <Text style={styles.text}>Member Since: {prettifyDate(user.user.date_joined)}</Text>
+              <Text style={styles.text}>{user.profile.profile_text}</Text>
             </View>
           </>
         : null

@@ -14,6 +14,7 @@ import CustomImagePicker from '../components/CustomImagePicker';
 import CustomButton from '../components/CustomButton';
 
 import Colors from '../config/colors';
+import { showModal, hideModal } from '../components/CustomModal';
 import { windowHeight, windowWidth } from '../config/dimensions';
 import { users_url, profiles_url } from '../config/urls';
 
@@ -23,6 +24,7 @@ const ProfileCreationScreen = props => {
 
     const [formValue, setFormValue] = useState({});
     const [selectedImage, setSelectedImage] = useState(null);
+    const [isProcessing, setIsProcessing] = useState(false);
 
     const firstNameRef = useRef(null);
     const lastNameRef = useRef(null);
@@ -33,15 +35,22 @@ const ProfileCreationScreen = props => {
     };
 
     const handleProfileCreation = () => {
-        const userPatchUrl = users_url + user.user.id + '/';
-        const profilePatchUrl = profiles_url + user.profile.id + '/';
+        if (!isProcessing) {
+            setIsProcessing(true);
+            showModal('CREATING_PROFILE');
 
-        let updatedUserData = user;
-        updatedUserData.user.first_name = formValue.first_name;
-        updatedUserData.user.last_name = formValue.last_name;
+            const userPatchUrl = users_url + user.user.id + '/';
+            const profilePatchUrl = profiles_url + user.profile.id + '/';
 
-        sendUpdateUserRequest(JSON.stringify(updatedUserData.user), userPatchUrl, 'PATCH');
-        sendUpdateProfileRequest(profilePatchUrl, 'PATCH');
+            let updatedUserData = user;
+            updatedUserData.user.first_name = formValue.first_name;
+            updatedUserData.user.last_name = formValue.last_name;
+
+            sendUpdateUserRequest(JSON.stringify(updatedUserData.user), userPatchUrl, 'PATCH');
+            sendUpdateProfileRequest(profilePatchUrl, 'PATCH');
+        } else {
+            console.log('Processing your request, please wait');
+        }
     };
 
     const createFormData = () => {
@@ -112,6 +121,8 @@ const ProfileCreationScreen = props => {
                 console.log(error)
             })
             .finally(() => {
+                setIsProcessing(false);
+                hideModal();
                 addProfile();
             });
     };

@@ -31,7 +31,12 @@ const validationErrorOptions = {
     ...defaultOptions,
     data: 'Fill out all details',
     icon: <MaterialIcons name='error-outline' size={50} color='red'/>
-}
+};
+
+const creatingProfileOptions = {
+    ...defaultOptions,
+    data: 'Creating Profile...',
+};
 
 export function showModal(type) {
     let options;
@@ -48,6 +53,9 @@ export function showModal(type) {
             break;
         case 'VALIDATION_ERROR':
             options = validationErrorOptions;
+            break;
+        case 'CREATING_PROFILE':
+            options = creatingProfileOptions;
             break;
         default:
             options = defaultOptions;
