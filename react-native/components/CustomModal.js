@@ -13,6 +13,14 @@ const loadingOptions = {
     icon: <ActivityIndicator color='#fff' size={'large'}/>
 };
 
+const createPostingOptions = {
+    data: 'Creating Your Posting',
+    textColor: '#fff',
+    backgroundColor: '#444444',
+    position: WModal.position.CENTER,
+    icon: <ActivityIndicator color='#fff' size={'large'}/>
+};
+
 const validationErrorOptions = {
     data: 'Fill out all details',
     textColor: '#fff',
@@ -27,6 +35,9 @@ export function showModal(type) {
     switch(type) {
         case 'LOADING':
             options = loadingOptions;
+            break;
+        case 'CREATING':
+            options = createPostingOptions;
             break;
         case 'VALIDATION_ERROR':
             options = validationErrorOptions;

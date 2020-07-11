@@ -19,6 +19,7 @@ import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { WToast } from 'react-native-smart-tip'
 
+import { showModal, hideModal } from '../components/CustomModal';
 import Center from '../components/Center';
 import CustomButton from '../components/CustomButton';
 import CustomImagePicker from '../components/CustomImagePicker';
@@ -52,6 +53,7 @@ const PostingCreationScreen = props => {
   const handlePostCreation = () => {
     if(!isProcessing) {
       setIsProcessing(true);
+      showModal('CREATING');
       sendPostRequest()
     } else {
       console.log('processing, please wait');
@@ -59,7 +61,7 @@ const PostingCreationScreen = props => {
   };
 
   const getImage = () => {
-    return selectedImage
+    return selectedImage;
   };
 
   // Create the data object in correct format to be sent off the server
@@ -101,6 +103,8 @@ const PostingCreationScreen = props => {
         console.log(error)
       })
       .finally(() => {
+        hideModal();
+        setIsProcessing(false);
       });
   };
 
