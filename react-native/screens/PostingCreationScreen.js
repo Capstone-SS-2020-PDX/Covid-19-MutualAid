@@ -27,13 +27,13 @@ import Colors from '../config/colors.js';
 import { windowHeight, windowWidth } from '../config/dimensions';
 import { postings_url } from '../config/urls';
 
-import { UserContext, UserProvider } from '../providers/UserProvider';
+import { AuthContext } from '../providers/AuthProvider';
 
 // const url = "https:cellular-virtue-277000.uc.r.appspot.com/postings/?format=json";
 
 const PostingCreationScreen = props => {
   const { navigation } = props;
-  const { userData } = useContext(UserContext);
+  const { user } = useContext(AuthContext);
 
   const [selectedImage, setSelectedImage] = useState(null);
   const [itemName, setItemName] = useState('');
@@ -73,7 +73,7 @@ const PostingCreationScreen = props => {
     data.append('desc', itemDescription);
     data.append('item_pic', selectedImage);
     data.append('count', itemCount);
-    data.append('owner', userData.user.id);
+    data.append('owner', user.user.id);
     data.append('category', categoryValue);
     data.append('request', requestValue);
 

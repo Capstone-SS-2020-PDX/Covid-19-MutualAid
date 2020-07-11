@@ -4,7 +4,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 import PostingListScreen from '../screens/PostingListScreen';
 
 import { AuthContext } from '../providers/AuthProvider';
-import { UserContext } from '../providers/UserProvider';
 import { addPostingsRoutes } from './addPostingsRoutes';
 
 import { headerOptions, drawerMenuIcon } from '../config/navigation-options';
@@ -14,9 +13,6 @@ const Stack = createStackNavigator();
 const HomeStack = props => {
   const { navigation } = props;
   const { username } = useContext(AuthContext);
-  const { userData } = useContext(UserContext);
-
-  // const userName = userData.user ? userData.user.username : '';
 
   const PostingListScreenOptions = {
     headerTitle: `Welcome ${username}`,

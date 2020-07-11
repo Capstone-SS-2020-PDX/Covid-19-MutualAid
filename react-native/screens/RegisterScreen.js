@@ -16,7 +16,6 @@ import { WModal } from 'react-native-smart-tip';
 import Center from '../components/Center';
 import CustomButton from '../components/CustomButton';
 import { AuthContext } from '../providers/AuthProvider';
-import { UserContext } from '../providers/UserProvider';
 
 import Colors from '../config/colors';
 import { windowHeight, windowWidth } from '../config/dimensions';

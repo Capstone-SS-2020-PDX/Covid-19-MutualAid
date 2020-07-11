@@ -13,7 +13,7 @@ const ProfileCreationStack = props => {
 
     const ProfileCreationScreenOptions = {
         headerTitle: 'Create Profile',
-        ...headerOptions,
+        // ...headerOptions,
         // headerLeft: drawerMenuIcon.bind(this, navigation),
     };
 

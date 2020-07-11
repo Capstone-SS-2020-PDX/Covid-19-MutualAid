@@ -2,12 +2,9 @@ import React, { createContext, useState, useContext } from 'react';
 import { AsyncStorage } from 'react-native';
 import { users_url, profiles_url } from '../config/urls';
 
-// const url = "https:cellular-virtue-277000.uc.r.appspot.com/auth/?format=json";
-
 export const UserContext = createContext(null);
 
 export const UserProvider = props => {
-
   const [userData, setUserData] = useState({});
 
   const updateUserData = updatedUserData => {
@@ -21,32 +18,32 @@ export const UserProvider = props => {
     });
   }
 
-  const fetchProfile = (data) => {
-    const url = profiles_url + data.profile + '/';
-    console.log("fetching profile with id: " + data.profile);
+  // const fetchProfile = (data) => {
+  //   const url = profiles_url + data.profile + '/';
+  //   console.log("fetching profile with id: " + data.profile);
 
-    return fetch(url, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Content-type': 'application/json',
-      },
-    })
-      .then(response => response.json())
-      .then(json => {
-        const updatedUserData = { ...data, profileData: json }
-        updateUserData(updatedUserData);
-      })
-      .catch(error => {
-        console.log(error)
-      })
-      .finally(() => {
-      });
-  };
+  //   return fetch(url, {
+  //     method: 'GET',
+  //     headers: {
+  //       'Accept': 'application/json',
+  //       'Content-type': 'application/json',
+  //     },
+  //   })
+  //     .then(response => response.json())
+  //     .then(json => {
+  //       const updatedUserData = { ...data, profileData: json }
+  //       updateUserData(updatedUserData);
+  //     })
+  //     .catch(error => {
+  //       console.log(error)
+  //     })
+  //     .finally(() => {
+  //     });
+  // };
 
   const initUserData = data => {
     // console.log("Initializing User Context with data: " + JSON.stringify(data));
-    fetchProfile(data);
+    updateUserData(data);
   };
 
   const removeUserData = () => {

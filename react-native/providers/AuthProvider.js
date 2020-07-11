@@ -1,6 +1,5 @@
 import React, { createContext, useState, useReducer, useContext } from 'react';
 import { AsyncStorage } from 'react-native';
-import { UserContext } from './UserProvider';
 
 import { login_url, register_url, check_username_url } from '../config/urls';
 
@@ -10,6 +9,8 @@ const LOGOUT = 'LOGOUT';
 const REGISTER = 'REGISTER';
 const SET_IS_LOADING = 'SET_IS_LOADING';
 const ADD_PROFILE = 'ADD_PROFILE';
+const UPDATE_PROFILE = 'UPDATE_PROFILE';
+const UPDATE_USER = 'UPDATE_USER';
 
 // Provides username, token and login/logout functionality to Global App Context
 // Allows the app to know which user is using it and to handle login/logout
@@ -17,13 +18,13 @@ const ADD_PROFILE = 'ADD_PROFILE';
 export const AuthContext = createContext({});
 
 export const AuthProvider = props => {
-    const { initUserData, removeUserData } = useContext(UserContext);
 
     const initialLoginState = {
         isLoading: true,
         username: null,
         token: null,
         hasProfile: true,
+        user: null,
     };
 
     const loginReducer = (previousState, action) => {
@@ -34,6 +35,7 @@ export const AuthProvider = props => {
                     username: action.username,
                     token: action.token,
                     isLoading: false,
+                    user: action.user,
                 };
             case LOGIN:
                 return {
@@ -41,6 +43,7 @@ export const AuthProvider = props => {
                     username: action.username,
                     token: action.token,
                     isLoading: false,
+                    user: action.user,
                 };
             case LOGOUT:
                 return {
@@ -48,14 +51,16 @@ export const AuthProvider = props => {
                     username: null,
                     token: null,
                     isLoading: false,
+                    user: null,
                 };
             case REGISTER:
                 return {
                     ...previousState,
                     username: action.username,
                     token: action.token,
-                    isLoading: false,
                     hasProfile: false,
+                    isLoading: false,
+                    user: action.user,
                 };
             case SET_IS_LOADING:
                 return {
@@ -66,7 +71,24 @@ export const AuthProvider = props => {
                 return {
                     ...previousState,
                     hasProfile: true,
+                    isLoading: false,
                 }
+            case UPDATE_PROFILE:
+                return {
+                    ...previousState,
+                    user: {
+                        ...previousState.user,
+                        profile: action.updatedProfile,
+                    },
+                };
+            case UPDATE_USER:
+                return {
+                    ...previousState,
+                    user: {
+                        ...previousState.user,
+                        ...action.updatedUser,
+                    }
+                };
         }
     };
 
@@ -102,15 +124,21 @@ export const AuthProvider = props => {
 
                 if (loginData) {
                     AsyncStorage.setItem('loginData', JSON.stringify(loginData)).then(() => {
-                        console.log('AsyncStorage: setting loginData as: ' + JSON.stringify(loginData))
-                        initUserData(loginData);
-                        dispatch({ type: requestType, username: userData.username, token: loginData.token})
+                        dispatch({ type: requestType, username: userData.username, token: loginData.token, user: loginData})
                     }).catch(error => {
                         console.log(error);
                     });
                 }
             });
     };
+
+    const updateProfile = newProfileData => {
+        dispatch({ type: UPDATE_PROFILE, updatedProfile: newProfileData });
+    }
+
+    const updateUser = newUserData => {
+        dispatch({ type: UPDATE_USER, updatedUser: newUserData });
+    }
 
     const handleAutoLogin = () => {
         AsyncStorage.getItem('loginData').then(loginData => {
@@ -119,14 +147,14 @@ export const AuthProvider = props => {
                 loginData = JSON.parse(loginData);
                 console.log('Token exists! : ' + loginData.token);
                 console.log('User exists! : ' + loginData.user.username);
-                dispatch({ type: AUTO_LOGIN, token: loginData.token, username: loginData.user.username })
-                initUserData(loginData);
+                dispatch({ type: AUTO_LOGIN, token: loginData.token, username: loginData.user.username, user: loginData })
             } else {
                 console.log('No existing token');
-                dispatch({ type: AUTO_LOGIN, token: null, username: null })
+                dispatch({ type: AUTO_LOGIN, token: null, username: null, user: null })
             }
         }).catch(error => {
             console.log(error);
+        }).finally(() => {
         });
 
     };
@@ -138,8 +166,11 @@ export const AuthProvider = props => {
     const handleLogout = () => {
         console.log("Logging out...");
 
-        removeUserData();
-        dispatch({ type: LOGOUT })
+        AsyncStorage.removeItem('loginData')
+                    .catch(error => console.log(error))
+                    .finally(() => {
+                        dispatch({ type: LOGOUT });
+                    });
     };
 
     const handleRegister = userData => {
@@ -186,6 +217,9 @@ export const AuthProvider = props => {
               token: loginState.token,
               username: loginState.username,
               hasProfile: loginState.hasProfile,
+              user: loginState.user,
+              updateProfile,
+              updateUser,
               autoLogin: handleAutoLogin,
               login: handleLogin,
               logout: handleLogout,

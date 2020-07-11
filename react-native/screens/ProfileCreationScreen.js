@@ -8,7 +8,6 @@ import {
     StyleSheet,
 } from 'react-native';
 
-import { UserContext } from '../providers/UserProvider';
 import { AuthContext } from '../providers/AuthProvider';
 
 import CustomImagePicker from '../components/CustomImagePicker';
@@ -20,8 +19,7 @@ import { users_url, profiles_url } from '../config/urls';
 
 const ProfileCreationScreen = props => {
     const { navigation } = props;
-    const { userData, updateProfileData } = useContext(UserContext);
-    const { hasProfile, addProfile } = useContext(AuthContext);
+    const { hasProfile, addProfile, updateUser, updateProfile, user } = useContext(AuthContext);
 
     const [formValue, setFormValue] = useState({});
     const [selectedImage, setSelectedImage] = useState(null);
@@ -35,26 +33,23 @@ const ProfileCreationScreen = props => {
     };
 
     const handleProfileCreation = () => {
-        const userPatchUrl = users_url + userData.user.id + '/';
-        const profilePatchUrl = profiles_url + userData.profile + '/';
+        const userPatchUrl = users_url + user.user.id + '/';
+        const profilePatchUrl = profiles_url + user.profile.id + '/';
 
-        let updatedUserData = userData;
+        let updatedUserData = user;
         updatedUserData.user.first_name = formValue.first_name;
         updatedUserData.user.last_name = formValue.last_name;
 
-        sendUpdateUserRequest(JSON.stringify(updatedUserData), userPatchUrl, 'PATCH');
+        sendUpdateUserRequest(JSON.stringify(updatedUserData.user), userPatchUrl, 'PATCH');
         sendUpdateProfileRequest(profilePatchUrl, 'PATCH');
     };
 
     const createFormData = () => {
         const data = new FormData();
-
         if (selectedImage) {
             data.append('profile_pic', selectedImage);
         }
-
         data.append('profile_text', formValue.profile_text);
-
         return data;
     };
 
@@ -68,13 +63,14 @@ const ProfileCreationScreen = props => {
         })
             .then(response => response.text())
             .then(json => {
-                console.log(json);
+                // updateProfile(json);
             })
             .catch(error => {
                 console.log(error)
             })
             .finally(() => {
                 fetchProfile();
+                // addProfile();
             });
     };
 
@@ -87,9 +83,9 @@ const ProfileCreationScreen = props => {
             },
             body: payload,
         })
-            .then(response => response.text())
+            .then(response => response.json())
             .then(json => {
-                console.log(json);
+                updateUser(json);
             })
             .catch(error => {
                 console.log(error)
@@ -99,7 +95,7 @@ const ProfileCreationScreen = props => {
     };
 
     const fetchProfile = () => {
-        const url = profiles_url + userData.profile + '/';
+        const url = profiles_url + user.profile.id + '/';
 
         return fetch(url, {
             method: 'GET',
@@ -110,10 +106,7 @@ const ProfileCreationScreen = props => {
         })
             .then(response => response.json())
             .then(json => {
-                console.log("Return from fetchProfile: ");
-                console.log(json);
-                    console.log('Updating profile');
-                    updateProfileData(json);
+                updateProfile(json);
             })
             .catch(error => {
                 console.log(error)
@@ -121,7 +114,6 @@ const ProfileCreationScreen = props => {
             .finally(() => {
                 addProfile();
             });
-
     };
 
     const clearInputs = () => {

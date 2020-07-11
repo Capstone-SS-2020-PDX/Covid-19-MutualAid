@@ -24,12 +24,12 @@ const itemPlaceHolder = '../assets/image_place_holder.jpg';
 
 import Colors from '../config/colors';
 import { windowHeight, windowWidth } from '../config/dimensions';
-import { UserContext } from '../providers/UserProvider';
+import { AuthContext } from '../providers/AuthProvider';
 
 const emailUrl = 'https://cellular-virtue-277000.uc.r.appspot.com/postings/contact/';
 
 const PostingDetailScreen = props => {
-  const { userData } = useContext(UserContext);
+  const { user } = useContext(AuthContext);
   const { route, navigation } = props;
   const [emailText, setEmailText] = useState('');
   const [postingImage, setPostingImage] = useState(null);
@@ -40,7 +40,7 @@ const PostingDetailScreen = props => {
   const handleReachOut = () => {
     console.log('Sending email from ' + emailText + ' to post with id: ' + route.params.id);
     setIsProcessing(true);
-    sendEmail(userData.user.email, route.params.id);
+    sendEmail(user.user.email, route.params.id);
   };
 
   const sendEmail = (fromEmail, id) => {

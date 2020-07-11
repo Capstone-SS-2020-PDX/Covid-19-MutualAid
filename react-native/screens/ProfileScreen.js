@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 
 import { AuthContext } from '../providers/AuthProvider';
-import { UserContext } from '../providers/UserProvider';
 
 import Colors from '../config/colors';
 import { windowHeight, windowWidth } from '../config/dimensions';
@@ -19,16 +18,14 @@ const itemPlaceHolder = '../assets/image_place_holder.jpg';
 
 const ProfileScreen = props => {
   const { navigation } = props;
-  const { userData } = useContext(UserContext);
+  const { user } = useContext(AuthContext);
 
-  const picUrl = userData.profileData.profile_pic ? userData.profileData.profile_pic : null;
-  // console.log('userdata: ' + JSON.stringify(userData));
-
+  const picUrl = user.profile.profile_pic ? user.profile.profile_pic : null;
 
   return(
     <View style={styles.screen}>
       {
-        userData.user ?
+        user.user ?
           <>
             <View style={styles.imageContainer}>
               <Image
@@ -39,15 +36,14 @@ const ProfileScreen = props => {
                         ? {uri:picUrl}
                         : require(itemPlaceHolder)
                        }
-
               />
             </View>
 
             <View style={styles.userDetailSection}>
-              <Text style={styles.username}>{userData.user.username}</Text>
-              <Text style={styles.text}>{userData.user.first_name} {userData.user.last_name}</Text>
-              <Text style={styles.text}>{userData.user.email}</Text>
-              <Text style={styles.text}>Member Since: {prettifyDate(userData.user.date_joined)}</Text>
+              <Text style={styles.username}>{user.user.username}</Text>
+              <Text style={styles.text}>{user.user.first_name} {user.user.last_name}</Text>
+              <Text style={styles.text}>{user.user.email}</Text>
+              <Text style={styles.text}>Member Since: {prettifyDate(user.user.date_joined)}</Text>
             </View>
           </>
         : null

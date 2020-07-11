@@ -18,7 +18,6 @@ import {
 } from 'react-native-paper';
 
 import { AuthContext } from '../providers/AuthProvider';
-import { UserContext } from '../providers/UserProvider';
 
 import { prettifyDate } from '../utility/helperFunctions';
 import Colors from '../config/colors';
@@ -26,20 +25,12 @@ const itemPlaceHolder = '../assets/image_place_holder.jpg';
 
 const DrawerContent = props => {
   const { navigation } = props;
-  const { logout } = useContext(AuthContext);
-  const { userData } = useContext(UserContext);
+  const { logout, isLoading, user } = useContext(AuthContext);
 
-  let picUrl = null;
-  let fullName = '';
-  let memberSince = '';
-  let username = '';
-
-  if (userData.profileData) {
-    picUrl = userData.profileData ? userData.profileData.profile_pic : null;
-    fullName = userData.user.first_name + ' ' + userData.user.last_name.charAt(0);
-    memberSince = prettifyDate(userData.user.date_joined);
-    username =  userData.user.username;
-  }
+  let picUrl = user.profile.profile_pic;
+  let fullName = user.user.first_name + ' ' + user.user.last_name.charAt(0);
+  let memberSince = prettifyDate(user.user.date_joined);
+  let username =  user.user.username;
 
   const handleLogout = () => {
     navigation.toggleDrawer();
