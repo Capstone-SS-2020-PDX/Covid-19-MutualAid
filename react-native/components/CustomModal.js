@@ -5,27 +5,31 @@ import { MaterialIcons } from '@expo/vector-icons';
 
 import Colors from '../config/colors';
 
-const loadingOptions = {
-    data: 'Loading',
+const defaultOptions = {
+    data: 'Loading...',
     textColor: '#fff',
     backgroundColor: '#444444',
     position: WModal.position.CENTER,
     icon: <ActivityIndicator color='#fff' size={'large'}/>
+};
+
+const loadingOptions = {
+    ...defaultOptions,
 };
 
 const createPostingOptions = {
-    data: 'Creating Your Posting',
-    textColor: '#fff',
-    backgroundColor: '#444444',
-    position: WModal.position.CENTER,
-    icon: <ActivityIndicator color='#fff' size={'large'}/>
+    ...defaultOptions,
+    data: 'Creating Your Posting...',
+};
+
+const sendingEmailOptions = {
+    ...defaultOptions,
+    data: 'Sending Message...',
 };
 
 const validationErrorOptions = {
+    ...defaultOptions,
     data: 'Fill out all details',
-    textColor: '#fff',
-    backgroundColor: '#444444',
-    position: WModal.position.CENTER,
     icon: <MaterialIcons name='error-outline' size={50} color='red'/>
 }
 
@@ -36,14 +40,17 @@ export function showModal(type) {
         case 'LOADING':
             options = loadingOptions;
             break;
-        case 'CREATING':
+        case 'CREATING_POSTING':
             options = createPostingOptions;
+            break;
+        case 'SENDING_EMAIL':
+            options = sendingEmailOptions;
             break;
         case 'VALIDATION_ERROR':
             options = validationErrorOptions;
             break;
         default:
-            options = loadingOptions;
+            options = defaultOptions;
     }
     WModal.show(options);
 };

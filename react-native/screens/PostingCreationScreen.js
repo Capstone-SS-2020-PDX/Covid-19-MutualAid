@@ -53,7 +53,7 @@ const PostingCreationScreen = props => {
   const handlePostCreation = () => {
     if(!isProcessing) {
       setIsProcessing(true);
-      showModal('CREATING');
+      showModal('CREATING_POSTING');
       sendPostRequest()
     } else {
       console.log('processing, please wait');

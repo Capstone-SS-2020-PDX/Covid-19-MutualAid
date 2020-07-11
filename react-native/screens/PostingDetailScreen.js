@@ -11,7 +11,7 @@ import { View,
          ActivityIndicator,
        } from 'react-native';
 
-import {RFValue, RFPercentage} from "react-native-responsive-fontsize";
+import { RFValue, RFPercentage } from "react-native-responsive-fontsize";
 import { WToast } from 'react-native-smart-tip'
 
 import Center from '../components/Center';
@@ -24,6 +24,7 @@ const itemPlaceHolder = '../assets/image_place_holder.jpg';
 
 import Colors from '../config/colors';
 import { windowHeight, windowWidth } from '../config/dimensions';
+import { showModal, hideModal } from '../components/CustomModal';
 import { AuthContext } from '../providers/AuthProvider';
 
 const emailUrl = 'https://cellular-virtue-277000.uc.r.appspot.com/postings/contact/';
@@ -38,9 +39,14 @@ const PostingDetailScreen = props => {
   const picUrl = route.params.item_pic;
 
   const handleReachOut = () => {
-    console.log('Sending email from ' + emailText + ' to post with id: ' + route.params.id);
-    setIsProcessing(true);
-    sendEmail(user.user.email, route.params.id);
+    if (!isProcessing) {
+      console.log('Sending email from ' + emailText + ' to post with id: ' + route.params.id);
+      setIsProcessing(true);
+      showModal('SENDING_EMAIL');
+      sendEmail(user.user.email, route.params.id);
+    } else {
+      console.log('Processing, please wait');
+    }
   };
 
   const sendEmail = (fromEmail, id) => {
@@ -58,15 +64,17 @@ const PostingDetailScreen = props => {
       .then(response => response.text())
       .then(text => {
         console.log('Response from sendEmail: ' + text);
-        notifyMessage('Email sent successfully!');
-        resetFormState();
-        navigateToHomeStack();
       })
       .catch(error => {
         console.log('Error from sendEmail: ' + error)
         notifyMessage('Oops! something went wrong...');
       })
       .finally(() => {
+        notifyMessage('Email sent successfully!');
+        resetFormState();
+        setIsProcessing(false)
+        hideModal();
+        navigateToHomeStack();
       });
   }
 
