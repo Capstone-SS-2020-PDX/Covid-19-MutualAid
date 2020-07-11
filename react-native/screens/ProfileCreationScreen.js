@@ -20,9 +20,9 @@ import { users_url, profiles_url } from '../config/urls';
 
 const ProfileCreationScreen = props => {
     const { navigation } = props;
-    const { hasProfile, addProfile, updateUser, updateProfile, user } = useContext(AuthContext);
+    const { addProfile, updateUser, updateProfile, user } = useContext(AuthContext);
 
-    const [formValue, setFormValue] = useState({});
+    const [formValue, setFormValue] = useState(null);
     const [selectedImage, setSelectedImage] = useState(null);
     const [isProcessing, setIsProcessing] = useState(false);
 
@@ -32,6 +32,17 @@ const ProfileCreationScreen = props => {
 
     const updateForm = (text, input) => {
         setFormValue({ ...formValue, [input]: text });
+    };
+
+    const attemptProfileCreation = () => {
+        if (!selectedImage || !formValue) {
+            showModal('VALIDATION_ERROR');
+            setTimeout(() => {
+                hideModal();
+            }, 900);
+        } else {
+            handleProfileCreation();
+        }
     };
 
     const handleProfileCreation = () => {
@@ -72,14 +83,12 @@ const ProfileCreationScreen = props => {
         })
             .then(response => response.text())
             .then(json => {
-                // updateProfile(json);
             })
             .catch(error => {
                 console.log(error)
             })
             .finally(() => {
                 fetchProfile();
-                // addProfile();
             });
     };
 
@@ -157,7 +166,7 @@ const ProfileCreationScreen = props => {
             />
           </View>
 
-          <KeyboardAvoidingView style={styles.inputContainer} behavior='height'>
+          <KeyboardAvoidingView style={styles.inputContainer} behavior='padding'>
             <View style={styles.inputView}>
               <TextInput
                 style={styles.inputText}
@@ -194,7 +203,7 @@ const ProfileCreationScreen = props => {
             </View>
           </KeyboardAvoidingView>
           <CustomButton
-            onPress={handleProfileCreation}
+            onPress={attemptProfileCreation}
             style={{ marginBottom: 10, alignSelf: 'center'}}
           >
             <Text style={styles.buttonText}>Confirm</Text>

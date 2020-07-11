@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useRef, useState, useContext } from 'react';
 import { View,
          KeyboardAvoidingView,
          Text,
@@ -64,7 +64,7 @@ const LoginScreen = props => {
           />
           <TextInput
             style={styles.inputText}
-            placeholder='User Name...'
+            placeholder='UserName...'
             placeholderTextColor={Colors.placeholder_text}
             autoCapitalize='none'
             onChangeText={text => setEmailText(text)}
