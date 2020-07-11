@@ -8,7 +8,7 @@ import ProfileCreationScreen from '../screens/ProfileCreationScreen';
 const Stack = createStackNavigator();
 
 // setup options for screens
-const LoginScreenOptions = {
+const LoginStackOptions = {
   header: () => null,
 }
 
@@ -18,7 +18,7 @@ const AuthStack = props => {
   return(
     <Stack.Navigator
       initialRouteName='Login'
-      screenOptions={LoginScreenOptions}
+      screenOptions={LoginStackOptions}
     >
       <Stack.Screen
         name='Login'

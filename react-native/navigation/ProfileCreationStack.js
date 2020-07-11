@@ -8,31 +8,30 @@ import { headerOptions, drawerMenuIcon } from '../config/navigation-options';
 
 const Stack = createStackNavigator();
 
+const ProfileCreationStackOptions = {
+  header: () => null,
+}
+
 const ProfileCreationStack = props => {
-    const { navigation } = props;
+  const { navigation } = props;
 
-    const ProfileCreationScreenOptions = {
-        headerTitle: 'Create Profile',
-        // ...headerOptions,
-        // headerLeft: drawerMenuIcon.bind(this, navigation),
-    };
 
-    return(
-        <Stack.Navigator
-          initialRouteName='CreateProfile'
-        >
-          <Stack.Screen
-            name='CreateProfile'
-            component={ProfileCreationScreen}
-            options={ProfileCreationScreenOptions}
-          />
-          {/* <Stack.Screen */}
-          {/*   name='JoinCommunity' */}
-          {/*   component={JoinCommunityScreen} */}
-          {/*   options={JoinCommunityScreenOptions} */}
-          {/* /> */}
-        </Stack.Navigator>
-    );
+  return(
+    <Stack.Navigator
+      initialRouteName='CreateProfile'
+      screenOptions={ProfileCreationStackOptions}
+    >
+      <Stack.Screen
+        name='CreateProfile'
+        component={ProfileCreationScreen}
+      />
+      {/* <Stack.Screen */}
+      {/*   name='JoinCommunity' */}
+      {/*   component={JoinCommunityScreen} */}
+      {/*   options={JoinCommunityScreenOptions} */}
+      {/* /> */}
+    </Stack.Navigator>
+  );
 
 }
 

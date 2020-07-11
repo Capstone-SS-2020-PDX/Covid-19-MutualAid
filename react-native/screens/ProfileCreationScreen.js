@@ -146,8 +146,9 @@ const ProfileCreationScreen = props => {
 
     return(
         <View style={styles.screen}>
-          <View style={styles.imageContainer}>
+          <Text style={styles.screenTitle}>Create Your Profile</Text>
 
+          <View style={styles.imageContainer}>
             <CustomImagePicker
               iconName='images'
               onSelectImage={selectImage}
@@ -209,10 +210,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     screenTitle: {
-        color: Colors.primary,
+        color: Colors.dark_shade1,
         fontFamily: 'open-sans-bold',
         fontSize: 36,
         textAlign: 'center',
+        marginTop: 20,
     },
     imageContainer: {
         width: '100%',
