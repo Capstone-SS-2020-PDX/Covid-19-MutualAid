@@ -2,8 +2,8 @@ export const prettifyDate = dateToMakePretty => {
     var prettyDate = dateToMakePretty.slice(0,10)
     var prettyDate = prettyDate.split("-").reverse().join("-");
 
-    var month = prettyDate.slice(0,2);
-    var day = prettyDate.slice(3,5);
+    var day = prettyDate.slice(0,2);
+    var month = prettyDate.slice(3,5);
     var year = prettyDate.slice(6,10);
 
     switch(month) {

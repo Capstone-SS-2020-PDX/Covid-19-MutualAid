@@ -15,7 +15,6 @@ const ProfileCreationStackOptions = {
 const ProfileCreationStack = props => {
   const { navigation } = props;
 
-
   return(
     <Stack.Navigator
       initialRouteName='CreateProfile'
