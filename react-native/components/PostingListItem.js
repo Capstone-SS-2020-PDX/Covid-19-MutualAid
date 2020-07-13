@@ -36,16 +36,16 @@ const PostingListItem = props => {
               <Text style={styles.itemTitleText}>
                 {props.title}
               </Text>
-              <Text style={styles.itemCommunityText}>
-                Oak Grove
-              </Text>
-            </View>
-            <View style={styles.postingTypeIconContainer}>
+              <View style={styles.postingTypeIconContainer}>
               <Image
                 style={styles.postingTypeIconImage}
                 resizeMode='contain'
                 source={itemIcon}
               />
+            </View>
+              <Text style={styles.itemCommunityText}>
+                Oak Grove
+              </Text>
             </View>
           </View>
         </TouchableOpacity>
@@ -55,7 +55,7 @@ const PostingListItem = props => {
 const styles = StyleSheet.create({
     listItem: {
         width: '100%',
-        height: 100,
+        height: 120,
         justifyContent: 'center',
         borderColor: Colors.dark_shade1,
         borderTopWidth: 0.8,
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
     },
     itemTextContainer: {
-        width: '55%',
+        width: '70%',
         alignContent: 'flex-start',
         paddingHorizontal: 5,
     },
@@ -77,8 +77,8 @@ const styles = StyleSheet.create({
         marginLeft: 10,
     },
     listImage: {
-        height: 80,
-        width: 80,
+        height: 90,
+        width: 90,
         borderWidth: 1,
         borderColor: Colors.dark_shade1,
     },
@@ -89,13 +89,15 @@ const styles = StyleSheet.create({
     itemCommunityText: {
         fontSize: 14,
         fontFamily: 'open-sans',
+        marginTop: 5,
     },
     postingTypeIconContainer: {
         width: '22%',
     },
     postingTypeIconImage: {
-        width: 70,
-        height: 70,
+        width: 20,
+        height: 20,
+        marginTop: 5,
     },
 });
 
