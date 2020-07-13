@@ -5,7 +5,7 @@ import { Text,
          TouchableOpacity,
          Image,
        } from 'react-native';
-//import { Entypo } from '@expo/vector-icons'; 
+import { Entypo } from '@expo/vector-icons'; 
 
 import Colors from '../config/colors';
 
@@ -48,10 +48,13 @@ const PostingListItem = props => {
                 <Text style={styles.itemDetailText}>
                   {itemType}
                 </Text>
-                </View>
-              <Text style={styles.itemDetailText}>
-                Oak Grove
-              </Text>
+              </View>
+              <View style={styles.postingTypeContainer}>
+                <Entypo name="location-pin" size={20} color="black" style={{marginTop: 5}} />
+                <Text style={styles.itemDetailText}>
+                  Oak Grove
+                </Text>
+              </View>
             </View>
           </View>
         </TouchableOpacity>
@@ -104,8 +107,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     postingTypeIconImage: {
-        width: 15,
-        height: 15,
+        width: 20,
+        height: 20,
         marginTop: 5,
     },
 });
