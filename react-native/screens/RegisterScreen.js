@@ -16,7 +16,6 @@ import { WModal } from 'react-native-smart-tip';
 import Center from '../components/Center';
 import CustomButton from '../components/CustomButton';
 import { AuthContext } from '../providers/AuthProvider';
-import { UserContext } from '../providers/UserProvider';
 
 import Colors from '../config/colors';
 import { windowHeight, windowWidth } from '../config/dimensions';
@@ -26,18 +25,26 @@ const RegisterScreen = props => {
   const { navigation, route } = props;
   const { register, isLoading, setIsLoading, checkUsername } = useContext(AuthContext);
 
-  const [emailText, setEmailText] = useState('');
-  const [userNameText, setUserNameText] = useState('');
-  const [passwordText, setPasswordText] = useState('');
+  const [emailText, setEmailText] = useState(null)
+  const [userNameText, setUserNameText] = useState(null);
+  const [passwordText, setPasswordText] = useState(null);
 
   const attemptRegister = () =>{
-    showModal();
-    setTimeout(() => {
-      hideModal();
-    }, 600);
+    if (!emailText || !userNameText || !passwordText) {
+      showModal('VALIDATION_ERROR');
+      setTimeout(() => {
+        hideModal();
+      }, 900);
 
-    const userData = { username: userNameText, password: passwordText, email: emailText };
-    register(userData);
+    } else {
+      showModal('LOADING');
+      setTimeout(() => {
+        hideModal();
+      }, 900);
+
+      const userData = { username: userNameText, password: passwordText, email: emailText };
+      register(userData);
+    }
   };
 
   return(

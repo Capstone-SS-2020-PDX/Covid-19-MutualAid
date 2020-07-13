@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import {
   MaterialIcons,
@@ -19,11 +19,18 @@ import {
 
 import { AuthContext } from '../providers/AuthProvider';
 
+import { prettifyDate } from '../utility/helperFunctions';
 import Colors from '../config/colors';
+const itemPlaceHolder = '../assets/image_place_holder.jpg';
 
 const DrawerContent = props => {
   const { navigation } = props;
-  const { logout } = useContext(AuthContext);
+  const { logout, isLoading, user } = useContext(AuthContext);
+
+  let picUrl = user.profile.profile_pic;
+  let fullName = user.user.first_name + ' ' + user.user.last_name.charAt(0);
+  let memberSince = prettifyDate(user.user.date_joined);
+  let username =  user.user.username;
 
   const handleLogout = () => {
     navigation.toggleDrawer();
@@ -35,27 +42,28 @@ const DrawerContent = props => {
       <DrawerContentScrollView {...props}>
         <View style={styles.drawerContent}>
           <View style={styles.userInfoSection}>
-            <View style={styles.avatarContainer}>
+            <TouchableOpacity style={styles.avatarContainer} onPress={() => navigation.navigate('Profile')}>
               <Avatar.Image
-                source={{
-                  uri: 'https://lyrictheatreokc.com/wp-content/uploads/2015/09/Geno-Square-Headshot-300x300.jpeg'
-                }}
+                source={picUrl !== null
+                        ? {uri:picUrl}
+                        : require(itemPlaceHolder)
+                       }
                 size={120}
               />
               <View style={styles.avatarCaptionContainer}>
-                <Title style={styles.title}>Dr. Fabulous</Title>
-                <Caption style={styles.caption}>@imfantastic</Caption>
+                <Title style={styles.name}>{fullName}</Title>
+                <Caption style={styles.caption}>{username}</Caption>
               </View>
-            </View>
+            </TouchableOpacity>
             <View style={styles.statsSection}>
               <View style={styles.section}>
                 <Caption style={styles.caption}>Member Since: </Caption>
-                <Paragraph style={[styles.paragraph, styles.caption]}>March 12, 2020</Paragraph>
+                <Paragraph style={[styles.paragraph, styles.caption]}>{memberSince}</Paragraph>
               </View>
               <View style={styles.row}>
                 <View style={styles.section}>
                   <Caption style={styles.caption}>Number of Postings: </Caption>
-                  <Paragraph style={[styles.paragraph, styles.caption]}>8</Paragraph>
+                  <Paragraph style={[styles.paragraph, styles.caption]}>0</Paragraph>
                 </View>
               </View>
             </View>
@@ -150,21 +158,22 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   userInfoSection: {
-    alignItems: 'center'
+    alignItems: 'center',
+    padding: 5,
   },
   avatarContainer: {
     flexDirection: 'row',
-    marginTop: 15,
+    marginTop: 12,
   },
   avatarCaptionContainer: {
     marginTop: 15,
-    marginLeft: 15,
+    marginLeft: 10,
     flexDirection: 'column',
   },
   statsSection: {
-    marginTop: 15,
+    marginTop: 12,
   },
-  title: {
+  name: {
     fontSize: 16,
     marginTop: 3,
     fontWeight: 'bold',
@@ -174,14 +183,14 @@ const styles = StyleSheet.create({
     lineHeight: 14,
   },
   row: {
-    marginTop: 20,
+    marginTop: 5,
     flexDirection: 'row',
     alignItems: 'center',
   },
   section: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginRight: 15,
+    marginRight: 10,
   },
   paragraph: {
     fontWeight: 'bold',

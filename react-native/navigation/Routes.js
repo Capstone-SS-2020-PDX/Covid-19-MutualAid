@@ -5,37 +5,22 @@ import { NavigationContainer } from '@react-navigation/native';
 
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
+import ProfileCreationStack from '../navigation/ProfileCreationStack';
 import AuthStack from './AuthStack';
 import NavTabs from './NavTabs';
 import DrawerNav from './DrawerNav';
 import Center from '../components/Center';
 
 import { AuthContext } from '../providers/AuthProvider';
-import { UserContext } from '../providers/UserProvider';
 
 const Stack = createStackNavigator();
 
 const Routes = () => {
-    const { autoLogin, login, isLoading, token } = useContext(AuthContext);
-    const { user, initUser } = useContext(UserContext);
-   
+    const { autoLogin, login, isLoading, token, hasProfile } = useContext(AuthContext);
+
     // Check if the user is logged in
     useEffect(() => {
-        // Attempt to grab an existing user token and if it exists,
-        // login the user automatically
-        AsyncStorage.getItem('token').then(token => {
-            console.log('Attempting to fetch token from AsyncStorage...');
-            if (token) {
-                console.log('Token exists! : ' + token);
-                autoLogin(token);
-            } else {
-                console.log('No existing token');
-                autoLogin(null);
-            }
-            // setIsLoading(false);
-        }).catch(error => {
-            console.log(error);
-        });
+        autoLogin();
     }, []);
 
     // If current loading (waiting for API return)..
@@ -55,8 +40,12 @@ const Routes = () => {
         // Main App Components is nested within DrawerNav
         return(
             <NavigationContainer>
-              {/* { currentUser ? <NavTabs /> : <AuthStack /> } */}
-              { token ? <DrawerNav /> : <AuthStack /> }
+              {
+                  !token
+                      ? <AuthStack />
+                      : (!hasProfile ? <ProfileCreationStack /> : <DrawerNav />)
+              }
+              {/* { token ? <DrawerNav/> : <AuthStack />} */}
             </NavigationContainer>
         );
     }

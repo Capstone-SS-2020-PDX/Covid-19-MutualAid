@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useRef, useState, useContext } from 'react';
 import { View,
          KeyboardAvoidingView,
          Text,
@@ -16,7 +16,6 @@ import { showModal, hideModal } from '../components/CustomModal';
 import Center from '../components/Center';
 import CustomButton from '../components/CustomButton';
 import { AuthContext } from '../providers/AuthProvider';
-import { UserContext } from '../providers/UserProvider';
 
 import Colors from '../config/colors';
 import { windowHeight, windowWidth } from '../config/dimensions';
@@ -24,27 +23,26 @@ import { windowHeight, windowWidth } from '../config/dimensions';
 const LoginScreen = props => {
   const { navigation, route } = props;
   const { login } = useContext(AuthContext);
-  const { user } = useContext(UserContext);
   // const [value, handleChange, reset] = useInputState("");
 
-  const [emailText, setEmailText] = useState('');
-  const [passwordText, setPasswordText] = useState('');
-
-  const [loginData, setLoginData] = useState({
-    userName: '',
-    password: '',
-    isValidUser: true,
-    isValidPassword: true,
-  });
+  const [emailText, setEmailText] = useState(null);
+  const [passwordText, setPasswordText] = useState(null);
 
   const attemptLogin = () => {
-    showModal();
-    setTimeout(() => {
-      hideModal();
-    }, 600);
-   
-    const userData = { username: emailText, password: passwordText };
-    login(userData);
+    if (!emailText || !passwordText) {
+      showModal('VALIDATION_ERROR');
+      setTimeout(() => {
+        hideModal();
+      }, 900);
+    } else {
+      showModal('LOADING');
+      setTimeout(() => {
+        hideModal();
+      }, 900);
+
+      const loginData = { username: emailText, password: passwordText };
+      login(loginData);
+    }
   };
 
   return(
@@ -66,7 +64,7 @@ const LoginScreen = props => {
           />
           <TextInput
             style={styles.inputText}
-            placeholder='User Name...'
+            placeholder='UserName...'
             placeholderTextColor={Colors.placeholder_text}
             autoCapitalize='none'
             onChangeText={text => setEmailText(text)}

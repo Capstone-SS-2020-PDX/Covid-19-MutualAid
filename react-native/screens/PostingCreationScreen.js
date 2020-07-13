@@ -19,6 +19,7 @@ import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { WToast } from 'react-native-smart-tip'
 
+import { showModal, hideModal } from '../components/CustomModal';
 import Center from '../components/Center';
 import CustomButton from '../components/CustomButton';
 import CustomImagePicker from '../components/CustomImagePicker';
@@ -27,13 +28,13 @@ import Colors from '../config/colors.js';
 import { windowHeight, windowWidth } from '../config/dimensions';
 import { postings_url } from '../config/urls';
 
-import { UserContext, UserProvider } from '../providers/UserProvider';
+import { AuthContext } from '../providers/AuthProvider';
 
 // const url = "https:cellular-virtue-277000.uc.r.appspot.com/postings/?format=json";
 
 const PostingCreationScreen = props => {
   const { navigation } = props;
-  const { user } = useContext(UserContext);
+  const { user } = useContext(AuthContext);
 
   const [selectedImage, setSelectedImage] = useState(null);
   const [itemName, setItemName] = useState('');
@@ -52,6 +53,7 @@ const PostingCreationScreen = props => {
   const handlePostCreation = () => {
     if(!isProcessing) {
       setIsProcessing(true);
+      showModal('CREATING_POSTING');
       sendPostRequest()
     } else {
       console.log('processing, please wait');
@@ -59,7 +61,7 @@ const PostingCreationScreen = props => {
   };
 
   const getImage = () => {
-    return selectedImage
+    return selectedImage;
   };
 
   // Create the data object in correct format to be sent off the server
@@ -73,7 +75,7 @@ const PostingCreationScreen = props => {
     data.append('desc', itemDescription);
     data.append('item_pic', selectedImage);
     data.append('count', itemCount);
-    data.append('owner', user.id);
+    data.append('owner', user.user.id);
     data.append('category', categoryValue);
     data.append('request', requestValue);
 
@@ -101,6 +103,8 @@ const PostingCreationScreen = props => {
         console.log(error)
       })
       .finally(() => {
+        hideModal();
+        setIsProcessing(false);
       });
   };
 
