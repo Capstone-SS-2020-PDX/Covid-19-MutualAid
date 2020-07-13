@@ -9,8 +9,8 @@ import { Text,
 import Colors from '../config/colors';
 
 const PostingListItem = props => {
-    const offeredItemIconImage = '../assets/offered_item.png';
-    const requestedItemIconImage = '../assets/requested_item.png';
+    const offeredItemIconImage = '../assets/round_offer.png';
+    const requestedItemIconImage = '../assets/round_request.png';
     const itemPlaceHolder = '../assets/image_place_holder.jpg';
 
     const itemIcon = props.request ? require(requestedItemIconImage)
