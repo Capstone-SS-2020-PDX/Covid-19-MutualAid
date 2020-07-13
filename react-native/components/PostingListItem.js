@@ -36,14 +36,17 @@ const PostingListItem = props => {
               <Text style={styles.itemTitleText}>
                 {props.title}
               </Text>
-              <View style={styles.postingTypeIconContainer}>
-              <Image
-                style={styles.postingTypeIconImage}
-                resizeMode='contain'
-                source={itemIcon}
-              />
-            </View>
-              <Text style={styles.itemCommunityText}>
+              <View style={styles.postingTypeContainer}>
+                <Image
+                  style={styles.postingTypeIconImage}
+                  resizeMode='contain'
+                  source={itemIcon}
+                />
+                <Text style={styles.itemDetailText}>
+                  Offer
+                </Text>
+                </View>
+              <Text style={styles.itemDetailText}>
                 Oak Grove
               </Text>
             </View>
@@ -86,17 +89,20 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontFamily: 'open-sans',
     },
-    itemCommunityText: {
+    itemDetailText: {
         fontSize: 14,
         fontFamily: 'open-sans',
         marginTop: 5,
+        marginLeft: 10,
     },
-    postingTypeIconContainer: {
-        width: '22%',
+    postingTypeContainer: {
+        width: '50%',
+        flexDirection: 'row',
+        alignItems: 'center',
     },
     postingTypeIconImage: {
-        width: 20,
-        height: 20,
+        width: 15,
+        height: 15,
         marginTop: 5,
     },
 });
