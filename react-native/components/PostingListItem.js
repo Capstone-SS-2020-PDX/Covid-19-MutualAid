@@ -5,6 +5,7 @@ import { Text,
          TouchableOpacity,
          Image,
        } from 'react-native';
+//import { Entypo } from '@expo/vector-icons'; 
 
 import Colors from '../config/colors';
 
@@ -15,6 +16,8 @@ const PostingListItem = props => {
 
     const itemIcon = props.request ? require(requestedItemIconImage)
         : require(offeredItemIconImage);
+    const itemType = props.request ? 'Request'
+        : 'Offer';
 
     const picUrl = props.item_pic;
 
@@ -43,7 +46,7 @@ const PostingListItem = props => {
                   source={itemIcon}
                 />
                 <Text style={styles.itemDetailText}>
-                  Offer
+                  {itemType}
                 </Text>
                 </View>
               <Text style={styles.itemDetailText}>
