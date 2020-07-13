@@ -6,7 +6,7 @@ class PostingSerializer(serializers.ModelSerializer):
     parser_classes = (MultiPartParser, FormParser, JSONParser)
     class Meta:
         model = Posting
-        fields = ('id', 'title', 'desc', 'count', 'category', 'created_on', 'owner', 'in_community', 'item_pic', 'request')
+        fields = ('id', 'title', 'desc', 'count', 'category', 'created_on', 'owner', 'in_community', 'item_pic', 'request', 'flagged')
 
 class CommunitySerializer(serializers.ModelSerializer):
     class Meta:
@@ -22,4 +22,4 @@ class UserProfileSerializer(serializers.ModelSerializer):
     parser_classes = (MultiPartParser, FormParser, JSONParser)
     class Meta:
         model = UserProfile
-        fields = ('id', 'user', 'profile_text', 'created_on', 'home', 'member_of', 'phone_number', 'profile_pic')
+        fields = ('id', 'user', 'profile_text', 'created_on', 'home', 'member_of', 'phone_number', 'profile_pic', 'saved_postings', 'is_admin')

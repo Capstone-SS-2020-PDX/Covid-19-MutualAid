@@ -14,6 +14,7 @@ from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
 from .models import Posting, Community, UserProfile
 from .serializers import PostingSerializer, CommunitySerializer, UserProfileSerializer, UserSerializer
+import datetime
         
 class PostingViewSet(ModelViewSet):
     queryset = Posting.objects.all()
@@ -62,22 +63,28 @@ class CommunityViewSet(ModelViewSet):
     """
     queryset = Community.objects.all()
     serializer_class = CommunitySerializer
+    
+    @action(detail=True)
+    def postings(self, request, *args, **kwargs):
+        community = self.get_object()
+        posting_serializer = PostingSerializer(community.posts, many=True)
+        return Response(posting_serializer.data)
 
 class UserProfileViewSet(ModelViewSet):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
-
-    @action(detail=False)
-    def bar(self, request):
-        argument = request.query_params.get('member_of', '')
-        user = UserProfile.objects.filter(member_of__id=argument)
-        serializer = UserProfileSerializer(userprofile, many=True)
-        return Response(serializer.data)
         
 class UserViewSet(ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     
+    @action(detail=True)
+    def postings(self, request, *args, **kwargs):
+        user = self.get_object()
+        posting_serializer = PostingSerializer(user.posts, many=True)
+        return Response(posting_serializer.data)
+        
+        
 @api_view(('POST',))
 @renderer_classes((JSONRenderer,))
 def register_user(request):
@@ -112,6 +119,8 @@ class CustomAuthToken(ObtainAuthToken):
         serializer = self.serializer_class(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
+        setattr(user, 'last_login', datetime.datetime.now())
+        user.save()
         user_serializer = UserSerializer(user)
         profile_data = UserProfile.objects.get(pk=user.profile.id)
         profile_serializer = UserProfileSerializer(profile_data)
