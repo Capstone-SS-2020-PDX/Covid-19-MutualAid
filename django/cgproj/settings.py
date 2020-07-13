@@ -20,14 +20,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
+SECRET_KEY = 'sd1v^qwjvnb+4hd1tn0dy0#cl98mlfxez@69pno-^t3s$*2v4+'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["cellular-virtue-277000.uc.r.appspot.com", 'localhost', '192.168.*', '10.*']
+ALLOWED_HOSTS = ["ace-mote-270703.wl.r.appspot.com", 'localhost', '192.168.*', '10.*', '127.0.0.1']
 
-SECURE_SSL_REDIRECT = True
+SECURE_SSL_REDIRECT = False
 
 # Application definition
 
@@ -80,16 +80,16 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-if os.getenv('GAE_APPLICATION', None):
-    DATABASES = {
-        'default': {
-                'ENGINE': 'django.db.backends.postgresql',
-                'HOST': '/cloudsql/cellular-virtue-277000:us-central1:cgtest',
-                'USER': 'postgres',
-                'NAME': 'postgres',
-                'PASSWORD': os.getenv('POSTGRES_DB_PASSWORD'),
-                }
-        }
+DATABASES = {
+    'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'HOST': '10.63.0.3',
+            'PORT': '5432',
+            'USER': 'postgres',
+            'NAME': 'postgres',
+            'PASSWORD': 'testpassword',
+            }
+    }
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
