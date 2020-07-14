@@ -82,13 +82,13 @@ CORS_ORIGIN_ALLOW_ALL = True
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 DATABASES = {
     'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'HOST': '10.4.48.3',
-            'PORT': '5432',
-            'USER': 'postgres',
-            'NAME': 'postgres',
-            'PASSWORD': os.getenv('POSTGRES_DB_PASSWORD'),
-            }
+        'ENGINE': 'django.db.backends.postgresql',
+        'HOST': '10.4.48.3',
+        'PORT': '5432',
+        'USER': 'postgres',
+        'NAME': 'postgres',
+        'PASSWORD': os.getenv('POSTGRES_DB_PASSWORD'),
+        }
     }
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
