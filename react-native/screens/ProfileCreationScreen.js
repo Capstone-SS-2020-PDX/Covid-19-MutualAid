@@ -81,14 +81,18 @@ const ProfileCreationScreen = props => {
             },
             body: createFormData(),
         })
-            .then(response => response.text())
+            .then(response => response.json())
             .then(json => {
+                updateProfile(json);
             })
             .catch(error => {
                 console.log(error)
             })
             .finally(() => {
-                fetchProfile();
+                // fetchProfile();
+                setIsProcessing(false);
+                hideModal();
+                addProfile();
             });
     };
 
@@ -112,36 +116,13 @@ const ProfileCreationScreen = props => {
             });
     };
 
-    const fetchProfile = () => {
-        const url = profiles_url + user.profile.id + '/';
-
-        return fetch(url, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-                'Content-type': 'application/json',
-            },
-        })
-            .then(response => response.json())
-            .then(json => {
-                updateProfile(json);
-            })
-            .catch(error => {
-                console.log(error)
-            })
-            .finally(() => {
-                setIsProcessing(false);
-                hideModal();
-                addProfile();
-            });
-    };
-
     const clearInputs = () => {
         setFormValue({});
 
         firstNameRef.current.clear();
         lastNameRef.current.clear();
         profileTextRef.current.clear();
+        setSelectedImage(null);
     };
 
     const getImage = () => {
@@ -149,7 +130,7 @@ const ProfileCreationScreen = props => {
     };
 
     const selectImage = imageData => {
-        console.log("In selectImage: " + JSON.stringify(imageData));
+        // console.log("In selectImage: " + JSON.stringify(imageData));
         setSelectedImage(imageData);
     };
 

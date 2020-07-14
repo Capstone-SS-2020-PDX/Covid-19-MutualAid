@@ -19,12 +19,17 @@ export const AuthContext = createContext({});
 
 export const AuthProvider = props => {
 
+    // useEffect(() => {
+       
+    // }, [loginState.updated]);
+
     const initialLoginState = {
         isLoading: true,
         username: null,
         token: null,
         hasProfile: true,
         user: null,
+        updated: false,
     };
 
     const loginReducer = (previousState, action) => {
@@ -208,6 +213,23 @@ export const AuthProvider = props => {
     const setIsLoading = loadingStatus => {
         dispatch({ type: SET_IS_LOADING, isLoading: loadingStatus });
     };
+
+    const storeData = async (key, value) => {
+        try {
+            await AsyncStorage.setItem(key, data);
+        } catch(error) {() => console.log(error)}
+    }
+
+    const getData = async (key) => {
+        try {
+            const value = await AsyncStorage.getItem(key);
+            if (value !== null) {
+                return value;
+            } else {
+                return null;
+            }
+        } catch(error) {() => console.log(error);}
+    }
 
     return (
         <AuthContext.Provider
