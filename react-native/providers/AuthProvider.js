@@ -41,7 +41,7 @@ export const AuthProvider = props => {
                     ...previousState,
                     username: action.username,
                     token: action.token,
-                    isLoading: false,
+                    // isLoading: false,
                     user: action.user,
                 };
             case LOGIN:
@@ -100,6 +100,7 @@ export const AuthProvider = props => {
                 return {
                     ...previousState,
                     communities: action.communities,
+                    isLoading: false,
                 };
         }
     };
@@ -107,21 +108,33 @@ export const AuthProvider = props => {
     const [loginState, dispatch] = useReducer(loginReducer, initialLoginState);
 
     const fetchCommunities = () => {
-        fetch(communities_url, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-                'Content-type': 'application/json',
-            },
-        }).then(response => response.json())
-          .then(communitiesJson => {
-              // console.log("Fetching communities: ");
-              // console.log(communitiesJson);
+        AsyncStorage.getItem('communities').then(communityData => {
+            console.log('Fetching communties from AsyncStorage: ');
+            if (communityData) {
+                console.log("Found communities in AsyncStorage!");
+                communityData = JSON.parse(communityData);
+                dispatch({ type: UPDATE_COMMUNITIES, communities: communityData });
+            } else {
+                console.log("Communities DONT exist in AsyncStorage, fetching from server: ");
 
-              AsyncStorage.setItem('communities', JSON.stringify(communitiesJson)).then(() => {
-                  dispatch({ type: UPDATE_COMMUNITIES, communities: communitiesJson });
-              });
-          });
+                fetch(communities_url, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-type': 'application/json',
+                    },
+                }).then(response => response.json())
+                  .then(communitiesJson => {
+                      // console.log("Fetching communities: ");
+                      // console.log(communitiesJson);
+
+                      AsyncStorage.setItem('communities', JSON.stringify(communitiesJson)).then(() => {
+                          dispatch({ type: UPDATE_COMMUNITIES, communities: communitiesJson });
+                      });
+                  });
+            }
+        });
+
     };
 
     const performAuthRequest = (requestType, userData, url) => {
@@ -185,16 +198,8 @@ export const AuthProvider = props => {
             }
         });
 
-        AsyncStorage.getItem('communities').then(communityData => {
-            console.log('Fetching communties from AsyncStorage: ');
-            if (communityData) {
-                console.log("Communities exists!: " + communityData);
-                communityData = JSON.parse(communityData);
-                dispatch({ type: UPDATE_COMMUNITIES, communities: communityData });
-            } else {
-                console.log("Communities DONT exist");
-            }
-        })
+        fetchCommunities();
+
     };
 
     const handleLogin = userData => {
