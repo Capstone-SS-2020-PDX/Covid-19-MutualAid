@@ -3,6 +3,7 @@ import {
     View,
     Text,
     TextInput,
+    Picker,
     TouchableOpacity,
     KeyboardAvoidingView,
     StyleSheet,
@@ -20,9 +21,10 @@ import { users_url, profiles_url } from '../config/urls';
 
 const ProfileCreationScreen = props => {
     const { navigation } = props;
-    const { addProfile, updateUser, updateProfile, user } = useContext(AuthContext);
+    const { addProfile, updateUser, updateProfile, user, communities } = useContext(AuthContext);
 
     const [formValue, setFormValue] = useState(null);
+    const [selectedCommunity, setSelectedCommunity] = useState(communities[0]);
     const [selectedImage, setSelectedImage] = useState(null);
     const [isProcessing, setIsProcessing] = useState(false);
 
@@ -70,6 +72,7 @@ const ProfileCreationScreen = props => {
             data.append('profile_pic', selectedImage);
         }
         data.append('profile_text', formValue.profile_text);
+        data.append('home', selectedCommunity.id);
         return data;
     };
 
@@ -134,6 +137,12 @@ const ProfileCreationScreen = props => {
         setSelectedImage(imageData);
     };
 
+    const renderCommunityPickerItems = () => {
+      return communities.map(community =>
+          <Picker.Item label={community.name} value={community} key={community.id}/>
+      );
+    }
+
     return(
         <View style={styles.screen}>
           <Text style={styles.screenTitle}>Create Your Profile</Text>
@@ -183,6 +192,15 @@ const ProfileCreationScreen = props => {
               />
             </View>
           </KeyboardAvoidingView>
+          <View style={styles.inputView}>
+            <Picker
+              style={styles.communityPicker}
+              selectedValue={selectedCommunity}
+              onValueChange={(itemValue, itemIndex) => setSelectedCommunity(itemValue)}
+            >
+              { renderCommunityPickerItems() }
+            </Picker>
+          </View>
           <CustomButton
             onPress={attemptProfileCreation}
             style={{ marginBottom: 10, alignSelf: 'center'}}
@@ -248,6 +266,15 @@ const styles = StyleSheet.create({
     buttonText: {
         color: Colors.light_shade1,
         fontSize: 24,
+    },
+    communityPickerContainer: {
+        width: '80%',
+        borderWidth: 1,
+        borderColor: Colors.dark_shade1,
+    },
+    communityPicker: {
+        height: 50,
+        width: '80%',
     },
 });
 

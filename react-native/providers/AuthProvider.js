@@ -1,7 +1,7 @@
 import React, { createContext, useState, useReducer, useContext } from 'react';
 import { AsyncStorage } from 'react-native';
 
-import { login_url, register_url, check_username_url } from '../config/urls';
+import { login_url, register_url, check_username_url, communities_url } from '../config/urls';
 
 const AUTO_LOGIN = 'AUTO_LOGIN';
 const LOGIN = 'LOGIN';
@@ -11,6 +11,7 @@ const SET_IS_LOADING = 'SET_IS_LOADING';
 const ADD_PROFILE = 'ADD_PROFILE';
 const UPDATE_PROFILE = 'UPDATE_PROFILE';
 const UPDATE_USER = 'UPDATE_USER';
+const UPDATE_COMMUNITIES = 'UPDATE_COMMUNITIES';
 
 // Provides username, token and login/logout functionality to Global App Context
 // Allows the app to know which user is using it and to handle login/logout
@@ -29,6 +30,7 @@ export const AuthProvider = props => {
         token: null,
         hasProfile: true,
         user: null,
+        communities: null,
         updated: false,
     };
 
@@ -92,12 +94,35 @@ export const AuthProvider = props => {
                     user: {
                         ...previousState.user,
                         ...action.updatedUser,
-                    }
+                    },
+                };
+            case UPDATE_COMMUNITIES:
+                return {
+                    ...previousState,
+                    communities: action.communities,
                 };
         }
     };
 
     const [loginState, dispatch] = useReducer(loginReducer, initialLoginState);
+
+    const fetchCommunities = () => {
+        fetch(communities_url, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-type': 'application/json',
+            },
+        }).then(response => response.json())
+          .then(communitiesJson => {
+              // console.log("Fetching communities: ");
+              // console.log(communitiesJson);
+
+              AsyncStorage.setItem('communities', JSON.stringify(communitiesJson)).then(() => {
+                  dispatch({ type: UPDATE_COMMUNITIES, communities: communitiesJson });
+              });
+          });
+    };
 
     const performAuthRequest = (requestType, userData, url) => {
 
@@ -121,6 +146,7 @@ export const AuthProvider = props => {
             .then(json => {
                 console.log('Server Response: ' + JSON.stringify(json));
                 loginData = json;
+                fetchCommunities();
             })
             .catch(error => {
                 console.log(error);
@@ -240,6 +266,7 @@ export const AuthProvider = props => {
               username: loginState.username,
               hasProfile: loginState.hasProfile,
               user: loginState.user,
+              communities: loginState.communities,
               updateProfile,
               updateUser,
               autoLogin: handleAutoLogin,
