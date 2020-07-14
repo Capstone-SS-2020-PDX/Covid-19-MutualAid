@@ -183,11 +183,18 @@ export const AuthProvider = props => {
                 console.log('No existing token');
                 dispatch({ type: AUTO_LOGIN, token: null, username: null, user: null })
             }
-        }).catch(error => {
-            console.log(error);
-        }).finally(() => {
         });
 
+        AsyncStorage.getItem('communities').then(communityData => {
+            console.log('Fetching communties from AsyncStorage: ');
+            if (communityData) {
+                console.log("Communities exists!: " + communityData);
+                communityData = JSON.parse(communityData);
+                dispatch({ type: UPDATE_COMMUNITIES, communities: communityData });
+            } else {
+                console.log("Communities DONT exist");
+            }
+        })
     };
 
     const handleLogin = userData => {
