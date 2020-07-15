@@ -17,7 +17,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { useHeaderHeight } from '@react-navigation/stack';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
-import { WToast } from 'react-native-smart-tip'
+import { WToast } from 'react-native-smart-tip';
 
 import { showModal, hideModal } from '../components/CustomModal';
 import Center from '../components/Center';

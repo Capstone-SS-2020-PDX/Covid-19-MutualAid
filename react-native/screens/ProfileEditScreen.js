@@ -17,6 +17,7 @@ import CustomButton from '../components/CustomButton';
 import { KeyboardAvoidingScrollView } from 'react-native-keyboard-avoiding-scroll-view';
 
 import Colors from '../config/colors';
+import { notifyMessage } from '../components/CustomToast';
 import { showModal, hideModal } from '../components/CustomModal';
 import { windowHeight, windowWidth } from '../config/dimensions';
 import { users_url, profiles_url } from '../config/urls';
@@ -118,6 +119,7 @@ const ProfileEditScreen = props => {
                 setIsProcessing(false);
                 hideModal();
                 navigation.goBack();
+                notifyMessage('Profile Sucessfully Updated!');
             });
     };
 
