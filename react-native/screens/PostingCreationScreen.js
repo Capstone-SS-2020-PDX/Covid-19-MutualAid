@@ -3,7 +3,6 @@ import { StyleSheet,
          Text,
          TextInput,
          View,
-         KeyboardAvoidingView,
          Button,
          Switch,
          TouchableOpacity,
@@ -23,6 +22,7 @@ import { showModal, hideModal } from '../components/CustomModal';
 import Center from '../components/Center';
 import CustomButton from '../components/CustomButton';
 import CustomImagePicker from '../components/CustomImagePicker';
+import KeyboardShift from 'react-native-keyboardshift-razzium';
 
 import Colors from '../config/colors.js';
 import { windowHeight, windowWidth } from '../config/dimensions';
@@ -158,12 +158,9 @@ const PostingCreationScreen = props => {
   };
 
   return (
+    <KeyboardShift>
+        {() => (
     <Center style={styles.screen}>
-      <KeyboardAwareScrollView
-        resetScrollToCoords={{ x: 0, y: height }}
-        contentContainerStyle={styles.keyboardView}
-        scrollEnabled={true}
-      >
         <View style={styles.imageContainer}>
 
           <CustomImagePicker
@@ -174,7 +171,9 @@ const PostingCreationScreen = props => {
           />
 
         </View>
-        <View style={styles.inputContainer}>
+
+        <View style={styles.keyboardView}>
+          <View style={styles.inputContainer}>
           <View style={styles.inputView}>
             <TextInput
               style={styles.inputText}
@@ -242,9 +241,11 @@ const PostingCreationScreen = props => {
             <Text style={styles.buttonText}>Confirm</Text>
           </CustomButton>
         </View>
-
-      </KeyboardAwareScrollView>
+        </View>
+        
     </Center>
+    )}
+    </KeyboardShift>
   );
 }
 
