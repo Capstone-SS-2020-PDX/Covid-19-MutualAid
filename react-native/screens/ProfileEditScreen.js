@@ -8,7 +8,6 @@ import {
     ActionSheetIOS,
     Button,
     TouchableOpacity,
-    KeyboardAvoidingView,
     Platform,
     StyleSheet,
 } from 'react-native';
@@ -40,8 +39,8 @@ const ProfileEditScreen = props => {
         last_name: user.user.last_name,
         profile_text: user.profile.profile_text,
     });
-    const [selectedCommunity, setSelectedCommunity] = useState(homeCommunity);
-    const [selectedImage, setSelectedImage] = useState(placeholderImage ? {uri: placeholderImage} : null);
+    const [selectedCommunity, setSelectedCommunity] = useState(homeCommunity || communities[0]);
+    const [selectedImage, setSelectedImage] = useState(null);
     const [isProcessing, setIsProcessing] = useState(false);
 
     const firstNameRef = useRef(null);
@@ -53,31 +52,25 @@ const ProfileEditScreen = props => {
     };
 
     const attemptProfileUpdate = () => {
-        if (!selectedImage || !formValue) {
-            showModal('VALIDATION_ERROR');
-            setTimeout(() => {
-                hideModal();
-            }, 900);
-        } else {
-            handleProfileUpdate();
-        }
+        handleProfileUpdate();
     };
 
-    const handleProfileUpdate = () => {
+    const handleProfileUpdate = async () => {
         if (!isProcessing) {
             setIsProcessing(true);
+            showModal('CREATING_PROFILE');
 
-            const userUrl = users_url + user.id + '/';
-            const profileUrl = profiles_url + user.profile + '/';
+            const userPatchUrl = users_url + user.user.id + '/';
+            const profilePatchUrl = profiles_url + user.profile.id + '/';
 
-            let userData = user;
-            userData.first_name = formValue.first_name;
-            userData.last_name = formValue.last_name;
-            sendRequest(JSON.stringify(userData), userUrl);
+            let updatedUserData = user;
+            updatedUserData.user.first_name = formValue.first_name;
+            updatedUserData.user.last_name = formValue.last_name;
+            updatedUserData.user.email = formValue.email;
+            updatedUserData.user.username = formValue.username;
 
-            let profileData = { user: user.id, profile_text: formValue.profile_text }
-            sendRequest(JSON.stringify(profileData), profileUrl);
-
+            await sendUpdateUserRequest(JSON.stringify(updatedUserData.user), userPatchUrl, 'PATCH');
+            await sendUpdateProfileRequest(profilePatchUrl, 'PATCH');
         } else {
             console.log('Processing your request, please wait');
         }
@@ -89,11 +82,14 @@ const ProfileEditScreen = props => {
             data.append('profile_pic', selectedImage);
         }
         data.append('profile_text', formValue.profile_text);
-        data.append('home', selectedCommunity.id);
+        if (selectedCommunity) {
+            data.append('home', selectedCommunity.id);
+        }
         return data;
     };
 
     const sendUpdateProfileRequest = (url, method) => {
+        console.log("In update profile Request, Outgoing url: " + url);
         return fetch(url, {
             method: method,
             headers: {
@@ -103,18 +99,16 @@ const ProfileEditScreen = props => {
         })
             .then(response => response.json())
             .then(json => {
-                // console.log("In update profile Request: ");
-                // console.log(json);
+                console.log(json);
                 updateProfile(json);
             })
             .catch(error => {
                 console.log(error)
             })
             .finally(() => {
-                // fetchProfile();
                 setIsProcessing(false);
                 hideModal();
-                addProfile();
+                navigation.goBack();
             });
     };
 
@@ -143,7 +137,7 @@ const ProfileEditScreen = props => {
     };
 
     const selectImage = imageData => {
-        // console.log("In selectImage: " + JSON.stringify(imageData));
+        console.log("In selectImage: " + JSON.stringify(imageData));
         setSelectedImage(imageData);
     };
 
@@ -217,7 +211,7 @@ const ProfileEditScreen = props => {
               onSelectImage={selectImage}
               getImage={getImage}
               setImage={setSelectedImage}
-              placeholder={user.profile.profile_pic}
+              placeholderImage={user.profile.profile_pic}
             />
           </View>
 

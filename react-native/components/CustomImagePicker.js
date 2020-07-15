@@ -105,15 +105,27 @@ const CustomImagePicker = props => {
         );
     }
 
+    const renderPlaceholderImage = () => {
+        if (props.placeholderImage) {
+            return(
+               <Image source={{ uri: props.placeholderImage }} style={styles.image}/>
+            );
+        } else {
+            return (
+                <FontAwesome5
+                size={130}
+                name={props.iconName}
+               />
+            );
+        }
+    };
+
     return(
         <TouchableOpacity onPress={selectImageOption}>
 
           { selectedImage 
             ? <Image source={{ uri: selectedImage.uri }} style={styles.image} />
-            : <FontAwesome5
-                size={150}
-                name={props.iconName}
-              />
+            : renderPlaceholderImage()
           }
 
         </TouchableOpacity>
