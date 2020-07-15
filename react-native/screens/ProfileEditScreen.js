@@ -66,7 +66,7 @@ const ProfileEditScreen = props => {
     const handleProfileUpdate = async () => {
         if (!isProcessing) {
             setIsProcessing(true);
-            showModal('CREATING_PROFILE');
+            showModal('UPDATING_PROFILE');
 
             const userPatchUrl = users_url + user.user.id + '/';
             const profilePatchUrl = profiles_url + user.profile.id + '/';
