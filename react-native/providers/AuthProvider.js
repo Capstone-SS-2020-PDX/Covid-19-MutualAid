@@ -212,7 +212,9 @@ export const AuthProvider = props => {
         AsyncStorage.removeItem('loginData')
                     .catch(error => console.log(error))
                     .finally(() => {
-                        dispatch({ type: LOGOUT });
+                        AsyncStorage.removeItem('communities').finally(() => {
+                            dispatch({ type: LOGOUT });
+                        })
                     });
     };
 
@@ -251,23 +253,6 @@ export const AuthProvider = props => {
     const setIsLoading = loadingStatus => {
         dispatch({ type: SET_IS_LOADING, isLoading: loadingStatus });
     };
-
-    const storeData = async (key, value) => {
-        try {
-            await AsyncStorage.setItem(key, data);
-        } catch(error) {() => console.log(error)}
-    }
-
-    const getData = async (key) => {
-        try {
-            const value = await AsyncStorage.getItem(key);
-            if (value !== null) {
-                return value;
-            } else {
-                return null;
-            }
-        } catch(error) {() => console.log(error);}
-    }
 
     return (
         <AuthContext.Provider

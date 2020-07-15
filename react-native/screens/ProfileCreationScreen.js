@@ -6,6 +6,7 @@ import {
     Picker,
     TouchableOpacity,
     KeyboardAvoidingView,
+    Platform,
     StyleSheet,
 } from 'react-native';
 
@@ -18,13 +19,14 @@ import Colors from '../config/colors';
 import { showModal, hideModal } from '../components/CustomModal';
 import { windowHeight, windowWidth } from '../config/dimensions';
 import { users_url, profiles_url } from '../config/urls';
+const isAndroid = Platform.OS === 'android' ? true : false;
 
 const ProfileCreationScreen = props => {
     const { navigation } = props;
     const { addProfile, updateUser, updateProfile, user, communities } = useContext(AuthContext);
 
     const [formValue, setFormValue] = useState(null);
-    const [selectedCommunity, setSelectedCommunity] = useState(communities[0]);
+    const [selectedCommunity, setSelectedCommunity] = useState('');
     const [selectedImage, setSelectedImage] = useState(null);
     const [isProcessing, setIsProcessing] = useState(false);
 
@@ -86,6 +88,8 @@ const ProfileCreationScreen = props => {
         })
             .then(response => response.json())
             .then(json => {
+                // console.log("In update profile Request: ");
+                // console.log(json);
                 updateProfile(json);
             })
             .catch(error => {
@@ -138,6 +142,7 @@ const ProfileCreationScreen = props => {
     };
 
     const renderCommunityPickerItems = () => {
+        console.log('Currently selected community: ' + selectedCommunity.name);
       return communities.map(community =>
           <Picker.Item label={community.name} value={community} key={community.id}/>
       );
@@ -192,10 +197,12 @@ const ProfileCreationScreen = props => {
               />
             </View>
           </KeyboardAvoidingView>
-          <View style={styles.inputView}>
+          <View style={isAndroid ? styles.inputView : styles.iosPicker}>
             <Picker
               style={styles.communityPicker}
               selectedValue={selectedCommunity}
+              mode={'dialog'}
+              prompt='Home Community'
               onValueChange={(itemValue, itemIndex) => setSelectedCommunity(itemValue)}
             >
               { renderCommunityPickerItems() }
@@ -272,8 +279,17 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: Colors.dark_shade1,
     },
+    iosPicker: {
+        flexDirection: 'row',
+        alignItems: 'center',
+
+        height: 100,
+        marginBottom: 10,
+        paddingHorizontal: 20,
+
+    },
     communityPicker: {
-        height: 50,
+        height: isAndroid ? 50 : 200,
         width: '80%',
     },
 });
