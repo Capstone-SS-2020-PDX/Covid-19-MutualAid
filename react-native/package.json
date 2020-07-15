@@ -27,7 +27,6 @@
     "react-native-gesture-handler": "~1.6.0",
     "react-native-image-editor": "0.0.1",
     "react-native-keyboard-aware-scroll-view": "^0.9.1",
-    "react-native-keyboardshift-razzium": "^1.0.0",
     "react-native-paper": "^3.10.1",
     "react-native-reanimated": "~1.7.0",
     "react-native-responsive-fontsize": "^0.4.3",

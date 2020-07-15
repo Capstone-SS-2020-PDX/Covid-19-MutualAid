@@ -6,7 +6,6 @@ import {
     TouchableOpacity,
     StyleSheet,
 } from 'react-native';
-import KeyboardShift from 'react-native-keyboardshift-razzium';
 
 import { UserContext } from '../providers/UserProvider';
 import CustomButton from '../components/CustomButton';
@@ -84,8 +83,6 @@ const ProfileCreationScreen = props => {
     };
 
     return(
-      <KeyboardShift>
-        {() => (
         <View style={styles.screen}>
           <Text style={styles.screenTitle}>Create Your Profile</Text>
           <View style={styles.imageContainer}>
@@ -144,17 +141,14 @@ const ProfileCreationScreen = props => {
                 ref={profileTextRef}
               />
             </View>
+          </View>
           <CustomButton
             onPress={handleProfileCreation}
-            style={{ marginTop: 10, marginBottom: 10, alignSelf: 'center'}}
+            style={{ marginBottom: 10, alignSelf: 'center'}}
           >
             <Text style={styles.buttonText}>Confirm</Text>
           </CustomButton>
-          </View>
-
         </View>
-        )}
-        </KeyboardShift>
     );
 };
 

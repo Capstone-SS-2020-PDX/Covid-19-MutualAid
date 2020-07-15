@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { View,
+         KeyboardAvoidingView,
          Text,
          TextInput,
          Button,
@@ -10,7 +11,7 @@ import { View,
        } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { WModal } from 'react-native-smart-tip';
-import KeyboardShift from 'react-native-keyboardshift-razzium';
+
 import { showModal, hideModal } from '../components/CustomModal';
 import Center from '../components/Center';
 import CustomButton from '../components/CustomButton';
@@ -47,8 +48,6 @@ const LoginScreen = props => {
   };
 
   return(
-    <KeyboardShift>
-    {() => (
     <View style={styles.screen}>
       <View style={ styles.imageContainer }>
         <Image
@@ -58,7 +57,7 @@ const LoginScreen = props => {
           fadeDuration={ 300 }
         />
       </View>
-      <View style={styles.inputContainer}>
+      <KeyboardAvoidingView behavior={'padding'} style={styles.inputContainer}>
         <View style={styles.inputView}>
           <AntDesign
             name={'user'}
@@ -87,7 +86,7 @@ const LoginScreen = props => {
             onChangeText={text => setPasswordText(text)}
           />
         </View>
-      </View>
+      </KeyboardAvoidingView>
       <TouchableOpacity>
         <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
       </TouchableOpacity>
@@ -110,9 +109,7 @@ const LoginScreen = props => {
       >
         <Text style={styles.registerText}>Register</Text>
       </TouchableOpacity>
-      </View>
-      )}
-      </KeyboardShift>
+    </View>
   );
 }
 
