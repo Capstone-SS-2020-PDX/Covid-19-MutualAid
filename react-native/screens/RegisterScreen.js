@@ -1,6 +1,5 @@
 import React, { useState, useContext } from 'react';
 import { View,
-         KeyboardAvoidingView,
          Text,
          TextInput,
          Button,
@@ -17,6 +16,7 @@ import Center from '../components/Center';
 import CustomButton from '../components/CustomButton';
 import { AuthContext } from '../providers/AuthProvider';
 import { UserContext } from '../providers/UserProvider';
+import KeyboardShift from 'react-native-keyboardshift-razzium';
 
 import Colors from '../config/colors';
 import { windowHeight, windowWidth } from '../config/dimensions';
@@ -41,9 +41,11 @@ const RegisterScreen = props => {
   };
 
   return(
+    <KeyboardShift>
+      {() => (
     <View style={styles.screen}>
       <Text style={styles.logo}>Register</Text>
-      <KeyboardAvoidingView behavior={'padding'} style={styles.inputContainer}>
+      <View style={styles.inputContainer}>
         <View style={styles.inputView}>
           <AntDesign
             name={'mail'}
@@ -102,7 +104,7 @@ const RegisterScreen = props => {
     /* onChangeText={text => setPasswordText(text)} */
           />
         </View>
-      </KeyboardAvoidingView>
+      </View>
 
       <CustomButton
         style={styles.registerButton}
@@ -121,6 +123,8 @@ const RegisterScreen = props => {
         <Text style={styles.registerText}>Back to Login</Text>
       </TouchableOpacity>
     </View>
+    )}
+    </KeyboardShift>
   );
 }
 

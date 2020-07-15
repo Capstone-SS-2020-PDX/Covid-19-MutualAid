@@ -1,6 +1,5 @@
 import React, { useState, useContext } from 'react';
 import { View,
-         KeyboardAvoidingView,
          Text,
          Button,
          TouchableOpacity,

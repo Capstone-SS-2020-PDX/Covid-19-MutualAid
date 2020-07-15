@@ -3,7 +3,6 @@ import { StyleSheet,
          Text,
          TextInput,
          View,
-         KeyboardAvoidingView,
          Button,
          Switch,
          TouchableOpacity,
@@ -18,6 +17,7 @@ import { useHeaderHeight } from '@react-navigation/stack';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { WToast } from 'react-native-smart-tip'
+import KeyboardShift from 'react-native-keyboardshift-razzium';
 
 import Center from '../components/Center';
 import CustomButton from '../components/CustomButton';
@@ -154,11 +154,9 @@ const PostingCreationScreen = props => {
 
   return (
     <Center style={styles.screen}>
-      <KeyboardAwareScrollView
-        resetScrollToCoords={{ x: 0, y: height }}
-        contentContainerStyle={styles.keyboardView}
-        scrollEnabled={true}
-      >
+      <KeyboardShift>
+        {() => (
+        <View style={styles.keyboardView}>
         <View style={styles.imageContainer}>
 
           <CustomImagePicker
@@ -238,7 +236,9 @@ const PostingCreationScreen = props => {
           </CustomButton>
         </View>
 
-      </KeyboardAwareScrollView>
+      </View>
+        )}
+        </KeyboardShift>
     </Center>
   );
 }
