@@ -8,7 +8,7 @@ import * as ImageManipulator from 'expo-image-manipulator';
 import { windowHeight, windowWidth } from '../config/dimensions';
 
 
-const CustomImagePicker = (props) => {
+const CustomImagePicker = props => {
     var selectedImage = props.getImage();
 
     useEffect(() => {

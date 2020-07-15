@@ -27,6 +27,8 @@ const ProfileEditScreen = props => {
     const { navigation } = props;
     const { addProfile, updateUser, updateProfile, user, communities } = useContext(AuthContext);
 
+    const placeholderImage = user.profile.profile_pic;
+
     const isAndroid = Platform.OS === 'android' ? true : false;
     const homeCommunity = communities.find(community => community.id === user.profile.home);
 
@@ -38,7 +40,7 @@ const ProfileEditScreen = props => {
         profile_text: user.profile.profile_text,
     });
     const [selectedCommunity, setSelectedCommunity] = useState(homeCommunity);
-    const [selectedImage, setSelectedImage] = useState(null);
+    const [selectedImage, setSelectedImage] = useState(placeholderImage ? {uri: placeholderImage} : null);
     const [isProcessing, setIsProcessing] = useState(false);
 
     const firstNameRef = useRef(null);
@@ -179,14 +181,17 @@ const ProfileEditScreen = props => {
     const renderHomeCommunityPicker = () => {
         if (isAndroid) {
             return(
-                <View style={styles.inputView}>
-                  <Picker
-                    style={styles.communityPicker}
-                    selectedValue={selectedCommunity}
-                    onValueChange={(itemValue, itemIndex) => setSelectedCommunity(itemValue)}
-                  >
-                    { renderCommunityPickerItems() }
-                  </Picker>
+                <View>
+                  <Text style={styles.labelText}>Home Community</Text>
+                  <View style={{...styles.inputView, ...styles.communityPickerContainer}}>
+                    <Picker
+                      style={styles.communityPicker}
+                      selectedValue={selectedCommunity}
+                      onValueChange={(itemValue, itemIndex) => setSelectedCommunity(itemValue)}
+                    >
+                      { renderCommunityPickerItems() }
+                    </Picker>
+                  </View>
                 </View>
             );
         } else {
@@ -211,6 +216,7 @@ const ProfileEditScreen = props => {
               onSelectImage={selectImage}
               getImage={getImage}
               setImage={setSelectedImage}
+              placeholder={user.profile.profile_pic}
             />
           </View>
 
@@ -218,7 +224,7 @@ const ProfileEditScreen = props => {
             <View style={styles.inputView}>
               <TextInput
                 style={styles.inputText}
-                placeholder={ formValue.first_name ? formValue.first_name : 'First Name...' }
+                placeholder={ `First Name: ${formValue.first_name}` }
                 placeholderTextColor={Colors.placeholder_text}
                 maxLength={25}
                 returnKeyType='next'
@@ -229,7 +235,7 @@ const ProfileEditScreen = props => {
             <View style={styles.inputView}>
               <TextInput
                 style={styles.inputText}
-                placeholder={ formValue.last_name ? formValue.last_name : 'Last Name...' }
+                placeholder={ `Last Name: ${formValue.last_name}` }
                 placeholderTextColor={Colors.placeholder_text}
                 maxLength={25}
                 returnKeyType='next'
@@ -240,7 +246,7 @@ const ProfileEditScreen = props => {
             <View style={styles.inputView}>
               <TextInput
                 style={styles.inputText}
-                placeholder={ formValue.username ? formValue.username : 'User Name...' }
+                placeholder={ `User Name: ${formValue.username}` }
                 placeholderTextColor={Colors.placeholder_text}
                 maxLength={25}
                 returnKeyType='next'
@@ -251,7 +257,7 @@ const ProfileEditScreen = props => {
             <View style={styles.inputView}>
               <TextInput
                 style={styles.inputText}
-                placeholder={ formValue.email ? formValue.email : 'email...' }
+                placeholder={ `email: ${formValue.email}` }
                 placeholderTextColor={Colors.placeholder_text}
                 maxLength={25}
                 returnKeyType='next'
@@ -262,7 +268,7 @@ const ProfileEditScreen = props => {
             <View style={{ ...styles.inputView, ...styles.profileInputView}}>
               <TextInput
                 style={styles.inputText}
-                placeholder={ formValue.profile_text ? formValue.profile_text : 'Profile Text...' }
+                placeholder={ `Profile Text: ${formValue.profile_text}` }
                 placeholderTextColor={Colors.placeholder_text}
                 maxLength={255}
                 multiline={true}
@@ -273,12 +279,12 @@ const ProfileEditScreen = props => {
             </View>
           </KeyboardAvoidingView>
           { renderHomeCommunityPicker() }
-          {/* <CustomButton */}
-          {/*   onPress={attemptProfileUpdate} */}
-          {/*   style={{ marginBottom: 10, alignSelf: 'center'}} */}
-          {/* > */}
-          {/*   <Text style={styles.buttonText}>Confirm</Text> */}
-          {/* </CustomButton> */}
+          <CustomButton
+            onPress={attemptProfileUpdate}
+            style={{ marginBottom: 10, alignSelf: 'center'}}
+          >
+            <Text style={styles.buttonText}>Confirm</Text>
+          </CustomButton>
         </ScrollView>
     );
 };
@@ -339,9 +345,6 @@ const styles = StyleSheet.create({
     },
     communityPickerContainer: {
         width: '80%',
-        borderWidth: 1,
-
-        borderColor: Colors.dark_shade1,
     },
     communityPicker: {
         height: 50,
@@ -350,7 +353,13 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 20,
         paddingBottom: 10,
-    }
+    },
+    labelText: {
+        textAlign: 'center',
+        paddingBottom: 5,
+        fontFamily: 'open-sans',
+        fontSize: 12,
+    },
 });
 
 export default ProfileEditScreen;
