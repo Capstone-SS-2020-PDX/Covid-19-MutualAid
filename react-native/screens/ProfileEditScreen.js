@@ -268,6 +268,9 @@ const ProfileEditScreen = props => {
               placeholder={ `email: ${user.user.email}` }
               placeholderTextColor={Colors.placeholder_text}
               maxLength={50}
+              keyboardType='email-address'
+              autoCapitalize='none'
+              autoCorrect={false}
               returnKeyType='next'
               onChangeText={text => updateForm(text, 'email')}
               ref={firstNameRef}

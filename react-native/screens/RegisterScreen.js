@@ -37,7 +37,7 @@ const RegisterScreen = props => {
         hideModal();
       }, 900);
 
-    } else if (!isValidUsername) {
+    } else if (isValidUsername === false) {
       showModal('INVALID_USERNAME');
       setTimeout(() => {
         hideModal();

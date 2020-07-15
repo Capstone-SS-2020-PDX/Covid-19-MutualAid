@@ -3,8 +3,10 @@ import {
     View,
     Text,
     TextInput,
+    Button,
     Picker,
     TouchableOpacity,
+    ActionSheetIOS,
     KeyboardAvoidingView,
     Platform,
     StyleSheet,
@@ -25,8 +27,9 @@ const ProfileCreationScreen = props => {
     const { navigation } = props;
     const { addProfile, updateUser, updateProfile, user, communities } = useContext(AuthContext);
 
+
     const [formValue, setFormValue] = useState(null);
-    const [selectedCommunity, setSelectedCommunity] = useState('');
+    const [selectedCommunity, setSelectedCommunity] = useState(communities[0]);
     const [selectedImage, setSelectedImage] = useState(null);
     const [isProcessing, setIsProcessing] = useState(false);
 
@@ -142,11 +145,65 @@ const ProfileCreationScreen = props => {
     };
 
     const renderCommunityPickerItems = () => {
-        console.log('Currently selected community: ' + selectedCommunity.name);
-      return communities.map(community =>
-          <Picker.Item label={community.name} value={community} key={community.id}/>
-      );
+        return communities.map(community =>
+            <Picker.Item label={community.name} value={community} key={community.id}/>
+        );
     }
+
+    const showiOSActionSheet = () => {
+        const options = communities.map(community => community.name);
+
+        ActionSheetIOS.showActionSheetWithOptions(
+            {
+                title: 'Home Community',
+                options: ['Cancel', ...options],
+                cancelButtonIndex: 0
+            },
+            buttonIndex => {
+                if (buttonIndex === 0) {
+                    // cancel action
+                } else if (buttonIndex === 1) {
+                    console.log(communities[buttonIndex-1].name);
+                    setSelectedCommunity(communities[buttonIndex - 1]);
+                } else if (buttonIndex === 2) {
+                    console.log(communities[buttonIndex-1].name);
+                    setSelectedCommunity(communities[buttonIndex - 1]);
+                } else if (buttonIndex === 3) {
+                    console.log(communities[buttonIndex-1].name);
+                    setSelectedCommunity(communities[buttonIndex - 1]);
+                }
+            }
+        );
+    };
+
+    const renderHomeCommunityPicker = () => {
+        if (isAndroid) {
+            return(
+                <View style={{ alignItems: 'center'}}>
+                  <Text style={styles.labelText}>Home Community</Text>
+                  <View style={{...styles.inputView, ...styles.communityPickerContainer}}>
+                    <Picker
+                      style={styles.communityPicker}
+                      selectedValue={selectedCommunity}
+                      onValueChange={(itemValue, itemIndex) => setSelectedCommunity(itemValue)}
+                    >
+                      { renderCommunityPickerItems() }
+                    </Picker>
+                  </View>
+                </View>
+            );
+        } else {
+            return(
+                <View style={{...styles.inputView, flexDirection: 'column', height: 80, paddingVertical: 10}}>
+                  <Button
+                    onPress={showiOSActionSheet}
+                    title='Choose Home Community'
+                  />
+                  <Text style={styles.text}>{selectedCommunity.name}</Text>
+                </View>
+            );
+        }
+    };
 
     return(
         <View style={styles.screen}>
@@ -191,23 +248,13 @@ const ProfileCreationScreen = props => {
                 placeholderTextColor={Colors.placeholder_text}
                 maxLength={255}
                 multiline={true}
-                returnKeyType='go'
+                returnKeyType='next'
                 onChangeText={text => updateForm(text, 'profile_text')}
                 ref={profileTextRef}
               />
             </View>
           </KeyboardAvoidingView>
-          <View style={isAndroid ? styles.inputView : styles.iosPicker}>
-            <Picker
-              style={styles.communityPicker}
-              selectedValue={selectedCommunity}
-              mode={'dialog'}
-              prompt='Home Community'
-              onValueChange={(itemValue, itemIndex) => setSelectedCommunity(itemValue)}
-            >
-              { renderCommunityPickerItems() }
-            </Picker>
-          </View>
+              { renderHomeCommunityPicker() }
           <CustomButton
             onPress={attemptProfileCreation}
             style={{ marginBottom: 10, alignSelf: 'center'}}
@@ -287,6 +334,9 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         paddingHorizontal: 20,
 
+    },
+    communityPickerContainer: {
+        width: '80%',
     },
     communityPicker: {
         height: isAndroid ? 50 : 200,
