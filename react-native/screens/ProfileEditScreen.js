@@ -15,6 +15,7 @@ import {
 
 import CustomImagePicker from '../components/CustomImagePicker';
 import CustomButton from '../components/CustomButton';
+import { KeyboardAvoidingScrollView } from 'react-native-keyboard-avoiding-scroll-view';
 
 import Colors from '../config/colors';
 import { showModal, hideModal } from '../components/CustomModal';
@@ -181,7 +182,7 @@ const ProfileEditScreen = props => {
     const renderHomeCommunityPicker = () => {
         if (isAndroid) {
             return(
-                <View>
+                <View style={{ alignItems: 'center'}}>
                   <Text style={styles.labelText}>Home Community</Text>
                   <View style={{...styles.inputView, ...styles.communityPickerContainer}}>
                     <Picker
@@ -208,7 +209,7 @@ const ProfileEditScreen = props => {
     };
 
     return(
-        <ScrollView contentContainerStyle={styles.screen}>
+        <KeyboardAvoidingScrollView contentContainerStyle={styles.screen}>
 
           <View style={styles.imageContainer}>
             <CustomImagePicker
@@ -220,11 +221,10 @@ const ProfileEditScreen = props => {
             />
           </View>
 
-          <KeyboardAvoidingView style={styles.inputContainer} behavior='padding'>
             <View style={styles.inputView}>
               <TextInput
                 style={styles.inputText}
-                placeholder={ `First Name: ${formValue.first_name}` }
+                placeholder={ `First Name: ${user.user.first_name}` }
                 placeholderTextColor={Colors.placeholder_text}
                 maxLength={25}
                 returnKeyType='next'
@@ -235,7 +235,7 @@ const ProfileEditScreen = props => {
             <View style={styles.inputView}>
               <TextInput
                 style={styles.inputText}
-                placeholder={ `Last Name: ${formValue.last_name}` }
+                placeholder={ `Last Name: ${user.user.last_name}` }
                 placeholderTextColor={Colors.placeholder_text}
                 maxLength={25}
                 returnKeyType='next'
@@ -246,7 +246,7 @@ const ProfileEditScreen = props => {
             <View style={styles.inputView}>
               <TextInput
                 style={styles.inputText}
-                placeholder={ `User Name: ${formValue.username}` }
+                placeholder={ `User Name: ${user.user.username}` }
                 placeholderTextColor={Colors.placeholder_text}
                 maxLength={25}
                 returnKeyType='next'
@@ -257,7 +257,7 @@ const ProfileEditScreen = props => {
             <View style={styles.inputView}>
               <TextInput
                 style={styles.inputText}
-                placeholder={ `email: ${formValue.email}` }
+                placeholder={ `email: ${user.user.email}` }
                 placeholderTextColor={Colors.placeholder_text}
                 maxLength={25}
                 returnKeyType='next'
@@ -268,7 +268,7 @@ const ProfileEditScreen = props => {
             <View style={{ ...styles.inputView, ...styles.profileInputView}}>
               <TextInput
                 style={styles.inputText}
-                placeholder={ `Profile Text: ${formValue.profile_text}` }
+                placeholder={ `Profile Text: ${user.profile.profile_text}` }
                 placeholderTextColor={Colors.placeholder_text}
                 maxLength={255}
                 multiline={true}
@@ -277,7 +277,6 @@ const ProfileEditScreen = props => {
                 ref={profileTextRef}
               />
             </View>
-          </KeyboardAvoidingView>
           { renderHomeCommunityPicker() }
           <CustomButton
             onPress={attemptProfileUpdate}
@@ -285,7 +284,7 @@ const ProfileEditScreen = props => {
           >
             <Text style={styles.buttonText}>Confirm</Text>
           </CustomButton>
-        </ScrollView>
+        </KeyboardAvoidingScrollView>
     );
 };
 
