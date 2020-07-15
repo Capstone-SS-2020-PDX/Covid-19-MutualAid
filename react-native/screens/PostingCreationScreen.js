@@ -78,6 +78,7 @@ const PostingCreationScreen = props => {
     data.append('owner', user.user.id);
     data.append('category', categoryValue);
     data.append('request', requestValue);
+    data.append('in_community', user.profile.home);
 
     return data;
   };
