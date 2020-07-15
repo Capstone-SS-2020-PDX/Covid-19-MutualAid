@@ -17,7 +17,7 @@ import { useHeaderHeight } from '@react-navigation/stack';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { WToast } from 'react-native-smart-tip'
-
+import {KeyboardAvoidingScrollView} from 'react-native-keyboard-avoiding-scroll-view';
 import { showModal, hideModal } from '../components/CustomModal';
 import Center from '../components/Center';
 import CustomButton from '../components/CustomButton';
@@ -158,8 +158,17 @@ const PostingCreationScreen = props => {
   };
 
   return (
-    <KeyboardShift>
-        {() => (
+    <KeyboardAvoidingScrollView 
+      stickyFooter={
+        <CustomButton
+            onPress={() => handlePostCreation()}
+            style={{ marginBottom: 10, marginTop: 0, alignSelf: 'center'}}
+          >
+            <Text style={styles.buttonText}>Confirm</Text>
+          </CustomButton>
+      }
+      containerStyle={styles.screen}
+    >
     <Center style={styles.screen}>
         <View style={styles.imageContainer}>
 
@@ -172,7 +181,6 @@ const PostingCreationScreen = props => {
 
         </View>
 
-        <View style={styles.keyboardView}>
           <View style={styles.inputContainer}>
           <View style={styles.inputView}>
             <TextInput
@@ -233,19 +241,9 @@ const PostingCreationScreen = props => {
               />
             </View>
           </View>
-
-          <CustomButton
-            onPress={() => handlePostCreation()}
-            style={{ marginBottom: 10, alignSelf: 'center'}}
-          >
-            <Text style={styles.buttonText}>Confirm</Text>
-          </CustomButton>
-        </View>
-        </View>
-        
+        </View>        
     </Center>
-    )}
-    </KeyboardShift>
+    </KeyboardAvoidingScrollView>
   );
 }
 
@@ -255,10 +253,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
     flexGrow: 1,
+    width: windowWidth,
   },
   keyboardView: {
-    width: windowWidth,
-    height: windowHeight,
     backgroundColor: Colors.light_shade4,
     alignItems: 'center',
     justifyContent: 'flex-start',
