@@ -19,7 +19,12 @@ const loadingOptions = {
 
 const createPostingOptions = {
     ...defaultOptions,
-    data: 'Creating Your Posting...',
+    data: 'Creating your Posting...',
+};
+
+const updatePostingOptions = {
+    ...defaultOptions,
+    data: 'Updating your Posting...',
 };
 
 const sendingEmailOptions = {
@@ -44,6 +49,11 @@ const creatingProfileOptions = {
     data: 'Creating Profile...',
 };
 
+const updateProfileOptions = {
+    ...defaultOptions,
+    data: 'Updating Profile...',
+};
+
 export function showModal(type) {
     let options;
 
@@ -53,6 +63,9 @@ export function showModal(type) {
             break;
         case 'CREATING_POSTING':
             options = createPostingOptions;
+            break;
+        case 'UPDATING_POSTING':
+            options = updatePostingOptions;
             break;
         case 'SENDING_EMAIL':
             options = sendingEmailOptions;
@@ -64,6 +77,9 @@ export function showModal(type) {
             options = invalidUsernameOptions;
             break;
         case 'CREATING_PROFILE':
+            options = creatingProfileOptions;
+            break;
+        case 'UPDATING_PROFILE':
             options = creatingProfileOptions;
             break;
         default:
