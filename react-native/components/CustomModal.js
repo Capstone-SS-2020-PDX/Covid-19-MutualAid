@@ -80,7 +80,7 @@ export function showModal(type) {
             options = creatingProfileOptions;
             break;
         case 'UPDATING_PROFILE':
-            options = creatingProfileOptions;
+            options = updateProfileOptions;
             break;
         default:
             options = defaultOptions;

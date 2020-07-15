@@ -39,6 +39,7 @@ const ProfileEditScreen = props => {
         last_name: user.user.last_name,
         profile_text: user.profile.profile_text,
     });
+
     const [selectedCommunity, setSelectedCommunity] = useState(homeCommunity || communities[0]);
     const [selectedImage, setSelectedImage] = useState(null);
     const [isProcessing, setIsProcessing] = useState(false);
@@ -53,7 +54,7 @@ const ProfileEditScreen = props => {
     };
 
     const attemptProfileUpdate = () => {
-        if (!isValidUsername) {
+        if (!isValidUsername && (formValue.username === user.user.username)) {
             showModal('INVALID_USERNAME');
             setTimeout(() => {
                 hideModal();
@@ -145,7 +146,7 @@ const ProfileEditScreen = props => {
     };
 
     const selectImage = imageData => {
-        console.log("In selectImage: " + JSON.stringify(imageData));
+        // console.log("In selectImage: " + JSON.stringify(imageData));
         setSelectedImage(imageData);
     };
 
@@ -239,7 +240,7 @@ const ProfileEditScreen = props => {
               style={styles.inputText}
               placeholder={ `Last Name: ${user.user.last_name}` }
               placeholderTextColor={Colors.placeholder_text}
-              maxLength={25}
+              maxLength={35}
               returnKeyType='next'
               onChangeText={text => updateForm(text, 'last_name')}
               ref={lastNameRef}
@@ -250,7 +251,7 @@ const ProfileEditScreen = props => {
               style={styles.inputText}
               placeholder={ `User Name: ${user.user.username}` }
               placeholderTextColor={Colors.placeholder_text}
-              maxLength={25}
+              maxLength={35}
               returnKeyType='next'
               onChangeText={text => updateForm(text, 'username')}
               onBlur={() => {
@@ -264,7 +265,7 @@ const ProfileEditScreen = props => {
               style={styles.inputText}
               placeholder={ `email: ${user.user.email}` }
               placeholderTextColor={Colors.placeholder_text}
-              maxLength={25}
+              maxLength={50}
               returnKeyType='next'
               onChangeText={text => updateForm(text, 'email')}
               ref={firstNameRef}
