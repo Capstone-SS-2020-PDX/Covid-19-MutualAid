@@ -27,11 +27,18 @@ const RegisterScreen = props => {
 
   const [emailText, setEmailText] = useState(null)
   const [userNameText, setUserNameText] = useState(null);
+  const [isValidUsername, setIsValidUsername] = useState(true);
   const [passwordText, setPasswordText] = useState(null);
 
   const attemptRegister = () =>{
     if (!emailText || !userNameText || !passwordText) {
       showModal('VALIDATION_ERROR');
+      setTimeout(() => {
+        hideModal();
+      }, 900);
+
+    } else if (!isValidUsername) {
+      showModal('INVALID_USERNAME');
       setTimeout(() => {
         hideModal();
       }, 900);
@@ -79,7 +86,7 @@ const RegisterScreen = props => {
             autoCapitalize='none'
             placeholderTextColor={Colors.placeholder_text}
             onBlur={() => {
-              checkUsername(userNameText);
+              setIsValidUsername(checkUsername(userNameText));
             }}
             onChangeText={text => setUserNameText(text)}
           />

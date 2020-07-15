@@ -30,7 +30,13 @@ const sendingEmailOptions = {
 const validationErrorOptions = {
     ...defaultOptions,
     data: 'Fill out all details',
-    icon: <MaterialIcons name='error-outline' size={50} color='red'/>
+    icon: <MaterialIcons name='error-outline' size={50} color='red'/>,
+};
+
+const invalidUsernameOptions = {
+    ...defaultOptions,
+    data: 'That username is not available',
+    icon: <MaterialIcons name='error-outline' size={50} color='red'/>,
 };
 
 const creatingProfileOptions = {
@@ -53,6 +59,9 @@ export function showModal(type) {
             break;
         case 'VALIDATION_ERROR':
             options = validationErrorOptions;
+            break;
+        case 'INVALID_USERNAME' :
+            options = invalidUsernameOptions;
             break;
         case 'CREATING_PROFILE':
             options = creatingProfileOptions;

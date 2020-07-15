@@ -224,6 +224,7 @@ export const AuthProvider = props => {
 
     const handleCheckUsername = username => {
         const usernameUrl = check_username_url + username;
+        let isValid = false;
 
         fetch(usernameUrl, {
             method: 'GET',
@@ -235,13 +236,15 @@ export const AuthProvider = props => {
           .then(status => {
               if (status === 200) {
                   console.log('Username available!');
+                  isValid = true;
               } else {
                   console.log('Username NOT available!');
+                  isValid = false;
               }
           }).catch(error => {
               console.log(error);
           }).finally(() => {
-
+              return isValid;
           });
 
     };

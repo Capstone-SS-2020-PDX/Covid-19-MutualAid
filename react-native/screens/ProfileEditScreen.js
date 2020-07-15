@@ -25,7 +25,7 @@ import { AuthContext } from '../providers/AuthProvider';
 
 const ProfileEditScreen = props => {
     const { navigation } = props;
-    const { addProfile, updateUser, updateProfile, user, communities } = useContext(AuthContext);
+    const { addProfile, updateUser, updateProfile, user, communities, checkUsername } = useContext(AuthContext);
 
     const placeholderImage = user.profile.profile_pic;
 
@@ -42,6 +42,7 @@ const ProfileEditScreen = props => {
     const [selectedCommunity, setSelectedCommunity] = useState(homeCommunity || communities[0]);
     const [selectedImage, setSelectedImage] = useState(null);
     const [isProcessing, setIsProcessing] = useState(false);
+    const [isValidUsername, setIsValidUsername] = useState(true);
 
     const firstNameRef = useRef(null);
     const lastNameRef = useRef(null);
@@ -52,7 +53,14 @@ const ProfileEditScreen = props => {
     };
 
     const attemptProfileUpdate = () => {
-        handleProfileUpdate();
+        if (!isValidUsername) {
+            showModal('INVALID_USERNAME');
+            setTimeout(() => {
+                hideModal();
+            }, 900);
+        } else {
+            handleProfileUpdate();
+        }
     };
 
     const handleProfileUpdate = async () => {
@@ -215,62 +223,65 @@ const ProfileEditScreen = props => {
             />
           </View>
 
-            <View style={styles.inputView}>
-              <TextInput
-                style={styles.inputText}
-                placeholder={ `First Name: ${user.user.first_name}` }
-                placeholderTextColor={Colors.placeholder_text}
-                maxLength={25}
-                returnKeyType='next'
-                onChangeText={text => updateForm(text, 'first_name')}
-                ref={firstNameRef}
-              />
-            </View>
-            <View style={styles.inputView}>
-              <TextInput
-                style={styles.inputText}
-                placeholder={ `Last Name: ${user.user.last_name}` }
-                placeholderTextColor={Colors.placeholder_text}
-                maxLength={25}
-                returnKeyType='next'
-                onChangeText={text => updateForm(text, 'last_name')}
-                ref={lastNameRef}
-              />
-            </View>
-            <View style={styles.inputView}>
-              <TextInput
-                style={styles.inputText}
-                placeholder={ `User Name: ${user.user.username}` }
-                placeholderTextColor={Colors.placeholder_text}
-                maxLength={25}
-                returnKeyType='next'
-                onChangeText={text => updateForm(text, 'username')}
-                ref={firstNameRef}
-              />
-            </View>
-            <View style={styles.inputView}>
-              <TextInput
-                style={styles.inputText}
-                placeholder={ `email: ${user.user.email}` }
-                placeholderTextColor={Colors.placeholder_text}
-                maxLength={25}
-                returnKeyType='next'
-                onChangeText={text => updateForm(text, 'email')}
-                ref={firstNameRef}
-              />
-            </View>
-            <View style={{ ...styles.inputView, ...styles.profileInputView}}>
-              <TextInput
-                style={styles.inputText}
-                placeholder={ `Profile Text: ${user.profile.profile_text}` }
-                placeholderTextColor={Colors.placeholder_text}
-                maxLength={255}
-                multiline={true}
-                returnKeyType='go'
-                onChangeText={text => updateForm(text, 'profile_text')}
-                ref={profileTextRef}
-              />
-            </View>
+          <View style={styles.inputView}>
+            <TextInput
+              style={styles.inputText}
+              placeholder={ `First Name: ${user.user.first_name}` }
+              placeholderTextColor={Colors.placeholder_text}
+              maxLength={25}
+              returnKeyType='next'
+              onChangeText={text => updateForm(text, 'first_name')}
+              ref={firstNameRef}
+            />
+          </View>
+          <View style={styles.inputView}>
+            <TextInput
+              style={styles.inputText}
+              placeholder={ `Last Name: ${user.user.last_name}` }
+              placeholderTextColor={Colors.placeholder_text}
+              maxLength={25}
+              returnKeyType='next'
+              onChangeText={text => updateForm(text, 'last_name')}
+              ref={lastNameRef}
+            />
+          </View>
+          <View style={styles.inputView}>
+            <TextInput
+              style={styles.inputText}
+              placeholder={ `User Name: ${user.user.username}` }
+              placeholderTextColor={Colors.placeholder_text}
+              maxLength={25}
+              returnKeyType='next'
+              onChangeText={text => updateForm(text, 'username')}
+              onBlur={() => {
+                  setIsValidUsername(checkUsername(formValue.text));
+              }}
+              ref={firstNameRef}
+            />
+          </View>
+          <View style={styles.inputView}>
+            <TextInput
+              style={styles.inputText}
+              placeholder={ `email: ${user.user.email}` }
+              placeholderTextColor={Colors.placeholder_text}
+              maxLength={25}
+              returnKeyType='next'
+              onChangeText={text => updateForm(text, 'email')}
+              ref={firstNameRef}
+            />
+          </View>
+          <View style={{ ...styles.inputView, ...styles.profileInputView}}>
+            <TextInput
+              style={styles.inputText}
+              placeholder={ `Profile Text: ${user.profile.profile_text}` }
+              placeholderTextColor={Colors.placeholder_text}
+              maxLength={255}
+              multiline={true}
+              returnKeyType='go'
+              onChangeText={text => updateForm(text, 'profile_text')}
+              ref={profileTextRef}
+            />
+          </View>
           { renderHomeCommunityPicker() }
           <CustomButton
             onPress={attemptProfileUpdate}
