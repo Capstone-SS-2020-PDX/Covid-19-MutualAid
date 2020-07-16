@@ -26,10 +26,10 @@ import Colors from '../config/colors';
 import { windowHeight, windowWidth } from '../config/dimensions';
 import { showModal, hideModal } from '../components/CustomModal';
 import { notifyMessage } from '../components/CustomToast';
+import { email_url } from '../config/urls';
 
 import { AuthContext } from '../providers/AuthProvider';
 
-const emailUrl = 'https://cellular-virtue-277000.uc.r.appspot.com/postings/contact/';
 
 const PostingDetailScreen = props => {
   const { user } = useContext(AuthContext);
@@ -53,7 +53,7 @@ const PostingDetailScreen = props => {
     const request = { postid: id, addressfrom: fromEmail };
     const requestJSON = JSON.stringify(request);
 
-    fetch(emailUrl, {
+    fetch(email_url, {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -80,16 +80,38 @@ const PostingDetailScreen = props => {
 
   const resetFormState = () => {
     setIsProcessing(false);
-    setEmailText('');
   };
 
   // Navigates to the Home Screen stack when called
   const navigateToHomeStack = () => {
     navigation.navigate('Home', {screen: 'Feed'})
-  }
+  };
 
-  const itemIcon = route.params.request ? require(requestedItemIconImage)
-        : require(offeredItemIconImage);
+  const renderBottomButton = () => {
+    if (route.params.owner === user.user.id) {
+      return(
+        <CustomButton
+          style={styles.reachOutButton}
+          onPress={() => {
+            console.log("edit posting clicked!");
+          }}
+        >
+          <Text style={styles.reachOutButtonText}>Edit Posting</Text>
+        </CustomButton>
+      );
+    } else {
+      return(
+        <CustomButton
+          style={styles.reachOutButton}
+          onPress={() => {
+            handleReachOut();
+          }}
+        >
+          <Text style={styles.reachOutButtonText}>Reach Out!</Text>
+        </CustomButton>
+    );
+    }
+  };
 
   const screenContent = (
     <>
@@ -122,26 +144,18 @@ const PostingDetailScreen = props => {
           <Text style={styles.bodyText}>{route.params.description}</Text>
         </ScrollView>
       </View>
-
-      <CustomButton
-        style={styles.reachOutButton}
-        onPress={() => {
-          handleReachOut();
-        }}
-      >
-        <Text style={styles.reachOutButtonText}>Reach Out!</Text>
-      </CustomButton>
+      { renderBottomButton() }
     </>
   )
 
   return(
     windowHeight < 650
       ? <ScrollView contentContainerStyle={styles.scrollScreen}>
-          {screenContent}
-        </ScrollView>
+           {screenContent}
+         </ScrollView>
     : <Center style={styles.screen}>
-        {screenContent}
-      </Center>
+       {screenContent}
+     </Center>
   );
 };
 

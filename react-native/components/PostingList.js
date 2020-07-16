@@ -26,6 +26,7 @@ const PostingList = props => {
                     created_on: itemData.item.created_on,
                     item_pic: itemData.item.item_pic,
                     request: itemData.item.request,
+                    in_community: itemData.item.in_community,
                   });
               }}
             />
