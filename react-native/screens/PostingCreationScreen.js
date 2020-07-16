@@ -17,8 +17,10 @@ import { useHeaderHeight } from '@react-navigation/stack';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { WToast } from 'react-native-smart-tip'
-import {KeyboardAvoidingScrollView} from 'react-native-keyboard-avoiding-scroll-view';
+import { KeyboardAvoidingScrollView } from 'react-native-keyboard-avoiding-scroll-view';
+
 import { showModal, hideModal } from '../components/CustomModal';
+import { notifyMessage } from '../components/CustomToast';
 import Center from '../components/Center';
 import CustomButton from '../components/CustomButton';
 import CustomImagePicker from '../components/CustomImagePicker';
@@ -78,6 +80,7 @@ const PostingCreationScreen = props => {
     data.append('owner', user.user.id);
     data.append('category', categoryValue);
     data.append('request', requestValue);
+    data.append('in_community', user.profile.home);
 
     return data;
   };
@@ -125,20 +128,6 @@ const PostingCreationScreen = props => {
 
   };
 
-  const notifyMessage = msg => {
-    const toastOptions = {
-      data: msg,
-      textColor: Colors.light_shade4,
-      backgroundColor: Colors.dark_shade1,
-      position: WToast.position.CENTER,
-      duration: WToast.duration.SHORT,
-      position: WToast.position.CENTER,
-      // icon: <ActivityIndicator color='#fff' size={'large'}/>
-    }
-
-    WToast.show(toastOptions)
-  }
-
   // Navigates to the Home Screen stack when called
   const navigateToHomeStack = () => {
     navigation.navigate('Home', {screen: 'Feed'})
@@ -153,7 +142,7 @@ const PostingCreationScreen = props => {
   };
 
   const selectImage = imageData => {
-    console.log("In selectImage: " + JSON.stringify(imageData));
+    // console.log("In selectImage: " + JSON.stringify(imageData));
     setSelectedImage(imageData);
   };
 
@@ -161,15 +150,15 @@ const PostingCreationScreen = props => {
     <KeyboardAvoidingScrollView 
       stickyFooter={
         <CustomButton
-            onPress={() => handlePostCreation()}
-            style={{ marginBottom: 10, marginTop: 0, alignSelf: 'center'}}
-          >
-            <Text style={styles.buttonText}>Confirm</Text>
-          </CustomButton>
+          onPress={() => handlePostCreation()}
+          style={{ marginBottom: 10, marginTop: 0, alignSelf: 'center'}}
+        >
+          <Text style={styles.buttonText}>Confirm</Text>
+        </CustomButton>
       }
       containerStyle={styles.screen}
     >
-    <Center style={styles.screen}>
+      <Center style={styles.screen}>
         <View style={styles.imageContainer}>
 
           <CustomImagePicker
@@ -181,7 +170,7 @@ const PostingCreationScreen = props => {
 
         </View>
 
-          <View style={styles.inputContainer}>
+        <View style={styles.inputContainer}>
           <View style={styles.inputView}>
             <TextInput
               style={styles.inputText}
@@ -193,7 +182,7 @@ const PostingCreationScreen = props => {
               ref={nameInputRef}
             />
           </View>
-          <View style={styles.inputView}>
+          <View style={{...styles.inputView, ...styles.descriptionInput}}>
             <TextInput
               style={styles.inputText}
               placeholder='Item Description...'
@@ -225,6 +214,7 @@ const PostingCreationScreen = props => {
                   style={styles.countInputText}
                   keyboardType='numeric'
                   returnKeyType='done'
+                  value={'1'}
                   onChangeText={text => setItemCount(text)}
                   ref={itemCountInputRef}
                 />
@@ -242,7 +232,7 @@ const PostingCreationScreen = props => {
             </View>
           </View>
         </View>        
-    </Center>
+      </Center>
     </KeyboardAvoidingScrollView>
   );
 }
@@ -251,7 +241,6 @@ const styles = StyleSheet.create({
   screen: {
     backgroundColor: Colors.light_shade4,
     alignItems: 'center',
-    justifyContent: 'flex-start',
     flexGrow: 1,
     width: windowWidth,
   },
@@ -301,6 +290,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+  },
+  descriptionInput: {
+    height: 80,
+    alignItems: 'flex-start',
   },
   inputText: {
     width: '90%',

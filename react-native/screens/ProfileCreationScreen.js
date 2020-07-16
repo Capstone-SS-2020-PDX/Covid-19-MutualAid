@@ -3,8 +3,12 @@ import {
     View,
     Text,
     TextInput,
+    Button,
+    Picker,
     TouchableOpacity,
+    ActionSheetIOS,
     KeyboardAvoidingView,
+    Platform,
     StyleSheet,
 } from 'react-native';
 
@@ -17,12 +21,15 @@ import Colors from '../config/colors';
 import { showModal, hideModal } from '../components/CustomModal';
 import { windowHeight, windowWidth } from '../config/dimensions';
 import { users_url, profiles_url } from '../config/urls';
+const isAndroid = Platform.OS === 'android' ? true : false;
 
 const ProfileCreationScreen = props => {
     const { navigation } = props;
-    const { addProfile, updateUser, updateProfile, user } = useContext(AuthContext);
+    const { addProfile, updateUser, updateProfile, user, communities } = useContext(AuthContext);
+
 
     const [formValue, setFormValue] = useState(null);
+    const [selectedCommunity, setSelectedCommunity] = useState(communities[0]);
     const [selectedImage, setSelectedImage] = useState(null);
     const [isProcessing, setIsProcessing] = useState(false);
 
@@ -70,6 +77,7 @@ const ProfileCreationScreen = props => {
             data.append('profile_pic', selectedImage);
         }
         data.append('profile_text', formValue.profile_text);
+        data.append('home', selectedCommunity.id);
         return data;
     };
 
@@ -81,14 +89,20 @@ const ProfileCreationScreen = props => {
             },
             body: createFormData(),
         })
-            .then(response => response.text())
+            .then(response => response.json())
             .then(json => {
+                // console.log("In update profile Request: ");
+                // console.log(json);
+                updateProfile(json);
             })
             .catch(error => {
                 console.log(error)
             })
             .finally(() => {
-                fetchProfile();
+                // fetchProfile();
+                setIsProcessing(false);
+                hideModal();
+                addProfile();
             });
     };
 
@@ -112,36 +126,13 @@ const ProfileCreationScreen = props => {
             });
     };
 
-    const fetchProfile = () => {
-        const url = profiles_url + user.profile.id + '/';
-
-        return fetch(url, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-                'Content-type': 'application/json',
-            },
-        })
-            .then(response => response.json())
-            .then(json => {
-                updateProfile(json);
-            })
-            .catch(error => {
-                console.log(error)
-            })
-            .finally(() => {
-                setIsProcessing(false);
-                hideModal();
-                addProfile();
-            });
-    };
-
     const clearInputs = () => {
         setFormValue({});
 
         firstNameRef.current.clear();
         lastNameRef.current.clear();
         profileTextRef.current.clear();
+        setSelectedImage(null);
     };
 
     const getImage = () => {
@@ -149,8 +140,69 @@ const ProfileCreationScreen = props => {
     };
 
     const selectImage = imageData => {
-        console.log("In selectImage: " + JSON.stringify(imageData));
+        // console.log("In selectImage: " + JSON.stringify(imageData));
         setSelectedImage(imageData);
+    };
+
+    const renderCommunityPickerItems = () => {
+        return communities.map(community =>
+            <Picker.Item label={community.name} value={community} key={community.id}/>
+        );
+    }
+
+    const showiOSActionSheet = () => {
+        const options = communities.map(community => community.name);
+
+        ActionSheetIOS.showActionSheetWithOptions(
+            {
+                title: 'Home Community',
+                options: ['Cancel', ...options],
+                cancelButtonIndex: 0
+            },
+            buttonIndex => {
+                if (buttonIndex === 0) {
+                    // cancel action
+                } else if (buttonIndex === 1) {
+                    console.log(communities[buttonIndex-1].name);
+                    setSelectedCommunity(communities[buttonIndex - 1]);
+                } else if (buttonIndex === 2) {
+                    console.log(communities[buttonIndex-1].name);
+                    setSelectedCommunity(communities[buttonIndex - 1]);
+                } else if (buttonIndex === 3) {
+                    console.log(communities[buttonIndex-1].name);
+                    setSelectedCommunity(communities[buttonIndex - 1]);
+                }
+            }
+        );
+    };
+
+    const renderHomeCommunityPicker = () => {
+        if (isAndroid) {
+            return(
+                <View style={{ alignItems: 'center'}}>
+                  <Text style={styles.labelText}>Home Community</Text>
+                  <View style={{...styles.inputView, ...styles.communityPickerContainer}}>
+                    <Picker
+                      style={styles.communityPicker}
+                      selectedValue={selectedCommunity}
+                      onValueChange={(itemValue, itemIndex) => setSelectedCommunity(itemValue)}
+                    >
+                      { renderCommunityPickerItems() }
+                    </Picker>
+                  </View>
+                </View>
+            );
+        } else {
+            return(
+                <View style={{...styles.inputView, flexDirection: 'column', height: 80, paddingVertical: 10}}>
+                  <Button
+                    onPress={showiOSActionSheet}
+                    title='Choose Home Community'
+                  />
+                  <Text style={styles.text}>{selectedCommunity.name}</Text>
+                </View>
+            );
+        }
     };
 
     return(
@@ -202,6 +254,7 @@ const ProfileCreationScreen = props => {
               />
             </View>
           </KeyboardAvoidingView>
+              { renderHomeCommunityPicker() }
           <CustomButton
             onPress={attemptProfileCreation}
             style={{ marginBottom: 10, alignSelf: 'center'}}
@@ -267,6 +320,27 @@ const styles = StyleSheet.create({
     buttonText: {
         color: Colors.light_shade1,
         fontSize: 24,
+    },
+    communityPickerContainer: {
+        width: '80%',
+        borderWidth: 1,
+        borderColor: Colors.dark_shade1,
+    },
+    iosPicker: {
+        flexDirection: 'row',
+        alignItems: 'center',
+
+        height: 100,
+        marginBottom: 10,
+        paddingHorizontal: 20,
+
+    },
+    communityPickerContainer: {
+        width: '80%',
+    },
+    communityPicker: {
+        height: isAndroid ? 50 : 200,
+        width: '80%',
     },
 });
 

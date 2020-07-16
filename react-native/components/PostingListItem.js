@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Text,
          View,
          StyleSheet,
@@ -8,8 +8,11 @@ import { Text,
 import { Entypo } from '@expo/vector-icons'; 
 
 import Colors from '../config/colors';
+import { AuthContext } from '../providers/AuthProvider';
 
 const PostingListItem = props => {
+    const { communities } = useContext(AuthContext);
+   
     const offeredItemIconImage = '../assets/round_offer.png';
     const requestedItemIconImage = '../assets/round_request.png';
     const itemPlaceHolder = '../assets/image_place_holder.jpg';
@@ -20,6 +23,13 @@ const PostingListItem = props => {
         : 'Offer';
 
     const picUrl = props.item_pic;
+
+    let communityName;
+    if (props.in_community) {
+        communityName = communities.find(community => props.in_community === community.id).name;
+    } else {
+        communityName = 'Oak Grove';
+    }
 
     return(
         <TouchableOpacity
@@ -52,7 +62,7 @@ const PostingListItem = props => {
               <View style={styles.postingTypeContainer}>
                 <Entypo name="location-pin" size={20} color="black" style={{marginTop: 5}} />
                 <Text style={styles.itemDetailText}>
-                  Oak Grove
+                  {communityName}
                 </Text>
               </View>
             </View>

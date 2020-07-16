@@ -12,10 +12,15 @@ const Stack = createStackNavigator();
 
 const HomeStack = props => {
   const { navigation } = props;
-  const { username } = useContext(AuthContext);
+  const { user, username, communities } = useContext(AuthContext);
+
+  // console.log("In Home stack: " + JSON.stringify(communities));
+
+  const homeCommunity = communities.find(community => community.id === user.profile.home);
 
   const PostingListScreenOptions = {
-    headerTitle: `Welcome ${username}`,
+    // headerTitle: `Welcome ${username}`,
+    headerTitle: homeCommunity ? `${homeCommunity.name}` : `Welcome ${username}`,
     ...headerOptions,
     headerLeft: drawerMenuIcon.bind(this, navigation),
   };

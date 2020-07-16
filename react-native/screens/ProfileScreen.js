@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import {
   View,
+  ScrollView,
   Text,
   Button,
   Image,
@@ -19,68 +20,65 @@ const itemPlaceHolder = '../assets/image_place_holder.jpg';
 
 const ProfileScreen = props => {
   const { navigation } = props;
-  const { user } = useContext(AuthContext);
+  const { user, communities } = useContext(AuthContext);
 
   const picUrl = user.profile.profile_pic ? user.profile.profile_pic : null;
+  const homeCommunity = communities.find(community => community.id === user.profile.home);
 
   return(
-    <View style={styles.screen}>
-      {
-        user.user ?
-          <>
-            <Text style={styles.username}>{user.user.username}</Text>
-            <Text style={styles.date}>Member Since: {prettifyDate(user.user.date_joined)}</Text>
+    <ScrollView contentContainerStyle={styles.screen}>
+        <Text style={styles.username}>{user.user.username}</Text>
+        <Text style={styles.date}>Member Since: {prettifyDate(user.user.date_joined)}</Text>
 
-            <View style={styles.imageContainer}>
-              <Image
-                style={styles.itemImage}
-                resizeMode='cover'
+        <View style={styles.imageContainer}>
+          <Image
+            style={styles.itemImage}
+            resizeMode='cover'
 
-                source={picUrl !== null
-                        ? {uri:picUrl}
-                        : require(itemPlaceHolder)
-                       }
-              />
-            </View>
+            source={picUrl !== null
+                    ? {uri:picUrl}
+                    : require(itemPlaceHolder)
+                   }
+          />
+        </View>
 
-              <View style={styles.userDetailSection}>
-                <Text>Name:</Text>
-                <Text style={styles.text}>{user.user.first_name} {user.user.last_name}</Text>
-                <Text >Email:</Text>
-                <Text style={styles.text}>{user.user.email}</Text>
-                <Text >Bio: </Text>
-                <Text style={styles.bio}>{user.profile.profile_text}</Text>
-            </View>
-          </>
-        : null
-      }
+        <View style={styles.userDetailSection}>
+          <Text style={styles.labelText}>Name</Text>
+          <Text style={styles.text}>{user.user.first_name} {user.user.last_name}</Text>
+          <Text style={styles.labelText}>Email</Text>
+          <Text style={styles.text}>{user.user.email}</Text>
+          <Text style={styles.labelText}>Bio</Text>
+          <Text style={styles.text}>{user.profile.profile_text}</Text>
+          <Text style={styles.labelText}>Home</Text>
+          <Text style={styles.text}>{homeCommunity.name}</Text>
+        </View>
       <CustomButton
         style={styles.button}
         onPress={() => {
-            navigation.navigate('EditProfile');
+          navigation.navigate('EditProfile');
         }}
       >
         <Text style={styles.buttonText}>Edit Your Profile</Text>
       </CustomButton>
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   screen: {
-    flex: 1,
     justifyContent: 'flex-start',
     alignItems: 'center',
   },
   userDetailSection: {
-    justifyContent: 'center',
-    alignItems: 'flex-start',
+    alignItems: 'center'
   },
   text: {
-    fontSize: 18,
+    fontSize: 20,
     fontFamily: 'open-sans',
-    marginBottom: 15,
-    marginLeft: 5
+    marginBottom: 10,
+  },
+  labelText: {
+    fontSize: 12,
   },
   imageContainer: {
     width: windowWidth / 1.8,
@@ -95,17 +93,10 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   username: {
-    fontSize: 25,
+    fontSize: 30,
     fontFamily: 'open-sans-bold',
     alignSelf: 'center',
     marginTop: 10
-  },
-  bio: {
-    fontSize: 18,
-    fontFamily: 'open-sans',
-    marginBottom: 15,
-    marginLeft: 5
-
   },
   button: {
     backgroundColor: Colors.primary,
@@ -121,7 +112,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
   date: {
-      fontSize: 12,
+    fontSize: 12,
   }
 });
 

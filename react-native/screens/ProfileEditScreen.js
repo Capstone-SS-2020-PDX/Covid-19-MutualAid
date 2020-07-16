@@ -1,26 +1,55 @@
-import React, { useContext, useState, useRef }from 'react';
+
+import React, { useContext, useState, useRef } from 'react';
+
 import {
     View,
+    ScrollView,
     Text,
     TextInput,
+    Picker,
+    ActionSheetIOS,
+    Button,
     TouchableOpacity,
+    Platform,
     StyleSheet,
 } from 'react-native';
-import KeyboardShift from 'react-native-keyboardshift-razzium';
-import { AuthContext } from '../providers/AuthProvider';
+
 import CustomImagePicker from '../components/CustomImagePicker';
 import CustomButton from '../components/CustomButton';
+import { KeyboardAvoidingScrollView } from 'react-native-keyboard-avoiding-scroll-view';
+import KeyboardShift from 'react-native-keyboardshift-razzium';
+
 import Colors from '../config/colors';
+import { notifyMessage } from '../components/CustomToast';
 import { showModal, hideModal } from '../components/CustomModal';
 import { windowHeight, windowWidth } from '../config/dimensions';
 import { users_url, profiles_url } from '../config/urls';
 
-const ProfileEditScreen = props => {
-    const { addProfile, updateUser, updateProfile, user } = useContext(AuthContext);
+import { AuthContext } from '../providers/AuthProvider';
 
-    const [formValue, setFormValue] = useState(null);
+const ProfileEditScreen = props => {
+
+    const { navigation } = props;
+    const { addProfile, updateUser, updateProfile, user, communities, checkUsername } = useContext(AuthContext);
+
+    const placeholderImage = user.profile.profile_pic;
+
+    const isAndroid = Platform.OS === 'android' ? true : false;
+    const homeCommunity = communities.find(community => community.id === user.profile.home);
+
+    const [formValue, setFormValue] = useState({
+        username: user.user.username,
+        email: user.user.email,
+        first_name: user.user.first_name,
+        last_name: user.user.last_name,
+        profile_text: user.profile.profile_text,
+    });
+
+    const [selectedCommunity, setSelectedCommunity] = useState(homeCommunity || communities[0]);
     const [selectedImage, setSelectedImage] = useState(null);
     const [isProcessing, setIsProcessing] = useState(false);
+    const [isValidUsername, setIsValidUsername] = useState(true);
+    const [usernameChanged, setUsernameChanged] = useState(false);
 
     const firstNameRef = useRef(null);
     const lastNameRef = useRef(null);
@@ -30,25 +59,34 @@ const ProfileEditScreen = props => {
         setFormValue({ ...formValue, [input]: text });
     };
 
-    const handleProfileUpdate = () => {
+    const attemptProfileUpdate = () => {
+        if (!isValidUsername && usernameChanged) {
+            showModal('INVALID_USERNAME');
+            setTimeout(() => {
+                hideModal();
+            }, 900);
+        } else {
+            handleProfileUpdate();
+        }
+    };
+
+    const handleProfileUpdate = async () => {
         if (!isProcessing) {
             setIsProcessing(true);
-            showModal('CREATING_PROFILE');
+            showModal('UPDATING_PROFILE');
 
             const userPatchUrl = users_url + user.user.id + '/';
             const profilePatchUrl = profiles_url + user.profile.id + '/';
 
             let updatedUserData = user;
+            updatedUserData.user.first_name = formValue.first_name;
+            updatedUserData.user.last_name = formValue.last_name;
+            updatedUserData.user.email = formValue.email;
+            updatedUserData.user.username = formValue.username;
 
-            if(formValue.first_name)
-                updatedUserData.user.first_name = formValue.first_name;
-            if(formValue.last_name)
-                updatedUserData.user.last_name = formValue.last_name;
-            if(formValue.profile_text)
-                updatedUserData.user.profile_text = formValue.profile_text;
+            await sendUpdateUserRequest(JSON.stringify(updatedUserData.user), userPatchUrl, 'PATCH');
+            await sendUpdateProfileRequest(profilePatchUrl, 'PATCH');
 
-            sendUpdateUserRequest(JSON.stringify(updatedUserData.user), userPatchUrl, 'PATCH');
-            sendUpdateProfileRequest(profilePatchUrl, 'PATCH');
         } else {
             console.log('Processing your request, please wait');
         }
@@ -59,10 +97,18 @@ const ProfileEditScreen = props => {
         if (selectedImage) {
             data.append('profile_pic', selectedImage);
         }
+
+        data.append('profile_text', formValue.profile_text);
+        if (selectedCommunity) {
+            data.append('home', selectedCommunity.id);
+        }
+      
         return data;
     };
 
     const sendUpdateProfileRequest = (url, method) => {
+        console.log("In update profile Request, Outgoing url: " + url);
+
         return fetch(url, {
             method: method,
             headers: {
@@ -70,14 +116,20 @@ const ProfileEditScreen = props => {
             },
             body: createFormData(),
         })
-            .then(response => response.text())
+
+            .then(response => response.json())
             .then(json => {
+                console.log(json);
+                updateProfile(json);
             })
             .catch(error => {
                 console.log(error)
             })
             .finally(() => {
-                fetchProfile();
+                setIsProcessing(false);
+                hideModal();
+                navigation.goBack();
+                notifyMessage('Profile Sucessfully Updated!');
             });
     };
 
@@ -101,27 +153,66 @@ const ProfileEditScreen = props => {
             });
     };
 
-    const fetchProfile = () => {
-        const url = profiles_url + user.profile.id + '/';
+    const renderCommunityPickerItems = () => {
+        return communities.map(community =>
+            <Picker.Item label={community.name} value={community} key={community.id}/>
+        );
+    }
 
-        return fetch(url, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-                'Content-type': 'application/json',
+    const showiOSActionSheet = () => {
+        const options = communities.map(community => community.name);
+
+        ActionSheetIOS.showActionSheetWithOptions(
+            {
+                title: 'Home Community',
+                options: ['Cancel', ...options],
+                cancelButtonIndex: 0
             },
-        })
-            .then(response => response.json())
-            .then(json => {
-                updateProfile(json);
-            })
-            .catch(error => {
-                console.log(error)
-            })
-            .finally(() => {
-                setIsProcessing(false);
-                hideModal();
-            });
+            buttonIndex => {
+                if (buttonIndex === 0) {
+                    // cancel action
+                } else if (buttonIndex === 1) {
+                    console.log(communities[buttonIndex-1].name);
+                    setSelectedCommunity(communities[buttonIndex - 1]);
+                } else if (buttonIndex === 2) {
+                    console.log(communities[buttonIndex-1].name);
+                    setSelectedCommunity(communities[buttonIndex - 1]);
+                } else if (buttonIndex === 3) {
+                    console.log(communities[buttonIndex-1].name);
+                    setSelectedCommunity(communities[buttonIndex - 1]);
+                }
+            }
+        );
+    };
+
+    const renderHomeCommunityPicker = () => {
+        if (isAndroid) {
+            return(
+                <View style={{ alignItems: 'center'}}>
+                  <Text style={styles.labelText}>Home Community</Text>
+                  <View style={{...styles.inputView, ...styles.communityPickerContainer}}>
+                    <Picker
+                      style={styles.communityPicker}
+                      selectedValue={selectedCommunity}
+                      onValueChange={(itemValue, itemIndex) => setSelectedCommunity(itemValue)}
+                    >
+                      { renderCommunityPickerItems() }
+                    </Picker>
+                  </View>
+                </View>
+            );
+        } else {
+            return(
+                <View style={{...styles.inputView, flexDirection: 'column', height: 80, paddingVertical: 10}}>
+                  <Button
+                    onPress={showiOSActionSheet}
+                    title='Choose Home Community'
+                  />
+                  <Text style={styles.text}>{selectedCommunity.name}</Text>
+                </View>
+            );
+        }
+
     };
 
     const clearInputs = () => {
@@ -141,72 +232,97 @@ const ProfileEditScreen = props => {
         console.log("In selectImage: " + JSON.stringify(imageData));
         setSelectedImage(imageData);
     };
-    return(
-        <KeyboardShift>
-            {() => (
-        <View style={styles.screen}>
-          <Text style={styles.screenTitle}>Edit Your Profile</Text>
 
+    return(
+        <KeyboardAvoidingScrollView contentContainerStyle={styles.screen}>
           <View style={styles.imageContainer}>
             <CustomImagePicker
               iconName='images'
               onSelectImage={selectImage}
               getImage={getImage}
               setImage={setSelectedImage}
+
+              placeholderImage={user.profile.profile_pic}
             />
           </View>
 
-          <View style={styles.inputContainer}>
-            <View style={styles.inputView}>
-              <TextInput
-                style={styles.inputText}
-                placeholder={user.user.first_name ? user.user.first_name : 'First Name...'}
-                placeholderTextColor={Colors.placeholder_text}
-                maxLength={25}
-                returnKeyType='next'
-                onChangeText={text => updateForm(text, 'first_name')}
-                ref={firstNameRef}
-              />
-            </View>
-            <View style={styles.inputView}>
-              <TextInput
-                style={styles.inputText}
-                placeholder={user.user.last_name ? user.user.last_name : 'Last Name...'}
-                placeholderTextColor={Colors.placeholder_text}
-                maxLength={25}
-                returnKeyType='next'
-                onChangeText={text => updateForm(text, 'last_name')}
-                ref={lastNameRef}
-              />
-            </View>
-            <View style={{ ...styles.inputView, ...styles.profileInputView}}>
-              <TextInput
-                style={styles.inputText}
-                placeholder={user.profile.profile_text ? user.profile.profile_text : 'Bio...'}
-                placeholderTextColor={Colors.placeholder_text}
-                maxLength={255}
-                multiline={true}
-                returnKeyType='go'
-                onChangeText={text => updateForm(text, 'profile_text')}
-                ref={profileTextRef}
-              />
-            </View>
+          <View style={styles.inputView}>
+            <TextInput
+              style={styles.inputText}
+              placeholder={ `First Name: ${user.user.first_name}` }
+              placeholderTextColor={Colors.placeholder_text}
+              maxLength={25}
+              returnKeyType='next'
+              onChangeText={text => updateForm(text, 'first_name')}
+              ref={firstNameRef}
+            />
           </View>
+          <View style={styles.inputView}>
+            <TextInput
+              style={styles.inputText}
+              placeholder={ `Last Name: ${user.user.last_name}` }
+              placeholderTextColor={Colors.placeholder_text}
+              maxLength={35}
+              returnKeyType='next'
+              onChangeText={text => updateForm(text, 'last_name')}
+              ref={lastNameRef}
+            />
+          </View>
+          <View style={styles.inputView}>
+            <TextInput
+              style={styles.inputText}
+              placeholder={ `User Name: ${user.user.username}` }
+              placeholderTextColor={Colors.placeholder_text}
+              maxLength={35}
+              returnKeyType='next'
+              onChangeText={text => updateForm(text, 'username')}
+              onBlur={() => {
+                  setIsValidUsername(checkUsername(formValue.text));
+                  setUsernameChanged(true);
+              }}
+              ref={firstNameRef}
+            />
+          </View>
+          <View style={styles.inputView}>
+            <TextInput
+              style={styles.inputText}
+              placeholder={ `email: ${user.user.email}` }
+              placeholderTextColor={Colors.placeholder_text}
+              maxLength={50}
+              keyboardType='email-address'
+              autoCapitalize='none'
+              autoCorrect={false}
+              returnKeyType='next'
+              onChangeText={text => updateForm(text, 'email')}
+              ref={firstNameRef}
+            />
+          </View>
+          <View style={{ ...styles.inputView, ...styles.profileInputView}}>
+            <TextInput
+              style={styles.inputText}
+              placeholder={ `Profile Text: ${user.profile.profile_text}` }
+              placeholderTextColor={Colors.placeholder_text}
+              maxLength={255}
+              multiline={true}
+              returnKeyType='go'
+              onChangeText={text => updateForm(text, 'profile_text')}
+              ref={profileTextRef}
+            />
+          </View>
+          { renderHomeCommunityPicker() }
           <CustomButton
-            onPress={handleProfileUpdate}
+            onPress={attemptProfileUpdate}
             style={{ marginBottom: 10, alignSelf: 'center'}}
           >
             <Text style={styles.buttonText}>Confirm</Text>
           </CustomButton>
-        </View>
-    )}
-    </KeyboardShift>
+        </KeyboardAvoidingScrollView>
+
     );
 };
 
 const styles = StyleSheet.create({
     screen: {
-        flex: 1,
         justifyContent: 'space-around',
         alignItems: 'center',
     },
@@ -260,6 +376,25 @@ const styles = StyleSheet.create({
         color: Colors.light_shade1,
         fontSize: 24,
     },
+    communityPickerContainer: {
+        width: '80%',
+    },
+    communityPicker: {
+        height: 50,
+        width: '80%',
+    },
+    text: {
+        fontSize: 20,
+        paddingBottom: 10,
+    },
+    labelText: {
+        textAlign: 'center',
+        paddingBottom: 5,
+        fontFamily: 'open-sans',
+        fontSize: 12,
+
+    },
 });
 
 export default ProfileEditScreen;
+

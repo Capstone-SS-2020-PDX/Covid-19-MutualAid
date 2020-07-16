@@ -1,7 +1,7 @@
 import React, { createContext, useState, useReducer, useContext } from 'react';
 import { AsyncStorage } from 'react-native';
 
-import { login_url, register_url, check_username_url } from '../config/urls';
+import { login_url, register_url, check_username_url, communities_url } from '../config/urls';
 
 const AUTO_LOGIN = 'AUTO_LOGIN';
 const LOGIN = 'LOGIN';
@@ -11,6 +11,7 @@ const SET_IS_LOADING = 'SET_IS_LOADING';
 const ADD_PROFILE = 'ADD_PROFILE';
 const UPDATE_PROFILE = 'UPDATE_PROFILE';
 const UPDATE_USER = 'UPDATE_USER';
+const UPDATE_COMMUNITIES = 'UPDATE_COMMUNITIES';
 
 // Provides username, token and login/logout functionality to Global App Context
 // Allows the app to know which user is using it and to handle login/logout
@@ -19,12 +20,18 @@ export const AuthContext = createContext({});
 
 export const AuthProvider = props => {
 
+    // useEffect(() => {
+       
+    // }, [loginState.updated]);
+
     const initialLoginState = {
         isLoading: true,
         username: null,
         token: null,
         hasProfile: true,
         user: null,
+        communities: null,
+        updated: false,
     };
 
     const loginReducer = (previousState, action) => {
@@ -34,7 +41,7 @@ export const AuthProvider = props => {
                     ...previousState,
                     username: action.username,
                     token: action.token,
-                    isLoading: false,
+                    // isLoading: false,
                     user: action.user,
                 };
             case LOGIN:
@@ -87,12 +94,48 @@ export const AuthProvider = props => {
                     user: {
                         ...previousState.user,
                         ...action.updatedUser,
-                    }
+                    },
+                };
+            case UPDATE_COMMUNITIES:
+                return {
+                    ...previousState,
+                    communities: action.communities,
+                    isLoading: false,
                 };
         }
     };
 
     const [loginState, dispatch] = useReducer(loginReducer, initialLoginState);
+
+    const fetchCommunities = () => {
+        AsyncStorage.getItem('communities').then(communityData => {
+            console.log('Fetching communties from AsyncStorage: ');
+            if (communityData) {
+                console.log("Found communities in AsyncStorage!");
+                communityData = JSON.parse(communityData);
+                dispatch({ type: UPDATE_COMMUNITIES, communities: communityData });
+            } else {
+                console.log("Communities DONT exist in AsyncStorage, fetching from server: ");
+
+                fetch(communities_url, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-type': 'application/json',
+                    },
+                }).then(response => response.json())
+                  .then(communitiesJson => {
+                      // console.log("Fetching communities: ");
+                      // console.log(communitiesJson);
+
+                      AsyncStorage.setItem('communities', JSON.stringify(communitiesJson)).then(() => {
+                          dispatch({ type: UPDATE_COMMUNITIES, communities: communitiesJson });
+                      });
+                  });
+            }
+        });
+
+    };
 
     const performAuthRequest = (requestType, userData, url) => {
 
@@ -116,6 +159,7 @@ export const AuthProvider = props => {
             .then(json => {
                 console.log('Server Response: ' + JSON.stringify(json));
                 loginData = json;
+                fetchCommunities();
             })
             .catch(error => {
                 console.log(error);
@@ -152,10 +196,9 @@ export const AuthProvider = props => {
                 console.log('No existing token');
                 dispatch({ type: AUTO_LOGIN, token: null, username: null, user: null })
             }
-        }).catch(error => {
-            console.log(error);
-        }).finally(() => {
         });
+
+        fetchCommunities();
 
     };
 
@@ -169,7 +212,9 @@ export const AuthProvider = props => {
         AsyncStorage.removeItem('loginData')
                     .catch(error => console.log(error))
                     .finally(() => {
-                        dispatch({ type: LOGOUT });
+                        AsyncStorage.removeItem('communities').finally(() => {
+                            dispatch({ type: LOGOUT });
+                        })
                     });
     };
 
@@ -179,6 +224,7 @@ export const AuthProvider = props => {
 
     const handleCheckUsername = username => {
         const usernameUrl = check_username_url + username;
+        let isValid = false;
 
         fetch(usernameUrl, {
             method: 'GET',
@@ -190,13 +236,15 @@ export const AuthProvider = props => {
           .then(status => {
               if (status === 200) {
                   console.log('Username available!');
+                  isValid = true;
               } else {
                   console.log('Username NOT available!');
+                  isValid = false;
               }
           }).catch(error => {
               console.log(error);
           }).finally(() => {
-
+              return isValid;
           });
 
     };
@@ -218,6 +266,7 @@ export const AuthProvider = props => {
               username: loginState.username,
               hasProfile: loginState.hasProfile,
               user: loginState.user,
+              communities: loginState.communities,
               updateProfile,
               updateUser,
               autoLogin: handleAutoLogin,
