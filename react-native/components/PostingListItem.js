@@ -23,7 +23,13 @@ const PostingListItem = props => {
         : 'Offer';
 
     const picUrl = props.item_pic;
-    const communityName = communities.find(community => props.in_community === community.id).name;
+
+    let communityName;
+    if (props.in_community) {
+        communityName = communities.find(community => props.in_community === community.id).name;
+    } else {
+        communityName = 'Oak Grove';
+    }
 
     return(
         <TouchableOpacity
