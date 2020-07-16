@@ -25,7 +25,7 @@ SECRET_KEY = 'sd1v^qwjvnb+4hd1tn0dy0#cl98mlfxez@69pno-^t3s$*2v4+'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['cellular-virtue-277000.uc.r.appspot.com', 'localhost', '192.168.*', '10.*', '127.0.0.1']
+ALLOWED_HOSTS = ['ace-mote-270703.wl.r.appspot.com', 'localhost', '192.168.*', '10.*', '127.0.0.1']
 
 SECURE_SSL_REDIRECT = False
 
@@ -129,22 +129,17 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = 'static'
 
+DEFAULT_FILE_STORAGE = 'gcloud.GoogleCloudMediaFileStorage'
 
-if os.getenv('GAE_APPLICATION', None):
-    DEFAULT_FILE_STORAGE = 'gcloud.GoogleCloudMediaFileStorage'
-    
-    GS_PROJECT_ID = 'cellular-virtue-277000'
-    GS_MEDIA_BUCKET_NAME = 'cgapi-upload-media'
-    
+GS_PROJECT_ID = 'ace-mote-270703'
+GS_MEDIA_BUCKET_NAME = 'charmander'
 
-    MEDIA_URL = 'https://storage.googleapis.com/{}/'.format(GS_MEDIA_BUCKET_NAME)
-    MEDIA_ROOT = "media/"
-    
-    UPLOAD_ROOT = 'media/uploads/'
 
-else:
-    MEDIA_URL = '/media/'
-    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = 'https://storage.googleapis.com/{}/'.format(GS_MEDIA_BUCKET_NAME)
+MEDIA_ROOT = "media/"
+
+UPLOAD_ROOT = 'media/uploads/'
+
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.sendgrid.net'

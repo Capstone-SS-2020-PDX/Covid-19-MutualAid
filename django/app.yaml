@@ -3,7 +3,7 @@ env: flex
 entrypoint: "python3 manage.py runserver 0.0.0.0:8080"
 
 beta_settings:
-  cloud_sql_instances: "cellular-virtue-277000:us-central1:cg-prod=tcp:5432"
+  cloud_sql_instances: "ace-mote-270703:us-west1:squirtle=tcp:5432"
 
 runtime_config:
   python_version: 3
