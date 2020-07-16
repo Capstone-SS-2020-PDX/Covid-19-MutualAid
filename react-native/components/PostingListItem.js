@@ -5,16 +5,19 @@ import { Text,
          TouchableOpacity,
          Image,
        } from 'react-native';
+import { Entypo } from '@expo/vector-icons'; 
 
 import Colors from '../config/colors';
 
 const PostingListItem = props => {
-    const offeredItemIconImage = '../assets/offered_item.png';
-    const requestedItemIconImage = '../assets/requested_item.png';
+    const offeredItemIconImage = '../assets/round_offer.png';
+    const requestedItemIconImage = '../assets/round_request.png';
     const itemPlaceHolder = '../assets/image_place_holder.jpg';
 
     const itemIcon = props.request ? require(requestedItemIconImage)
         : require(offeredItemIconImage);
+    const itemType = props.request ? 'Request'
+        : 'Offer';
 
     const picUrl = props.item_pic;
 
@@ -36,16 +39,22 @@ const PostingListItem = props => {
               <Text style={styles.itemTitleText}>
                 {props.title}
               </Text>
-              <Text style={styles.itemCommunityText}>
-                Oak Grove
-              </Text>
-            </View>
-            <View style={styles.postingTypeIconContainer}>
-              <Image
-                style={styles.postingTypeIconImage}
-                resizeMode='contain'
-                source={itemIcon}
-              />
+              <View style={styles.postingTypeContainer}>
+                <Image
+                  style={styles.postingTypeIconImage}
+                  resizeMode='contain'
+                  source={itemIcon}
+                />
+                <Text style={styles.itemDetailText}>
+                  {itemType}
+                </Text>
+              </View>
+              <View style={styles.postingTypeContainer}>
+                <Entypo name="location-pin" size={20} color="black" style={{marginTop: 5}} />
+                <Text style={styles.itemDetailText}>
+                  Oak Grove
+                </Text>
+              </View>
             </View>
           </View>
         </TouchableOpacity>
@@ -55,7 +64,7 @@ const PostingListItem = props => {
 const styles = StyleSheet.create({
     listItem: {
         width: '100%',
-        height: 100,
+        height: 120,
         justifyContent: 'center',
         borderColor: Colors.dark_shade1,
         borderTopWidth: 0.8,
@@ -67,7 +76,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
     },
     itemTextContainer: {
-        width: '55%',
+        width: '70%',
         alignContent: 'flex-start',
         paddingHorizontal: 5,
     },
@@ -77,8 +86,8 @@ const styles = StyleSheet.create({
         marginLeft: 10,
     },
     listImage: {
-        height: 80,
-        width: 80,
+        height: 90,
+        width: 90,
         borderWidth: 1,
         borderColor: Colors.dark_shade1,
     },
@@ -86,16 +95,21 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontFamily: 'open-sans',
     },
-    itemCommunityText: {
+    itemDetailText: {
         fontSize: 14,
         fontFamily: 'open-sans',
+        marginTop: 5,
+        marginLeft: 10,
     },
-    postingTypeIconContainer: {
-        width: '22%',
+    postingTypeContainer: {
+        width: '50%',
+        flexDirection: 'row',
+        alignItems: 'center',
     },
     postingTypeIconImage: {
-        width: 70,
-        height: 70,
+        width: 20,
+        height: 20,
+        marginTop: 5,
     },
 });
 

@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 
 import { AuthContext } from '../providers/AuthProvider';
+import CustomButton from '../components/CustomButton';
 
 import Colors from '../config/colors';
 import { windowHeight, windowWidth } from '../config/dimensions';
@@ -27,6 +28,9 @@ const ProfileScreen = props => {
       {
         user.user ?
           <>
+            <Text style={styles.username}>{user.user.username}</Text>
+            <Text style={styles.date}>Member Since: {prettifyDate(user.user.date_joined)}</Text>
+
             <View style={styles.imageContainer}>
               <Image
                 style={styles.itemImage}
@@ -39,20 +43,25 @@ const ProfileScreen = props => {
               />
             </View>
 
-            <View style={styles.userDetailSection}>
-              <Text style={styles.username}>{user.user.username}</Text>
-              <Text style={styles.text}>{user.user.first_name} {user.user.last_name}</Text>
-              <Text style={styles.text}>{user.user.email}</Text>
-              <Text style={styles.text}>Member Since: {prettifyDate(user.user.date_joined)}</Text>
-              <Text style={styles.text}>{user.profile.profile_text}</Text>
+              <View style={styles.userDetailSection}>
+                <Text>Name:</Text>
+                <Text style={styles.text}>{user.user.first_name} {user.user.last_name}</Text>
+                <Text >Email:</Text>
+                <Text style={styles.text}>{user.user.email}</Text>
+                <Text >Bio: </Text>
+                <Text style={styles.bio}>{user.profile.profile_text}</Text>
             </View>
           </>
         : null
       }
-      <Button
-        title="Edit Your Profile"
-        onPress={() => navigation.navigate('EditProfile')}
-      />
+      <CustomButton
+        style={styles.button}
+        onPress={() => {
+            navigation.navigate('EditProfile');
+        }}
+      >
+        <Text style={styles.buttonText}>Edit Your Profile</Text>
+      </CustomButton>
     </View>
   );
 };
@@ -60,21 +69,24 @@ const ProfileScreen = props => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    justifyContent: 'space-around',
+    justifyContent: 'flex-start',
     alignItems: 'center',
   },
   userDetailSection: {
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'flex-start',
   },
   text: {
     fontSize: 18,
     fontFamily: 'open-sans',
+    marginBottom: 15,
+    marginLeft: 5
   },
   imageContainer: {
     width: windowWidth / 1.8,
     height: windowWidth / 1.8,
     marginTop: 10,
+    marginBottom: 30,
     borderWidth: 2,
     borderColor: Colors.dark_shade1,
   },
@@ -86,7 +98,31 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontFamily: 'open-sans-bold',
     alignSelf: 'center',
+    marginTop: 10
   },
+  bio: {
+    fontSize: 18,
+    fontFamily: 'open-sans',
+    marginBottom: 15,
+    marginLeft: 5
+
+  },
+  button: {
+    backgroundColor: Colors.primary,
+    borderRadius: 25,
+    height: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 20,
+    elevation: 5,
+  },
+  buttonText: {
+    color: Colors.light_shade4,
+    fontSize: 24,
+  },
+  date: {
+      fontSize: 12,
+  }
 });
 
 export default ProfileScreen;
