@@ -25,6 +25,8 @@ const itemPlaceHolder = '../assets/image_place_holder.jpg';
 import Colors from '../config/colors';
 import { windowHeight, windowWidth } from '../config/dimensions';
 import { showModal, hideModal } from '../components/CustomModal';
+import { notifyMessage } from '../components/CustomToast';
+
 import { AuthContext } from '../providers/AuthProvider';
 
 const emailUrl = 'https://cellular-virtue-277000.uc.r.appspot.com/postings/contact/';
@@ -32,7 +34,6 @@ const emailUrl = 'https://cellular-virtue-277000.uc.r.appspot.com/postings/conta
 const PostingDetailScreen = props => {
   const { user } = useContext(AuthContext);
   const { route, navigation } = props;
-  const [emailText, setEmailText] = useState('');
   const [postingImage, setPostingImage] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
 
@@ -40,7 +41,6 @@ const PostingDetailScreen = props => {
 
   const handleReachOut = () => {
     if (!isProcessing) {
-      console.log('Sending email from ' + emailText + ' to post with id: ' + route.params.id);
       setIsProcessing(true);
       showModal('SENDING_EMAIL');
       sendEmail(user.user.email, route.params.id);
@@ -70,10 +70,10 @@ const PostingDetailScreen = props => {
         notifyMessage('Oops! something went wrong...');
       })
       .finally(() => {
-        notifyMessage('Email sent successfully!');
         resetFormState();
         setIsProcessing(false)
         hideModal();
+        notifyMessage('Email sent successfully!');
         navigateToHomeStack();
       });
   }
@@ -86,20 +86,6 @@ const PostingDetailScreen = props => {
   // Navigates to the Home Screen stack when called
   const navigateToHomeStack = () => {
     navigation.navigate('Home', {screen: 'Feed'})
-  }
-
-  const notifyMessage = msg => {
-    const toastOptions = {
-      data: msg,
-      textColor: Colors.light_shade4,
-      backgroundColor: Colors.dark_shade1,
-      position: WToast.position.CENTER,
-      duration: WToast.duration.SHORT,
-      position: WToast.position.CENTER,
-      // icon: <ActivityIndicator color='#fff' size={'large'}/>
-    }
-
-    WToast.show(toastOptions)
   }
 
   const itemIcon = route.params.request ? require(requestedItemIconImage)
@@ -116,8 +102,10 @@ const PostingDetailScreen = props => {
           style={styles.itemImage}
           resizeMode='cover'
 
-          source={picUrl != null?{uri:picUrl}
-                  : require(itemPlaceHolder)}
+          source={picUrl != null
+                  ? {uri:picUrl}
+                  : require(itemPlaceHolder)
+                 }
 
         />
       </View>
@@ -143,8 +131,6 @@ const PostingDetailScreen = props => {
       >
         <Text style={styles.reachOutButtonText}>Reach Out!</Text>
       </CustomButton>
-
-
     </>
   )
 
@@ -163,12 +149,11 @@ const PostingDetailScreen = props => {
 const styles = StyleSheet.create({
   scrollScreen: {
     alignItems: 'center',
-    justifyContent: 'space-between',
     paddingHorizontal: 10,
     backgroundColor: Colors.light_shade4,
   },
   screen: {
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     paddingHorizontal: 10,
     backgroundColor: Colors.light_shade4,
   },
@@ -182,18 +167,8 @@ const styles = StyleSheet.create({
     marginLeft: windowWidth / 128,
     textAlign: 'center',
     fontFamily: 'open-sans-bold',
-    fontSize: RFPercentage(4.5),
+    fontSize: RFPercentage(4.2),
     marginTop: 10,
-  },
-  postingTypeIconContainer: {
-    marginLeft: 8,
-  },
-  postingTypeIconImage: {
-    width: 80,
-    height: 80,
-  },
-  detailRow: {
-    flexDirection: 'row',
   },
   detailText: {
     fontSize: windowWidth / 32,

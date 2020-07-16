@@ -20,9 +20,10 @@ const itemPlaceHolder = '../assets/image_place_holder.jpg';
 
 const ProfileScreen = props => {
   const { navigation } = props;
-  const { user } = useContext(AuthContext);
+  const { user, communities } = useContext(AuthContext);
 
   const picUrl = user.profile.profile_pic ? user.profile.profile_pic : null;
+  const homeCommunity = communities.find(community => community.id === user.profile.home);
 
   return(
     <ScrollView contentContainerStyle={styles.screen}>
@@ -42,12 +43,14 @@ const ProfileScreen = props => {
         </View>
 
         <View style={styles.userDetailSection}>
-          <Text style={styles.labelText}>Name:</Text>
+          <Text style={styles.labelText}>Name</Text>
           <Text style={styles.text}>{user.user.first_name} {user.user.last_name}</Text>
-          <Text style={styles.labelText}>Email:</Text>
+          <Text style={styles.labelText}>Email</Text>
           <Text style={styles.text}>{user.user.email}</Text>
-          <Text style={styles.labelText}>Bio: </Text>
+          <Text style={styles.labelText}>Bio</Text>
           <Text style={styles.text}>{user.profile.profile_text}</Text>
+          <Text style={styles.labelText}>Home</Text>
+          <Text style={styles.text}>{homeCommunity.name}</Text>
         </View>
       <CustomButton
         style={styles.button}
@@ -67,13 +70,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   userDetailSection: {
-    justifyContent: 'center',
-    alignItems: 'flex-start',
+    alignItems: 'center'
   },
   text: {
-    fontSize: 18,
+    fontSize: 20,
     fontFamily: 'open-sans',
-    marginBottom: 15,
+    marginBottom: 10,
   },
   labelText: {
     fontSize: 12,

@@ -49,6 +49,7 @@ const ProfileEditScreen = props => {
     const [selectedImage, setSelectedImage] = useState(null);
     const [isProcessing, setIsProcessing] = useState(false);
     const [isValidUsername, setIsValidUsername] = useState(true);
+    const [usernameChanged, setUsernameChanged] = useState(false);
 
     const firstNameRef = useRef(null);
     const lastNameRef = useRef(null);
@@ -59,7 +60,7 @@ const ProfileEditScreen = props => {
     };
 
     const attemptProfileUpdate = () => {
-        if (!isValidUsername && (formValue.username === user.user.username)) {
+        if (!isValidUsername && usernameChanged) {
             showModal('INVALID_USERNAME');
             setTimeout(() => {
                 hideModal();
@@ -277,6 +278,7 @@ const ProfileEditScreen = props => {
               onChangeText={text => updateForm(text, 'username')}
               onBlur={() => {
                   setIsValidUsername(checkUsername(formValue.text));
+                  setUsernameChanged(true);
               }}
               ref={firstNameRef}
             />

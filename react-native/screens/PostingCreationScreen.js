@@ -150,15 +150,15 @@ const PostingCreationScreen = props => {
     <KeyboardAvoidingScrollView 
       stickyFooter={
         <CustomButton
-            onPress={() => handlePostCreation()}
-            style={{ marginBottom: 10, marginTop: 0, alignSelf: 'center'}}
-          >
-            <Text style={styles.buttonText}>Confirm</Text>
-          </CustomButton>
+          onPress={() => handlePostCreation()}
+          style={{ marginBottom: 10, marginTop: 0, alignSelf: 'center'}}
+        >
+          <Text style={styles.buttonText}>Confirm</Text>
+        </CustomButton>
       }
       containerStyle={styles.screen}
     >
-    <Center style={styles.screen}>
+      <Center style={styles.screen}>
         <View style={styles.imageContainer}>
 
           <CustomImagePicker
@@ -170,7 +170,7 @@ const PostingCreationScreen = props => {
 
         </View>
 
-          <View style={styles.inputContainer}>
+        <View style={styles.inputContainer}>
           <View style={styles.inputView}>
             <TextInput
               style={styles.inputText}
@@ -182,7 +182,7 @@ const PostingCreationScreen = props => {
               ref={nameInputRef}
             />
           </View>
-          <View style={styles.inputView}>
+          <View style={{...styles.inputView, ...styles.descriptionInput}}>
             <TextInput
               style={styles.inputText}
               placeholder='Item Description...'
@@ -214,6 +214,7 @@ const PostingCreationScreen = props => {
                   style={styles.countInputText}
                   keyboardType='numeric'
                   returnKeyType='done'
+                  value={'1'}
                   onChangeText={text => setItemCount(text)}
                   ref={itemCountInputRef}
                 />
@@ -231,7 +232,7 @@ const PostingCreationScreen = props => {
             </View>
           </View>
         </View>        
-    </Center>
+      </Center>
     </KeyboardAvoidingScrollView>
   );
 }
@@ -240,7 +241,6 @@ const styles = StyleSheet.create({
   screen: {
     backgroundColor: Colors.light_shade4,
     alignItems: 'center',
-    justifyContent: 'flex-start',
     flexGrow: 1,
     width: windowWidth,
   },
@@ -290,6 +290,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+  },
+  descriptionInput: {
+    height: 80,
+    alignItems: 'flex-start',
   },
   inputText: {
     width: '90%',

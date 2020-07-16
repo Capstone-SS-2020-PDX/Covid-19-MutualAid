@@ -248,7 +248,7 @@ const ProfileCreationScreen = props => {
                 placeholderTextColor={Colors.placeholder_text}
                 maxLength={255}
                 multiline={true}
-                returnKeyType='next'
+                returnKeyType='go'
                 onChangeText={text => updateForm(text, 'profile_text')}
                 ref={profileTextRef}
               />
