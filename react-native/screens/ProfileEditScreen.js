@@ -152,15 +152,6 @@ const ProfileEditScreen = props => {
             });
     };
 
-    const getImage = () => {
-        return selectedImage;
-    };
-
-    const selectImage = imageData => {
-        // console.log("In selectImage: " + JSON.stringify(imageData));
-        setSelectedImage(imageData);
-    };
-
     const renderCommunityPickerItems = () => {
         return communities.map(community =>
             <Picker.Item label={community.name} value={community} key={community.id}/>
@@ -223,29 +214,6 @@ const ProfileEditScreen = props => {
 
     };
 
-    const fetchProfile = () => {
-        const url = profiles_url + user.profile.id + '/';
-
-        return fetch(url, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-                'Content-type': 'application/json',
-            },
-        })
-            .then(response => response.json())
-            .then(json => {
-                updateProfile(json);
-            })
-            .catch(error => {
-                console.log(error)
-            })
-            .finally(() => {
-                setIsProcessing(false);
-                hideModal();
-            });
-    };
-
     const clearInputs = () => {
         setFormValue({});
 
@@ -263,6 +231,7 @@ const ProfileEditScreen = props => {
         console.log("In selectImage: " + JSON.stringify(imageData));
         setSelectedImage(imageData);
     };
+
     return(
         <KeyboardAvoidingScrollView contentContainerStyle={styles.screen}>
           <View style={styles.imageContainer}>
@@ -346,16 +315,14 @@ const ProfileEditScreen = props => {
             <Text style={styles.buttonText}>Confirm</Text>
           </CustomButton>
         </KeyboardAvoidingScrollView>
-        </View>
-    )}
 
     );
 };
 
 const styles = StyleSheet.create({
     screen: {
-        flex: 1,
         justifyContent: 'space-around',
+        alignItems: 'center',
     },
     screenTitle: {
         color: Colors.dark_shade1,
