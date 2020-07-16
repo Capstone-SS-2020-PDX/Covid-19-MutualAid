@@ -3,7 +3,6 @@ import { StyleSheet,
          Text,
          TextInput,
          View,
-         KeyboardAvoidingView,
          Button,
          Switch,
          TouchableOpacity,
@@ -18,11 +17,12 @@ import { useHeaderHeight } from '@react-navigation/stack';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { WToast } from 'react-native-smart-tip'
-
+import {KeyboardAvoidingScrollView} from 'react-native-keyboard-avoiding-scroll-view';
 import { showModal, hideModal } from '../components/CustomModal';
 import Center from '../components/Center';
 import CustomButton from '../components/CustomButton';
 import CustomImagePicker from '../components/CustomImagePicker';
+import KeyboardShift from 'react-native-keyboardshift-razzium';
 
 import Colors from '../config/colors.js';
 import { windowHeight, windowWidth } from '../config/dimensions';
@@ -158,12 +158,18 @@ const PostingCreationScreen = props => {
   };
 
   return (
+    <KeyboardAvoidingScrollView 
+      stickyFooter={
+        <CustomButton
+            onPress={() => handlePostCreation()}
+            style={{ marginBottom: 10, marginTop: 0, alignSelf: 'center'}}
+          >
+            <Text style={styles.buttonText}>Confirm</Text>
+          </CustomButton>
+      }
+      containerStyle={styles.screen}
+    >
     <Center style={styles.screen}>
-      <KeyboardAwareScrollView
-        resetScrollToCoords={{ x: 0, y: height }}
-        contentContainerStyle={styles.keyboardView}
-        scrollEnabled={true}
-      >
         <View style={styles.imageContainer}>
 
           <CustomImagePicker
@@ -174,7 +180,8 @@ const PostingCreationScreen = props => {
           />
 
         </View>
-        <View style={styles.inputContainer}>
+
+          <View style={styles.inputContainer}>
           <View style={styles.inputView}>
             <TextInput
               style={styles.inputText}
@@ -234,17 +241,9 @@ const PostingCreationScreen = props => {
               />
             </View>
           </View>
-
-          <CustomButton
-            onPress={() => handlePostCreation()}
-            style={{ marginBottom: 10, alignSelf: 'center'}}
-          >
-            <Text style={styles.buttonText}>Confirm</Text>
-          </CustomButton>
-        </View>
-
-      </KeyboardAwareScrollView>
+        </View>        
     </Center>
+    </KeyboardAvoidingScrollView>
   );
 }
 
@@ -254,10 +253,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
     flexGrow: 1,
+    width: windowWidth,
   },
   keyboardView: {
-    width: windowWidth,
-    height: windowHeight,
     backgroundColor: Colors.light_shade4,
     alignItems: 'center',
     justifyContent: 'flex-start',
