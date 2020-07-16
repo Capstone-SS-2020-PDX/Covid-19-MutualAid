@@ -1,4 +1,6 @@
+
 import React, { useContext, useState, useRef } from 'react';
+
 import {
     View,
     ScrollView,
@@ -15,6 +17,7 @@ import {
 import CustomImagePicker from '../components/CustomImagePicker';
 import CustomButton from '../components/CustomButton';
 import { KeyboardAvoidingScrollView } from 'react-native-keyboard-avoiding-scroll-view';
+import KeyboardShift from 'react-native-keyboardshift-razzium';
 
 import Colors from '../config/colors';
 import { notifyMessage } from '../components/CustomToast';
@@ -25,6 +28,7 @@ import { users_url, profiles_url } from '../config/urls';
 import { AuthContext } from '../providers/AuthProvider';
 
 const ProfileEditScreen = props => {
+
     const { navigation } = props;
     const { addProfile, updateUser, updateProfile, user, communities, checkUsername } = useContext(AuthContext);
 
@@ -81,6 +85,7 @@ const ProfileEditScreen = props => {
 
             await sendUpdateUserRequest(JSON.stringify(updatedUserData.user), userPatchUrl, 'PATCH');
             await sendUpdateProfileRequest(profilePatchUrl, 'PATCH');
+
         } else {
             console.log('Processing your request, please wait');
         }
@@ -91,15 +96,18 @@ const ProfileEditScreen = props => {
         if (selectedImage) {
             data.append('profile_pic', selectedImage);
         }
+
         data.append('profile_text', formValue.profile_text);
         if (selectedCommunity) {
             data.append('home', selectedCommunity.id);
         }
+      
         return data;
     };
 
     const sendUpdateProfileRequest = (url, method) => {
         console.log("In update profile Request, Outgoing url: " + url);
+
         return fetch(url, {
             method: method,
             headers: {
@@ -107,6 +115,7 @@ const ProfileEditScreen = props => {
             },
             body: createFormData(),
         })
+
             .then(response => response.json())
             .then(json => {
                 console.log(json);
@@ -211,17 +220,58 @@ const ProfileEditScreen = props => {
                 </View>
             );
         }
+
     };
 
+    const fetchProfile = () => {
+        const url = profiles_url + user.profile.id + '/';
+
+        return fetch(url, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-type': 'application/json',
+            },
+        })
+            .then(response => response.json())
+            .then(json => {
+                updateProfile(json);
+            })
+            .catch(error => {
+                console.log(error)
+            })
+            .finally(() => {
+                setIsProcessing(false);
+                hideModal();
+            });
+    };
+
+    const clearInputs = () => {
+        setFormValue({});
+
+        firstNameRef.current.clear();
+        lastNameRef.current.clear();
+        profileTextRef.current.clear();
+    };
+
+
+    const getImage = () => {
+        return selectedImage;
+    };
+
+    const selectImage = imageData => {
+        console.log("In selectImage: " + JSON.stringify(imageData));
+        setSelectedImage(imageData);
+    };
     return(
         <KeyboardAvoidingScrollView contentContainerStyle={styles.screen}>
-
           <View style={styles.imageContainer}>
             <CustomImagePicker
               iconName='images'
               onSelectImage={selectImage}
               getImage={getImage}
               setImage={setSelectedImage}
+
               placeholderImage={user.profile.profile_pic}
             />
           </View>
@@ -296,12 +346,16 @@ const ProfileEditScreen = props => {
             <Text style={styles.buttonText}>Confirm</Text>
           </CustomButton>
         </KeyboardAvoidingScrollView>
+        </View>
+    )}
+
     );
 };
 
 const styles = StyleSheet.create({
     screen: {
-        alignItems: 'center',
+        flex: 1,
+        justifyContent: 'space-around',
     },
     screenTitle: {
         color: Colors.dark_shade1,
@@ -369,6 +423,7 @@ const styles = StyleSheet.create({
         paddingBottom: 5,
         fontFamily: 'open-sans',
         fontSize: 12,
+
     },
 });
 
