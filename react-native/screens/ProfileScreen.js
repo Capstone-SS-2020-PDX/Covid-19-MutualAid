@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   username: {
-    fontSize: 25,
+    fontSize: 30,
     fontFamily: 'open-sans-bold',
     alignSelf: 'center',
     marginTop: 10
