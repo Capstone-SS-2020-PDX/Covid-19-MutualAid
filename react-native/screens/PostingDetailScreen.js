@@ -150,14 +150,12 @@ const PostingDetailScreen = props => {
 
   return(
     windowHeight < 650
-      ? <ScrollView
-             contentContainerStyle={styles.scrollScreen}
-  >
-    {screenContent}
-  </ScrollView>
+      ? <ScrollView contentContainerStyle={styles.scrollScreen}>
+          {screenContent}
+        </ScrollView>
     : <Center style={styles.screen}>
-                                     {screenContent}
-                                   </Center>
+        {screenContent}
+      </Center>
   );
 };
 
@@ -181,10 +179,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   detailTitleText: {
-    maxWidth: '75%',
     marginLeft: windowWidth / 128,
+    textAlign: 'center',
     fontFamily: 'open-sans-bold',
-    fontSize: RFPercentage(5),
+    fontSize: RFPercentage(4.5),
     marginTop: 10,
   },
   postingTypeIconContainer: {
