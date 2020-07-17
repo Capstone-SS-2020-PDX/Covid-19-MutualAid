@@ -1,6 +1,10 @@
-FROM gcr.io/google-appengine/python
+FROM python:3.8-slim-buster
 
-RUN apt-get update && apt-get install -y binutils libproj-dev gdal-bin
+RUN apt-get -y update && apt-get install -y binutils libproj-dev gdal-bin libpq-dev
+RUN export PATH=$PATH:/usr/lib
+RUN export PATH=$PATH:/usr/local/lib
+RUN export LD_LIBRARY_PATH=/usr/local/lib
+RUN echo `python3 --version`
 
 # Set environment variables
 ENV PYTHONUNBUFFERED 1
