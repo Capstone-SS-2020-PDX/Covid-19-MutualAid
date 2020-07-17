@@ -1,6 +1,15 @@
-runtime: python37
+runtime: custom
+env: flex
+entrypoint: "python3 manage.py runserver 0.0.0.0:8080"
+
+beta_settings:
+  cloud_sql_instances: "ace-mote-270703:us-west1:squirtle=tcp:5432"
+
+runtime_config:
+  python_version: 3
+
 handlers:
-- url: /static
-  static_dir: static/
-- url: /.*
-  script: auto
+  - url: /static
+    static_dir: static/
+  - url: /.*
+    script: auto

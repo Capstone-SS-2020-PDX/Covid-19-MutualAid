@@ -10,6 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
+# Python 3.8
+# build from source dependencies
+
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -20,14 +23,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
+SECRET_KEY = 'sd1v^qwjvnb+4hd1tn0dy0#cl98mlfxez@69pno-^t3s$*2v4+'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["cellular-virtue-277000.uc.r.appspot.com", 'localhost', '192.168.*', '10.*']
+ALLOWED_HOSTS = ['ace-mote-270703.wl.r.appspot.com', 'localhost', '192.168.*', '10.*', '127.0.0.1']
 
-SECURE_SSL_REDIRECT = True
+SECURE_SSL_REDIRECT = False
 
 # Application definition
 
@@ -35,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
+    'django.contrib.gis',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
@@ -80,16 +84,16 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-if os.getenv('GAE_APPLICATION', None):
-    DATABASES = {
-        'default': {
-                'ENGINE': 'django.db.backends.postgresql',
-                'HOST': '/cloudsql/cellular-virtue-277000:us-central1:cgtest',
-                'USER': 'postgres',
-                'NAME': 'postgres',
-                'PASSWORD': os.getenv('POSTGRES_DB_PASSWORD'),
-                }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'HOST': '10.63.0.7',
+        'PORT': '5432',
+        'USER': 'postgres',
+        'NAME': 'postgres',
+        'PASSWORD': 'testpassword',
         }
+    }
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
@@ -129,22 +133,17 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = 'static'
 
+DEFAULT_FILE_STORAGE = 'gcloud.GoogleCloudMediaFileStorage'
 
-if os.getenv('GAE_APPLICATION', None):
-    DEFAULT_FILE_STORAGE = 'gcloud.GoogleCloudMediaFileStorage'
-    
-    GS_PROJECT_ID = 'cellular-virtue-277000'
-    GS_MEDIA_BUCKET_NAME = 'cgapi-upload-media'
-    
+GS_PROJECT_ID = 'ace-mote-270703'
+GS_MEDIA_BUCKET_NAME = 'charmander'
 
-    MEDIA_URL = 'https://storage.googleapis.com/{}/'.format(GS_MEDIA_BUCKET_NAME)
-    MEDIA_ROOT = "media/"
-    
-    UPLOAD_ROOT = 'media/uploads/'
 
-else:
-    MEDIA_URL = '/media/'
-    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = 'https://storage.googleapis.com/{}/'.format(GS_MEDIA_BUCKET_NAME)
+MEDIA_ROOT = "media/"
+
+UPLOAD_ROOT = 'media/uploads/'
+
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.sendgrid.net'
