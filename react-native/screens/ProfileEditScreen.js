@@ -1,6 +1,4 @@
-
 import React, { useContext, useState, useRef } from 'react';
-
 import {
     View,
     ScrollView,
@@ -28,7 +26,6 @@ import { users_url, profiles_url } from '../config/urls';
 import { AuthContext } from '../providers/AuthProvider';
 
 const ProfileEditScreen = props => {
-
     const { navigation } = props;
     const { addProfile, updateUser, updateProfile, user, communities, checkUsername } = useContext(AuthContext);
 
@@ -53,6 +50,8 @@ const ProfileEditScreen = props => {
 
     const firstNameRef = useRef(null);
     const lastNameRef = useRef(null);
+    const usernameRef = useRef(null);
+    const emailRef = useRef(null);
     const profileTextRef = useRef(null);
 
     const updateForm = (text, input) => {
@@ -233,6 +232,12 @@ const ProfileEditScreen = props => {
         setSelectedImage(imageData);
     };
 
+    const onKeyPress = (key) => {
+        if (key === 'Enter') {
+            descriptionInputRef.current.blur();
+        }
+    }
+
     return(
         <KeyboardAvoidingScrollView contentContainerStyle={styles.screen}>
           <View style={styles.imageContainer}>
@@ -253,7 +258,9 @@ const ProfileEditScreen = props => {
               placeholderTextColor={Colors.placeholder_text}
               maxLength={25}
               returnKeyType='next'
+              blurOnSubmit={false}
               onChangeText={text => updateForm(text, 'first_name')}
+              onSubmitEditing={() => lastNameRef.current.focus()}
               ref={firstNameRef}
             />
           </View>
@@ -264,7 +271,9 @@ const ProfileEditScreen = props => {
               placeholderTextColor={Colors.placeholder_text}
               maxLength={35}
               returnKeyType='next'
+              blurOnSubmit={false}
               onChangeText={text => updateForm(text, 'last_name')}
+              onSubmitEditing={() => usernameRef.current.focus()}
               ref={lastNameRef}
             />
           </View>
@@ -275,12 +284,14 @@ const ProfileEditScreen = props => {
               placeholderTextColor={Colors.placeholder_text}
               maxLength={35}
               returnKeyType='next'
+              blurOnSubmit={false}
               onChangeText={text => updateForm(text, 'username')}
               onBlur={() => {
                   setIsValidUsername(checkUsername(formValue.text));
                   setUsernameChanged(true);
               }}
-              ref={firstNameRef}
+              onSubmitEditing={() => emailRef.current.focus()}
+              ref={usernameRef}
             />
           </View>
           <View style={styles.inputView}>
@@ -293,8 +304,10 @@ const ProfileEditScreen = props => {
               autoCapitalize='none'
               autoCorrect={false}
               returnKeyType='next'
+              blurOnSubmit={false}
               onChangeText={text => updateForm(text, 'email')}
-              ref={firstNameRef}
+              onSubmitEditing={() => profileTextRef.current.focus()}
+              ref={emailRef}
             />
           </View>
           <View style={{ ...styles.inputView, ...styles.profileInputView}}>
@@ -302,9 +315,11 @@ const ProfileEditScreen = props => {
               style={styles.inputText}
               placeholder={ `Profile Text: ${user.profile.profile_text}` }
               placeholderTextColor={Colors.placeholder_text}
+              blurOnSubmit={true}
               maxLength={255}
               multiline={true}
-              returnKeyType='go'
+              returnKeyType='done'
+              onKeyPress={nativeEvent => onKeyPress(nativeEvent.key)}
               onChangeText={text => updateForm(text, 'profile_text')}
               ref={profileTextRef}
             />
