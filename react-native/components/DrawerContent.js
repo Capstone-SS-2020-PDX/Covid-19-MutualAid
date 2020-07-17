@@ -4,7 +4,8 @@ import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import {
   MaterialIcons,
   MaterialCommunityIcons,
-  Ionicons
+  Ionicons,
+  Entypo,
 } from '@expo/vector-icons';
 import {
   Avatar,
@@ -86,6 +87,17 @@ const DrawerContent = props => {
             />
             <DrawerItem
               icon={params => (
+                <Entypo
+                  name='list'
+                  color={params.color}
+                  size={params.size}
+                />
+              )}
+              label="My Postings"
+              onPress={() => {navigation.navigate('User Postings')}}
+            />
+            <DrawerItem
+              icon={params => (
                 <MaterialIcons
                   name='favorite-border'
                   color={params.color}
@@ -105,17 +117,6 @@ const DrawerContent = props => {
               )}
               label="About"
               onPress={() => {navigation.navigate('About')}}
-            />
-            <DrawerItem
-              icon={params => (
-                <MaterialCommunityIcons
-                  name='help-circle-outline'
-                  color={params.color}
-                  size={params.size}
-                />
-              )}
-              label="Get Help"
-              onPress={() => {}}
             />
             <DrawerItem
               icon={params => (

@@ -4,13 +4,11 @@ import { View,
          TextInput,
          Button,
          StyleSheet,
-         FlatList,
          ActivityIndicator,
          TouchableOpacity,
        } from 'react-native';
 import { Ionicons, Feather } from '@expo/vector-icons';
 
-import Center from '../components/Center';
 import PostingList from '../components/PostingList';
 
 import Colors from '../config/colors';
