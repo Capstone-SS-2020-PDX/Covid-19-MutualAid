@@ -87,6 +87,7 @@ const PostingCreationScreen = props => {
 
   // handle sending the request
   const sendPostRequest = () => {
+    console.log(windowHeight);
     return fetch(postings_url, {
       method: 'POST',
       headers: {
@@ -145,21 +146,14 @@ const PostingCreationScreen = props => {
     // console.log("In selectImage: " + JSON.stringify(imageData));
     setSelectedImage(imageData);
   };
+  const Wrapper = (windowHeight > 650) ? View : ScrollView;
 
   return (
-    <KeyboardAvoidingScrollView 
-      stickyFooter={
-        <CustomButton
-          onPress={() => handlePostCreation()}
-          style={{ marginBottom: 10, marginTop: 0, alignSelf: 'center'}}
-        >
-          <Text style={styles.buttonText}>Confirm</Text>
-        </CustomButton>
-      }
-      containerStyle={styles.screen}
-    >
+    <KeyboardShift>
+      {() => (
+      <Wrapper style={(Wrapper === ScrollView) ? {backgroundColor: Colors.light_shade4, flexGrow: 1} : styles.screen}>
       <Center style={styles.screen}>
-        <View style={styles.imageContainer}>
+        <View style={ (windowHeight > 650) ? styles.imageContainerBig : styles.imageContainer}>
 
           <CustomImagePicker
             iconName='images'
@@ -196,7 +190,7 @@ const PostingCreationScreen = props => {
               ref={descriptionInputRef}
             />
           </View>
-          <View style={styles.switchRow}>
+          <View style={ (windowHeight > 650) ? styles.switchRowBig : styles.switchRow}>
             <View style={styles.switchColumn}>
               <Text style={styles.switchTitle}>Request?</Text>
               <Switch
@@ -231,9 +225,17 @@ const PostingCreationScreen = props => {
               />
             </View>
           </View>
-        </View>        
+        </View>
+        <CustomButton
+          onPress={() => handlePostCreation()}
+          style={styles.confirmButton}
+        >
+          <Text style={styles.buttonText}>Confirm</Text>
+        </CustomButton>   
       </Center>
-    </KeyboardAvoidingScrollView>
+      </Wrapper>
+      )}
+      </KeyboardShift> 
   );
 }
 
@@ -243,16 +245,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexGrow: 1,
     width: windowWidth,
+    justifyContent: 'center'
   },
   keyboardView: {
     backgroundColor: Colors.light_shade4,
     alignItems: 'center',
     justifyContent: 'flex-start',
   },
+  imageContainerBig: {
+    width: '100%',
+    alignItems: 'center',
+    marginBottom: windowHeight / 20
+  },
   imageContainer: {
     width: '100%',
     alignItems: 'center',
-    marginVertical: 10
+    marginVertical: windowHeight / 40
   },
   textInput: {
     width: '100%',
@@ -279,7 +287,7 @@ const styles = StyleSheet.create({
     borderColor: Colors.placeholder_text,
     borderWidth: 0.5,
     height: 50,
-    marginBottom: 20,
+    marginBottom: windowHeight/40,
     paddingHorizontal: 20,
 
     shadowColor: Colors.dark_shade1,
@@ -309,7 +317,7 @@ const styles = StyleSheet.create({
     borderColor: Colors.placeholder_text,
     borderWidth: 0.5,
     height: 30,
-    marginBottom: 20,
+    marginBottom: windowHeight/40,
     paddingHorizontal: 20,
 
     shadowColor: Colors.dark_shade1,
@@ -326,11 +334,17 @@ const styles = StyleSheet.create({
     color: Colors.dark_shade1,
     textAlign: 'center',
   },
+  switchRowBig: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginHorizontal: 20,
+    marginVertical: 10
+  },
   switchRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginHorizontal: 20,
-    marginBottom: -10
+    marginVertical: -(windowHeight/70)
   },
   switchColumn: {
     alignItems: 'center',
@@ -343,7 +357,7 @@ const styles = StyleSheet.create({
       transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }],
   },
   confirmButton: {
-    marginBottom: 20,
+    marginBottom: 0,
   },
   createPostingButtonText: {
     color: 'white',
@@ -356,6 +370,9 @@ const styles = StyleSheet.create({
   activityIndicator: {
     marginTop: windowHeight / 40,
   },
+  confirmButton: {
+    alignSelf: 'center'
+  }
 });
 
 export default PostingCreationScreen;
