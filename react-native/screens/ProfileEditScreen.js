@@ -234,7 +234,10 @@ const ProfileEditScreen = props => {
     };
 
     return(
-        <KeyboardAvoidingScrollView contentContainerStyle={styles.screen}>
+        <KeyboardShift>
+        {() => (
+        <ScrollView style={{ showsVerticalScrollIndicator: false}}>
+            <View style={{marginHorizontal: 20}}>
           <View style={styles.imageContainer}>
             <CustomImagePicker
               iconName='images'
@@ -316,7 +319,10 @@ const ProfileEditScreen = props => {
           >
             <Text style={styles.buttonText}>Confirm</Text>
           </CustomButton>
-        </KeyboardAvoidingScrollView>
+          </View>
+          </ScrollView>
+        )}
+        </KeyboardShift>
 
     );
 };
