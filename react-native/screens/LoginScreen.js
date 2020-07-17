@@ -87,7 +87,7 @@ const LoginScreen = props => {
             style={styles.inputText}
             placeholder='Password...'
             placeholderTextColor={Colors.placeholder_text}
-            returnKeyType='go'
+            returnKeyType='done'
             secureTextEntry
             onChangeText={text => setPasswordText(text)}
             onSubmitEditing={() => attemptLogin()}

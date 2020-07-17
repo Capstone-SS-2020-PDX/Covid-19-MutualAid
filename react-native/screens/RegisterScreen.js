@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useRef } from 'react';
 import { View,
          Text,
          TextInput,
@@ -29,6 +29,10 @@ const RegisterScreen = props => {
   const [userNameText, setUserNameText] = useState(null);
   const [isValidUsername, setIsValidUsername] = useState(true);
   const [passwordText, setPasswordText] = useState(null);
+
+  const usernameInputRef = useRef(null);
+  const passwordInputRef = useRef(null);
+  const confirmPasswordInputRef = useRef(null);
 
   const attemptRegister = () =>{
     if (!emailText || !userNameText || !passwordText) {
@@ -72,8 +76,11 @@ const RegisterScreen = props => {
             autoCapitalize='none'
             autoCorrect={false}
             keyboardType='email-address'
+            returnKeyType='next'
+            blurOnSubmit={false}
             placeholderTextColor={Colors.placeholder_text}
             onChangeText={text => setEmailText(text)}
+            onSubmitEditing={() => usernameInputRef.current.focus()}
           />
         </View>
         <View style={styles.inputView}>
@@ -83,14 +90,18 @@ const RegisterScreen = props => {
             style={styles.icon}
           />
           <TextInput
+            ref={usernameInputRef}
             style={styles.inputText}
             placeholder='User Name...'
             autoCapitalize='none'
             placeholderTextColor={Colors.placeholder_text}
+            returnKeyType='next'
             onBlur={() => {
               setIsValidUsername(checkUsername(userNameText));
             }}
+            blurOnSubmit={false}
             onChangeText={text => setUserNameText(text)}
+            onSubmitEditing={() => passwordInputRef.current.focus()}
           />
         </View>
         <View style={styles.inputView}>
@@ -100,11 +111,15 @@ const RegisterScreen = props => {
             style={styles.icon}
           />
           <TextInput
+            ref={passwordInputRef}
             style={styles.inputText}
             placeholder='Password...'
             placeholderTextColor={Colors.placeholder_text}
             secureTextEntry
+            returnKeyType='next'
+            blurOnSubmit={false}
             onChangeText={text => setPasswordText(text)}
+            onSubmitEditing={() => confirmPasswordInputRef.current.focus()}
           />
         </View>
         <View style={styles.inputView}>
@@ -114,11 +129,14 @@ const RegisterScreen = props => {
             style={styles.icon}
           />
           <TextInput
+            ref={confirmPasswordInputRef}
             style={styles.inputText}
             placeholder='Confirm Password...'
+            returnKeyType='done'
             placeholderTextColor={Colors.placeholder_text}
             secureTextEntry
     /* onChangeText={text => setPasswordText(text)} */
+            onSubmitEditing={() => attemptRegister()}
           />
         </View>
       </View>
