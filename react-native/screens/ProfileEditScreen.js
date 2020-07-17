@@ -59,7 +59,7 @@ const ProfileEditScreen = props => {
     };
 
     const attemptProfileUpdate = () => {
-        if (!isValidUsername && (formValue.username !== user.user.username)) {
+        if (!isValidUsername && usernameChanged) {
             showModal('INVALID_USERNAME');
             setTimeout(() => {
                 hideModal();
