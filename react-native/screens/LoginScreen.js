@@ -22,10 +22,11 @@ import { windowHeight, windowWidth } from '../config/dimensions';
 const LoginScreen = props => {
   const { navigation, route } = props;
   const { login } = useContext(AuthContext);
-  // const [value, handleChange, reset] = useInputState("");
 
   const [emailText, setEmailText] = useState(null);
   const [passwordText, setPasswordText] = useState(null);
+
+  const passwordInputRef = useRef(null);
 
   const attemptLogin = () => {
     if (!emailText || !passwordText) {
@@ -65,10 +66,14 @@ const LoginScreen = props => {
           />
           <TextInput
             style={styles.inputText}
-            placeholder='UserName...'
+            placeholder='User Name...'
             placeholderTextColor={Colors.placeholder_text}
             autoCapitalize='none'
+            autoCorrect={false}
+            returnKeyType='next'
+            blurOnSubmit={false}
             onChangeText={text => setEmailText(text)}
+            onSubmitEditing={() => passwordInputRef.current.focus()}
           />
         </View>
         <View style={styles.inputView}>
@@ -78,11 +83,14 @@ const LoginScreen = props => {
             style={styles.icon}
           />
           <TextInput
+            ref={passwordInputRef}
             style={styles.inputText}
             placeholder='Password...'
             placeholderTextColor={Colors.placeholder_text}
+            returnKeyType='go'
             secureTextEntry
             onChangeText={text => setPasswordText(text)}
+            onSubmitEditing={() => attemptLogin()}
           />
         </View>
       </View>

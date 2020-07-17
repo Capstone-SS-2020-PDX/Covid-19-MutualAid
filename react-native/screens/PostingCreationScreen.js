@@ -73,9 +73,12 @@ const PostingCreationScreen = props => {
 
     const data = new FormData();
 
+    if (selectedImage) {
+      data.append('item_pic', selectedImage);
+    }
+
     data.append('title', itemName);
     data.append('desc', itemDescription);
-    data.append('item_pic', selectedImage);
     data.append('count', itemCount);
     data.append('owner', user.user.id);
     data.append('category', categoryValue);
