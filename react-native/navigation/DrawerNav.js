@@ -3,8 +3,8 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 
 import NavTabs from './NavTabs';
 import AboutStack from './AboutStack';
+import UserPostingStack from './UserPostingStack';
 import DrawerContent from '../components/DrawerContent';
-import UserPostingListScreen from '../screens/UserPostingListScreen';
 
 const Drawer = createDrawerNavigator();
 
@@ -24,7 +24,7 @@ const DrawerNav = props => {
       />
       <Drawer.Screen
         name='User Postings'
-        component={UserPostingListScreen}
+        component={UserPostingStack}
       />
     </Drawer.Navigator>
   );
