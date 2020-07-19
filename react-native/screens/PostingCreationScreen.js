@@ -73,9 +73,12 @@ const PostingCreationScreen = props => {
 
     const data = new FormData();
 
+    if (selectedImage) {
+      data.append('item_pic', selectedImage);
+    }
+
     data.append('title', itemName);
     data.append('desc', itemDescription);
-    data.append('item_pic', selectedImage);
     data.append('count', itemCount);
     data.append('owner', user.user.id);
     data.append('category', categoryValue);
@@ -148,6 +151,12 @@ const PostingCreationScreen = props => {
   };
   const Wrapper = (windowHeight > 650) ? View : ScrollView;
 
+  const onKeyPress = (key) => {
+    if (key === 'Enter') {
+      descriptionInputRef.current.blur();
+    }
+  }
+
   return (
     <KeyboardShift>
       {() => (
@@ -172,8 +181,10 @@ const PostingCreationScreen = props => {
               placeholderTextColor={Colors.placeholder_text}
               maxLength={35}
               returnKeyType='next'
+              blurOnSubmit={false}
               onChangeText={text => setItemName(text)}
               ref={nameInputRef}
+              onSubmitEditing={() => descriptionInputRef.current.focus()}
             />
           </View>
           <View style={{...styles.inputView, ...styles.descriptionInput}}>
@@ -183,9 +194,11 @@ const PostingCreationScreen = props => {
               placeholderTextColor={Colors.placeholder_text}
               keyboardType='default'
               returnKeyType='done'
+              blurOnSubmit={true}
               multiline={true}
               maxLength={255}
               numberOfLines={3}
+              onKeyPress={nativeEvent => onKeyPress(nativeEvent.key)}
               onChangeText={text => setItemDescription(text)}
               ref={descriptionInputRef}
             />
@@ -208,7 +221,7 @@ const PostingCreationScreen = props => {
                   style={styles.countInputText}
                   keyboardType='numeric'
                   returnKeyType='done'
-                  value={'1'}
+                  value={itemCount.toString()}
                   onChangeText={text => setItemCount(text)}
                   ref={itemCountInputRef}
                 />
@@ -305,6 +318,7 @@ const styles = StyleSheet.create({
   },
   inputText: {
     width: '90%',
+    paddingVertical: 10,
     color: Colors.dark_shade1,
   },
   countInputView: {
