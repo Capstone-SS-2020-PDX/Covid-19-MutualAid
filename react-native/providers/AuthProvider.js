@@ -154,16 +154,18 @@ export const AuthProvider = props => {
         })
             .then(response => {
                 console.log("Response status: " + response.status);
-                return response.json();
+                if (response.status = 200) {
+                    return response.json();
+                } else {
+                    throw Error(response.statusText);
+                }
             })
             .then(json => {
                 console.log('Server Response: ' + JSON.stringify(json));
                 loginData = json;
                 fetchCommunities();
             })
-            .catch(error => {
-                console.log(error);
-            })
+            .catch(error => console.log(error))
             .finally(() => {
 
                 if (loginData) {
@@ -184,10 +186,10 @@ export const AuthProvider = props => {
         dispatch({ type: UPDATE_USER, updatedUser: newUserData });
     }
 
-    const handleAutoLogin = () => {
+    const handleAutoLogin = async () => {
         AsyncStorage.getItem('loginData').then(loginData => {
             console.log('Attempting to fetch token from AsyncStorage...');
-            if (loginData) {
+            if (loginData.token) {
                 loginData = JSON.parse(loginData);
                 console.log('Token exists! : ' + loginData.token);
                 console.log('User exists! : ' + loginData.user.username);
