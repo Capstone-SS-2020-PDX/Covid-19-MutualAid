@@ -5,6 +5,7 @@ import {
     TextInput,
     Button,
     Picker,
+    ActivityIndicator,
     TouchableOpacity,
     ActionSheetIOS,
     KeyboardAvoidingView,
@@ -16,6 +17,7 @@ import { AuthContext } from '../providers/AuthProvider';
 
 import CustomImagePicker from '../components/CustomImagePicker';
 import CustomButton from '../components/CustomButton';
+import Center from '../components/Center';
 
 import Colors from '../config/colors';
 import { showModal, hideModal } from '../components/CustomModal';
@@ -25,7 +27,7 @@ const isAndroid = Platform.OS === 'android' ? true : false;
 
 const ProfileCreationScreen = props => {
     const { navigation } = props;
-    const { addProfile, updateUser, updateProfile, user, communities } = useContext(AuthContext);
+    const { isLoading, addProfile, updateUser, updateProfile, user, communities } = useContext(AuthContext);
 
 
     const [formValue, setFormValue] = useState(null);
@@ -205,64 +207,80 @@ const ProfileCreationScreen = props => {
         }
     };
 
-    return(
-        <View style={styles.screen}>
-          <Text style={styles.screenTitle}>Create Your Profile</Text>
+    const onKeyPress = (key) => {
+        if (key === 'Enter') {
+            profileTextRef.current.blur();
+        }
+    }
 
-          <View style={styles.imageContainer}>
-            <CustomImagePicker
-              iconName='images'
-              onSelectImage={selectImage}
-              getImage={getImage}
-              setImage={setSelectedImage}
-            />
-          </View>
+    if (isLoading) {
+        return( <Center><ActivityIndicator size='large'/></Center> );
+    } else {
+        return(
+            <View style={styles.screen}>
+              <Text style={styles.screenTitle}>Create Your Profile</Text>
 
-          <KeyboardAvoidingView style={styles.inputContainer} behavior='padding'>
-            <View style={styles.inputView}>
-              <TextInput
-                style={styles.inputText}
-                placeholder='First Name...'
-                placeholderTextColor={Colors.placeholder_text}
-                maxLength={25}
-                returnKeyType='next'
-                onChangeText={text => updateForm(text, 'first_name')}
-                ref={firstNameRef}
-              />
-            </View>
-            <View style={styles.inputView}>
-              <TextInput
-                style={styles.inputText}
-                placeholder='Last Name...'
-                placeholderTextColor={Colors.placeholder_text}
-                maxLength={25}
-                returnKeyType='next'
-                onChangeText={text => updateForm(text, 'last_name')}
-                ref={lastNameRef}
-              />
-            </View>
-            <View style={{ ...styles.inputView, ...styles.profileInputView}}>
-              <TextInput
-                style={styles.inputText}
-                placeholder='Profile Text...'
-                placeholderTextColor={Colors.placeholder_text}
-                maxLength={255}
-                multiline={true}
-                returnKeyType='go'
-                onChangeText={text => updateForm(text, 'profile_text')}
-                ref={profileTextRef}
-              />
-            </View>
-          </KeyboardAvoidingView>
+              <View style={styles.imageContainer}>
+                <CustomImagePicker
+                  iconName='images'
+                  onSelectImage={selectImage}
+                  getImage={getImage}
+                  setImage={setSelectedImage}
+                />
+              </View>
+
+              <KeyboardAvoidingView style={styles.inputContainer} behavior='padding'>
+                <View style={styles.inputView}>
+                  <TextInput
+                    style={styles.inputText}
+                    placeholder='First Name...'
+                    placeholderTextColor={Colors.placeholder_text}
+                    maxLength={25}
+                    returnKeyType='next'
+                    onChangeText={text => updateForm(text, 'first_name')}
+                    onSubmitEditing={() => {
+                        lastNameRef.current.focus()
+                    }}
+                    ref={firstNameRef}
+                  />
+                </View>
+                <View style={styles.inputView}>
+                  <TextInput
+                    style={styles.inputText}
+                    placeholder='Last Name...'
+                    placeholderTextColor={Colors.placeholder_text}
+                    maxLength={25}
+                    returnKeyType='next'
+                    onChangeText={text => updateForm(text, 'last_name')}
+                    onSubmitEditing={() => profileTextRef.current.focus()}
+                    ref={lastNameRef}
+                  />
+                </View>
+                <View style={{ ...styles.inputView, ...styles.profileInputView}}>
+                  <TextInput
+                    style={styles.inputText}
+                    placeholder='Profile Text...'
+                    placeholderTextColor={Colors.placeholder_text}
+                    maxLength={255}
+                    blurOnSubmit={true}
+                    multiline={true}
+                    returnKeyType='done'
+                    onChangeText={text => updateForm(text, 'profile_text')}
+                    onKeyPress={nativeEvent => onKeyPress(nativeEvent.key)}
+                    ref={profileTextRef}
+                  />
+                </View>
+              </KeyboardAvoidingView>
               { renderHomeCommunityPicker() }
-          <CustomButton
-            onPress={attemptProfileCreation}
-            style={{ marginBottom: 10, alignSelf: 'center'}}
-          >
-            <Text style={styles.buttonText}>Confirm</Text>
-          </CustomButton>
-        </View>
-    );
+              <CustomButton
+                onPress={attemptProfileCreation}
+                style={{ marginBottom: 10, alignSelf: 'center'}}
+              >
+                <Text style={styles.buttonText}>Confirm</Text>
+              </CustomButton>
+            </View>
+        );
+    }
 };
 
 const styles = StyleSheet.create({
