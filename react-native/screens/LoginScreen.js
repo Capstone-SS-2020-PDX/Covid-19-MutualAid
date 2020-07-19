@@ -90,7 +90,11 @@ const LoginScreen = props => {
             returnKeyType='done'
             secureTextEntry
             onChangeText={text => setPasswordText(text)}
-            onSubmitEditing={() => attemptLogin()}
+            onSubmitEditing={() => {
+              if (emailText && passwordText) {
+                attemptLogin();
+              }
+            }}
           />
         </View>
       </View>
