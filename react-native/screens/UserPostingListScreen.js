@@ -1,70 +1,73 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { View,
-         Text,
-         TextInput,
-         Button,
-         StyleSheet,
-         ActivityIndicator,
-         TouchableOpacity,
-       } from 'react-native';
+import React, { useEffect, useContext, useState, useRef } from 'react';
+import {
+    View,
+    Text,
+    TextInput,
+    ActivityIndicator,
+    TouchableOpacity,
+    StyleSheet,
+} from 'react-native';
 import { Ionicons, Feather } from '@expo/vector-icons';
 
 import PostingList from '../components/PostingList';
-
 import Colors from '../config/colors';
 import { windowWidth, windowHeight } from '../config/dimensions';
-import { postings_url } from '../config/urls';
+import { users_url } from '../config/urls';
 
+import { AuthContext } from '../providers/AuthProvider';
 
-const Feed = props => {
-  const { navigation } = props;
-  const [isLoading, setIsLoading] = useState(true);
-  const [postings, setPostings] = useState([]);
-  const [searchPostings, setSearchPostings] = useState([]);
-  const [searchText, setSearchText] = useState('');
-  const searchInputRef = useRef(null);
+const UserPostingListScreen = props => {
+    const { navigation } = props;
+    const { user } = useContext(AuthContext);
+    const userPostingsUrl = users_url + user.user.id + '/postings/';
 
-  const fetchPostings = () => {
-    setIsLoading(true);
-   
-    fetch(postings_url, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Content-type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-      }
-    })
-      .then(response => response.json())
-      .then(json => {
-        setPostings(json);
-        setSearchPostings(json);
-      })
-      .catch(error => console.log(error))
-      .finally(() => {
-        setIsLoading(false)
-      });
-  };
+    const [isLoading, setIsLoading] = useState(true);
+    const [postings, setPostings] = useState([]);
+    const [searchPostings, setSearchPostings] = useState([]);
+    const [searchText, setSearchText] = useState('');
+    const searchInputRef = useRef(null);
 
-  useEffect(() => {
-    fetchPostings();
-  }, []);
+    const fetchPostings = () => {
+        setIsLoading(true);
 
-  const handleSearch = text => {
-    setSearchText(text);
+        fetch(userPostingsUrl, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+            }
+        })
+            .then(response => response.json())
+            .then(json => {
+                setPostings(json);
+                setSearchPostings(json);
+            })
+            .catch(error => console.log(error))
+            .finally(() => {
+                setIsLoading(false)
+            });
+    };
 
-    let filteredPostings = postings.filter(posting =>
-      posting.title.toLowerCase().includes(text.toLowerCase())
-    );
+    useEffect(() => {
+        fetchPostings();
+    }, []);
 
-    setSearchPostings(filteredPostings);
-  };
+    const handleSearch = text => {
+        setSearchText(text);
 
-  const handleClearSearchInput = () => {
-    setSearchText('');
-    setSearchPostings(postings);
-    searchInputRef.current.clear();
-  };
+        let filteredPostings = postings.filter(posting =>
+            posting.title.toLowerCase().includes(text.toLowerCase())
+        );
+
+        setSearchPostings(filteredPostings);
+    };
+
+    const handleClearSearchInput = () => {
+        setSearchText('');
+        setSearchPostings(postings);
+        searchInputRef.current.clear();
+    };
 
   const PostingListSection = isLoading ? <ActivityIndicator size='large'/>
           : <PostingList
@@ -74,7 +77,7 @@ const Feed = props => {
             onRefresh={fetchPostings}
           />
 
-  return(
+    return(
        <View style={styles.screen}>
           <View style={styles.searchContainer}>
             <View style={styles.inputView}>
@@ -105,7 +108,7 @@ const Feed = props => {
           </View>
          {PostingListSection}
         </View>
-  );
+    );
 };
 
 const styles = StyleSheet.create({
@@ -148,4 +151,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Feed;
+export default UserPostingListScreen;

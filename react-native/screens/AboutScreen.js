@@ -41,7 +41,7 @@ const AboutScreen = props => {
 
                 <Text style={{...styles.bodyText, marginTop: 10}}>It was developed in order to assist mutual aid efforts and encourage community building.</Text>
                 <Text style={{...styles.bodyText}}>We encourage users to assist their neighbors however they can, whether they are able to reciprocate the gesture or not. We believe that no matter the situation, where there is humanity there is the capability for kindess.</Text>
-                <Text style={{...styles.bodyText, alignSelf: 'center'}}>Be good to each other.</Text>
+                <Text style={{...styles.bodyText, alignSelf: 'center', fontWeight: 'bold'}}>Be good to each other.</Text>
             </View>
 
             <Text style={{...styles.bodyText, marginHorizontal: 15, fontSize: 12, marginTop: 20}}>The backend of Common Goods is implemented using a Django web framework which is hosted on a Google App Engine instance, which is configured to communicate with a CloudSQL Postgres database.</Text>

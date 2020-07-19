@@ -3,11 +3,12 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 
 import NavTabs from './NavTabs';
 import AboutStack from './AboutStack';
+import UserPostingStack from './UserPostingStack';
 import DrawerContent from '../components/DrawerContent';
 
 const Drawer = createDrawerNavigator();
 
-// Any screen you want the Drawer to be aware of you need to add as a Screen
+// Add screens to Drawer
 const DrawerNav = props => {
   return(
     <Drawer.Navigator
@@ -20,6 +21,10 @@ const DrawerNav = props => {
       <Drawer.Screen
         name='About'
         component={AboutStack}
+      />
+      <Drawer.Screen
+        name='User Postings'
+        component={UserPostingStack}
       />
     </Drawer.Navigator>
   );
