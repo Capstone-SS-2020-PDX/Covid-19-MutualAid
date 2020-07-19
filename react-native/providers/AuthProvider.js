@@ -153,6 +153,7 @@ export const AuthProvider = props => {
         })
             .then(response => {
                 console.log("Response status: " + response.status);
+                fetchCommunities();
                 if (response.ok) {
                     return response.json();
                 } else {
@@ -163,11 +164,8 @@ export const AuthProvider = props => {
                 console.log('Server Response: ' + JSON.stringify(json));
                 if (json.Error) {
                     console.log("Error! " + requestType + " failed!");
-                    dispatch({ type: requestType, username: null, token: null, user: null});
-                    dispatch({ type: UPDATE_COMMUNITIES, communities: null });
                 } else {
                     loginData = json;
-                    fetchCommunities();
                     AsyncStorage.setItem('loginData', JSON.stringify(loginData)).then(() => {
                         dispatch({ type: requestType, username: userData.username, token: loginData.token, user: loginData});
                     }).catch(error => {
@@ -193,8 +191,8 @@ export const AuthProvider = props => {
                 loginData = JSON.parse(loginData);
                 console.log('Token exists! : ' + loginData.token);
                 console.log('User exists! : ' + loginData.user.username);
-                dispatch({ type: AUTO_LOGIN, token: loginData.token, username: loginData.user.username, user: loginData })
                 fetchCommunities();
+                dispatch({ type: AUTO_LOGIN, token: loginData.token, username: loginData.user.username, user: loginData })
             } else {
                 console.log('No existing token');
                 dispatch({ type: AUTO_LOGIN, token: null, username: null, user: null })

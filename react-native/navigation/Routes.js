@@ -16,7 +16,7 @@ import { AuthContext } from '../providers/AuthProvider';
 const Stack = createStackNavigator();
 
 const Routes = () => {
-    const { autoLogin, login, isLoading, token, hasProfile } = useContext(AuthContext);
+    const { autoLogin, isLoading, token, hasProfile } = useContext(AuthContext);
 
     // Check if the user is logged in
     useEffect(() => {

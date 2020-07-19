@@ -14,7 +14,10 @@ const HomeStack = props => {
   const { navigation } = props;
   const { user, username, communities } = useContext(AuthContext);
 
-  const homeCommunity = communities.find(community => community.id === user.profile.home);
+  let homeCommunity;
+  if (communities) {
+    homeCommunity = communities.find(community => community.id === user.profile.home);
+  }
 
   const PostingListScreenOptions = {
     // headerTitle: `Welcome ${username}`,
