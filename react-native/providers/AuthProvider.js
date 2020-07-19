@@ -49,7 +49,7 @@ export const AuthProvider = props => {
                     ...previousState,
                     username: action.username,
                     token: action.token,
-                    isLoading: false,
+                    // isLoading: false,
                     user: action.user,
                 };
             case LOGOUT:
@@ -66,7 +66,7 @@ export const AuthProvider = props => {
                     username: action.username,
                     token: action.token,
                     hasProfile: false,
-                    isLoading: false,
+                    // isLoading: false,
                     user: action.user,
                 };
             case SET_IS_LOADING:
@@ -107,8 +107,8 @@ export const AuthProvider = props => {
 
     const [loginState, dispatch] = useReducer(loginReducer, initialLoginState);
 
-    const fetchCommunities = () => {
-        AsyncStorage.getItem('communities').then(communityData => {
+    const fetchCommunities = async () => {
+        await AsyncStorage.getItem('communities').then(communityData => {
             console.log('Fetching communties from AsyncStorage: ');
             if (communityData) {
                 console.log("Found communities in AsyncStorage!");
@@ -134,7 +134,6 @@ export const AuthProvider = props => {
                   });
             }
         });
-
     };
 
     const performAuthRequest = (requestType, userData, url) => {
@@ -144,7 +143,7 @@ export const AuthProvider = props => {
 
         let loginData = null;
 
-        fetch(url, {
+        return fetch(url, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -154,74 +153,63 @@ export const AuthProvider = props => {
         })
             .then(response => {
                 console.log("Response status: " + response.status);
-                if (response.status = 200) {
+                if (response.ok) {
                     return response.json();
                 } else {
-                    throw Error(response.statusText);
+                    return { Error: response.json() };
                 }
             })
             .then(json => {
                 console.log('Server Response: ' + JSON.stringify(json));
-                loginData = json;
-                fetchCommunities();
-            })
-            .catch(error => console.log(error))
-            .finally(() => {
-
-                if (loginData) {
+                if (json.Error) {
+                    console.log("Error! " + requestType + " failed!");
+                    dispatch({ type: requestType, username: null, token: null, user: null});
+                    dispatch({ type: UPDATE_COMMUNITIES, communities: null });
+                } else {
+                    loginData = json;
+                    fetchCommunities();
                     AsyncStorage.setItem('loginData', JSON.stringify(loginData)).then(() => {
-                        dispatch({ type: requestType, username: userData.username, token: loginData.token, user: loginData})
+                        dispatch({ type: requestType, username: userData.username, token: loginData.token, user: loginData});
                     }).catch(error => {
-                        console.log(error);
+                        console.log(error.message);
                     });
                 }
             });
     };
 
-    const updateProfile = newProfileData => {
-        dispatch({ type: UPDATE_PROFILE, updatedProfile: newProfileData });
-    }
+    const handleLogin = async userData => {
+        await performAuthRequest(LOGIN, userData, login_url);
+    };
 
-    const updateUser = newUserData => {
-        dispatch({ type: UPDATE_USER, updatedUser: newUserData });
-    }
+    const handleRegister = async userData => {
+        await performAuthRequest(REGISTER, userData, register_url);
+    };
 
-    const handleAutoLogin = async () => {
+    const handleAutoLogin = () => {
         AsyncStorage.getItem('loginData').then(loginData => {
             console.log('Attempting to fetch token from AsyncStorage...');
-            if (loginData.token) {
+            // console.log(loginData);
+            if (loginData) {
                 loginData = JSON.parse(loginData);
                 console.log('Token exists! : ' + loginData.token);
                 console.log('User exists! : ' + loginData.user.username);
                 dispatch({ type: AUTO_LOGIN, token: loginData.token, username: loginData.user.username, user: loginData })
+                fetchCommunities();
             } else {
                 console.log('No existing token');
                 dispatch({ type: AUTO_LOGIN, token: null, username: null, user: null })
+                AsyncStorage.removeItem('loginData');
+                dispatch({ type: SET_IS_LOADING, isLoading: false });
             }
         });
-
-        fetchCommunities();
-
     };
 
-    const handleLogin = userData => {
-        performAuthRequest(LOGIN, userData, login_url);
-    };
-
-    const handleLogout = () => {
+    const handleLogout = async () => {
         console.log("Logging out...");
 
-        AsyncStorage.removeItem('loginData')
-                    .catch(error => console.log(error))
-                    .finally(() => {
-                        AsyncStorage.removeItem('communities').finally(() => {
-                            dispatch({ type: LOGOUT });
-                        })
-                    });
-    };
-
-    const handleRegister = userData => {
-        performAuthRequest(REGISTER, userData, register_url);
+        await AsyncStorage.removeItem('loginData');
+        await AsyncStorage.removeItem('communities');
+        dispatch({ type: LOGOUT });
     };
 
     const handleCheckUsername = username => {
@@ -244,12 +232,20 @@ export const AuthProvider = props => {
                   isValid = false;
               }
           }).catch(error => {
-              console.log(error);
+              console.log(error.message);
           }).finally(() => {
               return isValid;
           });
 
     };
+
+    const updateProfile = newProfileData => {
+        dispatch({ type: UPDATE_PROFILE, updatedProfile: newProfileData });
+    }
+
+    const updateUser = newUserData => {
+        dispatch({ type: UPDATE_USER, updatedUser: newUserData });
+    }
 
     const addProfile = () => {
         dispatch({ type: ADD_PROFILE });
