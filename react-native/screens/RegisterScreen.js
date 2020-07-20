@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef } from 'react';
+import React, { useState, useContext, useRef, useEffect } from 'react';
 import { View,
          Text,
          TextInput,
@@ -24,7 +24,8 @@ import { showModal, hideModal } from '../components/CustomModal';
 const RegisterScreen = props => {
   const { navigation, route } = props;
   const { register, isLoading, setIsLoading, checkUsername } = useContext(AuthContext);
-
+  const [ location, setLocation] = useState(null);
+  const [ errorMsg, setErrorMsg] = useState(null);
   const [emailText, setEmailText] = useState(null)
   const [userNameText, setUserNameText] = useState(null);
   const [isValidUsername, setIsValidUsername] = useState(true);
@@ -33,6 +34,17 @@ const RegisterScreen = props => {
   const usernameInputRef = useRef(null);
   const passwordInputRef = useRef(null);
   const confirmPasswordInputRef = useRef(null);
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+      } 
+        let location = await Location.getCurrentPositionAsync({accuracy: 5})
+        setLocation(location);
+      }
+    )()
+  });
 
   const attemptRegister = () =>{
     if (!emailText || !userNameText || !passwordText) {
@@ -53,7 +65,7 @@ const RegisterScreen = props => {
         hideModal();
       }, 900);
 
-      const userData = { username: userNameText, password: passwordText, email: emailText };
+      const userData = { username: userNameText, password: passwordText, email: emailText, location: location };
       register(userData);
     }
   };
