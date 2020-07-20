@@ -10,7 +10,7 @@ import { headerOptions, drawerMenuIcon } from '../config/navigation-options';
 const Stack = createStackNavigator();
 
 const UserPostingStack = props => {
-    const { navigation } = props;
+    const { navigation, route } = props;
     const { user } = useContext(AuthContext);
 
     const UserPostingListScreenOptions = {

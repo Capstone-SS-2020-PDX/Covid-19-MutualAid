@@ -3,7 +3,6 @@ import { View, Text, Button, TouchableOpacity, Image, StyleSheet } from 'react-n
 import { Ionicons } from '@expo/vector-icons';
 import { HeaderBackButton } from '@react-navigation/stack';
 
-
 import PostingDetailScreen from '../screens/PostingDetailScreen';
 import EditPostingScreen from '../screens/EditPostingScreen';
 
@@ -56,7 +55,7 @@ export const addPostingsRoutes = (Stack, navigation) => {
                   headerTitle: props => <CustomHeaderTitle request={route.params.request}/>,
                   ...headerOptions,
                   headerBackTitle: 'Back',
-                  /* headerRight: () => handleEdit(route), */
+                  headerRight: () => handleEdit(route),
                 })
             }
           />
@@ -65,7 +64,8 @@ export const addPostingsRoutes = (Stack, navigation) => {
             component={EditPostingScreen}
             options={
               ({route, navigation}) => ({
-                headerTitle: `Editing ${route.params.id}`,
+                /* headerTitle: `Editing ${route.params.title}`, */
+                headerTitle: 'Edit Posting',
                 ...headerOptions,
                 headerRight: () => handleDone(route),
               })

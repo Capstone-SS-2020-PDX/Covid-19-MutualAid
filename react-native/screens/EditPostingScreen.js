@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useLayoutEffect } from 'react';
 import { View,
          Text,
          TextInput,
@@ -9,20 +9,46 @@ import { View,
 
 import Center from '../components/Center';
 import Colors from '../config/colors';
+import { postings_url } from '../config/urls';
 
-async function apiCall(data) {
-    // make POST request with data
+const handleUpdatePosting = async (url, data) => {
+
+    console.log("Outgoing payload: " + JSON.stringify(data));
+
+    return fetch(url, {
+      method: 'PATCH',
+      headers: {
+        'content-type': 'multipart/form-data',
+      },
+      body: data,
+    })
+      .then(response => {
+          console.log(response.status);
+          return response.json();
+      })
+      .then(json => {
+          console.log(json);
+      })
+      .catch(error => {
+          console.log(error.message)
+      })
+      .finally(() => {
+      });
 };
 
 const EditPostingScreen = props => {
     const { route, navigation } = props;
-    const [formState, setFormState] = useState({});
-    const [bodyText, setBodyText] = useState(route.params.body);
+    const [selectedImage, setSelectedImage] = useState(null);
+    const postingPatchUrl = postings_url + route.params.id + '/';
+    const [formState, setFormState] = useState({
+        title: route.params.title,
+        desc: route.params.description,
+    })
     const submit = useRef(null);
 
     submit.current = () => {
-        // make API call with new form state
-        apiCall(formState).then(() => {
+
+        handleUpdatePosting(postingPatchUrl, createFormData()).then(() => {
             navigation.goBack();
         });
     };
@@ -31,26 +57,48 @@ const EditPostingScreen = props => {
         navigation.setParams({submit});
     }, []);
 
+  const createFormData = () => {
+    // const categoryValue = isCategorySwitchEnabled ? 'services' : 'goods';
+    // const requestValue = isRequestSwitchEnabled ? true : false;
+
+    const data = new FormData();
+
+    if (selectedImage) {
+      data.append('item_pic', selectedImage);
+    }
+
+      data.append('title', formState.title);
+      data.append('desc', formState.desc);
+    // data.append('count', itemCount);
+    // data.append('owner', user.user.id);
+    // data.append('category', categoryValue);
+    // data.append('request', requestValue);
+    // data.append('in_community', user.profile.home);
+
+    return data;
+  };
+
+    const updateForm = (text, input) => {
+        setFormState({ ...formState, [input]: text });
+    };
+
     return(
         <Center style={styles.screen}>
-          <Text style={styles.titleText}>
-              Edit Your Posting
-            </Text>
           <View style={styles.editContent}>
-            <Text style={styles.editBodyHeader}>Edit Title</Text>
+            <Text style={styles.editBodyHeader}>Title</Text>
             <TextInput
               style={styles.editTextInput}
-              onChangeText={text => setBodyText(text)}
+              onChangeText={text => updateForm(text, 'title')}
               multiline={true}
             >
               {route.params.title}
             </TextInput>
           </View>
           <View style={styles.editContent}>
-            <Text style={styles.editBodyHeader}>Edit Body</Text>
+            <Text style={styles.editBodyHeader}>Description</Text>
             <TextInput
               style={styles.editTextInput}
-              onChangeText={text => setBodyText(text)}
+              onChangeText={text => updateForm(text, 'desc')}
               multiline={true}
             >
               {route.params.description}
