@@ -19,8 +19,8 @@ export const addPostingsRoutes = (Stack, navigation) => {
               style={styles.headerRight}
               onPress={() => {
                   console.log(`Finish Editing ${route.params.id}`);
-                  if (route.params.submitSave) {
-                      route.params.submitSave.current();
+                  if (route.params.submitEditPosting) {
+                      route.params.submitEditPosting.current();
                   }
               }}
             >

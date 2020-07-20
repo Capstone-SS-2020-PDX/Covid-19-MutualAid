@@ -24,7 +24,6 @@ import { windowHeight, windowWidth } from '../config/dimensions';
 import { users_url, profiles_url } from '../config/urls';
 
 import { AuthContext } from '../providers/AuthProvider';
-
 const ProfileEditScreen = props => {
     const { navigation } = props;
     const { addProfile, updateUser, updateProfile, user, communities, checkUsername } = useContext(AuthContext);
@@ -221,7 +220,6 @@ const ProfileEditScreen = props => {
         lastNameRef.current.clear();
         profileTextRef.current.clear();
     };
-
 
     const getImage = () => {
         return selectedImage;
