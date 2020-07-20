@@ -27,7 +27,7 @@ import { AuthContext } from '../providers/AuthProvider';
 
 const ProfileEditScreen = props => {
   const { navigation } = props;
-  const { addProfile, updateUser, updateProfile, user, communities, checkUsername } = useContext(AuthContext);
+  const { addProfile, updateUser, updateProfile, user, communities } = useContext(AuthContext);
 
   const placeholderImage = user.profile.profile_pic;
 
@@ -35,7 +35,6 @@ const ProfileEditScreen = props => {
   const homeCommunity = communities.find(community => community.id === user.profile.home);
 
   const [formValue, setFormValue] = useState({
-    username: user.user.username,
     email: user.user.email,
     first_name: user.user.first_name,
     last_name: user.user.last_name,
@@ -44,12 +43,10 @@ const ProfileEditScreen = props => {
 
   const [selectedCommunity, setSelectedCommunity] = useState(homeCommunity || communities[0]);
   const [selectedImage, setSelectedImage] = useState(null);
-  const [usernameAvailable, setUsernameAvailable] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false);
 
   const firstNameRef = useRef(null);
   const lastNameRef = useRef(null);
-  const usernameRef = useRef(null);
   const emailRef = useRef(null);
   const profileTextRef = useRef(null);
 
@@ -58,14 +55,7 @@ const ProfileEditScreen = props => {
   };
 
   const attemptProfileUpdate = () => {
-    if (usernameAvailable) {
-      handleProfileUpdate();
-    } else {
-      showModal('INVALID_USERNAME');
-      setTimeout(() => {
-        hideModal();
-      }, 900);
-    }
+    handleProfileUpdate();
   };
 
   const handleProfileUpdate = async () => {
@@ -80,7 +70,6 @@ const ProfileEditScreen = props => {
       updatedUserData.user.first_name = formValue.first_name;
       updatedUserData.user.last_name = formValue.last_name;
       updatedUserData.user.email = formValue.email;
-      updatedUserData.user.username = formValue.username;
 
       await sendUpdateUserRequest(JSON.stringify(updatedUserData.user), userPatchUrl, 'PATCH');
       await sendUpdateProfileRequest(profilePatchUrl, 'PATCH');
@@ -231,19 +220,6 @@ const ProfileEditScreen = props => {
     setSelectedImage(imageData);
   };
 
-  const validateUsername = () => {
-    let isValidUsername = checkUsername(formValue.username);
-
-    if (formValue.username === user.user.username)
-      isValidUsername = true;
-
-    if (formValue.username === '') {
-      formValue.username = user.user.username;
-      isValidUsername = true;
-    }
-
-    setUsernameAvailable(isValidUsername);
-  }
 
   const onKeyPress = (key) => {
     if (key === 'Enter') {
@@ -289,23 +265,8 @@ const ProfileEditScreen = props => {
                 returnKeyType='next'
                 blurOnSubmit={false}
                 onChangeText={text => updateForm(text, 'last_name')}
-                onSubmitEditing={() => usernameRef.current.focus()}
-                ref={lastNameRef}
-              />
-            </View>
-            <View style={styles.inputView}>
-              <TextInput
-                style={styles.inputText}
-                placeholder={ `User Name: ${user.user.username}` }
-                placeholderTextColor={Colors.placeholder_text}
-                maxLength={35}
-                autoCapitalize='none'
-                returnKeyType='next'
-                blurOnSubmit={false}
-                onChangeText={text => updateForm(text, 'username')}
-                onBlur={() => validateUsername()}
                 onSubmitEditing={() => emailRef.current.focus()}
-                ref={usernameRef}
+                ref={lastNameRef}
               />
             </View>
             <View style={styles.inputView}>
