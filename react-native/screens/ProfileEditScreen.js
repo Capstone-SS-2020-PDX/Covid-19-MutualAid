@@ -226,7 +226,6 @@ const ProfileEditScreen = props => {
     };
 
     const selectImage = imageData => {
-        console.log("In selectImage: " + JSON.stringify(imageData));
         setSelectedImage(imageData);
     };
 
