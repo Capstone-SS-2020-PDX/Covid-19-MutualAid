@@ -117,11 +117,11 @@ const ProfileEditScreen = props => {
 
       .then(response => response.json())
       .then(json => {
-        console.log(json);
+        // console.log(json);
         updateProfile(json);
       })
       .catch(error => {
-        console.log(error)
+        console.log(error.message);
       })
       .finally(() => {
         setIsProcessing(false);
@@ -145,7 +145,7 @@ const ProfileEditScreen = props => {
         updateUser(json);
       })
       .catch(error => {
-        console.log(error)
+        console.log(error.message)
       })
       .finally(() => {
       });
@@ -237,8 +237,10 @@ const ProfileEditScreen = props => {
     if (formValue.username === user.user.username)
       isValidUsername = true;
 
-    if (formValue.username === '')
-      isValidUsername = false;
+    if (formValue.username === '') {
+      formValue.username = user.user.username;
+      isValidUsername = true;
+    }
 
     setUsernameAvailable(isValidUsername);
   }
