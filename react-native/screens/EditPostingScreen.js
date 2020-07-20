@@ -7,8 +7,11 @@ import { View,
          StyleSheet
        } from 'react-native';
 
+import { notifyMessage } from '../components/CustomToast';
+import { showModal, hideModal } from '../components/CustomModal';
 import Center from '../components/Center';
 import Colors from '../config/colors';
+import CustomImagePicker from '../components/CustomImagePicker';
 import { postings_url } from '../config/urls';
 
 const handleUpdatePosting = async (url, data) => {
@@ -33,20 +36,28 @@ const handleUpdatePosting = async (url, data) => {
           console.log(error.message)
       })
       .finally(() => {
+          hideModal();
+          notifyMessage('Posting Updated Successfully!');
       });
 };
 
 const EditPostingScreen = props => {
     const { route, navigation } = props;
-    const [selectedImage, setSelectedImage] = useState(null);
+
     const postingPatchUrl = postings_url + route.params.id + '/';
+
+    const [selectedImage, setSelectedImage] = useState(null);
+    const [isProcessing, setIsProcessing] = useState(false);
     const [formState, setFormState] = useState({
         title: route.params.title,
         desc: route.params.description,
     })
-    const submit = useRef(null);
 
-    submit.current = () => {
+    const submitSave = useRef(null);
+
+    submitSave.current = () => {
+        setIsProcessing(true);
+        showModal('UPDATING_POSTING');
 
         handleUpdatePosting(postingPatchUrl, createFormData()).then(() => {
             navigation.goBack();
@@ -54,7 +65,7 @@ const EditPostingScreen = props => {
     };
 
     useEffect(() => {
-        navigation.setParams({submit});
+        navigation.setParams({submitSave});
     }, []);
 
   const createFormData = () => {

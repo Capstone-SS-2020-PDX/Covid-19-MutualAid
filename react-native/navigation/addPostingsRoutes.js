@@ -19,12 +19,12 @@ export const addPostingsRoutes = (Stack, navigation) => {
               style={styles.headerRight}
               onPress={() => {
                   console.log(`Finish Editing ${route.params.id}`);
-                  if (route.params.submit) {
-                      route.params.submit.current();
+                  if (route.params.submitSave) {
+                      route.params.submitSave.current();
                   }
               }}
             >
-            <Text style={styles.doneButtonText}>Done</Text>
+            <Text style={styles.saveButtonText}>Save</Text>
             </TouchableOpacity>
         );
     }
@@ -55,7 +55,7 @@ export const addPostingsRoutes = (Stack, navigation) => {
                   headerTitle: props => <CustomHeaderTitle request={route.params.request}/>,
                   ...headerOptions,
                   headerBackTitle: 'Back',
-                  headerRight: () => handleEdit(route),
+                  /* headerRight: () => handleEdit(route), */
                 })
             }
           />
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
   headerRight: {
     paddingRight: 15,
   },
-  doneButtonText: {
+  saveButtonText: {
     color: Colors.contrast1,
     fontSize: 20,
   },
