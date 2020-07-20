@@ -45,8 +45,6 @@ const ProfileEditScreen = props => {
     const [selectedCommunity, setSelectedCommunity] = useState(homeCommunity || communities[0]);
     const [selectedImage, setSelectedImage] = useState(null);
     const [isProcessing, setIsProcessing] = useState(false);
-    const [isValidUsername, setIsValidUsername] = useState(true);
-    const [usernameChanged, setUsernameChanged] = useState(false);
 
     const firstNameRef = useRef(null);
     const lastNameRef = useRef(null);
@@ -59,14 +57,7 @@ const ProfileEditScreen = props => {
     };
 
     const attemptProfileUpdate = () => {
-        if (!isValidUsername && usernameChanged) {
-            showModal('INVALID_USERNAME');
-            setTimeout(() => {
-                hideModal();
-            }, 900);
-        } else {
-            handleProfileUpdate();
-        }
+      handleProfileUpdate();
     };
 
     const handleProfileUpdate = async () => {
@@ -106,7 +97,7 @@ const ProfileEditScreen = props => {
     };
 
     const sendUpdateProfileRequest = (url, method) => {
-        console.log("In update profile Request, Outgoing url: " + url);
+        // console.log("In update profile Request, Outgoing url: " + url);
 
         return fetch(url, {
             method: method,
@@ -286,13 +277,10 @@ const ProfileEditScreen = props => {
               placeholder={ `User Name: ${user.user.username}` }
               placeholderTextColor={Colors.placeholder_text}
               maxLength={35}
+              autoCapitalize='none'
               returnKeyType='next'
               blurOnSubmit={false}
               onChangeText={text => updateForm(text, 'username')}
-              onBlur={() => {
-                  setIsValidUsername(checkUsername(formValue.text));
-                  setUsernameChanged(true);
-              }}
               onSubmitEditing={() => emailRef.current.focus()}
               ref={usernameRef}
             />
