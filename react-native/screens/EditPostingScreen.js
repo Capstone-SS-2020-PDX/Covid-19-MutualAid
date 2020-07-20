@@ -16,6 +16,7 @@ import { showModal, hideModal } from '../components/CustomModal';
 import Center from '../components/Center';
 import Colors from '../config/colors';
 import CustomImagePicker from '../components/CustomImagePicker';
+import CustomButton from '../components/CustomButton';
 import { postings_url } from '../config/urls';
 
 import { AuthContext } from '../providers/AuthProvider';
@@ -47,6 +48,24 @@ const handleUpdatePosting = async (url, data) => {
       });
 };
 
+const handleDeletePosting = async (url) => {
+    showModal('DELETE_POSTING');
+
+    return fetch(url, {
+        method: 'DELETE',
+    }).then(response => {
+        console.log(response.status);
+        return response.json();
+    }).then(json => {
+        // console.log(json);
+    }).catch(error => {
+        console.log(error.message);
+    }).finally(() => {
+        hideModal();
+        notifyMessage('Posting Deleted Successfully!');
+    });
+};
+
 const EditPostingScreen = props => {
     const { route, navigation } = props;
     const { communities } = useContext(AuthContext);
@@ -67,7 +86,6 @@ const EditPostingScreen = props => {
     const submitEditPosting = useRef(null);
 
     submitEditPosting.current = () => {
-        setIsProcessing(true);
         showModal('UPDATING_POSTING');
 
         handleUpdatePosting(postingPatchUrl, createFormData()).then(() => {
@@ -78,6 +96,11 @@ const EditPostingScreen = props => {
     useEffect(() => {
         navigation.setParams({submitEditPosting});
     }, []);
+
+    const submitDeletePosting = () => {
+        handleDeletePosting(postingPatchUrl);
+        navigation.navigate('Feed');
+    }
 
   const createFormData = () => {
     // const categoryValue = isCategorySwitchEnabled ? 'services' : 'goods';
@@ -184,6 +207,12 @@ const EditPostingScreen = props => {
               {route.params.description}
             </TextInput>
           { renderCommunityPicker() }
+          <CustomButton
+            onPress={() => submitDeletePosting()}
+            style={{ backgroundColor: Colors.contrast3, marginBottom: 10, alignSelf: 'center' }}
+          >
+            <Text style={styles.buttonText}>Delete Posting</Text>
+          </CustomButton>
           </View>
         </Center>
               </ScrollView>
@@ -232,6 +261,10 @@ const styles = StyleSheet.create({
     communityPicker: {
         height: 50,
         width: '80%',
+    },
+    buttonText: {
+        color: Colors.light_shade1,
+        fontSize: 24,
     },
 });
 
