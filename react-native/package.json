@@ -19,6 +19,7 @@
     "expo": "~37.0.3",
     "expo-image-manipulator": "~8.1.0",
     "expo-image-picker": "~8.1.0",
+    "expo-location": "~8.1.0",
     "faker": "^4.1.0",
     "logkitty": "^0.7.1",
     "react": "~16.9.0",
