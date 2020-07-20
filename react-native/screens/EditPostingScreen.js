@@ -84,6 +84,8 @@ const EditPostingScreen = props => {
     const placeholderImage = route.params.item_pic;
 
     const submitEditPosting = useRef(null);
+    const titleTextRef = useRef(null);
+    const descriptionTextRef = useRef(null);
 
     submitEditPosting.current = () => {
         showModal('UPDATING_POSTING');
@@ -133,7 +135,6 @@ const EditPostingScreen = props => {
     };
 
     const selectImage = imageData => {
-        console.log("In selectImage: " + JSON.stringify(imageData));
         setSelectedImage(imageData);
     };
 
@@ -154,6 +155,7 @@ const EditPostingScreen = props => {
                 </View>
             );
         } else {
+            return(null);
             // return(
             //     <View style={{...styles.inputView, flexDirection: 'column', height: 80, paddingVertical: 10}}>
             //       <Button
@@ -170,6 +172,12 @@ const EditPostingScreen = props => {
         return communities.map(community =>
             <Picker.Item label={community.name} value={community} key={community.id}/>
         );
+    }
+
+    const onKeyPress = (key) => {
+        if (key === 'Enter') {
+            descriptionInputRef.current.blur();
+        }
     }
 
     return(
@@ -192,7 +200,10 @@ const EditPostingScreen = props => {
             <TextInput
               style={styles.editTextInput}
               onChangeText={text => updateForm(text, 'title')}
-              multiline={true}
+              returnKeyType='next'
+              blurOnSubmit={false}
+              ref={titleTextRef}
+              onSubmitEditing={() => descriptionTextRef.current.focus()}
             >
               {route.params.title}
             </TextInput>
@@ -202,7 +213,10 @@ const EditPostingScreen = props => {
             <TextInput
               style={styles.editTextInput}
               onChangeText={text => updateForm(text, 'desc')}
+              blurOnSubmit={true}
+              onKeyPress={nativeEvent => onKeyPress(nativeEvent.key)}
               multiline={true}
+              ref={descriptionTextRef}
             >
               {route.params.description}
             </TextInput>
@@ -234,6 +248,7 @@ const styles = StyleSheet.create({
     editContent: {
         width: '100%',
         alignItems: 'center',
+        paddingVertical: 10,
     },
     editBodyHeader: {
         fontSize: 18,
