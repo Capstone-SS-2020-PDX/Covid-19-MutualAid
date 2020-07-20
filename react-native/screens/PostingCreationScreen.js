@@ -18,6 +18,7 @@ import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { WToast } from 'react-native-smart-tip'
 import { KeyboardAvoidingScrollView } from 'react-native-keyboard-avoiding-scroll-view';
+import DropDownPicker from 'react-native-dropdown-picker';
 
 import { showModal, hideModal } from '../components/CustomModal';
 import { notifyMessage } from '../components/CustomToast';
@@ -42,7 +43,7 @@ const PostingCreationScreen = props => {
   const [itemName, setItemName] = useState('');
   const [itemDescription, setItemDescription] = useState('');
   const [itemCount, setItemCount] = useState(1);
-  const [isRequestSwitchEnabled, setIsRequestSwitchEnabled] = useState(false);
+  const [isRequestSelected, setIsRequestSelected] = useState(false);
   const [isCategorySwitchEnabled, setIsCategorySwitchEnabled] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
 
@@ -69,7 +70,7 @@ const PostingCreationScreen = props => {
   // Create the data object in correct format to be sent off the server
   const createFormData = () => {
     const categoryValue = isCategorySwitchEnabled ? 'services' : 'goods';
-    const requestValue = isRequestSwitchEnabled ? true : false;
+    const requestValue = isRequestSelected ? true : false;
 
     const data = new FormData();
 
@@ -123,7 +124,7 @@ const PostingCreationScreen = props => {
     setItemCount(1);
     setIsProcessing(false);
 
-    setIsRequestSwitchEnabled(false);
+    setIsRequestSelected(false);
     setIsCategorySwitchEnabled(false);
 
     nameInputRef.current.clear();
@@ -137,8 +138,15 @@ const PostingCreationScreen = props => {
     navigation.navigate('Home', {screen: 'Feed'})
   }
 
-  const toggleRequestSwitch = () => {
-    setIsRequestSwitchEnabled(previousState => !previousState);
+  const changeType = (item) => {
+    switch (item.value) {
+      case 'r':
+        setIsRequestSelected(true);
+      break;
+      case 'o':
+        setIsRequestSelected(false);
+      break;
+    }
   };
 
   const toggleCategorySwitch = () => {
@@ -205,27 +213,29 @@ const PostingCreationScreen = props => {
           </View>
           <View style={ (windowHeight > 650) ? styles.switchRowBig : styles.switchRow}>
             <View style={styles.switchColumn}>
-              <Text style={styles.switchTitle}>Request?</Text>
-              <Switch
-                style={styles.switch}
-                onValueChange={toggleRequestSwitch}
-                value={isRequestSwitchEnabled}
-                trackColor={{ false: "#767577", true: Colors.primary }}
-                thumbColor={isRequestSwitchEnabled ? Colors.primary : "#f4f3f4"}
-              />
-            </View>
-            <View style={styles.switchColumn}>
-              <Text style={styles.switchTitle}>Count</Text>
               <View style={styles.countInputView}>
                 <TextInput
                   style={styles.countInputText}
+                  placeholder='Quantity...'
+                  placeholderTextColor={Colors.placeholder_text}
                   keyboardType='numeric'
                   returnKeyType='done'
-                  value={itemCount.toString()}
                   onChangeText={text => setItemCount(text)}
                   ref={itemCountInputRef}
                 />
               </View>
+            </View>
+            <View style={styles.switchColumn}>
+              <DropDownPicker
+                style={styles.dropDown}
+                items={[
+                  {label: 'Request', value: 'r'},
+                  {label: 'Offer', value: 'o'},
+                ]}
+                defaultValue='r'
+                containerStyle={styles.dropDown}
+                onChangeItem={item => changeType(item)}
+              />
             </View>
             <View style={styles.switchColumn}>
               <Text style={styles.switchTitle}>Category</Text>
@@ -351,8 +361,8 @@ const styles = StyleSheet.create({
   switchRowBig: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginHorizontal: 20,
-    marginVertical: 10
+    marginVertical: 10,
+    marginBottom: 60,
   },
   switchRow: {
     flexDirection: 'row',
@@ -369,6 +379,10 @@ const styles = StyleSheet.create({
   },
   switch: {
       transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }],
+  },
+  dropDown: {
+    width:100, 
+    height: 40,
   },
   confirmButton: {
     marginBottom: 0,
