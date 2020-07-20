@@ -43,8 +43,8 @@ const PostingCreationScreen = props => {
   const [itemName, setItemName] = useState('');
   const [itemDescription, setItemDescription] = useState('');
   const [itemCount, setItemCount] = useState(1);
-  const [isRequestSelected, setIsRequestSelected] = useState(false);
-  const [isCategorySwitchEnabled, setIsCategorySwitchEnabled] = useState(false);
+  const [isRequestSelected, setIsRequestSelected] = useState(true);
+  const [isGoodSelected, setIsGoodSelected] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false);
 
   const nameInputRef = useRef(null);
@@ -69,7 +69,7 @@ const PostingCreationScreen = props => {
 
   // Create the data object in correct format to be sent off the server
   const createFormData = () => {
-    const categoryValue = isCategorySwitchEnabled ? 'services' : 'goods';
+    const categoryValue = isGoodSelected ? 'goods' : 'services';
     const requestValue = isRequestSelected ? true : false;
 
     const data = new FormData();
@@ -124,8 +124,8 @@ const PostingCreationScreen = props => {
     setItemCount(1);
     setIsProcessing(false);
 
-    setIsRequestSelected(false);
-    setIsCategorySwitchEnabled(false);
+    setIsRequestSelected(true);
+    setIsGoodSelected(true);
 
     nameInputRef.current.clear();
     descriptionInputRef.current.clear();
@@ -149,9 +149,16 @@ const PostingCreationScreen = props => {
     }
   };
 
-  const toggleCategorySwitch = () => {
-    setIsCategorySwitchEnabled(previousState => !previousState);
-  };
+  const changeCategory = (item) => {
+    switch (item.value) {
+      case 'g':
+        setIsGoodSelected(true);
+      break;
+      case 's':
+        setIsGoodSelected(false);
+      break;
+    }
+  }
 
   const selectImage = imageData => {
     // console.log("In selectImage: " + JSON.stringify(imageData));
@@ -238,13 +245,15 @@ const PostingCreationScreen = props => {
               />
             </View>
             <View style={styles.switchColumn}>
-              <Text style={styles.switchTitle}>Category</Text>
-              <Switch
-                style={styles.switch}
-                onValueChange={toggleCategorySwitch}
-                value={isCategorySwitchEnabled}
-                trackColor={{ false: "#767577", true: Colors.primary }}
-                thumbColor={isCategorySwitchEnabled ? Colors.primary : "#f4f3f4"}
+              <DropDownPicker
+                style={styles.dropDown}
+                items={[
+                  {label: 'Good', value: 'g'},
+                  {label: 'Service', value: 's'},
+                ]}
+                defaultValue='g'
+                containerStyle={styles.dropDown}
+                onChangeItem={item => changeCategory(item)}
               />
             </View>
           </View>
