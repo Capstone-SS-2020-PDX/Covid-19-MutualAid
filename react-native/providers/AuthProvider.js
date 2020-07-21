@@ -169,19 +169,12 @@ export const AuthProvider = props => {
                 loginData = json;
                 fetchCommunities();
                 setLoginData(loginData, requestType);
+
             })
             .catch(error => {
                 console.log(error);
             })
             .finally(() => {
-
-                // if (loginData) {
-                //     AsyncStorage.setItem('loginData', JSON.stringify(loginData)).then(() => {
-                //         dispatch({ type: requestType, token: loginData.token, user: loginData})
-                //     }).catch(error => {
-                //         console.log(error);
-                //     });
-                // }
             });
     };
 
@@ -208,8 +201,12 @@ export const AuthProvider = props => {
         });
     };
 
+    const handleRegister = userData => {
+        return performAuthRequest(REGISTER, userData, register_url);
+    };
+
     const handleLogin = userData => {
-        performAuthRequest(LOGIN, userData, login_url);
+        return performAuthRequest(LOGIN, userData, login_url);
     };
 
     const handleLogout = () => {
@@ -222,10 +219,6 @@ export const AuthProvider = props => {
                             dispatch({ type: LOGOUT });
                         })
                     });
-    };
-
-    const handleRegister = userData => {
-        performAuthRequest(REGISTER, userData, register_url);
     };
 
     const handleCheckUsername = username => {

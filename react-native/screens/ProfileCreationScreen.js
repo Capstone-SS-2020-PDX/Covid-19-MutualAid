@@ -27,7 +27,6 @@ const ProfileCreationScreen = props => {
     const { navigation } = props;
     const { addProfile, updateUser, updateProfile, user, communities } = useContext(AuthContext);
 
-
     const [formValue, setFormValue] = useState(null);
     const [selectedCommunity, setSelectedCommunity] = useState(communities[0]);
     const [selectedImage, setSelectedImage] = useState(null);

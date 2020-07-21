@@ -48,73 +48,73 @@ const LoginScreen = props => {
   return(
     <KeyboardShift>
       {() => (
-    <View style={styles.screen}>
-      <View style={ styles.imageContainer }>
-        <Image
-          style={ styles.image }
-          resizeMode='contain'
-          source={ require('../assets/CommonGoods-Title.png') }
-          fadeDuration={ 300 }
-        />
-      </View>
-      <View style={styles.inputContainer}>
-        <View style={styles.inputView}>
-          <AntDesign
-            name={'user'}
-            size={20}
-            style={styles.icon}
-          />
-          <TextInput
-            style={styles.inputText}
-            placeholder='User Name...'
-            placeholderTextColor={Colors.placeholder_text}
-            autoCapitalize='none'
-            autoCorrect={false}
-            returnKeyType='next'
-            blurOnSubmit={false}
-            onChangeText={text => setEmailText(text)}
-            onSubmitEditing={() => passwordInputRef.current.focus()}
-          />
-        </View>
-        <View style={styles.inputView}>
-          <AntDesign
-            name={'lock'}
-            size={20}
-            style={styles.icon}
-          />
-          <TextInput
-            ref={passwordInputRef}
-            style={styles.inputText}
-            placeholder='Password...'
-            placeholderTextColor={Colors.placeholder_text}
-            returnKeyType='done'
-            secureTextEntry
-            onChangeText={text => setPasswordText(text)}
-            /* onSubmitEditing={() => attemptLogin()} */
-          />
-        </View>
-      </View>
-      <TouchableOpacity>
-        <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
-      </TouchableOpacity>
+        <View style={styles.screen}>
+          <View style={ styles.imageContainer }>
+            <Image
+              style={ styles.image }
+              resizeMode='contain'
+              source={ require('../assets/CommonGoods-Title.png') }
+              fadeDuration={ 300 }
+            />
+          </View>
+          <View style={styles.inputContainer}>
+            <View style={styles.inputView}>
+              <AntDesign
+                name={'user'}
+                size={20}
+                style={styles.icon}
+              />
+              <TextInput
+                style={styles.inputText}
+                placeholder='User Name...'
+                placeholderTextColor={Colors.placeholder_text}
+                autoCapitalize='none'
+                autoCorrect={false}
+                returnKeyType='next'
+                blurOnSubmit={false}
+                onChangeText={text => setEmailText(text)}
+                onSubmitEditing={() => passwordInputRef.current.focus()}
+              />
+            </View>
+            <View style={styles.inputView}>
+              <AntDesign
+                name={'lock'}
+                size={20}
+                style={styles.icon}
+              />
+              <TextInput
+                ref={passwordInputRef}
+                style={styles.inputText}
+                placeholder='Password...'
+                placeholderTextColor={Colors.placeholder_text}
+                returnKeyType='done'
+                secureTextEntry
+                onChangeText={text => setPasswordText(text)}
+        /* onSubmitEditing={() => attemptLogin()} */
+              />
+            </View>
+          </View>
+          <TouchableOpacity>
+            <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+          </TouchableOpacity>
 
-      <CustomButton
-        style={styles.loginButton}
-        onPress={() => {
-          attemptLogin();
-        }}
-      >
-        <Text style={styles.loginText}>LOGIN</Text>
-      </CustomButton>
+          <CustomButton
+            style={styles.loginButton}
+            onPress={() => {
+              attemptLogin();
+            }}
+          >
+            <Text style={styles.loginText}>LOGIN</Text>
+          </CustomButton>
 
-      <TouchableOpacity
-        onPress={() => {
-          navigation.navigate('Register');
-        }}
-      >
-        <Text style={styles.registerText}>Register</Text>
-      </TouchableOpacity>
-    </View>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('Register');
+            }}
+          >
+            <Text style={styles.registerText}>Register</Text>
+          </TouchableOpacity>
+        </View>
       )}
     </KeyboardShift>
   );
