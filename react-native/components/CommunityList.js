@@ -24,7 +24,7 @@ const CommunityList = props => {
           members={itemData.item.members}
           postings={itemData.item.posts}
           id={itemData.item.id}
-          isSelected={isMemberOf}
+          /* isSelected={isMemberOf} */
           onSelectCommunity={() => {
             /* props.updateCommunitySelections(itemData.item.id, isMemberOf); */
           }}

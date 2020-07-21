@@ -20,8 +20,13 @@ const CommunityListScreen = props => {
     const { user, communities } = useContext(AuthContext);
     const { navigation } = props;
 
+    console.log(user.profile.member_of);
+    const myCommunities = communities.filter(community => {
+        return user.profile.member_of.includes(community.id);
+    });
+
     const [isLoading, setIsLoading] = useState(false);
-    const [searchCommunities, setSearchCommunities] = useState(communities);
+    const [searchCommunities, setSearchCommunities] = useState(myCommunities);
     const [communitySelections, setCommunitySelections] = useState({});
     const [searchText, setSearchText] = useState('');
     const searchInputRef = useRef(null);

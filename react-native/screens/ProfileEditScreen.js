@@ -87,6 +87,7 @@ const ProfileEditScreen = props => {
     data.append('profile_text', formValue.profile_text);
     if (selectedCommunity) {
       data.append('home', selectedCommunity.id);
+      data.append('member_of', selectedCommunity.id);
     }
 
     return data;

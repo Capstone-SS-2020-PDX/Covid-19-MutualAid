@@ -78,6 +78,7 @@ const ProfileCreationScreen = props => {
         }
         data.append('profile_text', formValue.profile_text);
         data.append('home', selectedCommunity.id);
+        data.append('member_of', selectedCommunity.id);
         return data;
     };
 
@@ -205,6 +206,12 @@ const ProfileCreationScreen = props => {
         }
     };
 
+    const onKeyPress = (key) => {
+        if (key === 'Enter') {
+            descriptionInputRef.current.blur();
+        }
+    }
+
     return(
         <View style={styles.screen}>
           <Text style={styles.screenTitle}>Create Your Profile</Text>
@@ -224,9 +231,11 @@ const ProfileCreationScreen = props => {
                 style={styles.inputText}
                 placeholder='First Name...'
                 placeholderTextColor={Colors.placeholder_text}
+                blurOnSubmit={false}
                 maxLength={25}
                 returnKeyType='next'
                 onChangeText={text => updateForm(text, 'first_name')}
+                onSubmitEditing={() => lastNameRef.current.focus()}
                 ref={firstNameRef}
               />
             </View>
@@ -235,9 +244,11 @@ const ProfileCreationScreen = props => {
                 style={styles.inputText}
                 placeholder='Last Name...'
                 placeholderTextColor={Colors.placeholder_text}
+                blurOnSubmit={false}
                 maxLength={25}
                 returnKeyType='next'
                 onChangeText={text => updateForm(text, 'last_name')}
+                onSubmitEditing={() => profileTextRef.current.focus()}
                 ref={lastNameRef}
               />
             </View>
@@ -247,9 +258,10 @@ const ProfileCreationScreen = props => {
                 placeholder='Profile Text...'
                 placeholderTextColor={Colors.placeholder_text}
                 maxLength={255}
+                blurOnSubmit={true}
                 multiline={true}
-                returnKeyType='go'
-                onChangeText={text => updateForm(text, 'profile_text')}
+                returnKeyType='done'
+                onKeyPress={nativeEvent => onKeyPress(nativeEvent.key)}
                 ref={profileTextRef}
               />
             </View>
