@@ -90,7 +90,7 @@ const LoginScreen = props => {
             returnKeyType='done'
             secureTextEntry
             onChangeText={text => setPasswordText(text)}
-            onSubmitEditing={() => attemptLogin()}
+            /* onSubmitEditing={() => attemptLogin()} */
           />
         </View>
       </View>
