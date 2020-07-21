@@ -6,6 +6,9 @@ import Routes from './navigation/Routes';
 import { AuthProvider } from './providers/AuthProvider';
 
 const App = () =>  {
+  // Hide yellow box warning in-app. They still appear in the console
+  console.disableYellowBox = true;
+
   const [isFontLoaded, setIsFontLoaded] = useState(false);
 
   // Load fonts and other assets before launching app
