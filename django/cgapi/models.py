@@ -4,6 +4,8 @@ from datetime import date
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 from rest_framework.authtoken.models import Token
+from django.contrib.gis.db import models as geomodels
+
 
 
 @receiver(post_save, sender=User)
@@ -35,6 +37,7 @@ class Posting(models.Model):
     item_pic = models.ImageField(upload_to='pimg/', default='')
     request = models.BooleanField(default=True)
     flagged = models.BooleanField(default=False)
+    point = geomodels.PointField(blank=True, null=True)
     
     # Meta data about DB table
     class Meta:
