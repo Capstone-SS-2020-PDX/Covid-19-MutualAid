@@ -73,11 +73,13 @@ const ProfileCreationScreen = props => {
 
     const createFormData = () => {
         const data = new FormData();
+      
         if (selectedImage) {
             data.append('profile_pic', selectedImage);
         }
         data.append('profile_text', formValue.profile_text);
         data.append('home', selectedCommunity.id);
+        data.append('member_of', selectedCommunity.id);
         return data;
     };
 
@@ -99,7 +101,6 @@ const ProfileCreationScreen = props => {
                 console.log(error)
             })
             .finally(() => {
-                // fetchProfile();
                 setIsProcessing(false);
                 hideModal();
                 addProfile();
@@ -117,6 +118,8 @@ const ProfileCreationScreen = props => {
         })
             .then(response => response.json())
             .then(json => {
+                // console.log("In update user Request: ");
+                // console.log(json);
                 updateUser(json);
             })
             .catch(error => {

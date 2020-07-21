@@ -161,7 +161,7 @@ export const AuthProvider = props => {
                 if (response.ok) {
                     return response.json();
                 } else {
-                    throw Error('ERROR: ' + requestType + ' failed!');
+                    throw Error('ERROR: ' + requestType + ' failed! ' + response.body);
                 }
             })
             .then(json => {
@@ -194,6 +194,7 @@ export const AuthProvider = props => {
     }
 
     const handleAutoLogin = () => {
+        fetchCommunities();
         AsyncStorage.getItem('loginData').then(loginData => {
             console.log('Attempting to fetch token from AsyncStorage...');
             if (loginData) {
@@ -205,9 +206,6 @@ export const AuthProvider = props => {
                 dispatch({ type: AUTO_LOGIN, token: null, user: null })
             }
         });
-
-        fetchCommunities();
-
     };
 
     const handleLogin = userData => {
