@@ -6,6 +6,7 @@ import {
   MaterialCommunityIcons,
   Ionicons,
   Entypo,
+  SimpleLineIcons,
 } from '@expo/vector-icons';
 import {
   Avatar,
@@ -106,6 +107,17 @@ const DrawerContent = props => {
               )}
               label="Saved Postings"
               onPress={() => {}}
+            />
+            <DrawerItem
+              icon={params => (
+                <MaterialIcons
+                  name='people-outline'
+                  color={params.color}
+                  size={params.size}
+                />
+              )}
+              label="Communities"
+              onPress={() => {navigation.navigate('Communities')}}
             />
             <DrawerItem
               icon={params => (
