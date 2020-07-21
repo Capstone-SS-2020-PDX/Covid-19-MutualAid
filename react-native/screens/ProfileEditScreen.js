@@ -24,7 +24,6 @@ import { windowHeight, windowWidth } from '../config/dimensions';
 import { users_url, profiles_url } from '../config/urls';
 
 import { AuthContext } from '../providers/AuthProvider';
-
 const ProfileEditScreen = props => {
   const { navigation } = props;
   const { addProfile, updateUser, updateProfile, user, communities } = useContext(AuthContext);
@@ -211,14 +210,14 @@ const ProfileEditScreen = props => {
   };
 
 
-  const getImage = () => {
-    return selectedImage;
-  };
+    const getImage = () => {
+        return selectedImage;
+    };
 
-  const selectImage = imageData => {
-    console.log("In selectImage: " + JSON.stringify(imageData));
-    setSelectedImage(imageData);
-  };
+    const selectImage = imageData => {
+        setSelectedImage(imageData);
+    };
+
 
 
   const onKeyPress = (key) => {

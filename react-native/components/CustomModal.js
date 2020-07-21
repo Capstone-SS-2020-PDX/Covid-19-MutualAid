@@ -27,6 +27,7 @@ const updatePostingOptions = {
     data: 'Updating your Posting...',
 };
 
+
 const loginFailedOptions = {
     ...defaultOptions,
     data: 'Login Failed!',
@@ -37,6 +38,11 @@ const registerFailedOptions = {
     ...defaultOptions,
     data: 'Register Failed!',
     icon: <MaterialIcons name='error-outline' size={50} color='red'/>,
+ };
+
+const deletePostingOptions = {
+    ...defaultOptions,
+    data: 'Deleting your Posting...',
 };
 
 const sendingEmailOptions = {
@@ -84,6 +90,9 @@ export function showModal(type) {
             break;
         case 'UPDATING_POSTING':
             options = updatePostingOptions;
+            break;
+        case 'DELETE_POSTING':
+            options = deletePostingOptions;
             break;
         case 'SENDING_EMAIL':
             options = sendingEmailOptions;
