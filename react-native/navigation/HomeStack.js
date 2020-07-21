@@ -17,8 +17,8 @@ const HomeStack = props => {
   const homeCommunity = communities.find(community => community.id === user.profile.home);
 
   const PostingListScreenOptions = {
-    // headerTitle: `Welcome ${username}`,
-    headerTitle: homeCommunity ? `${homeCommunity.name}` : `Welcome ${username}`,
+    headerTitle: `Welcome ${user.user.first_name}`,
+    // headerTitle: homeCommunity ? `${homeCommunity.name}` : `Welcome ${username}`,
     ...headerOptions,
     headerLeft: drawerMenuIcon.bind(this, navigation),
   };
