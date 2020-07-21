@@ -8,7 +8,7 @@ import { View,
          ActivityIndicator,
          TouchableOpacity,
        } from 'react-native';
-import { Ionicons, Feather } from '@expo/vector-icons';
+import { Ionicons, Feather, FontAwesome5 } from '@expo/vector-icons';
 
 import CommunityList from '../components/CommunityList';
 import Colors from '../config/colors';
@@ -31,19 +31,24 @@ const CommunityListScreen = props => {
     const [searchText, setSearchText] = useState('');
     const searchInputRef = useRef(null);
 
-    // useLayoutEffect(() => {
-    //     navigation.setOptions({
-    //         headerRight: () => (
-    //             <TouchableOpacity
-    //               style={styles.saveButton}
-    //               onPress={() => handleJoinCommunities() }
-    //             >
-    //               <Text style={styles.saveButtonText}>Save</Text>
-    //             </TouchableOpacity>
-    //         ),
-    //     });
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            headerRight: () => (
+                <TouchableOpacity
+                  style={styles.saveButton}
+                  onPress={() => handleJoinCommunities() }
+                >
+                  <Feather
+                    name='user-plus'
+                    size={25}
+                    color={Colors.light_shade4}
+                  />
 
-    // }, [navigation]);
+                </TouchableOpacity>
+            ),
+        });
+
+    }, [navigation]);
 
     // useEffect(() => { initializeCommunitySelections() }, []);
 
@@ -59,9 +64,9 @@ const CommunityListScreen = props => {
     //     console.log("selection status from initializeCommunitySelections: " + JSON.stringify(communitySelections));
     // };
 
-    // const handleJoinCommunities = () => {
-    //     console.log("inside handleJoinCommunities in CommunityList" + JSON.stringify(communitySelections));
-    // };
+    const handleJoinCommunities = () => {
+        console.log("Navigating to Join Community Screen");
+    };
 
     // const updateCommunitySelections = (id, value) => {
     //     console.log("id: " + id + " value: " + value);

@@ -40,12 +40,12 @@ const CommunityList = props => {
       keyExtractor={(itemData, i) => i.toString()}
       data={props.communities}
       showsVerticalScrollIndicator={false}
-      refreshControl={
-        <RefreshControl
-        /*   refreshing={props.isLoading} */
-        /*   onRefresh={props.onRefresh} */
-        />
-      }
+      /* refreshControl={ */
+      /*   <RefreshControl */
+      /*     refreshing={props.isLoading} */
+      /*     onRefresh={props.onRefresh} */
+      /*   /> */
+      /* } */
     />
   );
 }
