@@ -3,7 +3,6 @@ import { View, Text, Button, TouchableOpacity, Image, StyleSheet } from 'react-n
 import { Ionicons } from '@expo/vector-icons';
 import { HeaderBackButton } from '@react-navigation/stack';
 
-
 import PostingDetailScreen from '../screens/PostingDetailScreen';
 import EditPostingScreen from '../screens/EditPostingScreen';
 
@@ -20,12 +19,12 @@ export const addPostingsRoutes = (Stack, navigation) => {
               style={styles.headerRight}
               onPress={() => {
                   console.log(`Finish Editing ${route.params.id}`);
-                  if (route.params.submit) {
-                      route.params.submit.current();
+                  if (route.params.submitEditPosting) {
+                      route.params.submitEditPosting.current();
                   }
               }}
             >
-            <Text style={styles.doneButtonText}>Done</Text>
+            <Text style={styles.saveButtonText}>Save</Text>
             </TouchableOpacity>
         );
     }
@@ -65,7 +64,8 @@ export const addPostingsRoutes = (Stack, navigation) => {
             component={EditPostingScreen}
             options={
               ({route, navigation}) => ({
-                headerTitle: `Editing ${route.params.id}`,
+                /* headerTitle: `Editing ${route.params.title}`, */
+                headerTitle: 'Edit Posting',
                 ...headerOptions,
                 headerRight: () => handleDone(route),
               })
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
   headerRight: {
     paddingRight: 15,
   },
-  doneButtonText: {
+  saveButtonText: {
     color: Colors.contrast1,
     fontSize: 20,
   },

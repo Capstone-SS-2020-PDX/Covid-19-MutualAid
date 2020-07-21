@@ -93,7 +93,9 @@ const PostingDetailScreen = props => {
         <CustomButton
           style={styles.reachOutButton}
           onPress={() => {
-            console.log("edit posting clicked!");
+            navigation.navigate('EditPosting', {
+              ...route.params,
+            })
           }}
         >
           <Text style={styles.reachOutButtonText}>Edit Posting</Text>

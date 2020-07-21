@@ -27,6 +27,11 @@ const updatePostingOptions = {
     data: 'Updating your Posting...',
 };
 
+const deletePostingOptions = {
+    ...defaultOptions,
+    data: 'Deleting your Posting...',
+};
+
 const sendingEmailOptions = {
     ...defaultOptions,
     data: 'Sending Message...',
@@ -66,6 +71,9 @@ export function showModal(type) {
             break;
         case 'UPDATING_POSTING':
             options = updatePostingOptions;
+            break;
+        case 'DELETE_POSTING':
+            options = deletePostingOptions;
             break;
         case 'SENDING_EMAIL':
             options = sendingEmailOptions;
