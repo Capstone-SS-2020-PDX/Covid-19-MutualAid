@@ -13,7 +13,7 @@ const UPDATE_PROFILE = 'UPDATE_PROFILE';
 const UPDATE_USER = 'UPDATE_USER';
 const UPDATE_COMMUNITIES = 'UPDATE_COMMUNITIES';
 
-// Provides username, token and login/logout functionality to Global App Context
+// Provides token and login/logout functionality to Global App Context
 // Allows the app to know which user is using it and to handle login/logout
 
 export const AuthContext = createContext({});
@@ -26,7 +26,6 @@ export const AuthProvider = props => {
 
     const initialLoginState = {
         isLoading: true,
-        username: null,
         token: null,
         hasProfile: true,
         user: null,
@@ -39,7 +38,6 @@ export const AuthProvider = props => {
             case AUTO_LOGIN:
                 return {
                     ...previousState,
-                    username: action.username,
                     token: action.token,
                     // isLoading: false,
                     user: action.user,
@@ -47,7 +45,6 @@ export const AuthProvider = props => {
             case LOGIN:
                 return {
                     ...previousState,
-                    username: action.username,
                     token: action.token,
                     isLoading: false,
                     user: action.user,
@@ -55,7 +52,6 @@ export const AuthProvider = props => {
             case LOGOUT:
                 return {
                     ...previousState,
-                    username: null,
                     token: null,
                     isLoading: false,
                     user: null,
@@ -63,7 +59,6 @@ export const AuthProvider = props => {
             case REGISTER:
                 return {
                     ...previousState,
-                    username: action.username,
                     token: action.token,
                     hasProfile: false,
                     isLoading: false,
@@ -107,8 +102,8 @@ export const AuthProvider = props => {
 
     const [loginState, dispatch] = useReducer(loginReducer, initialLoginState);
 
-    const fetchCommunities = () => {
-        AsyncStorage.getItem('communities').then(communityData => {
+    const fetchCommunities = async () => {
+        await AsyncStorage.getItem('communities').then(communityData => {
             console.log('Fetching communties from AsyncStorage: ');
             if (communityData) {
                 console.log("Found communities in AsyncStorage!");
@@ -168,7 +163,7 @@ export const AuthProvider = props => {
 
                 if (loginData) {
                     AsyncStorage.setItem('loginData', JSON.stringify(loginData)).then(() => {
-                        dispatch({ type: requestType, username: userData.username, token: loginData.token, user: loginData})
+                        dispatch({ type: requestType, token: loginData.token, user: loginData})
                     }).catch(error => {
                         console.log(error);
                     });
@@ -190,11 +185,10 @@ export const AuthProvider = props => {
             if (loginData) {
                 loginData = JSON.parse(loginData);
                 console.log('Token exists! : ' + loginData.token);
-                console.log('User exists! : ' + loginData.user.username);
-                dispatch({ type: AUTO_LOGIN, token: loginData.token, username: loginData.user.username, user: loginData })
+                dispatch({ type: AUTO_LOGIN, token: loginData.token, user: loginData })
             } else {
                 console.log('No existing token');
-                dispatch({ type: AUTO_LOGIN, token: null, username: null, user: null })
+                dispatch({ type: AUTO_LOGIN, token: null, user: null })
             }
         });
 
@@ -263,7 +257,6 @@ export const AuthProvider = props => {
               isLoading: loginState.isLoading,
               setIsLoading: setIsLoading,
               token: loginState.token,
-              username: loginState.username,
               hasProfile: loginState.hasProfile,
               user: loginState.user,
               communities: loginState.communities,
