@@ -129,8 +129,17 @@ export const AuthProvider = props => {
                   });
             }
         });
-
     };
+
+    const setLoginData = async (loginData, requestType) => {
+        console.log('Setting loginData to AsyncStorage...');
+        await AsyncStorage.setItem('loginData', JSON.stringify(loginData)).then(() => {
+            console.log('Successfully set loginData!');
+            dispatch({ type: requestType, token: loginData.token, user: loginData})
+        }).catch(error => {
+            console.log(error);
+        });
+    }
 
     const performAuthRequest = (requestType, userData, url) => {
 
@@ -149,25 +158,30 @@ export const AuthProvider = props => {
         })
             .then(response => {
                 console.log("Response status: " + response.status);
-                return response.json();
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw Error('ERROR: ' + requestType + ' failed!');
+                }
             })
             .then(json => {
                 console.log('Server Response: ' + JSON.stringify(json));
                 loginData = json;
                 fetchCommunities();
+                setLoginData(loginData, requestType);
             })
             .catch(error => {
                 console.log(error);
             })
             .finally(() => {
 
-                if (loginData) {
-                    AsyncStorage.setItem('loginData', JSON.stringify(loginData)).then(() => {
-                        dispatch({ type: requestType, token: loginData.token, user: loginData})
-                    }).catch(error => {
-                        console.log(error);
-                    });
-                }
+                // if (loginData) {
+                //     AsyncStorage.setItem('loginData', JSON.stringify(loginData)).then(() => {
+                //         dispatch({ type: requestType, token: loginData.token, user: loginData})
+                //     }).catch(error => {
+                //         console.log(error);
+                //     });
+                // }
             });
     };
 
