@@ -25,7 +25,6 @@ import { showModal, hideModal } from '../components/CustomModal';
 const RegisterScreen = props => {
   const { navigation, route } = props;
   const { register, isLoading, setIsLoading, checkUsername } = useContext(AuthContext);
-  const [ location, setLocation] = useState(null);
   const [ errorMsg, setErrorMsg] = useState(null);
   const [emailText, setEmailText] = useState(null)
   const [userNameText, setUserNameText] = useState(null);
@@ -35,7 +34,8 @@ const RegisterScreen = props => {
   const usernameInputRef = useRef(null);
   const passwordInputRef = useRef(null);
   const confirmPasswordInputRef = useRef(null);
-
+  const [ location, setLocation] = useState(null);
+  
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestPermissionsAsync();
@@ -66,8 +66,10 @@ const RegisterScreen = props => {
       setTimeout(() => {
         hideModal();
       }, 900);
-
-      const userData = { username: userNameText, password: passwordText, email: emailText, location: location };
+      console.log(location);
+      let point = 'POINT(' + location.coords.latitude + ' ' + location.coords.longitude + ')';
+      console.log(point);
+      const userData = { username: userNameText, password: passwordText, email: emailText, point: point };
       register(userData);
     }
   };

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import { StyleSheet,
          Text,
          TextInput,
@@ -20,6 +20,7 @@ import * as ImageManipulator from 'expo-image-manipulator';
 import { WToast } from 'react-native-smart-tip'
 import { KeyboardAvoidingScrollView } from 'react-native-keyboard-avoiding-scroll-view';
 import RNPickerSelect from 'react-native-picker-select';
+import * as Location from 'expo-location';
 
 import { showModal, hideModal } from '../components/CustomModal';
 import { notifyMessage } from '../components/CustomToast';
@@ -54,6 +55,19 @@ const PostingCreationScreen = props => {
 
   const height = useHeaderHeight();
   const isAndroid = Platform.OS === 'android';
+  const [ location, setLocation] = useState(null);
+  
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+      } 
+        let location = await Location.getCurrentPositionAsync({accuracy: 5})
+        setLocation(location);
+      }
+    )()
+  });
 
   const handlePostCreation = () => {
     if(!isProcessing) {
@@ -71,14 +85,18 @@ const PostingCreationScreen = props => {
 
   // Create the data object in correct format to be sent off the server
   const createFormData = () => {
-    const categoryValue = isGoodSelected ? 'goods' : 'services';
-    const requestValue = isRequestSelected ? true : false;
-
+    const categoryValue = isCategorySwitchEnabled ? 'services' : 'goods';
+    const requestValue = isRequestSwitchEnabled ? true : false;
+    console.log(location);
+    let point = 'POINT(' + location.coords.latitude + ' ' + location.coords.longitude + ')';
+    console.log(point)
+    
     const data = new FormData();
 
     if (selectedImage) {
       data.append('item_pic', selectedImage);
     }
+    ;
 
     data.append('title', itemName);
     data.append('desc', itemDescription);
@@ -87,7 +105,7 @@ const PostingCreationScreen = props => {
     data.append('category', categoryValue);
     data.append('request', requestValue);
     data.append('in_community', user.profile.home);
-
+    data.append('point', point);
     return data;
   };
 
@@ -103,6 +121,7 @@ const PostingCreationScreen = props => {
     })
       .then(response => response.json())
       .then(json => {
+        console.log('Post Request: \n')
         console.log(json);
         notifyMessage('Posting Sucessfully Created!');
         resetFormState();
