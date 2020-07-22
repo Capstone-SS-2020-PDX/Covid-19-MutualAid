@@ -13,6 +13,8 @@ const ADD_PROFILE = 'ADD_PROFILE';
 const UPDATE_PROFILE = 'UPDATE_PROFILE';
 const UPDATE_USER = 'UPDATE_USER';
 const UPDATE_COMMUNITIES = 'UPDATE_COMMUNITIES';
+const SET_AUTH_FAILED = 'SET_AUTH_FAILED';
+const RESET_AUTH_STATUS = 'RESET_AUTH_STATUS';
 
 // Provides token and login/logout functionality to Global App Context
 // Allows the app to know which user is using it and to handle login/logout
@@ -27,7 +29,7 @@ export const AuthProvider = props => {
         hasProfile: true,
         user: null,
         communities: null,
-        updated: false,
+        authFailed: false,
     };
 
     const loginReducer = (previousState, action) => {
@@ -93,6 +95,16 @@ export const AuthProvider = props => {
                     communities: action.communities,
                     isLoading: false,
                 };
+            case SET_AUTH_FAILED:
+                return {
+                    ...previousState,
+                    authFailed: true,
+                };
+            case RESET_AUTH_STATUS:
+                return {
+                    ...previousState,
+                    authFailed: false,
+                };
         }
     };
 
@@ -153,31 +165,30 @@ export const AuthProvider = props => {
             .then(response => {
                 console.log("Response status: " + response.status);
                 if (response.status != 200) {
-                    if (requestType == 'LOGIN') {
-                        showModal('LOGIN_FAILED');
-                        setTimeout(() => {
-                            hideModal();
-                        }, 3000);
-                    }
-                    else if (requestType == 'REGISTER') {
-                        showModal('REGISTER_FAILED');
-                        setTimeout(() => {
-                            hideModal();
-                        }, 3000);
-                    }
+                    // if (requestType == 'LOGIN') {
+                    //     showModal('LOGIN_FAILED');
+                    //     setTimeout(() => {
+                    //         hideModal();
+                    //     }, 3000);
+                    // }
+                    // else if (requestType == 'REGISTER') {
+                    //     showModal('REGISTER_FAILED');
+                    //     setTimeout(() => {
+                    //         hideModal();
+                    //     }, 3000);
+                    // }
+                    dispatch({ type: SET_AUTH_FAILED });
+                } else {
+                    return response.json();
                 }
-                return response.json();
             })
             .then(json => {
-                console.log('Server Response: ' + JSON.stringify(json));
-                loginData = json;
-                fetchCommunities();
-                setLoginData(loginData, requestType);
-            })
-            .catch(error => {
-                console.log(error);
-            })
-            .finally(() => {
+                if (json) {
+                    console.log('Server Response: ' + JSON.stringify(json));
+                    loginData = json;
+                    fetchCommunities();
+                    setLoginData(loginData, requestType);
+                }
             });
     };
 
@@ -259,6 +270,10 @@ export const AuthProvider = props => {
         dispatch({ type: SET_IS_LOADING, isLoading: loadingStatus });
     };
 
+    const resetAuthStatus = () => {
+        dispatch({ type: RESET_AUTH_STATUS });
+    };
+
     return (
         <AuthContext.Provider
           value={{
@@ -268,6 +283,8 @@ export const AuthProvider = props => {
               hasProfile: loginState.hasProfile,
               user: loginState.user,
               communities: loginState.communities,
+              authFailed: loginState.authFailed,
+              resetAuthStatus,
               updateProfile,
               updateUser,
               autoLogin: handleAutoLogin,
