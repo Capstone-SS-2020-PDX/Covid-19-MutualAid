@@ -187,7 +187,6 @@ const PostingCreationScreen = props => {
           />
 
         </View>
-
         <View style={styles.inputContainer}>
           <View style={styles.inputView}>
             <TextInput
@@ -202,45 +201,6 @@ const PostingCreationScreen = props => {
               onSubmitEditing={() => descriptionInputRef.current.focus()}
             />
           </View>
-          <RNPickerSelect
-                placeholder={{
-                  label: 'Select an item type...',
-                  value: null,
-                }}
-                items={[
-                  {label: 'Request', value: 'r'},
-                  {label: 'Offer', value: 'o'},
-                ]} 
-                onValueChange={
-                  value =>
-                  {if (value == null) {
-                    setIsRequestSelected(previousState => previousState);
-                  }
-                  else { 
-                    changeType(value);
-                  }
-                }}
-              />
-            <RNPickerSelect
-                //style={styles.dropDown}
-                placeholder={{
-                  label: 'Select a category...',
-                  value: null,
-                }}
-                items={[
-                  {label: 'Good', value: 'g'},
-                  {label: 'Service', value: 's'},
-                ]}
-                onValueChange={
-                  value =>
-                  {if (value == null) {
-                    setIsGoodSelected(previousState => previousState);
-                  }
-                  else {
-                    changeCategory(value);
-                  }
-                }}
-              />
           <View style={{...styles.inputView, ...styles.descriptionInput}}>
             <TextInput
               style={styles.inputText}
@@ -257,20 +217,63 @@ const PostingCreationScreen = props => {
               ref={descriptionInputRef}
             />
           </View>
-          <View style={ (windowHeight > 650) ? styles.switchRowBig : styles.switchRow}>
-            <View style={styles.switchColumn}>
-              <View style={styles.countInputView}>
-                <TextInput
-                  style={styles.countInputText}
-                  placeholder='Quantity...'
-                  placeholderTextColor={Colors.placeholder_text}
-                  keyboardType='numeric'
-                  returnKeyType='done'
-                  onChangeText={text => setItemCount(text)}
-                  ref={itemCountInputRef}
-                />
-              </View>
+          <View style={styles.pickerRow}>
+            <View style={styles.pickerView}>
+              <RNPickerSelect
+                    placeholder={{
+                      label: 'Item type...',
+                      value: null,
+                      color: Colors.placeholder_text,
+                    }}
+                    placeholderTextColor={Colors.placeholder_text}
+                    items={[
+                      {label: 'Request', value: 'r'},
+                      {label: 'Offer', value: 'o'},
+                    ]} 
+                    onValueChange={
+                      value =>
+                      {if (value == null) {
+                        setIsRequestSelected(previousState => previousState);
+                      }
+                      else { 
+                        changeType(value);
+                      }
+                    }}
+                  />
             </View>
+            <View style = {styles.pickerView}>
+              <RNPickerSelect
+                    placeholder={{
+                      label: 'Category...',
+                      value: null,
+                      color: Colors.placeholder_text,
+                    }}
+                    items={[
+                      {label: 'Good', value: 'g'},
+                      {label: 'Service', value: 's'},
+                    ]}
+                    onValueChange={
+                      value =>
+                      {if (value == null) {
+                        setIsGoodSelected(previousState => previousState);
+                      }
+                      else {
+                        changeCategory(value);
+                      }
+                    }}
+              />
+            </View>
+          </View>
+          <View style={styles.countInputView}>
+            <TextInput
+              style={styles.countInputText}
+              placeholder='Quantity...'
+              placeholderTextColor={Colors.placeholder_text}
+              keyboardType='numeric'
+              returnKeyType='done'
+              onChangeText={text => setItemCount(text)}
+              ref={itemCountInputRef}
+            />
           </View>
         </View>
         <CustomButton
@@ -359,6 +362,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    width: 110,
 
     backgroundColor: Colors.light_shade4,
     borderRadius: 10,
@@ -382,31 +386,13 @@ const styles = StyleSheet.create({
     color: Colors.dark_shade1,
     textAlign: 'center',
   },
-  switchRowBig: {
+  pickerRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginVertical: 10,
-    marginBottom: 60,
   },
-  switchRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginHorizontal: 20,
-    marginVertical: -(windowHeight/70)
-  },
-  switchColumn: {
-    alignItems: 'center',
-  },
-  switchTitle: {
-    fontSize: 16,
-    marginBottom: 10,
-  },
-  switch: {
-      transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }],
-  },
-  dropDown: {
-    width:100, 
-    height: 40,
+  pickerView: {
+    flex: 0.5,
+    marginBottom: windowHeight/40,
   },
   confirmButton: {
     marginBottom: 0,
