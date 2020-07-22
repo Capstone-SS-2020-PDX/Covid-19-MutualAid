@@ -32,6 +32,7 @@ const DrawerContent = props => {
   let picUrl = user.profile.profile_pic;
   let fullName = user.user.first_name + ' ' + user.user.last_name.charAt(0);
   let memberSince = prettifyDate(user.user.date_joined);
+  let lastLogin = prettifyDate(user.user.last_login);
   let username =  user.user.username;
 
   const handleLogout = () => {
@@ -64,8 +65,8 @@ const DrawerContent = props => {
               </View>
               <View style={styles.row}>
                 <View style={styles.section}>
-                  <Caption style={styles.caption}>Number of Postings: </Caption>
-                  <Paragraph style={[styles.paragraph, styles.caption]}>0</Paragraph>
+                  <Caption style={styles.caption}>Last Login: </Caption>
+                  <Paragraph style={[styles.paragraph, styles.caption]}>{lastLogin}</Paragraph>
                 </View>
               </View>
             </View>
