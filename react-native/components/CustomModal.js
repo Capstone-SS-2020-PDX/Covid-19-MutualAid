@@ -29,13 +29,13 @@ const updatePostingOptions = {
 
 const loginFailedOptions = {
     ...defaultOptions,
-    data: 'Login Failed!',
+    data: 'Login attempt failed!',
     icon: <MaterialIcons name='error-outline' size={50} color='red'/>,
 };
 
 const registerFailedOptions = {
     ...defaultOptions,
-    data: 'Register Failed!',
+    data: 'Registration attempt failed!',
     icon: <MaterialIcons name='error-outline' size={50} color='red'/>,
  };
 

@@ -1,6 +1,7 @@
 import React, { createContext, useState, useReducer, useContext } from 'react';
 import { AsyncStorage } from 'react-native';
 
+import { showModal, hideModal } from '../components/CustomModal';
 import { login_url, register_url, check_username_url, communities_url } from '../config/urls';
 
 const AUTO_LOGIN = 'AUTO_LOGIN';
@@ -35,7 +36,6 @@ export const AuthProvider = props => {
                 return {
                     ...previousState,
                     token: action.token,
-                    // isLoading: false,
                     user: action.user,
                 };
             case LOGIN:
@@ -116,8 +116,6 @@ export const AuthProvider = props => {
                     },
                 }).then(response => response.json())
                   .then(communitiesJson => {
-                      // console.log("Fetching communities: ");
-                      // console.log(communitiesJson);
 
                       AsyncStorage.setItem('communities', JSON.stringify(communitiesJson)).then(() => {
                           dispatch({ type: UPDATE_COMMUNITIES, communities: communitiesJson });
@@ -154,18 +152,27 @@ export const AuthProvider = props => {
         })
             .then(response => {
                 console.log("Response status: " + response.status);
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    throw Error('ERROR: ' + requestType + ' failed! ' + response.body);
+                if (response.status != 200) {
+                    if (requestType == 'LOGIN') {
+                        showModal('LOGIN_FAILED');
+                        setTimeout(() => {
+                            hideModal();
+                        }, 3000);
+                    }
+                    else if (requestType == 'REGISTER') {
+                        showModal('REGISTER_FAILED');
+                        setTimeout(() => {
+                            hideModal();
+                        }, 3000);
+                    }
                 }
+                return response.json();
             })
             .then(json => {
                 console.log('Server Response: ' + JSON.stringify(json));
                 loginData = json;
                 fetchCommunities();
                 setLoginData(loginData, requestType);
-
             })
             .catch(error => {
                 console.log(error);
