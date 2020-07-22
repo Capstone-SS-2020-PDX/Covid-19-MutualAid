@@ -1,14 +1,11 @@
-import React, { useContext, useState, useRef, useEffect, useLayoutEffect } from 'react';
+import React, { useContext, useState, useRef, useLayoutEffect } from 'react';
 import { View,
-         Text,
          TextInput,
-         Button,
          StyleSheet,
-         FlatList,
          ActivityIndicator,
          TouchableOpacity,
        } from 'react-native';
-import { Ionicons, Feather, FontAwesome5 } from '@expo/vector-icons';
+import { Ionicons, Feather } from '@expo/vector-icons';
 
 import CommunityList from '../components/CommunityList';
 import Colors from '../config/colors';
@@ -27,7 +24,6 @@ const CommunityListScreen = props => {
 
     const [isLoading, setIsLoading] = useState(false);
     const [searchCommunities, setSearchCommunities] = useState(myCommunities);
-    const [communitySelections, setCommunitySelections] = useState({});
     const [searchText, setSearchText] = useState('');
     const searchInputRef = useRef(null);
 
@@ -35,8 +31,8 @@ const CommunityListScreen = props => {
         navigation.setOptions({
             headerRight: () => (
                 <TouchableOpacity
-                  style={styles.saveButton}
-                  onPress={() => handleJoinCommunities() }
+                  style={styles.joinHeaderIcon}
+                  onPress={() => goToJoinCommunitiesScreen() }
                 >
                   <Feather
                     name='user-plus'
@@ -50,32 +46,9 @@ const CommunityListScreen = props => {
 
     }, [navigation]);
 
-    // useEffect(() => { initializeCommunitySelections() }, []);
-
-    // const initializeCommunitySelections = () => {
-    //     let selections = {};
-
-    //     communities.map((community, index) => {
-    //         selections[community.id] = community.id === user.profile.member_of.find(id => id === community.id);
-    //         console.log(selections[community.id]);
-    //     });
-
-    //     setCommunitySelections(selections);
-    //     console.log("selection status from initializeCommunitySelections: " + JSON.stringify(communitySelections));
-    // };
-
-    const handleJoinCommunities = () => {
-        console.log("Navigating to Join Community Screen");
+    const goToJoinCommunitiesScreen = () => {
+        navigation.navigate('Join Communities');
     };
-
-    // const updateCommunitySelections = (id, value) => {
-    //     console.log("id: " + id + " value: " + value);
-    //     setCommunitySelections({
-    //         ...communitySelections,
-    //         [id]: !value,
-    //     });
-    // };
-
 
     const handleSearch = text => {
         setSearchText(text);
@@ -99,9 +72,6 @@ const CommunityListScreen = props => {
               navigation={navigation}
               isLoading={isLoading}
               communities={searchCommunities}
-              communitySelections={communitySelections}
-              /* updateCommunitySelections={updateCommunitySelections} */
-    /* onRefresh={fetchCommunities} */
             />
 
     return(
@@ -176,10 +146,10 @@ const styles = StyleSheet.create({
     inputIcon: {
         width: '10%',
     },
-    saveButton: {
+    joinHeaderIcon: {
         paddingRight: 15,
     },
-    saveButtonText: {
+    joinHeaderIconText: {
         color: Colors.contrast1,
         fontSize: 16,
     },

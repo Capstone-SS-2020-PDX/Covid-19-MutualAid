@@ -15,7 +15,6 @@ const CommunityList = props => {
   console.log("Inside CommunityList, communitySelections: ");
   console.log(props.communitySelections);
   const renderCommunityListItem = itemData => {
-    // let isMemberOf = props.communitySelections[itemData.item.id];
     return(
       <View style={styles.list}>
         <CommunityListItem
@@ -24,9 +23,7 @@ const CommunityList = props => {
           members={itemData.item.members}
           postings={itemData.item.posts}
           id={itemData.item.id}
-          /* isSelected={isMemberOf} */
           onSelectCommunity={() => {
-            /* props.updateCommunitySelections(itemData.item.id, isMemberOf); */
           }}
         />
       </View>

@@ -9,6 +9,7 @@ import {
 import { createStackNavigator } from '@react-navigation/stack';
 
 import CommunityListScreen from '../screens/CommunityListScreen';
+import JoinCommunitiesScreen from '../screens/JoinCommunitiesScreen';
 
 import Colors from '../config/colors';
 import { headerOptions, drawerMenuIcon } from '../config/navigation-options';
@@ -27,14 +28,26 @@ const CommunityStack = props => {
         })
     };
 
+    const JoinCommunitiesScreenOptions = route => {
+        return({
+            headerTitle: 'Join Communities',
+            ...headerOptions,
+        })
+    };
+
     return(
         <Stack.Navigator
-          initialRouteName='Community List'
+          initialRouteName='My Communities'
         >
           <Stack.Screen
-            name='Community List'
+            name='My Communities'
             component={CommunityListScreen}
             options={CommunityListScreenOptions}
+          />
+          <Stack.Screen
+            name='Join Communities'
+            component={JoinCommunitiesScreen}
+            options={JoinCommunitiesScreenOptions}
           />
         </Stack.Navigator>
     );
