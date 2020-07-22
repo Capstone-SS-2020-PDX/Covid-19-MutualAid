@@ -2,7 +2,7 @@ import React, { useContext, useState, useLayoutEffect, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, FlatList, RefreshControl } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 
-import CommunityListItem from './CommunityListItem';
+import JoinCommunitiesListItem from './JoinCommunitiesListItem';
 import { AuthContext } from '../providers/AuthProvider';
 
 import Colors from '../config/colors';
@@ -15,18 +15,18 @@ const JoinCommunitiesList = props => {
   console.log("Inside CommunityList, communitySelections: ");
   console.log(props.communitySelections);
   const renderCommunityListItem = itemData => {
-    // let isMemberOf = props.communitySelections[itemData.item.id];
+    let isMemberOf = props.communitySelections[itemData.item.id];
     return(
       <View style={styles.list}>
-        <CommunityListItem
+        <JoinCommunitiesListItem
           name={itemData.item.name}
           home_pic={itemData.item.home_pic}
           members={itemData.item.members}
           postings={itemData.item.posts}
           id={itemData.item.id}
-          /* isSelected={isMemberOf} */
+          isSelected={isMemberOf}
           onSelectCommunity={() => {
-            /* props.updateCommunitySelections(itemData.item.id, isMemberOf); */
+            props.updateCommunitySelections(itemData.item.id, isMemberOf);
           }}
         />
       </View>

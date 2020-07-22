@@ -58,13 +58,13 @@ const JoinCommunitiesScreen = props => {
     // };
 
 
-    // const updateCommunitySelections = (id, value) => {
-    //     console.log("id: " + id + " value: " + value);
-    //     setCommunitySelections({
-    //         ...communitySelections,
-    //         [id]: !value,
-    //     });
-    // };
+    const updateCommunitySelections = (id, value) => {
+        console.log("id: " + id + " value: " + value);
+        setCommunitySelections({
+            ...communitySelections,
+            [id]: !value,
+        });
+    };
 
     const handleJoinCommunities = () => {
         console.log('joining communities');
@@ -73,7 +73,7 @@ const JoinCommunitiesScreen = props => {
     const handleSearch = text => {
         setSearchText(text);
 
-        let filteredCommunities = communities.filter(community =>
+        let filteredCommunities = communityList.filter(community =>
             community.name.toLowerCase().includes(text.toLowerCase())
         );
 
@@ -82,7 +82,7 @@ const JoinCommunitiesScreen = props => {
 
     const handleClearSearchInput = () => {
         setSearchText('');
-        setSearchCommunities(communities);
+        setSearchCommunities(communityList);
         searchInputRef.current.clear();
     };
 
@@ -93,7 +93,7 @@ const JoinCommunitiesScreen = props => {
               isLoading={isLoading}
               communities={searchCommunities}
               communitySelections={communitySelections}
-              /* updateCommunitySelections={updateCommunitySelections} */
+              updateCommunitySelections={updateCommunitySelections}
     /* onRefresh={fetchCommunities} */
             />
 

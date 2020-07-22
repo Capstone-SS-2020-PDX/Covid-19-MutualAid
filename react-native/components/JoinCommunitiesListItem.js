@@ -5,7 +5,7 @@ import { Text,
          TouchableOpacity,
          Image,
        } from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, FontAwesome } from '@expo/vector-icons';
 
 import Colors from '../config/colors';
 import { AuthContext } from '../providers/AuthProvider';
@@ -15,7 +15,7 @@ const JoinCommunitiesListItem = props => {
     return(
         <TouchableOpacity
           style={{...styles.listItem, ...props.style}}
-          /* onPress={() => props.onSelectCommunity(props.id, props.isSelected)} */
+          onPress={() => props.onSelectCommunity(props.id, props.isSelected)}
         >
           <View style={styles.itemContent}>
             <View style={styles.listImageContainer}>
@@ -30,21 +30,21 @@ const JoinCommunitiesListItem = props => {
               <Text>Members: {props.members.length}</Text>
               <Text>Postings: {props.postings.length}</Text>
             </View>
-            {/* <View style={styles.iconContainer}> */}
-            {/*   { */}
-            {/*       props.isSelected */}
-            {/*           ? <AntDesign */}
-            {/*               name='checkcircle' */}
-            {/*               size={35} */}
-            {/*               color={Colors.primary} */}
-            {/*             /> */}
-            {/*           : <AntDesign */}
-            {/*               name='checkcircleo' */}
-            {/*               size={35} */}
-            {/*               color={Colors.dark_shade1} */}
-            {/*             /> */}
-            {/*   } */}
-            {/* </View> */}
+            <View style={styles.iconContainer}>
+              {
+                  props.isSelected
+                      ? <AntDesign
+                          name='checkcircle'
+                          size={35}
+                          color={Colors.primary}
+                        />
+                      : <FontAwesome
+                          name='circle-thin'
+                          size={40}
+                          color={Colors.dark_shade1}
+                        />
+              }
+            </View>
           </View>
         </TouchableOpacity>
 
