@@ -220,22 +220,17 @@ const PostingCreationScreen = props => {
           <View style={styles.pickerRow}>
             <View style={styles.pickerView}>
               <RNPickerSelect
-                    placeholder={{
-                      label: 'Item type...',
-                      value: null,
-                      color: Colors.placeholder_text,
-                    }}
-                    placeholderTextColor={Colors.placeholder_text}
+                    placeholder={{}}
                     items={[
                       {label: 'Request', value: 'r'},
                       {label: 'Offer', value: 'o'},
-                    ]} 
+                    ]}
                     onValueChange={
                       value =>
                       {if (value == null) {
                         setIsRequestSelected(previousState => previousState);
                       }
-                      else { 
+                      else {
                         changeType(value);
                       }
                     }}
@@ -243,14 +238,10 @@ const PostingCreationScreen = props => {
             </View>
             <View style = {styles.pickerView}>
               <RNPickerSelect
-                    placeholder={{
-                      label: 'Category...',
-                      value: null,
-                      color: Colors.placeholder_text,
-                    }}
+                    placeholder={{}}
                     items={[
-                      {label: 'Good', value: 'g'},
-                      {label: 'Service', value: 's'},
+                      {label: 'Goods', value: 'g'},
+                      {label: 'Services', value: 's'},
                     ]}
                     onValueChange={
                       value =>
@@ -264,16 +255,25 @@ const PostingCreationScreen = props => {
               />
             </View>
           </View>
-          <View style={styles.countInputView}>
-            <TextInput
-              style={styles.countInputText}
-              placeholder='Quantity...'
-              placeholderTextColor={Colors.placeholder_text}
-              keyboardType='numeric'
-              returnKeyType='done'
-              onChangeText={text => setItemCount(text)}
-              ref={itemCountInputRef}
-            />
+          <View style={styles.countView}>
+            <View style={styles.countInputTitle}>
+                <Text style={styles.countInputTitleText}>
+                  Quantity:
+                </Text>
+              </View>
+            <View>
+              <View style={styles.countInputView}>
+                <TextInput
+                  style={styles.countInputText}
+                  placeholderTextColor={Colors.placeholder_text}
+                  keyboardType='numeric'
+                  returnKeyType='done'
+                  value = '1'
+                  onChangeText={text => setItemCount(text)}
+                  ref={itemCountInputRef}
+                />
+              </View>
+            </View>
           </View>
         </View>
         <CustomButton
@@ -358,11 +358,23 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     color: Colors.dark_shade1,
   },
+  countView: {
+    alignItems: 'center',
+    marginHorizontal: windowWidth/18,
+  },
+  countInputTitle: {
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  countInputTitleText: {
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
   countInputView: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    width: 110,
+    width: windowWidth/4,
 
     backgroundColor: Colors.light_shade4,
     borderRadius: 10,
@@ -389,10 +401,19 @@ const styles = StyleSheet.create({
   pickerRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginHorizontal: windowWidth/18,
   },
   pickerView: {
     flex: 0.5,
-    marginBottom: windowHeight/40,
+    alignItems: 'center',
+    marginBottom: windowHeight/75,
+  },
+  pickerTitle: {
+    flex: 0.5,
+  },
+  pickerTitleText: {
+    fontWeight: 'bold',
+    fontSize: 16,
   },
   confirmButton: {
     marginBottom: 0,
