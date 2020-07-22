@@ -18,7 +18,7 @@ import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { WToast } from 'react-native-smart-tip'
 import { KeyboardAvoidingScrollView } from 'react-native-keyboard-avoiding-scroll-view';
-import DropDownPicker from 'react-native-dropdown-picker';
+import RNPickerSelect from 'react-native-picker-select';
 
 import { showModal, hideModal } from '../components/CustomModal';
 import { notifyMessage } from '../components/CustomToast';
@@ -138,8 +138,8 @@ const PostingCreationScreen = props => {
     navigation.navigate('Home', {screen: 'Feed'})
   }
 
-  const changeType = (item) => {
-    switch (item.value) {
+  const changeType = (value) => {
+    switch (value) {
       case 'r':
         setIsRequestSelected(true);
       break;
@@ -149,8 +149,8 @@ const PostingCreationScreen = props => {
     }
   };
 
-  const changeCategory = (item) => {
-    switch (item.value) {
+  const changeCategory = (value) => {
+    switch (value) {
       case 'g':
         setIsGoodSelected(true);
       break;
@@ -202,6 +202,45 @@ const PostingCreationScreen = props => {
               onSubmitEditing={() => descriptionInputRef.current.focus()}
             />
           </View>
+          <RNPickerSelect
+                placeholder={{
+                  label: 'Select an item type...',
+                  value: null,
+                }}
+                items={[
+                  {label: 'Request', value: 'r'},
+                  {label: 'Offer', value: 'o'},
+                ]} 
+                onValueChange={
+                  value =>
+                  {if (value == null) {
+                    setIsRequestSelected(previousState => previousState);
+                  }
+                  else { 
+                    changeType(value);
+                  }
+                }}
+              />
+            <RNPickerSelect
+                //style={styles.dropDown}
+                placeholder={{
+                  label: 'Select a category...',
+                  value: null,
+                }}
+                items={[
+                  {label: 'Good', value: 'g'},
+                  {label: 'Service', value: 's'},
+                ]}
+                onValueChange={
+                  value =>
+                  {if (value == null) {
+                    setIsGoodSelected(previousState => previousState);
+                  }
+                  else {
+                    changeCategory(value);
+                  }
+                }}
+              />
           <View style={{...styles.inputView, ...styles.descriptionInput}}>
             <TextInput
               style={styles.inputText}
@@ -231,30 +270,6 @@ const PostingCreationScreen = props => {
                   ref={itemCountInputRef}
                 />
               </View>
-            </View>
-            <View style={styles.switchColumn}>
-              <DropDownPicker
-                style={styles.dropDown}
-                items={[
-                  {label: 'Request', value: 'r'},
-                  {label: 'Offer', value: 'o'},
-                ]}
-                defaultValue='r'
-                containerStyle={styles.dropDown}
-                onChangeItem={item => changeType(item)}
-              />
-            </View>
-            <View style={styles.switchColumn}>
-              <DropDownPicker
-                style={styles.dropDown}
-                items={[
-                  {label: 'Good', value: 'g'},
-                  {label: 'Service', value: 's'},
-                ]}
-                defaultValue='g'
-                containerStyle={styles.dropDown}
-                onChangeItem={item => changeCategory(item)}
-              />
             </View>
           </View>
         </View>
