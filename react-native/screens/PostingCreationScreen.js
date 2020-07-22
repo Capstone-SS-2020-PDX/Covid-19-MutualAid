@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import { StyleSheet,
          Text,
          TextInput,
@@ -18,6 +18,7 @@ import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { WToast } from 'react-native-smart-tip'
 import { KeyboardAvoidingScrollView } from 'react-native-keyboard-avoiding-scroll-view';
+import * as Location from 'expo-location';
 
 import { showModal, hideModal } from '../components/CustomModal';
 import { notifyMessage } from '../components/CustomToast';
@@ -51,6 +52,19 @@ const PostingCreationScreen = props => {
   const itemCountInputRef = useRef(null);
 
   const height = useHeaderHeight();
+  const [ location, setLocation] = useState(null);
+  
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+      } 
+        let location = await Location.getCurrentPositionAsync({accuracy: 5})
+        setLocation(location);
+      }
+    )()
+  });
 
   const handlePostCreation = () => {
     if(!isProcessing) {
@@ -70,12 +84,16 @@ const PostingCreationScreen = props => {
   const createFormData = () => {
     const categoryValue = isCategorySwitchEnabled ? 'services' : 'goods';
     const requestValue = isRequestSwitchEnabled ? true : false;
-
+    console.log(location);
+    let point = 'POINT(' + location.coords.latitude + ' ' + location.coords.longitude + ')';
+    console.log(point)
+    
     const data = new FormData();
 
     if (selectedImage) {
       data.append('item_pic', selectedImage);
     }
+    ;
 
     data.append('title', itemName);
     data.append('desc', itemDescription);
@@ -84,7 +102,7 @@ const PostingCreationScreen = props => {
     data.append('category', categoryValue);
     data.append('request', requestValue);
     data.append('in_community', user.profile.home);
-
+    data.append('point', point);
     return data;
   };
 
@@ -100,6 +118,7 @@ const PostingCreationScreen = props => {
     })
       .then(response => response.json())
       .then(json => {
+        console.log('Post Request: \n')
         console.log(json);
         notifyMessage('Posting Sucessfully Created!');
         resetFormState();
