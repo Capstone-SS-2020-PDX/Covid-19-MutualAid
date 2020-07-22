@@ -10,7 +10,7 @@ import { AntDesign } from '@expo/vector-icons';
 import Colors from '../config/colors';
 import { AuthContext } from '../providers/AuthProvider';
 
-const CommunityListItem = props => {
+const JoinCommunitiesListItem = props => {
 
     return(
         <TouchableOpacity
@@ -30,6 +30,21 @@ const CommunityListItem = props => {
               <Text>Members: {props.members.length}</Text>
               <Text>Postings: {props.postings.length}</Text>
             </View>
+            {/* <View style={styles.iconContainer}> */}
+            {/*   { */}
+            {/*       props.isSelected */}
+            {/*           ? <AntDesign */}
+            {/*               name='checkcircle' */}
+            {/*               size={35} */}
+            {/*               color={Colors.primary} */}
+            {/*             /> */}
+            {/*           : <AntDesign */}
+            {/*               name='checkcircleo' */}
+            {/*               size={35} */}
+            {/*               color={Colors.dark_shade1} */}
+            {/*             /> */}
+            {/*   } */}
+            {/* </View> */}
           </View>
         </TouchableOpacity>
 
@@ -70,6 +85,10 @@ const styles = StyleSheet.create({
         fontSize: 20,
         marginBottom: 10,
     },
+    iconContainer: {
+        width: '20%',
+        marginRight: -10,
+    },
 });
 
-export default CommunityListItem;
+export default JoinCommunitiesListItem;
