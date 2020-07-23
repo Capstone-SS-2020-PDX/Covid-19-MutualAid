@@ -27,7 +27,6 @@ const ProfileCreationScreen = props => {
     const { navigation } = props;
     const { addProfile, updateUser, updateProfile, user, communities } = useContext(AuthContext);
 
-
     const [formValue, setFormValue] = useState(null);
     const [selectedCommunity, setSelectedCommunity] = useState(communities[0]);
     const [selectedImage, setSelectedImage] = useState(null);
@@ -73,11 +72,13 @@ const ProfileCreationScreen = props => {
 
     const createFormData = () => {
         const data = new FormData();
+      
         if (selectedImage) {
             data.append('profile_pic', selectedImage);
         }
         data.append('profile_text', formValue.profile_text);
         data.append('home', selectedCommunity.id);
+        data.append('member_of', selectedCommunity.id);
         return data;
     };
 
@@ -99,7 +100,6 @@ const ProfileCreationScreen = props => {
                 console.log(error)
             })
             .finally(() => {
-                // fetchProfile();
                 setIsProcessing(false);
                 hideModal();
                 addProfile();
@@ -117,6 +117,8 @@ const ProfileCreationScreen = props => {
         })
             .then(response => response.json())
             .then(json => {
+                // console.log("In update user Request: ");
+                // console.log(json);
                 updateUser(json);
             })
             .catch(error => {
@@ -205,6 +207,12 @@ const ProfileCreationScreen = props => {
         }
     };
 
+    const onKeyPress = (key) => {
+        if (key === 'Enter') {
+            descriptionInputRef.current.blur();
+        }
+    }
+
     return(
         <View style={styles.screen}>
           <Text style={styles.screenTitle}>Create Your Profile</Text>
@@ -227,6 +235,7 @@ const ProfileCreationScreen = props => {
                 maxLength={25}
                 returnKeyType='next'
                 onChangeText={text => updateForm(text, 'first_name')}
+                onSubmitEditing={() => lastNameRef.current.focus()}
                 ref={firstNameRef}
               />
             </View>
@@ -238,6 +247,7 @@ const ProfileCreationScreen = props => {
                 maxLength={25}
                 returnKeyType='next'
                 onChangeText={text => updateForm(text, 'last_name')}
+                onSubmitEditing={() => profileTextRef.current.focus()}
                 ref={lastNameRef}
               />
             </View>
@@ -246,15 +256,17 @@ const ProfileCreationScreen = props => {
                 style={styles.inputText}
                 placeholder='Profile Text...'
                 placeholderTextColor={Colors.placeholder_text}
+                blurOnSubmit={true}
                 maxLength={255}
                 multiline={true}
-                returnKeyType='go'
+                returnKeyType='done'
+                onKeyPress={nativeEvent => onKeyPress(nativeEvent.key)}
                 onChangeText={text => updateForm(text, 'profile_text')}
                 ref={profileTextRef}
               />
             </View>
           </KeyboardAvoidingView>
-              { renderHomeCommunityPicker() }
+          { renderHomeCommunityPicker() }
           <CustomButton
             onPress={attemptProfileCreation}
             style={{ marginBottom: 10, alignSelf: 'center'}}
