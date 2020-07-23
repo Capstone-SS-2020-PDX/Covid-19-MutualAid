@@ -32,6 +32,8 @@ const ProfileEditScreen = props => {
 
   const isAndroid = Platform.OS === 'android' ? true : false;
   const homeCommunity = communities.find(community => community.id === user.profile.home);
+  const availableCommunities = communities.filter(community => user.profile.member_of.includes(community.id));
+  console.log(availableCommunities);
 
   const [formValue, setFormValue] = useState({
     email: user.user.email,
@@ -87,7 +89,6 @@ const ProfileEditScreen = props => {
     data.append('profile_text', formValue.profile_text);
     if (selectedCommunity) {
       data.append('home', selectedCommunity.id);
-      data.append('member_of', selectedCommunity.id);
     }
 
     return data;
@@ -141,7 +142,7 @@ const ProfileEditScreen = props => {
   };
 
   const renderCommunityPickerItems = () => {
-    return communities.map(community =>
+    return availableCommunities.map(community =>
       <Picker.Item label={community.name} value={community} key={community.id}/>
     );
   }
