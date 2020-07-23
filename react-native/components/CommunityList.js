@@ -12,8 +12,6 @@ const CommunityList = props => {
   const { navigation, communities } = props;
   const { user } = useContext(AuthContext);
 
-  console.log("Inside CommunityList, communitySelections: ");
-  console.log(props.communitySelections);
   const renderCommunityListItem = itemData => {
     return(
       <View style={styles.list}>
@@ -24,6 +22,7 @@ const CommunityList = props => {
           postings={itemData.item.posts}
           id={itemData.item.id}
           onSelectCommunity={() => {
+            console.log(itemData.item.id + ' selected');
           }}
         />
       </View>

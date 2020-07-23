@@ -45,7 +45,7 @@ const DrawerContent = props => {
       <DrawerContentScrollView {...props}>
         <View style={styles.drawerContent}>
           <View style={styles.userInfoSection}>
-            <TouchableOpacity style={styles.avatarContainer} onPress={() => navigation.navigate('Profile')}>
+            <TouchableOpacity style={styles.avatarContainer} onPress={() => navigation.navigate('Main', { screen: 'Profile' })}>
               <Avatar.Image
                 source={picUrl !== null
                         ? {uri:picUrl}
@@ -85,7 +85,7 @@ const DrawerContent = props => {
                 />
               )}
               label="Home"
-              onPress={() => {navigation.navigate('Home')}}
+              onPress={() => {navigation.navigate('Main', { screen: 'Feed' })}}
             />
             <DrawerItem
               icon={params => (

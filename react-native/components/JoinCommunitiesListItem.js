@@ -15,7 +15,7 @@ const JoinCommunitiesListItem = props => {
     return(
         <TouchableOpacity
           style={{...styles.listItem, ...props.style}}
-          onPress={() => props.onSelectCommunity(props.id, props.isSelected)}
+          onPress={() => props.onSelectCommunity()}
         >
           <View style={styles.itemContent}>
             <View style={styles.listImageContainer}>

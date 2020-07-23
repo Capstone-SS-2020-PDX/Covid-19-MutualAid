@@ -1,4 +1,4 @@
-import React, { useContext, useState, useRef, useLayoutEffect } from 'react';
+import React, { useEffect, useContext, useState, useRef, useLayoutEffect } from 'react';
 import { View,
          TextInput,
          StyleSheet,
@@ -18,9 +18,10 @@ const CommunityListScreen = props => {
     const { navigation } = props;
 
     console.log(user.profile.member_of);
-    const myCommunities = communities.filter(community => {
-        return user.profile.member_of.includes(community.id);
-    });
+    // const myCommunities = communities.filter(community => {
+    //     return user.profile.member_of.includes(community.id);
+    // });
+    let myCommunities;
 
     const [isLoading, setIsLoading] = useState(false);
     const [searchCommunities, setSearchCommunities] = useState(myCommunities);
@@ -45,6 +46,13 @@ const CommunityListScreen = props => {
         });
 
     }, [navigation]);
+
+    useEffect(() => {
+        myCommunities = communities.filter(community => {
+            return user.profile.member_of.includes(community.id);
+        });
+        setSearchCommunities(myCommunities);
+    }, [user]);
 
     const goToJoinCommunitiesScreen = () => {
         navigation.navigate('Join Communities');
