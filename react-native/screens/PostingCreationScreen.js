@@ -258,21 +258,19 @@ const PostingCreationScreen = props => {
           <View style={styles.countView}>
             <View style={styles.countInputTitle}>
                 <Text style={styles.countInputTitleText}>
-                  Quantity:
+                  Quantity
                 </Text>
               </View>
-            <View>
-              <View style={styles.countInputView}>
-                <TextInput
-                  style={styles.countInputText}
-                  placeholderTextColor={Colors.placeholder_text}
-                  keyboardType='numeric'
-                  returnKeyType='done'
-                  value = '1'
-                  onChangeText={text => setItemCount(text)}
-                  ref={itemCountInputRef}
-                />
-              </View>
+            <View style={styles.countInputView}>
+              <TextInput
+                style={styles.countInputText}
+                placeholderTextColor={Colors.placeholder_text}
+                keyboardType='numeric'
+                returnKeyType='done'
+                value={itemCount.toString()}
+                onChangeText={text => setItemCount(text)}
+                ref={itemCountInputRef}
+              />
             </View>
           </View>
         </View>
@@ -374,13 +372,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    width: windowWidth/4,
+    width: 60,
+    height: 40,
 
     backgroundColor: Colors.light_shade4,
     borderRadius: 10,
     borderColor: Colors.placeholder_text,
     borderWidth: 0.5,
-    height: 30,
     marginBottom: windowHeight/40,
     paddingHorizontal: 20,
 
@@ -401,7 +399,7 @@ const styles = StyleSheet.create({
   pickerRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginHorizontal: windowWidth/18,
+    marginHorizontal: windowWidth / 18,
   },
   pickerView: {
     flex: 0.5,
