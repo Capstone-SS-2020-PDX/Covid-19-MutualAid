@@ -85,7 +85,7 @@ const DrawerContent = props => {
                 />
               )}
               label="Home"
-              onPress={() => {navigation.navigate('Main', { screen: 'Feed' })}}
+              onPress={() => {navigation.navigate('Main', { screen: 'Home' })}}
             />
             <DrawerItem
               icon={params => (

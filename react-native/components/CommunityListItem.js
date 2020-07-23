@@ -30,6 +30,17 @@ const CommunityListItem = props => {
               <Text>Members: {props.members.length}</Text>
               <Text>Postings: {props.postings.length}</Text>
             </View>
+            <View style={styles.iconContainer}>
+              {
+                  props.isHome
+                  ? <AntDesign
+                    name='home'
+                    size={35}
+                    color={Colors.contrast2}
+                  />
+                  : null
+              }
+            </View>
           </View>
         </TouchableOpacity>
 
@@ -69,6 +80,10 @@ const styles = StyleSheet.create({
     communityNameText: {
         fontSize: 20,
         marginBottom: 10,
+    },
+    iconContainer: {
+        width: '20%',
+        marginRight: -10,
     },
 });
 

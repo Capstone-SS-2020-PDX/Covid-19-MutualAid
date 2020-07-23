@@ -38,7 +38,6 @@ const Feed = props => {
     })
       .then(response => response.json())
       .then(json => {
-        console.log(json);
         filterPostings(json);
       })
       .catch(error => console.log(error))

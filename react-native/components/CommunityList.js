@@ -13,6 +13,8 @@ const CommunityList = props => {
   const { user } = useContext(AuthContext);
 
   const renderCommunityListItem = itemData => {
+    const isHomeCommunity = user.profile.home === itemData.item.id;
+
     return(
       <View style={styles.list}>
         <CommunityListItem
@@ -21,6 +23,7 @@ const CommunityList = props => {
           members={itemData.item.members}
           postings={itemData.item.posts}
           id={itemData.item.id}
+          isHome={isHomeCommunity}
           onSelectCommunity={() => {
             console.log(itemData.item.id + ' selected');
           }}
