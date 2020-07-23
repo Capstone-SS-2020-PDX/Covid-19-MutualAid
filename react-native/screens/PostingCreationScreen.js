@@ -9,9 +9,10 @@ import { StyleSheet,
          ScrollView,
          Dimensions,
          Image,
+         Platform,
          ActivityIndicator,
        } from "react-native";
-import { FontAwesome5 } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { useHeaderHeight } from '@react-navigation/stack';
 import * as ImagePicker from 'expo-image-picker';
@@ -52,6 +53,7 @@ const PostingCreationScreen = props => {
   const itemCountInputRef = useRef(null);
 
   const height = useHeaderHeight();
+  const isAndroid = Platform.OS === 'android';
 
   const handlePostCreation = () => {
     if(!isProcessing) {
@@ -218,7 +220,8 @@ const PostingCreationScreen = props => {
             />
           </View>
           <View style={styles.pickerRow}>
-            <View style={styles.pickerView}>
+
+            <View style={isAndroid ? styles.pickerViewAndroid : {...styles.inputView, ...styles.pickerViewiOS}}>
               <RNPickerSelect
                     placeholder={{}}
                     items={[
@@ -236,8 +239,9 @@ const PostingCreationScreen = props => {
                     }}
                   />
             </View>
-            <View style = {styles.pickerView}>
+            <View style={isAndroid ? styles.pickerViewAndroid : {...styles.inputView, ...styles.pickerViewiOS}}>
               <RNPickerSelect
+                style={styles.picker}
                     placeholder={{}}
                     items={[
                       {label: 'Goods', value: 'g'},
@@ -303,12 +307,12 @@ const styles = StyleSheet.create({
   imageContainerBig: {
     width: '100%',
     alignItems: 'center',
-    marginBottom: windowHeight / 20
+    marginBottom: windowHeight / 20,
   },
   imageContainer: {
     width: '100%',
     alignItems: 'center',
-    marginVertical: windowHeight / 40
+    marginVertical: windowHeight / 40,
   },
   textInput: {
     width: '100%',
@@ -349,7 +353,6 @@ const styles = StyleSheet.create({
   },
   descriptionInput: {
     height: 80,
-    alignItems: 'flex-start',
   },
   inputText: {
     width: '90%',
@@ -398,13 +401,16 @@ const styles = StyleSheet.create({
   },
   pickerRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginHorizontal: windowWidth / 18,
+    justifyContent: 'space-around',
   },
-  pickerView: {
-    flex: 0.5,
-    alignItems: 'center',
-    marginBottom: windowHeight/75,
+  pickerViewiOS: {
+    width: '45%',
+    paddingTop: 15,
+    marginBottom: windowHeight / 75,
+  },
+  pickerViewAndroid: {
+    width: '45%',
+    marginBottom: windowHeight / 75,
   },
   pickerTitle: {
     flex: 0.5,
