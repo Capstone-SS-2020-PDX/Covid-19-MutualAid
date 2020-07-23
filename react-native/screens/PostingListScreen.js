@@ -58,7 +58,7 @@ const Feed = props => {
 
   useEffect(() => {
     fetchPostings();
-  }, []);
+  }, [user.profile.member_of]);
 
   const handleSearch = text => {
     setSearchText(text);
