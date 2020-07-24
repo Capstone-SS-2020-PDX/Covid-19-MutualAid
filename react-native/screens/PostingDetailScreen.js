@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useLayoutEffect } from 'react';
 import { View,
          KeyboardAvoidingView,
          Text,
@@ -10,6 +10,7 @@ import { View,
          TextInput,
          ActivityIndicator,
        } from 'react-native';
+import { AntDesign } from '@expo/vector-icons';
 
 import { RFValue, RFPercentage } from "react-native-responsive-fontsize";
 import { WToast } from 'react-native-smart-tip'
@@ -38,6 +39,26 @@ const PostingDetailScreen = props => {
   const [isProcessing, setIsProcessing] = useState(false);
 
   const picUrl = route.params.item_pic;
+
+  useLayoutEffect(() => {
+    const isFavorited = user.profile.saved_postings.includes(route.params.id);
+    const heartIcon = isFavorited ? 'heart' : 'hearto';
+
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity
+          style={styles.favIcon}
+        >
+
+          <AntDesign
+            name={heartIcon}
+            size={25}
+            color={Colors.light_shade4}
+          />
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation]);
 
   const handleReachOut = () => {
     if (!isProcessing) {
@@ -269,6 +290,9 @@ const styles = StyleSheet.create({
   },
   activityIndicator: {
     marginTop: windowHeight / 40,
+  },
+  favIcon: {
+    marginRight: 20,
   },
 });
 
