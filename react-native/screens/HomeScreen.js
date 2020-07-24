@@ -46,7 +46,7 @@ const HomeScreen = props => {
       >
         <Circle
         center={Latlng}
-        radius={5000}
+        radius={4000}
         fillColor='rgba(50,10,10,0.2)'
         />
         <Marker
