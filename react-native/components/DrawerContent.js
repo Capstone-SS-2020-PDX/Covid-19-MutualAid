@@ -107,7 +107,7 @@ const DrawerContent = props => {
                 />
               )}
               label="Saved Postings"
-              onPress={() => {}}
+              onPress={() => {navigation.navigate('Saved Postings')}}
             />
             <DrawerItem
               icon={params => (
