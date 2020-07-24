@@ -9,15 +9,17 @@ import { StyleSheet,
          ScrollView,
          Dimensions,
          Image,
+         Platform,
          ActivityIndicator,
        } from "react-native";
-import { FontAwesome5 } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { useHeaderHeight } from '@react-navigation/stack';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { WToast } from 'react-native-smart-tip'
 import { KeyboardAvoidingScrollView } from 'react-native-keyboard-avoiding-scroll-view';
+import RNPickerSelect from 'react-native-picker-select';
 
 import { showModal, hideModal } from '../components/CustomModal';
 import { notifyMessage } from '../components/CustomToast';
@@ -42,8 +44,8 @@ const PostingCreationScreen = props => {
   const [itemName, setItemName] = useState('');
   const [itemDescription, setItemDescription] = useState('');
   const [itemCount, setItemCount] = useState(1);
-  const [isRequestSwitchEnabled, setIsRequestSwitchEnabled] = useState(false);
-  const [isCategorySwitchEnabled, setIsCategorySwitchEnabled] = useState(false);
+  const [isRequestSelected, setIsRequestSelected] = useState(true);
+  const [isGoodSelected, setIsGoodSelected] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false);
 
   const nameInputRef = useRef(null);
@@ -51,6 +53,7 @@ const PostingCreationScreen = props => {
   const itemCountInputRef = useRef(null);
 
   const height = useHeaderHeight();
+  const isAndroid = Platform.OS === 'android';
 
   const handlePostCreation = () => {
     if(!isProcessing) {
@@ -68,8 +71,8 @@ const PostingCreationScreen = props => {
 
   // Create the data object in correct format to be sent off the server
   const createFormData = () => {
-    const categoryValue = isCategorySwitchEnabled ? 'services' : 'goods';
-    const requestValue = isRequestSwitchEnabled ? true : false;
+    const categoryValue = isGoodSelected ? 'goods' : 'services';
+    const requestValue = isRequestSelected ? true : false;
 
     const data = new FormData();
 
@@ -123,8 +126,8 @@ const PostingCreationScreen = props => {
     setItemCount(1);
     setIsProcessing(false);
 
-    setIsRequestSwitchEnabled(false);
-    setIsCategorySwitchEnabled(false);
+    setIsRequestSelected(true);
+    setIsGoodSelected(true);
 
     nameInputRef.current.clear();
     descriptionInputRef.current.clear();
@@ -137,13 +140,27 @@ const PostingCreationScreen = props => {
     navigation.navigate('Home', {screen: 'Feed'})
   }
 
-  const toggleRequestSwitch = () => {
-    setIsRequestSwitchEnabled(previousState => !previousState);
+  const changeType = (value) => {
+    switch (value) {
+      case 'r':
+        setIsRequestSelected(true);
+      break;
+      case 'o':
+        setIsRequestSelected(false);
+      break;
+    }
   };
 
-  const toggleCategorySwitch = () => {
-    setIsCategorySwitchEnabled(previousState => !previousState);
-  };
+  const changeCategory = (value) => {
+    switch (value) {
+      case 'g':
+        setIsGoodSelected(true);
+      break;
+      case 's':
+        setIsGoodSelected(false);
+      break;
+    }
+  }
 
   const selectImage = imageData => {
     // console.log("In selectImage: " + JSON.stringify(imageData));
@@ -172,7 +189,6 @@ const PostingCreationScreen = props => {
           />
 
         </View>
-
         <View style={styles.inputContainer}>
           <View style={styles.inputView}>
             <TextInput
@@ -203,38 +219,61 @@ const PostingCreationScreen = props => {
               ref={descriptionInputRef}
             />
           </View>
-          <View style={ (windowHeight > 650) ? styles.switchRowBig : styles.switchRow}>
-            <View style={styles.switchColumn}>
-              <Text style={styles.switchTitle}>Request?</Text>
-              <Switch
-                style={styles.switch}
-                onValueChange={toggleRequestSwitch}
-                value={isRequestSwitchEnabled}
-                trackColor={{ false: "#767577", true: Colors.primary }}
-                thumbColor={isRequestSwitchEnabled ? Colors.primary : "#f4f3f4"}
+          <View style={styles.pickerRow}>
+
+            <View style={isAndroid ? styles.pickerViewAndroid : {...styles.inputView, ...styles.pickerViewiOS}}>
+              <RNPickerSelect
+                    placeholder={{}}
+                    items={[
+                      {label: 'Request', value: 'r'},
+                      {label: 'Offer', value: 'o'},
+                    ]}
+                    onValueChange={
+                      value =>
+                      {if (value == null) {
+                        setIsRequestSelected(previousState => previousState);
+                      }
+                      else {
+                        changeType(value);
+                      }
+                    }}
+                  />
+            </View>
+            <View style={isAndroid ? styles.pickerViewAndroid : {...styles.inputView, ...styles.pickerViewiOS}}>
+              <RNPickerSelect
+                style={styles.picker}
+                    placeholder={{}}
+                    items={[
+                      {label: 'Goods', value: 'g'},
+                      {label: 'Services', value: 's'},
+                    ]}
+                    onValueChange={
+                      value =>
+                      {if (value == null) {
+                        setIsGoodSelected(previousState => previousState);
+                      }
+                      else {
+                        changeCategory(value);
+                      }
+                    }}
               />
             </View>
-            <View style={styles.switchColumn}>
-              <Text style={styles.switchTitle}>Count</Text>
-              <View style={styles.countInputView}>
-                <TextInput
-                  style={styles.countInputText}
-                  keyboardType='numeric'
-                  returnKeyType='done'
-                  value={itemCount.toString()}
-                  onChangeText={text => setItemCount(text)}
-                  ref={itemCountInputRef}
-                />
+          </View>
+          <View style={styles.countView}>
+            <View style={styles.countInputTitle}>
+                <Text style={styles.countInputTitleText}>
+                  Quantity
+                </Text>
               </View>
-            </View>
-            <View style={styles.switchColumn}>
-              <Text style={styles.switchTitle}>Category</Text>
-              <Switch
-                style={styles.switch}
-                onValueChange={toggleCategorySwitch}
-                value={isCategorySwitchEnabled}
-                trackColor={{ false: "#767577", true: Colors.primary }}
-                thumbColor={isCategorySwitchEnabled ? Colors.primary : "#f4f3f4"}
+            <View style={styles.countInputView}>
+              <TextInput
+                style={styles.countInputText}
+                placeholderTextColor={Colors.placeholder_text}
+                keyboardType='numeric'
+                returnKeyType='done'
+                value={itemCount.toString()}
+                onChangeText={text => setItemCount(text)}
+                ref={itemCountInputRef}
               />
             </View>
           </View>
@@ -268,12 +307,12 @@ const styles = StyleSheet.create({
   imageContainerBig: {
     width: '100%',
     alignItems: 'center',
-    marginBottom: windowHeight / 20
+    marginBottom: windowHeight / 20,
   },
   imageContainer: {
     width: '100%',
     alignItems: 'center',
-    marginVertical: windowHeight / 40
+    marginVertical: windowHeight / 40,
   },
   textInput: {
     width: '100%',
@@ -314,23 +353,35 @@ const styles = StyleSheet.create({
   },
   descriptionInput: {
     height: 80,
-    alignItems: 'flex-start',
   },
   inputText: {
     width: '90%',
     paddingVertical: 10,
     color: Colors.dark_shade1,
   },
+  countView: {
+    alignItems: 'center',
+    marginHorizontal: windowWidth/18,
+  },
+  countInputTitle: {
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  countInputTitleText: {
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
   countInputView: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    width: 60,
+    height: 40,
 
     backgroundColor: Colors.light_shade4,
     borderRadius: 10,
     borderColor: Colors.placeholder_text,
     borderWidth: 0.5,
-    height: 30,
     marginBottom: windowHeight/40,
     paddingHorizontal: 20,
 
@@ -348,27 +399,25 @@ const styles = StyleSheet.create({
     color: Colors.dark_shade1,
     textAlign: 'center',
   },
-  switchRowBig: {
+  pickerRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginHorizontal: 20,
-    marginVertical: 10
+    justifyContent: 'space-around',
   },
-  switchRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginHorizontal: 20,
-    marginVertical: -(windowHeight/70)
+  pickerViewiOS: {
+    width: '45%',
+    paddingTop: 15,
+    marginBottom: windowHeight / 75,
   },
-  switchColumn: {
-    alignItems: 'center',
+  pickerViewAndroid: {
+    width: '45%',
+    marginBottom: windowHeight / 75,
   },
-  switchTitle: {
+  pickerTitle: {
+    flex: 0.5,
+  },
+  pickerTitleText: {
+    fontWeight: 'bold',
     fontSize: 16,
-    marginBottom: 10,
-  },
-  switch: {
-      transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }],
   },
   confirmButton: {
     marginBottom: 0,
