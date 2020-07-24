@@ -19,11 +19,7 @@ import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { WToast } from 'react-native-smart-tip'
 import { KeyboardAvoidingScrollView } from 'react-native-keyboard-avoiding-scroll-view';
-<<<<<<< HEAD
-import RNPickerSelect from 'react-native-picker-select';
-=======
 import * as Location from 'expo-location';
->>>>>>> Location is sent at registration and posting creation
 
 import { showModal, hideModal } from '../components/CustomModal';
 import { notifyMessage } from '../components/CustomToast';
@@ -57,9 +53,6 @@ const PostingCreationScreen = props => {
   const itemCountInputRef = useRef(null);
 
   const height = useHeaderHeight();
-<<<<<<< HEAD
-  const isAndroid = Platform.OS === 'android';
-=======
   const [ location, setLocation] = useState(null);
   
   useEffect(() => {
@@ -73,7 +66,6 @@ const PostingCreationScreen = props => {
       }
     )()
   });
->>>>>>> Location is sent at registration and posting creation
 
   const handlePostCreation = () => {
     if(!isProcessing) {
@@ -91,18 +83,12 @@ const PostingCreationScreen = props => {
 
   // Create the data object in correct format to be sent off the server
   const createFormData = () => {
-<<<<<<< HEAD
-    const categoryValue = isGoodSelected ? 'goods' : 'services';
-    const requestValue = isRequestSelected ? true : false;
-
-=======
     const categoryValue = isCategorySwitchEnabled ? 'services' : 'goods';
     const requestValue = isRequestSwitchEnabled ? true : false;
     console.log(location);
     let point = 'POINT(' + location.coords.latitude + ' ' + location.coords.longitude + ')';
     console.log(point)
     
->>>>>>> Location is sent at registration and posting creation
     const data = new FormData();
 
     if (selectedImage) {

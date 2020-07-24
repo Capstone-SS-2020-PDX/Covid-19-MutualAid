@@ -54,13 +54,13 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True, related_name='profile')
     profile_text = models.CharField(max_length=160)
     member_of = models.ManyToManyField(Community, related_name='members', blank=True)
-    home = models.ForeignKey(Community, on_delete=models.CASCADE, blank=True, null=True)
+    home_community = models.ForeignKey(Community, on_delete=models.CASCADE, blank=True, null=True)
     phone_number = models.CharField(max_length=17, blank=True)
     created_on = models.DateField(default=date.today)
     profile_pic = models.ImageField(upload_to='uimg/', default='')
     saved_postings = models.ManyToManyField(Posting, blank=True)
     is_admin = models.BooleanField(default=False)
-    location = geomodels.PointField(blank=True, null=True)
+    home_location = geomodels.PointField(blank=True, null=True)
     
     class Meta:
         db_table = 'userprofile'
