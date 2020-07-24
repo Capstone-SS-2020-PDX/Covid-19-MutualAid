@@ -22,4 +22,4 @@ class UserProfileSerializer(serializers.ModelSerializer):
     parser_classes = (MultiPartParser, FormParser, JSONParser)
     class Meta:
         model = UserProfile
-        fields = ('id', 'user', 'profile_text', 'created_on', 'home_location', 'member_of', 'phone_number', 'profile_pic', 'saved_postings', 'is_admin', 'home_community')
+        fields = ('id', 'user', 'profile_text', 'created_on', 'home_location', 'member_of', 'phone_number', 'profile_pic', 'saved_postings', 'is_admin', 'home')
