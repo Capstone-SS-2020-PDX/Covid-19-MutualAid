@@ -2,8 +2,8 @@ import React from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 
 import Colors from '../config/colors';
-const offeredItemIconImage = '../assets/offered_item.png';
-const requestedItemIconImage = '../assets/requested_item.png';
+const offeredItemIconImage = '../assets/round_offer.png';
+const requestedItemIconImage = '../assets/round_request.png';
 
 const CustomHeaderTitle = props => {
 
@@ -14,28 +14,23 @@ const CustomHeaderTitle = props => {
 
     return(
         <View style={{ ...styles.headerContainer, ...props.style}}>
-          <Text style={styles.titleText}>
-            {props.request ? 'Request Detail' : 'Offer Detail'}
-          </Text>
           <Image
-            style={isRequest ? styles.requestIconImage : styles.offerIconImage}
+            style={styles.iconImage}
             resizeMode='contain'
             source={itemIcon}
           />
+          <Text style={styles.titleText}>
+            {props.request ? 'Request Detail' : 'Offer Detail'}
+          </Text>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
-    requestIconImage: {
-        width: 70,
-        height: 70,
-        marginLeft: -5,
-    },
-    offerIconImage: {
-        width: 70,
-        height: 70,
-        marginLeft: 10,
+    iconImage: {
+        width: 25,
+        height: 25,
+        marginRight: 12,
     },
     titleText: {
         color: Colors.light_shade4,
