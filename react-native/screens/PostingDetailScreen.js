@@ -22,11 +22,14 @@ const offeredItemIconImage = '../assets/offered_item.png';
 const requestedItemIconImage = '../assets/requested_item.png';
 const itemPlaceHolder = '../assets/image_place_holder.jpg';
 
+import { postings_url } from '../config/urls';
+
 import Colors from '../config/colors';
 import { windowHeight, windowWidth } from '../config/dimensions';
 import { showModal, hideModal } from '../components/CustomModal';
 import { notifyMessage } from '../components/CustomToast';
 import { email_url } from '../config/urls';
+import openMap from 'react-native-open-maps';
 
 import { AuthContext } from '../providers/AuthProvider';
 
@@ -38,6 +41,24 @@ const PostingDetailScreen = props => {
   const [isProcessing, setIsProcessing] = useState(false);
 
   const picUrl = route.params.item_pic;
+
+  const goToItem = () => {
+
+    if(route.params.point !== null) {
+      var point = route.params.point;
+      console.log(point)
+      point = point.slice(point.indexOf('(') + 1, point.indexOf(')'));
+      console.log(point);
+      var lat = point.slice(0, point.indexOf(' '));
+      var long = point.slice(point.indexOf(' ') + 1);
+      console.log(lat);
+      console.log(long);
+      openMap({latitude: parseFloat(lat), longitude: parseFloat(long)});
+    }
+    else {
+      console.log("null point")
+    }
+  }
 
   const handleReachOut = () => {
     if (!isProcessing) {
@@ -157,6 +178,7 @@ const PostingDetailScreen = props => {
          </ScrollView>
     : <Center style={styles.screen}>
        {screenContent}
+       <Button title="go to item" onPress={() => goToItem()} />
      </Center>
   );
 };

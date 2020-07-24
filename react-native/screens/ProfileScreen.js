@@ -11,6 +11,7 @@ import {
 
 import { AuthContext } from '../providers/AuthProvider';
 import CustomButton from '../components/CustomButton';
+import openMap from 'react-native-open-maps';
 
 import Colors from '../config/colors';
 import { windowHeight, windowWidth } from '../config/dimensions';
