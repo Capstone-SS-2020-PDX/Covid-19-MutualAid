@@ -60,6 +60,7 @@ class UserProfile(models.Model):
     profile_pic = models.ImageField(upload_to='uimg/', default='')
     saved_postings = models.ManyToManyField(Posting, blank=True)
     is_admin = models.BooleanField(default=False)
+    location = geomodels.PointField(blank=True, null=True)
     
     class Meta:
         db_table = 'userprofile'
