@@ -232,6 +232,7 @@ const ProfileCreationScreen = props => {
                 style={styles.inputText}
                 placeholder='First Name...'
                 placeholderTextColor={Colors.placeholder_text}
+                blurOnSubmit={false}
                 maxLength={25}
                 returnKeyType='next'
                 onChangeText={text => updateForm(text, 'first_name')}
@@ -244,6 +245,7 @@ const ProfileCreationScreen = props => {
                 style={styles.inputText}
                 placeholder='Last Name...'
                 placeholderTextColor={Colors.placeholder_text}
+                blurOnSubmit={false}
                 maxLength={25}
                 returnKeyType='next'
                 onChangeText={text => updateForm(text, 'last_name')}
@@ -258,6 +260,7 @@ const ProfileCreationScreen = props => {
                 placeholderTextColor={Colors.placeholder_text}
                 blurOnSubmit={true}
                 maxLength={255}
+                blurOnSubmit={true}
                 multiline={true}
                 returnKeyType='done'
                 onKeyPress={nativeEvent => onKeyPress(nativeEvent.key)}

@@ -6,6 +6,7 @@ import {
   MaterialCommunityIcons,
   Ionicons,
   Entypo,
+  SimpleLineIcons,
 } from '@expo/vector-icons';
 import {
   Avatar,
@@ -31,6 +32,7 @@ const DrawerContent = props => {
   let picUrl = user.profile.profile_pic;
   let fullName = user.user.first_name + ' ' + user.user.last_name.charAt(0);
   let memberSince = prettifyDate(user.user.date_joined);
+  let lastLogin = prettifyDate(user.user.last_login);
   let username =  user.user.username;
 
   const handleLogout = () => {
@@ -43,7 +45,7 @@ const DrawerContent = props => {
       <DrawerContentScrollView {...props}>
         <View style={styles.drawerContent}>
           <View style={styles.userInfoSection}>
-            <TouchableOpacity style={styles.avatarContainer} onPress={() => navigation.navigate('Profile')}>
+            <TouchableOpacity style={styles.avatarContainer} onPress={() => navigation.navigate('Main', { screen: 'Profile' })}>
               <Avatar.Image
                 source={picUrl !== null
                         ? {uri:picUrl}
@@ -63,8 +65,8 @@ const DrawerContent = props => {
               </View>
               <View style={styles.row}>
                 <View style={styles.section}>
-                  <Caption style={styles.caption}>Number of Postings: </Caption>
-                  <Paragraph style={[styles.paragraph, styles.caption]}>0</Paragraph>
+                  <Caption style={styles.caption}>Last Login: </Caption>
+                  <Paragraph style={[styles.paragraph, styles.caption]}>{lastLogin}</Paragraph>
                 </View>
               </View>
             </View>
@@ -83,7 +85,7 @@ const DrawerContent = props => {
                 />
               )}
               label="Home"
-              onPress={() => {navigation.navigate('Main')}}
+              onPress={() => {navigation.navigate('Main', { screen: 'Home' })}}
             />
             <DrawerItem
               icon={params => (
@@ -106,6 +108,17 @@ const DrawerContent = props => {
               )}
               label="Saved Postings"
               onPress={() => {}}
+            />
+            <DrawerItem
+              icon={params => (
+                <MaterialIcons
+                  name='people-outline'
+                  color={params.color}
+                  size={params.size}
+                />
+              )}
+              label="Communities"
+              onPress={() => {navigation.navigate('Communities')}}
             />
             <DrawerItem
               icon={params => (

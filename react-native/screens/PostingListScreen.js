@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useContext, useState, useRef } from 'react';
 import { View,
          Text,
          TextInput,
@@ -10,7 +10,7 @@ import { View,
 import { Ionicons, Feather } from '@expo/vector-icons';
 
 import PostingList from '../components/PostingList';
-
+import { AuthContext } from '../providers/AuthProvider';
 import Colors from '../config/colors';
 import { windowWidth, windowHeight } from '../config/dimensions';
 import { postings_url } from '../config/urls';
@@ -18,6 +18,7 @@ import { postings_url } from '../config/urls';
 
 const Feed = props => {
   const { navigation } = props;
+  const { user, communities } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(true);
   const [postings, setPostings] = useState([]);
   const [searchPostings, setSearchPostings] = useState([]);
@@ -37,18 +38,27 @@ const Feed = props => {
     })
       .then(response => response.json())
       .then(json => {
-        setPostings(json);
-        setSearchPostings(json);
+        filterPostings(json);
       })
       .catch(error => console.log(error))
       .finally(() => {
         setIsLoading(false)
       });
+
+    const filterPostings = postings => {
+      // filter postings by whether it is in the user's member_of list
+      let filteredPostings = postings.filter(posting => {
+        return user.profile.member_of.includes(posting.in_community);
+      });
+
+      setPostings(filteredPostings);
+      setSearchPostings(filteredPostings);
+    }
   };
 
   useEffect(() => {
     fetchPostings();
-  }, []);
+  }, [user.profile.member_of]);
 
   const handleSearch = text => {
     setSearchText(text);

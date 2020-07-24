@@ -32,6 +32,7 @@ const ProfileEditScreen = props => {
 
   const isAndroid = Platform.OS === 'android' ? true : false;
   const homeCommunity = communities.find(community => community.id === user.profile.home);
+  const availableCommunities = communities.filter(community => user.profile.member_of.includes(community.id));
 
   const [formValue, setFormValue] = useState({
     email: user.user.email,
@@ -140,7 +141,7 @@ const ProfileEditScreen = props => {
   };
 
   const renderCommunityPickerItems = () => {
-    return communities.map(community =>
+    return availableCommunities.map(community =>
       <Picker.Item label={community.name} value={community} key={community.id}/>
     );
   }
