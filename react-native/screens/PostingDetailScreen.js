@@ -27,13 +27,13 @@ import Colors from '../config/colors';
 import { windowHeight, windowWidth } from '../config/dimensions';
 import { showModal, hideModal } from '../components/CustomModal';
 import { notifyMessage } from '../components/CustomToast';
-import { email_url } from '../config/urls';
+import { email_url, profiles_url } from '../config/urls';
 
 import { AuthContext } from '../providers/AuthProvider';
 
 
 const PostingDetailScreen = props => {
-  const { user } = useContext(AuthContext);
+  const { user, updateProfile } = useContext(AuthContext);
   const { route, navigation } = props;
   const [postingImage, setPostingImage] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -48,8 +48,8 @@ const PostingDetailScreen = props => {
       headerRight: () => (
         <TouchableOpacity
           style={styles.favIcon}
+          onPress={() => handleToggleFavorite(!isFavorited)}
         >
-
           <AntDesign
             name={heartIcon}
             size={25}
@@ -58,7 +58,36 @@ const PostingDetailScreen = props => {
         </TouchableOpacity>
       ),
     });
-  }, [navigation]);
+  }, [navigation, user.profile]);
+
+  const handleToggleFavorite = status => {
+    const url = profiles_url + user.profile.id + '/';
+    let savedPostings = user.profile.saved_postings;
+
+    if (status === true) {
+      savedPostings.push(route.params.id);
+    } else {
+      savedPostings = savedPostings.filter(id => id !== route.params.id);
+    }
+    const payload = { 'saved_postings': savedPostings };
+
+    fetch(url, {
+      method: 'PATCH',
+      headers: {
+        'Accept': 'application/json',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    }).then(response => {
+      console.log("Server Response: " + response.status);
+      return response.json();
+    }).then(json => {
+      console.log("Server response after toggling favorite");
+      console.log(json);
+      updateProfile(json);
+    });
+   
+  };
 
   const handleReachOut = () => {
     if (!isProcessing) {
