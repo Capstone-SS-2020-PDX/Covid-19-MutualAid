@@ -27,6 +27,19 @@ const updatePostingOptions = {
     data: 'Updating your Posting...',
 };
 
+
+const loginFailedOptions = {
+    ...defaultOptions,
+    data: 'Login Failed!',
+    icon: <MaterialIcons name='error-outline' size={50} color='red'/>,
+};
+
+const registerFailedOptions = {
+    ...defaultOptions,
+    data: 'Register Failed!',
+    icon: <MaterialIcons name='error-outline' size={50} color='red'/>,
+ };
+
 const deletePostingOptions = {
     ...defaultOptions,
     data: 'Deleting your Posting...',
@@ -65,6 +78,12 @@ export function showModal(type) {
     switch(type) {
         case 'LOADING':
             options = loadingOptions;
+            break;
+        case 'LOGIN_FAILED':
+            options = loginFailedOptions;
+            break;
+        case 'REGISTER_FAILED':
+            options = registerFailedOptions;
             break;
         case 'CREATING_POSTING':
             options = createPostingOptions;

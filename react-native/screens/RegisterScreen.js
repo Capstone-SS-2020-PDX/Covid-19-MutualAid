@@ -136,7 +136,7 @@ const RegisterScreen = props => {
             placeholderTextColor={Colors.placeholder_text}
             secureTextEntry
     /* onChangeText={text => setPasswordText(text)} */
-            onSubmitEditing={() => attemptRegister()}
+            /* onSubmitEditing={() => attemptRegister()} */
           />
         </View>
       </View>
