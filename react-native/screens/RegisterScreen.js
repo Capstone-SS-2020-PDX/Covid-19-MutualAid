@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef, useEffect } from 'react';
+import React, { useState, useContext, useRef } from 'react';
 import { View,
          Text,
          TextInput,
@@ -34,19 +34,7 @@ const RegisterScreen = props => {
   const usernameInputRef = useRef(null);
   const passwordInputRef = useRef(null);
   const confirmPasswordInputRef = useRef(null);
-  const [ location, setLocation] = useState(null);
   
-  useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestPermissionsAsync();
-      if (status !== 'granted') {
-        setErrorMsg('Permission to access location was denied');
-      } 
-        let location = await Location.getCurrentPositionAsync({accuracy: 5})
-        setLocation(location);
-      }
-    )()
-  });
 
   const attemptRegister = () =>{
     if (!emailText || !userNameText || !passwordText) {
@@ -66,10 +54,7 @@ const RegisterScreen = props => {
       setTimeout(() => {
         hideModal();
       }, 900);
-      console.log(location);
-      let point = 'POINT(' + location.coords.latitude + ' ' + location.coords.longitude + ')';
-      console.log(point);
-      const userData = { username: userNameText, password: passwordText, email: emailText, point: point };
+      const userData = { username: userNameText, password: passwordText, email: emailText };
       register(userData);
     }
   };
