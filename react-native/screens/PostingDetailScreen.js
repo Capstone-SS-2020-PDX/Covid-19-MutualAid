@@ -41,23 +41,28 @@ const PostingDetailScreen = props => {
   const picUrl = route.params.item_pic;
 
   useLayoutEffect(() => {
-    const isFavorited = user.profile.saved_postings.includes(route.params.id);
-    const heartIcon = isFavorited ? 'heart' : 'hearto';
+    const isOwned = user.user.id === route.params.owner;
 
-    navigation.setOptions({
-      headerRight: () => (
-        <TouchableOpacity
-          style={styles.favIcon}
-          onPress={() => handleToggleFavorite(!isFavorited)}
-        >
-          <AntDesign
-            name={heartIcon}
-            size={25}
-            color={Colors.light_shade4}
-          />
-        </TouchableOpacity>
-      ),
-    });
+    if (!isOwned) {
+
+      const isFavorited = user.profile.saved_postings.includes(route.params.id);
+      const heartIcon = isFavorited ? 'heart' : 'hearto';
+
+      navigation.setOptions({
+        headerRight: () => (
+          <TouchableOpacity
+            style={styles.favIcon}
+            onPress={() => handleToggleFavorite(!isFavorited)}
+          >
+            <AntDesign
+              name={heartIcon}
+              size={25}
+              color={Colors.light_shade4}
+            />
+          </TouchableOpacity>
+        ),
+      });
+    }
   }, [navigation, user.profile]);
 
   const handleToggleFavorite = status => {
@@ -86,7 +91,7 @@ const PostingDetailScreen = props => {
       console.log(json);
       updateProfile(json);
     });
-   
+
   };
 
   const handleReachOut = () => {
@@ -161,7 +166,7 @@ const PostingDetailScreen = props => {
         >
           <Text style={styles.reachOutButtonText}>Reach Out!</Text>
         </CustomButton>
-    );
+      );
     }
   };
 
@@ -203,11 +208,11 @@ const PostingDetailScreen = props => {
   return(
     windowHeight < 650
       ? <ScrollView contentContainerStyle={styles.scrollScreen}>
-           {screenContent}
-         </ScrollView>
+        {screenContent}
+      </ScrollView>
     : <Center style={styles.screen}>
-       {screenContent}
-     </Center>
+                       {screenContent}
+                     </Center>
   );
 };
 
