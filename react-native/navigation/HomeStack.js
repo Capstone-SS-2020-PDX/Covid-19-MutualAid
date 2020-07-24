@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-
+import HomeScreen from '../screens/HomeScreen';
 import PostingListScreen from '../screens/PostingListScreen';
 import UserPostingListScreen from '../screens/UserPostingListScreen';
 
@@ -23,11 +23,11 @@ const HomeStack = props => {
 
   return(
     <Stack.Navigator
-      initialRouteName='Feed'
+      initialRouteName='Home'
     >
       <Stack.Screen
-        name='Feed'
-        component={PostingListScreen}
+        name='Home'
+        component={HomeScreen}
         options={PostingListScreenOptions}
       />
       {addPostingsRoutes(Stack, navigation)}
