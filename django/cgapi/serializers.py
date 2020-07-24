@@ -6,7 +6,7 @@ class PostingSerializer(serializers.ModelSerializer):
     parser_classes = (MultiPartParser, FormParser, JSONParser)
     class Meta:
         model = Posting
-        fields = ('id', 'title', 'desc', 'count', 'category', 'created_on', 'owner', 'in_community', 'item_pic', 'request', 'flagged')
+        fields = ('id', 'title', 'desc', 'count', 'category', 'created_on', 'owner', 'in_community', 'item_pic', 'request', 'flagged', 'point')
 
 class CommunitySerializer(serializers.ModelSerializer):
     class Meta:
