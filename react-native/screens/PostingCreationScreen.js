@@ -13,11 +13,12 @@ import { StyleSheet,
          ActivityIndicator,
        } from "react-native";
 import { FontAwesome } from '@expo/vector-icons';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import RNPickerSelect from 'react-native-picker-select';
 import { useHeaderHeight } from '@react-navigation/stack';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
-import { WToast } from 'react-native-smart-tip'
+import { WToast } from 'react-native-smart-tip';
 import { KeyboardAvoidingScrollView } from 'react-native-keyboard-avoiding-scroll-view';
 import * as Location from 'expo-location';
 
@@ -44,15 +45,14 @@ const PostingCreationScreen = props => {
   const [itemName, setItemName] = useState('');
   const [itemDescription, setItemDescription] = useState('');
   const [itemCount, setItemCount] = useState(1);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [isRequestSelected, setIsRequestSelected] = useState(true);
   const [isGoodSelected, setIsGoodSelected] = useState(true);
-  const [isProcessing, setIsProcessing] = useState(false);
 
   const nameInputRef = useRef(null);
   const descriptionInputRef = useRef(null);
   const itemCountInputRef = useRef(null);
 
-  const height = useHeaderHeight();
   const [ location, setLocation] = useState(null);
   
   useEffect(() => {
@@ -65,7 +65,7 @@ const PostingCreationScreen = props => {
         setLocation(location);
       }
     )()
-  });
+  }, []);
 
   const handlePostCreation = () => {
     if(!isProcessing) {
@@ -83,18 +83,17 @@ const PostingCreationScreen = props => {
 
   // Create the data object in correct format to be sent off the server
   const createFormData = () => {
-    const categoryValue = isCategorySwitchEnabled ? 'services' : 'goods';
-    const requestValue = isRequestSwitchEnabled ? true : false;
+    const categoryValue = isGoodSelected ? 'goods' : 'services';
+    const requestValue = isRequestSelected ? true : false;
     console.log(location);
-    let point = 'POINT(' + location.coords.latitude + ' ' + location.coords.longitude + ')';
-    console.log(point)
+    let location = user.profile.home_location;
+    console.log(location);
     
     const data = new FormData();
 
     if (selectedImage) {
       data.append('item_pic', selectedImage);
     }
-    ;
 
     data.append('title', itemName);
     data.append('desc', itemDescription);
@@ -103,7 +102,7 @@ const PostingCreationScreen = props => {
     data.append('category', categoryValue);
     data.append('request', requestValue);
     data.append('in_community', user.profile.home);
-    data.append('point', point);
+    data.append('location', location);
     return data;
   };
 
