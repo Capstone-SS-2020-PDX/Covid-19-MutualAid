@@ -12,13 +12,7 @@ import { StyleSheet,
          Platform,
          ActivityIndicator,
        } from "react-native";
-import { FontAwesome } from '@expo/vector-icons';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { useHeaderHeight } from '@react-navigation/stack';
-import * as ImagePicker from 'expo-image-picker';
-import * as ImageManipulator from 'expo-image-manipulator';
-import { WToast } from 'react-native-smart-tip'
-import { KeyboardAvoidingScrollView } from 'react-native-keyboard-avoiding-scroll-view';
 import RNPickerSelect from 'react-native-picker-select';
 
 import { showModal, hideModal } from '../components/CustomModal';
@@ -50,7 +44,6 @@ const PostingCreationScreen = props => {
   const descriptionInputRef = useRef(null);
   const itemCountInputRef = useRef(null);
 
-  const height = useHeaderHeight();
   const isAndroid = Platform.OS === 'android';
 
   const handlePostCreation = () => {
