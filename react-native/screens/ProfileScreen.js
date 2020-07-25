@@ -1,15 +1,12 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   View,
   ScrollView,
   Text,
-  Button,
   Image,
   StyleSheet,
-  ActivityIndicator,
 } from 'react-native';
 
-import * as Location from 'expo-location';
 import { AuthContext } from '../providers/AuthProvider';
 import CustomButton from '../components/CustomButton';
 
@@ -22,32 +19,8 @@ const itemPlaceHolder = '../assets/image_place_holder.jpg';
 const ProfileScreen = props => {
   const { navigation } = props;
   const { user, communities } = useContext(AuthContext);
-  const [ location, setLocation] = useState(null);
-  const [ errorMsg, setErrorMsg] = useState(null);
   const picUrl = user.profile.profile_pic ? user.profile.profile_pic : null;
   const homeCommunity = communities.find(community => community.id === user.profile.home);
-
-
-    useEffect(() => {
-      (async () => {
-        let { status } = await Location.requestPermissionsAsync();
-        if (status !== 'granted') {
-          setErrorMsg('Permission to access location was denied');
-        } 
-          let location = await Location.getCurrentPositionAsync({accuracy: 5})
-          setLocation(location);
-        }
-      )()
-    });
-
-
-
-  let text = 'Waiting..';
-  if (errorMsg) {
-    text = errorMsg;
-  } else if (location) {
-    text = 'Latitude: ' + JSON.stringify(location.coords.latitude) + '\nLongitude: ' + JSON.stringify(location.coords.longitude);
-  }
 
   return(
     <ScrollView contentContainerStyle={styles.screen}>
@@ -76,7 +49,6 @@ const ProfileScreen = props => {
           <Text style={styles.labelText}>Home</Text>
           <Text style={styles.text}>{homeCommunity.name}</Text>
           <Text style={styles.labelText}>Location</Text>
-          <Text>{text}</Text>
         </View>
       <CustomButton
         style={styles.button}
