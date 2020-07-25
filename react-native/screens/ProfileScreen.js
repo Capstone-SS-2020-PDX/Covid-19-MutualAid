@@ -23,7 +23,7 @@ const ProfileScreen = props => {
   const { user, communities } = useContext(AuthContext);
 
   const picUrl = user.profile.profile_pic ? user.profile.profile_pic : null;
-  const homeCommunity = communities.find(community => community.id === user.profile.home);
+  const homeCommunity = communities.find(community => community.id === user.profile.home) || '';
 
   return(
     <ScrollView contentContainerStyle={styles.screen}>
