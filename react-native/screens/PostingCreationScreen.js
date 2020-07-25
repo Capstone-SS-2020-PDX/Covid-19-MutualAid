@@ -34,8 +34,6 @@ import { postings_url } from '../config/urls';
 
 import { AuthContext } from '../providers/AuthProvider';
 
-// const url = "https:cellular-virtue-277000.uc.r.appspot.com/postings/?format=json";
-
 const PostingCreationScreen = props => {
   const { navigation } = props;
   const { user } = useContext(AuthContext);

@@ -1,4 +1,4 @@
-import React, { useContext, useState, useRef } from 'react';
+import React, { useContext, useLayoutEffect, useState, useRef } from 'react';
 import {
   View,
   ScrollView,
@@ -14,19 +14,21 @@ import {
 
 import CustomImagePicker from '../components/CustomImagePicker';
 import CustomButton from '../components/CustomButton';
-import { KeyboardAvoidingScrollView } from 'react-native-keyboard-avoiding-scroll-view';
 import KeyboardShift from 'react-native-keyboardshift-razzium';
+import Dialog, { DialogContent, DialogTitle, DialogButton, DialogFooter } from 'react-native-popup-dialog';
 
 import Colors from '../config/colors';
 import { notifyMessage } from '../components/CustomToast';
+import { windowWidth } from '../config/dimensions';
 import { showModal, hideModal } from '../components/CustomModal';
-import { windowHeight, windowWidth } from '../config/dimensions';
 import { users_url, profiles_url } from '../config/urls';
 
 import { AuthContext } from '../providers/AuthProvider';
+
+
 const ProfileEditScreen = props => {
   const { navigation } = props;
-  const { addProfile, updateUser, updateProfile, user, communities } = useContext(AuthContext);
+  const { updateUser, updateProfile, user, communities, logout } = useContext(AuthContext);
 
   const placeholderImage = user.profile.profile_pic;
 
@@ -44,14 +46,46 @@ const ProfileEditScreen = props => {
   const [selectedCommunity, setSelectedCommunity] = useState(homeCommunity || communities[0]);
   const [selectedImage, setSelectedImage] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isDialogVisible, setIsDialogVisible] = useState(false);
 
   const firstNameRef = useRef(null);
   const lastNameRef = useRef(null);
   const emailRef = useRef(null);
   const profileTextRef = useRef(null);
 
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity
+          style={styles.headerButton}
+          onPress={() => attemptDeleteProfile() }
+        >
+          <Text style={styles.deleteButtonText}>Delete</Text>
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation]);
+
   const updateForm = (text, input) => {
     setFormValue({ ...formValue, [input]: text });
+  };
+
+  const attemptDeleteProfile = () => {
+    setIsDialogVisible(true);
+  };
+
+  const handleDeleteProfile = async () => {
+    const url = users_url + user.user.id + '/';
+
+    fetch(url, {
+      method: 'DELETE',
+    }).then(response => {
+      console.log('Server response to account deletion: ', response.status);
+    }).finally(() => {
+      setIsDialogVisible(false);
+      notifyMessage('Account Sucessfully Deleted!');
+      logout();
+    });
   };
 
   const attemptProfileUpdate = () => {
@@ -211,21 +245,44 @@ const ProfileEditScreen = props => {
   };
 
 
-    const getImage = () => {
-        return selectedImage;
-    };
+  const getImage = () => {
+    return selectedImage;
+  };
 
-    const selectImage = imageData => {
-        setSelectedImage(imageData);
-    };
-
-
+  const selectImage = imageData => {
+    setSelectedImage(imageData);
+  };
 
   const onKeyPress = (key) => {
     if (key === 'Enter') {
       descriptionInputRef.current.blur();
     }
   }
+
+  const renderDeleteDialog = () => {
+    return(
+      <Dialog
+        visible={isDialogVisible}
+        onTouchOutside={() => setIsDialogVisible(false)}
+        dialogTitle={<DialogTitle title="Are you sure you want to Delete your profile?"/>}
+        width={windowWidth * 0.75}
+        footer={
+          <DialogFooter>
+            <DialogButton
+              text='No'
+              onPress={() => setIsDialogVisible(false)}
+            />
+            <DialogButton
+              text='Yes'
+              onPress={() => handleDeleteProfile()}
+            />
+          </DialogFooter>
+        }
+      >
+        {null}
+      </Dialog>
+    )
+  };
 
   return(
     <KeyboardShift>
@@ -307,6 +364,7 @@ const ProfileEditScreen = props => {
               <Text style={styles.buttonText}>Confirm</Text>
             </CustomButton>
           </View>
+          {renderDeleteDialog()}
         </ScrollView>
       )}
     </KeyboardShift>
@@ -386,6 +444,13 @@ const styles = StyleSheet.create({
     fontFamily: 'open-sans',
     fontSize: 12,
 
+  },
+  headerButton: {
+    marginRight: 15,
+  },
+  deleteButtonText: {
+    color: Colors.contrast3,
+    fontSize: 18,
   },
 });
 
