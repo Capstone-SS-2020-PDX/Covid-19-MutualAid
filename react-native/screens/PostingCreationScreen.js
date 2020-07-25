@@ -1,26 +1,12 @@
-import React, { useState, useRef, useEffect, useContext } from "react";
+import React, { useState, useRef, useContext } from "react";
 import { StyleSheet,
          Text,
          TextInput,
          View,
-         Button,
-         Switch,
-         TouchableOpacity,
          ScrollView,
-         Dimensions,
-         Image,
          Platform,
-         ActivityIndicator,
        } from "react-native";
-import { FontAwesome } from '@expo/vector-icons';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import RNPickerSelect from 'react-native-picker-select';
-import { useHeaderHeight } from '@react-navigation/stack';
-import * as ImagePicker from 'expo-image-picker';
-import * as ImageManipulator from 'expo-image-manipulator';
-import { WToast } from 'react-native-smart-tip';
-import { KeyboardAvoidingScrollView } from 'react-native-keyboard-avoiding-scroll-view';
-import * as Location from 'expo-location';
 
 import { showModal, hideModal } from '../components/CustomModal';
 import { notifyMessage } from '../components/CustomToast';
@@ -53,20 +39,6 @@ const PostingCreationScreen = props => {
   const descriptionInputRef = useRef(null);
   const itemCountInputRef = useRef(null);
 
-  const [ location, setLocation] = useState(null);
-  
-  useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestPermissionsAsync();
-      if (status !== 'granted') {
-        setErrorMsg('Permission to access location was denied');
-      } 
-        let location = await Location.getCurrentPositionAsync({accuracy: 5})
-        setLocation(location);
-      }
-    )()
-  }, []);
-
   const handlePostCreation = () => {
     if(!isProcessing) {
       setIsProcessing(true);
@@ -85,10 +57,8 @@ const PostingCreationScreen = props => {
   const createFormData = () => {
     const categoryValue = isGoodSelected ? 'goods' : 'services';
     const requestValue = isRequestSelected ? true : false;
-    console.log(location);
-    let location = user.profile.home_location;
-    console.log(location);
-    
+    const location = user.profile.home_location;
+
     const data = new FormData();
 
     if (selectedImage) {

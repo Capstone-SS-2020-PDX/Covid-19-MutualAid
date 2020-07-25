@@ -48,7 +48,6 @@ const ProfileScreen = props => {
           <Text style={styles.text}>{user.profile.profile_text}</Text>
           <Text style={styles.labelText}>Home</Text>
           <Text style={styles.text}>{homeCommunity.name}</Text>
-          <Text style={styles.labelText}>Location</Text>
         </View>
       <CustomButton
         style={styles.button}
