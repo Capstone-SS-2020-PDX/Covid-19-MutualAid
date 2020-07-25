@@ -4,6 +4,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import NavTabs from './NavTabs';
 import AboutStack from './AboutStack';
 import UserPostingStack from './UserPostingStack';
+import SavedPostingStack from './SavedPostingStack';
 import CommunityStack from './CommunityStack';
 import DrawerContent from '../components/DrawerContent';
 
@@ -26,6 +27,10 @@ const DrawerNav = props => {
       <Drawer.Screen
         name='User Postings'
         component={UserPostingStack}
+      />
+      <Drawer.Screen
+        name='Saved Postings'
+        component={SavedPostingStack}
       />
       <Drawer.Screen
         name='Communities'

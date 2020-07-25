@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useLayoutEffect } from 'react';
 import { View,
          KeyboardAvoidingView,
          Text,
@@ -10,6 +10,7 @@ import { View,
          TextInput,
          ActivityIndicator,
        } from 'react-native';
+import { AntDesign } from '@expo/vector-icons';
 
 import { RFValue, RFPercentage } from "react-native-responsive-fontsize";
 import { WToast } from 'react-native-smart-tip'
@@ -26,18 +27,72 @@ import Colors from '../config/colors';
 import { windowHeight, windowWidth } from '../config/dimensions';
 import { showModal, hideModal } from '../components/CustomModal';
 import { notifyMessage } from '../components/CustomToast';
-import { email_url } from '../config/urls';
+import { email_url, profiles_url } from '../config/urls';
 
 import { AuthContext } from '../providers/AuthProvider';
 
 
 const PostingDetailScreen = props => {
-  const { user } = useContext(AuthContext);
+  const { user, updateProfile } = useContext(AuthContext);
   const { route, navigation } = props;
   const [postingImage, setPostingImage] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
 
   const picUrl = route.params.item_pic;
+
+  useLayoutEffect(() => {
+    const isOwned = user.user.id === route.params.owner;
+
+    if (!isOwned) {
+
+      const isFavorited = user.profile.saved_postings.includes(route.params.id);
+      const heartIcon = isFavorited ? 'heart' : 'hearto';
+
+      navigation.setOptions({
+        headerRight: () => (
+          <TouchableOpacity
+            style={styles.favIcon}
+            onPress={() => handleToggleFavorite(!isFavorited)}
+          >
+            <AntDesign
+              name={heartIcon}
+              size={25}
+              color={Colors.light_shade4}
+            />
+          </TouchableOpacity>
+        ),
+      });
+    }
+  }, [navigation, user.profile]);
+
+  const handleToggleFavorite = status => {
+    const url = profiles_url + user.profile.id + '/';
+    let savedPostings = user.profile.saved_postings;
+
+    if (status === true) {
+      savedPostings.push(route.params.id);
+    } else {
+      savedPostings = savedPostings.filter(id => id !== route.params.id);
+    }
+    const payload = { 'saved_postings': savedPostings };
+
+    fetch(url, {
+      method: 'PATCH',
+      headers: {
+        'Accept': 'application/json',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    }).then(response => {
+      console.log("Server Response: " + response.status);
+      return response.json();
+    }).then(json => {
+      console.log("Server response after toggling favorite");
+      console.log(json);
+      updateProfile(json);
+    });
+
+  };
 
   const handleReachOut = () => {
     if (!isProcessing) {
@@ -111,7 +166,7 @@ const PostingDetailScreen = props => {
         >
           <Text style={styles.reachOutButtonText}>Reach Out!</Text>
         </CustomButton>
-    );
+      );
     }
   };
 
@@ -153,11 +208,11 @@ const PostingDetailScreen = props => {
   return(
     windowHeight < 650
       ? <ScrollView contentContainerStyle={styles.scrollScreen}>
-           {screenContent}
-         </ScrollView>
+        {screenContent}
+      </ScrollView>
     : <Center style={styles.screen}>
-       {screenContent}
-     </Center>
+                       {screenContent}
+                     </Center>
   );
 };
 
@@ -269,6 +324,9 @@ const styles = StyleSheet.create({
   },
   activityIndicator: {
     marginTop: windowHeight / 40,
+  },
+  favIcon: {
+    marginRight: 20,
   },
 });
 
