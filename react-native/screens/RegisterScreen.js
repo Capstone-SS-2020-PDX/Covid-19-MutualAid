@@ -9,8 +9,10 @@ import { View,
          Platform,
          ActivityIndicator,
        } from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, FontAwesome } from '@expo/vector-icons';
 import { WModal } from 'react-native-smart-tip';
+import { Formik } from "formik";
+import * as Yup from "yup";
 
 import Center from '../components/Center';
 import CustomButton from '../components/CustomButton';
@@ -25,141 +27,176 @@ const RegisterScreen = props => {
   const { navigation, route } = props;
   const { register, isLoading, setIsLoading, checkUsername } = useContext(AuthContext);
 
-  const [emailText, setEmailText] = useState(null)
-  const [userNameText, setUserNameText] = useState(null);
   const [isValidUsername, setIsValidUsername] = useState(true);
-  const [passwordText, setPasswordText] = useState(null);
 
   const usernameInputRef = useRef(null);
   const passwordInputRef = useRef(null);
   const confirmPasswordInputRef = useRef(null);
 
-  const attemptRegister = () =>{
-    if (!emailText || !userNameText || !passwordText) {
-      showModal('VALIDATION_ERROR');
-      setTimeout(() => {
-        hideModal();
-      }, 900);
+  const attemptRegister = values => {
+    showModal('LOADING');
+    setTimeout(() => {
+      hideModal();
+    }, 900);
 
-    } else if (isValidUsername === false) {
-      showModal('INVALID_USERNAME');
-      setTimeout(() => {
-        hideModal();
-      }, 900);
-
-    } else {
-      showModal('LOADING');
-      setTimeout(() => {
-        hideModal();
-      }, 900);
-
-      const userData = { username: userNameText, password: passwordText, email: emailText };
-      register(userData);
-    }
+    const userData = { username: values.username, password: values.password, email: values.email };
+    register(userData);
   };
+
+  const errorIcon = () => (
+    <FontAwesome
+      name={'exclamation-circle'}
+      size={20}
+      color={Colors.contrast3}
+      style={styles.icon}
+    />
+  );
+
+  const updateIsValidUsername = async value => {
+    const isValid = await checkUsername(value);
+    setIsValidUsername(isValid);
+  };
+
+  const registerForm = () => (
+    <Formik
+      initialValues={{ email: '', username: '', password: '' }}
+      onSubmit={values => {
+        attemptRegister(values);
+        console.log(values);
+      }}
+    validationSchema={Yup.object().shape({
+      email: Yup.string().email('Invalid email').required('email required'),
+      username: Yup.string().min(4, 'Too short!').max(30, 'Too long!')
+                   .test('username-available', 'username not available', () => {
+                     console.log("Is usernameValid? " + isValidUsername);
+                     return isValidUsername;
+                   })
+                   .required('username required'),
+      password: Yup.string().min(4, 'Too short!').max(30, 'Too long!')
+                   .required('password required'),
+      confirm_password: Yup.string().oneOf(
+        [Yup.ref('password'), null],
+        'Passwords must match'
+      ).required('confirm your password'),
+    })}
+    >
+      {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
+        <>
+          <View style={styles.inputContainer}>
+            <View style={styles.inputView}>
+              <AntDesign
+                name={'mail'}
+                size={20}
+                style={styles.icon}
+              />
+              <TextInput
+                style={styles.inputText}
+                placeholder='Email...'
+                autoCapitalize='none'
+                autoCorrect={false}
+                keyboardType='email-address'
+                returnKeyType='next'
+                blurOnSubmit={false}
+                placeholderTextColor={Colors.placeholder_text}
+                value={values.email}
+                onChangeText={handleChange('email')}
+                onSubmitEditing={() => usernameInputRef.current.focus()}
+              />
+              { errors.email && touched.email ? errorIcon() : null }
+            </View>
+            <View style={styles.inputView}>
+              <AntDesign
+                name={'user'}
+                size={20}
+                style={styles.icon}
+              />
+              <TextInput
+                ref={usernameInputRef}
+                style={styles.inputText}
+                placeholder='User Name...'
+                autoCapitalize='none'
+                placeholderTextColor={Colors.placeholder_text}
+                returnKeyType='next'
+                onBlur={() => {
+                  updateIsValidUsername(values.username);
+                }}
+                blurOnSubmit={false}
+                value={values.username}
+                onChangeText={handleChange('username')}
+                onSubmitEditing={() => passwordInputRef.current.focus()}
+              />
+              { errors.username && touched.username ? errorIcon() : null }
+            </View>
+            <View style={styles.inputView}>
+              <AntDesign
+                name={'lock'}
+                size={20}
+                style={styles.icon}
+              />
+              <TextInput
+                ref={passwordInputRef}
+                style={styles.inputText}
+                placeholder='Password...'
+                placeholderTextColor={Colors.placeholder_text}
+                secureTextEntry
+                returnKeyType='next'
+                blurOnSubmit={false}
+                value={values.password}
+                onChangeText={handleChange('password')}
+                onSubmitEditing={() => confirmPasswordInputRef.current.focus()}
+              />
+              { errors.password && touched.password ? errorIcon() : null }
+            </View>
+            <View style={styles.inputView}>
+              <AntDesign
+                name={'lock'}
+                size={20}
+                style={styles.icon}
+              />
+              <TextInput
+                ref={confirmPasswordInputRef}
+                style={styles.inputText}
+                placeholder='Confirm Password...'
+                returnKeyType='done'
+                placeholderTextColor={Colors.placeholder_text}
+                secureTextEntry
+                value={values.confirm_password}
+                onChangeText={handleChange('confirm_password')}
+              />
+              { errors.confirm_password && touched.confirm_password ? errorIcon() : null }
+            </View>
+          </View>
+          <CustomButton
+            style={styles.registerButton}
+            onPress={() => {
+              handleSubmit();
+            }}
+          >
+            <Text style={styles.loginText}>Sign Up</Text>
+          </CustomButton>
+        </>
+      )}
+    </Formik>
+  );
 
   return(
     <KeyboardShift>
       {() => (
-    <View style={styles.screen}>
-      <Text style={styles.logo}>Register</Text>
-      <View style={styles.inputContainer}>
-        <View style={styles.inputView}>
-          <AntDesign
-            name={'mail'}
-            size={20}
-            style={styles.icon}
-          />
-          <TextInput
-            style={styles.inputText}
-            placeholder='Email...'
-            autoCapitalize='none'
-            autoCorrect={false}
-            keyboardType='email-address'
-            returnKeyType='next'
-            blurOnSubmit={false}
-            placeholderTextColor={Colors.placeholder_text}
-            onChangeText={text => setEmailText(text)}
-            onSubmitEditing={() => usernameInputRef.current.focus()}
-          />
-        </View>
-        <View style={styles.inputView}>
-          <AntDesign
-            name={'user'}
-            size={20}
-            style={styles.icon}
-          />
-          <TextInput
-            ref={usernameInputRef}
-            style={styles.inputText}
-            placeholder='User Name...'
-            autoCapitalize='none'
-            placeholderTextColor={Colors.placeholder_text}
-            returnKeyType='next'
-            onBlur={() => {
-              setIsValidUsername(checkUsername(userNameText));
+        <View style={styles.screen}>
+          <Text style={styles.logo}>Register</Text>
+
+          { registerForm() }
+
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('Login');
             }}
-            blurOnSubmit={false}
-            onChangeText={text => setUserNameText(text)}
-            onSubmitEditing={() => passwordInputRef.current.focus()}
-          />
+          >
+            <Text style={styles.registerText}>Back to Login</Text>
+          </TouchableOpacity>
         </View>
-        <View style={styles.inputView}>
-          <AntDesign
-            name={'lock'}
-            size={20}
-            style={styles.icon}
-          />
-          <TextInput
-            ref={passwordInputRef}
-            style={styles.inputText}
-            placeholder='Password...'
-            placeholderTextColor={Colors.placeholder_text}
-            secureTextEntry
-            returnKeyType='next'
-            blurOnSubmit={false}
-            onChangeText={text => setPasswordText(text)}
-            onSubmitEditing={() => confirmPasswordInputRef.current.focus()}
-          />
-        </View>
-        <View style={styles.inputView}>
-          <AntDesign
-            name={'lock'}
-            size={20}
-            style={styles.icon}
-          />
-          <TextInput
-            ref={confirmPasswordInputRef}
-            style={styles.inputText}
-            placeholder='Confirm Password...'
-            returnKeyType='done'
-            placeholderTextColor={Colors.placeholder_text}
-            secureTextEntry
-    /* onChangeText={text => setPasswordText(text)} */
-            /* onSubmitEditing={() => attemptRegister()} */
-          />
-        </View>
-      </View>
-
-      <CustomButton
-        style={styles.registerButton}
-        onPress={() => {
-          attemptRegister();
-        }}
-      >
-        <Text style={styles.loginText}>Sign Up</Text>
-      </CustomButton>
-
-      <TouchableOpacity
-        onPress={() => {
-          navigation.navigate('Login');
-        }}
-      >
-        <Text style={styles.registerText}>Back to Login</Text>
-      </TouchableOpacity>
-    </View>
       )}
-      </KeyboardShift>
+    </KeyboardShift>
   );
 }
 
@@ -175,14 +212,14 @@ const styles = StyleSheet.create({
   },
   inputView: {
     flexDirection: 'row',
-    justifyContent: 'center',
     alignItems: 'center',
+    width: '100%',
+    height: 50,
 
     backgroundColor: Colors.light_shade4,
     borderRadius: 25,
     borderColor: Colors.placeholder_text,
     borderWidth: 0.5,
-    height: 50,
     marginBottom: 20,
     paddingHorizontal: 20,
     shadowColor: Colors.dark_shade1,
@@ -195,9 +232,12 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   inputText: {
-    width: '90%',
+    width: '80%',
     height: 50,
     color: Colors.dark_shade1,
+  },
+  icon: {
+    width: '10%',
   },
   logo: {
     fontFamily: 'open-sans-bold',
@@ -222,9 +262,6 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primary,
     marginTop: 20,
     marginBottom: 20,
-  },
-  icon: {
-    width: '10%',
   },
 });
 

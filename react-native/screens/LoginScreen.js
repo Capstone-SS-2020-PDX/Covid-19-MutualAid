@@ -8,7 +8,7 @@ import { View,
        } from 'react-native';
 import { AntDesign, FontAwesome } from '@expo/vector-icons';
 import KeyboardShift from 'react-native-keyboardshift-razzium';
-import { Formik, ErrorMessage } from "formik";
+import { Formik } from "formik";
 import * as Yup from "yup";
 
 import { showModal, hideModal } from '../components/CustomModal';

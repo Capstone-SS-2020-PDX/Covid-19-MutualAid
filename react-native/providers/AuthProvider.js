@@ -221,11 +221,11 @@ export const AuthProvider = props => {
                     });
     };
 
-    const handleCheckUsername = username => {
+    const handleCheckUsername = async username => {
         const usernameUrl = check_username_url + username;
         let isValid = false;
 
-        fetch(usernameUrl, {
+        await fetch(usernameUrl, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
@@ -234,18 +234,18 @@ export const AuthProvider = props => {
         }).then(response => response.status)
           .then(status => {
               if (status === 200) {
-                  console.log('Username available!');
+                  console.log(username + ' IS available!');
                   isValid = true;
               } else {
-                  console.log('Username NOT available!');
+                  console.log(username + ' NOT available!');
                   isValid = false;
               }
           }).catch(error => {
               console.log(error);
           }).finally(() => {
-              return isValid;
           });
 
+        return isValid;
     };
 
     const addProfile = () => {
