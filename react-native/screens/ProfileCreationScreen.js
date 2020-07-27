@@ -7,10 +7,12 @@ import {
     Picker,
     TouchableOpacity,
     ActionSheetIOS,
-    KeyboardAvoidingView,
     Platform,
     StyleSheet,
 } from 'react-native';
+import KeyboardShift from 'react-native-keyboardshift-razzium';
+import { Formik } from "formik";
+import * as Yup from "yup";
 
 import { AuthContext } from '../providers/AuthProvider';
 
@@ -72,7 +74,7 @@ const ProfileCreationScreen = props => {
 
     const createFormData = () => {
         const data = new FormData();
-      
+
         if (selectedImage) {
             data.append('profile_pic', selectedImage);
         }
@@ -214,69 +216,74 @@ const ProfileCreationScreen = props => {
     }
 
     return(
-        <View style={styles.screen}>
-          <Text style={styles.screenTitle}>Create Your Profile</Text>
+        <KeyboardShift>
+          {() => (
 
-          <View style={styles.imageContainer}>
-            <CustomImagePicker
-              iconName='images'
-              onSelectImage={selectImage}
-              getImage={getImage}
-              setImage={setSelectedImage}
-            />
-          </View>
+              <View style={styles.screen}>
+                <Text style={styles.screenTitle}>Create Your Profile</Text>
 
-          <KeyboardAvoidingView style={styles.inputContainer} behavior='padding'>
-            <View style={styles.inputView}>
-              <TextInput
-                style={styles.inputText}
-                placeholder='First Name...'
-                placeholderTextColor={Colors.placeholder_text}
-                blurOnSubmit={false}
-                maxLength={25}
-                returnKeyType='next'
-                onChangeText={text => updateForm(text, 'first_name')}
-                onSubmitEditing={() => lastNameRef.current.focus()}
-                ref={firstNameRef}
-              />
-            </View>
-            <View style={styles.inputView}>
-              <TextInput
-                style={styles.inputText}
-                placeholder='Last Name...'
-                placeholderTextColor={Colors.placeholder_text}
-                blurOnSubmit={false}
-                maxLength={25}
-                returnKeyType='next'
-                onChangeText={text => updateForm(text, 'last_name')}
-                onSubmitEditing={() => profileTextRef.current.focus()}
-                ref={lastNameRef}
-              />
-            </View>
-            <View style={{ ...styles.inputView, ...styles.profileInputView}}>
-              <TextInput
-                style={styles.inputText}
-                placeholder='Profile Text...'
-                placeholderTextColor={Colors.placeholder_text}
-                blurOnSubmit={true}
-                maxLength={255}
-                blurOnSubmit={true}
-                multiline={true}
-                returnKeyType='done'
-                onKeyPress={nativeEvent => onKeyPress(nativeEvent.key)}
-                onChangeText={text => updateForm(text, 'profile_text')}
-                ref={profileTextRef}
-              />
-            </View>
-          </KeyboardAvoidingView>
-          { renderHomeCommunityPicker() }
-          <CustomButton
-            onPress={attemptProfileCreation}
-            style={{ marginBottom: 10, alignSelf: 'center'}}
-          >
-            <Text style={styles.buttonText}>Confirm</Text>
-          </CustomButton>
-        </View>
+                <View style={styles.imageContainer}>
+                  <CustomImagePicker
+                    iconName='images'
+                    onSelectImage={selectImage}
+                    getImage={getImage}
+                    setImage={setSelectedImage}
+                  />
+                </View>
+
+                <View style={styles.inputContainer} behavior='padding'>
+                  <View style={styles.inputView}>
+                    <TextInput
+                      style={styles.inputText}
+                      placeholder='First Name...'
+                      placeholderTextColor={Colors.placeholder_text}
+                      blurOnSubmit={false}
+                      maxLength={25}
+                      returnKeyType='next'
+                      onChangeText={text => updateForm(text, 'first_name')}
+                      onSubmitEditing={() => lastNameRef.current.focus()}
+                      ref={firstNameRef}
+                    />
+                  </View>
+                  <View style={styles.inputView}>
+                    <TextInput
+                      style={styles.inputText}
+                      placeholder='Last Name...'
+                      placeholderTextColor={Colors.placeholder_text}
+                      blurOnSubmit={false}
+                      maxLength={25}
+                      returnKeyType='next'
+                      onChangeText={text => updateForm(text, 'last_name')}
+                      onSubmitEditing={() => profileTextRef.current.focus()}
+                      ref={lastNameRef}
+                    />
+                  </View>
+                  <View style={{ ...styles.inputView, ...styles.profileInputView}}>
+                    <TextInput
+                      style={styles.inputText}
+                      placeholder='Profile Text...'
+                      placeholderTextColor={Colors.placeholder_text}
+                      blurOnSubmit={true}
+                      maxLength={255}
+                      blurOnSubmit={true}
+                      multiline={true}
+                      returnKeyType='done'
+                      onKeyPress={nativeEvent => onKeyPress(nativeEvent.key)}
+                      onChangeText={text => updateForm(text, 'profile_text')}
+                      ref={profileTextRef}
+                    />
+                  </View>
+                </View>
+                { renderHomeCommunityPicker() }
+                <CustomButton
+                  onPress={attemptProfileCreation}
+                  style={{ marginBottom: 10, alignSelf: 'center'}}
+                >
+                  <Text style={styles.buttonText}>Confirm</Text>
+                </CustomButton>
+              </View>
+          )}
+        </KeyboardShift>
     );
 };
 
