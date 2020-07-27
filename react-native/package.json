@@ -20,6 +20,7 @@
     "expo-image-manipulator": "~8.1.0",
     "expo-image-picker": "~8.1.0",
     "faker": "^4.1.0",
+    "formik": "^2.1.5",
     "logkitty": "^0.7.1",
     "react": "~16.9.0",
     "react-dom": "~16.9.0",
@@ -38,7 +39,8 @@
     "react-native-screens": "~2.2.0",
     "react-native-smart-tip": "^2.2.0",
     "react-native-unordered-list": "^1.0.4",
-    "react-native-web": "~0.11.7"
+    "react-native-web": "~0.11.7",
+    "yup": "^0.29.2"
   },
   "devDependencies": {
     "@babel/core": "^7.8.6",

@@ -2,17 +2,16 @@ import React, { useRef, useState, useContext } from 'react';
 import { View,
          Text,
          TextInput,
-         Button,
          Image,
          StyleSheet,
          TouchableOpacity,
-         ActivityIndicator,
        } from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, FontAwesome } from '@expo/vector-icons';
 import { WModal } from 'react-native-smart-tip';
+import { Formik } from "formik";
+import * as Yup from "yup";
 
 import { showModal, hideModal } from '../components/CustomModal';
-import Center from '../components/Center';
 import CustomButton from '../components/CustomButton';
 import { AuthContext } from '../providers/AuthProvider';
 import KeyboardShift from 'react-native-keyboardshift-razzium';
@@ -45,18 +44,26 @@ const LoginScreen = props => {
     }
   };
 
-  return(
-    <KeyboardShift>
-      {() => (
-        <View style={styles.screen}>
-          <View style={ styles.imageContainer }>
-            <Image
-              style={ styles.image }
-              resizeMode='contain'
-              source={ require('../assets/CommonGoods-Title.png') }
-              fadeDuration={ 300 }
-            />
-          </View>
+  const errorIcon = () => (
+    <FontAwesome
+      name={'exclamation-circle'}
+      size={20}
+      color={Colors.contrast3}
+      style={styles.icon}
+    />
+  );
+
+  const loginForm = () => (
+    <Formik
+      initialValues={{ username: '', password: '' }}
+      onSubmit={values => console.log(values)}
+      validationSchema={Yup.object().shape({
+        username: Yup.string().required('Required'),
+        password: Yup.string().required('Required'),
+      })}
+    >
+      {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
+        <>
           <View style={styles.inputContainer}>
             <View style={styles.inputView}>
               <AntDesign
@@ -72,9 +79,12 @@ const LoginScreen = props => {
                 autoCorrect={false}
                 returnKeyType='next'
                 blurOnSubmit={false}
-                onChangeText={text => setEmailText(text)}
+                value={values.username}
+                onBlur={handleBlur('username')}
+                onChangeText={handleChange('username')}
                 onSubmitEditing={() => passwordInputRef.current.focus()}
               />
+              { errors.username && touched.username ? errorIcon() : null }
             </View>
             <View style={styles.inputView}>
               <AntDesign
@@ -89,9 +99,11 @@ const LoginScreen = props => {
                 placeholderTextColor={Colors.placeholder_text}
                 returnKeyType='done'
                 secureTextEntry
-                onChangeText={text => setPasswordText(text)}
-        /* onSubmitEditing={() => attemptLogin()} */
+                value={values.password}
+                onBlur={handleBlur('password')}
+                onChangeText={handleChange('password')}
               />
+              { errors.password && touched.password ? errorIcon() : null }
             </View>
           </View>
           <TouchableOpacity>
@@ -101,7 +113,8 @@ const LoginScreen = props => {
           <CustomButton
             style={styles.loginButton}
             onPress={() => {
-              attemptLogin();
+              /* attemptLogin(); */
+              handleSubmit()
             }}
           >
             <Text style={styles.loginText}>LOGIN</Text>
@@ -114,6 +127,24 @@ const LoginScreen = props => {
           >
             <Text style={styles.registerText}>Register</Text>
           </TouchableOpacity>
+        </>
+      )}
+    </Formik>
+  );
+
+  return(
+    <KeyboardShift>
+      {() => (
+        <View style={styles.screen}>
+          <View style={ styles.imageContainer }>
+            <Image
+              style={ styles.image }
+              resizeMode='contain'
+              source={ require('../assets/CommonGoods-Title.png') }
+              fadeDuration={ 300 }
+            />
+          </View>
+          { loginForm() }
         </View>
       )}
     </KeyboardShift>
@@ -132,14 +163,14 @@ const styles = StyleSheet.create({
   },
   inputView: {
     flexDirection: 'row',
-    justifyContent: 'center',
     alignItems: 'center',
+    width: '100%',
+    height: 50,
 
     backgroundColor: Colors.light_shade4,
     borderRadius: 25,
     borderColor: Colors.placeholder_text,
     borderWidth: 0.5,
-    height: 50,
     marginBottom: 20,
     paddingHorizontal: 20,
 
@@ -164,9 +195,12 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   inputText: {
-    width: '90%',
+    width: '80%',
     height: 50,
     color: Colors.dark_shade1,
+  },
+  icon: {
+    width: '10%',
   },
   forgotPasswordText: {
     color: Colors.contrast2,
@@ -184,9 +218,6 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primary,
     marginTop: 20,
     marginBottom: 20,
-  },
-  icon: {
-    width: '10%',
   },
 });
 
