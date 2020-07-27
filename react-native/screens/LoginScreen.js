@@ -7,14 +7,13 @@ import { View,
          TouchableOpacity,
        } from 'react-native';
 import { AntDesign, FontAwesome } from '@expo/vector-icons';
-import { WModal } from 'react-native-smart-tip';
-import { Formik } from "formik";
+import KeyboardShift from 'react-native-keyboardshift-razzium';
+import { Formik, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
 import { showModal, hideModal } from '../components/CustomModal';
 import CustomButton from '../components/CustomButton';
 import { AuthContext } from '../providers/AuthProvider';
-import KeyboardShift from 'react-native-keyboardshift-razzium';
 import Colors from '../config/colors';
 import { windowHeight, windowWidth } from '../config/dimensions';
 
@@ -22,26 +21,11 @@ const LoginScreen = props => {
   const { navigation, route } = props;
   const { login } = useContext(AuthContext);
 
-  const [emailText, setEmailText] = useState(null);
-  const [passwordText, setPasswordText] = useState(null);
-
   const passwordInputRef = useRef(null);
 
-  const attemptLogin = () => {
-    if (!emailText || !passwordText) {
-      showModal('VALIDATION_ERROR');
-      setTimeout(() => {
-        hideModal();
-      }, 900);
-    } else {
-      showModal('LOADING');
-      setTimeout(() => {
-        hideModal();
-      }, 900);
-
-      const loginData = { username: emailText, password: passwordText };
-      login(loginData);
-    }
+  const attemptLogin = async values => {
+    const loginData = { username: values.username, password: values.password };
+    await login(loginData);
   };
 
   const errorIcon = () => (
@@ -56,7 +40,9 @@ const LoginScreen = props => {
   const loginForm = () => (
     <Formik
       initialValues={{ username: '', password: '' }}
-      onSubmit={values => console.log(values)}
+      onSubmit={values => {
+        attemptLogin(values);
+      }}
       validationSchema={Yup.object().shape({
         username: Yup.string().required('Required'),
         password: Yup.string().required('Required'),
@@ -113,8 +99,11 @@ const LoginScreen = props => {
           <CustomButton
             style={styles.loginButton}
             onPress={() => {
-              /* attemptLogin(); */
-              handleSubmit()
+              showModal('LOADING');
+              handleSubmit();
+              setTimeout(() => {
+                hideModal();
+              }, 800);
             }}
           >
             <Text style={styles.loginText}>LOGIN</Text>
