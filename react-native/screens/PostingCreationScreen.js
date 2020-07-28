@@ -37,8 +37,6 @@ import { postings_url } from '../config/urls';
 import { AuthContext } from '../providers/AuthProvider';
 const isAndroid = Platform.OS === 'android';
 
-// const url = "https:cellular-virtue-277000.uc.r.appspot.com/postings/?format=json";
-
 const PostingCreationScreen = props => {
   const { navigation } = props;
   const { user } = useContext(AuthContext);
@@ -65,6 +63,14 @@ const PostingCreationScreen = props => {
   );
 
   const handlePostCreation = values => {
+    if (!selectedImage) {
+      showModal('NO_IMAGE_ERROR');
+      setTimeout(() => {
+        hideModal();
+      }, 1000);
+      return;
+    }
+
     if(!isProcessing) {
       setIsProcessing(true);
       showModal('CREATING_POSTING');
