@@ -344,6 +344,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'space-around',
         alignItems: 'center',
+        backgroundColor: Colors.light_shade4,
     },
     screenTitle: {
         color: Colors.dark_shade1,

@@ -105,7 +105,7 @@ export const AuthProvider = props => {
     const fetchCommunities = async () => {
         await AsyncStorage.getItem('communities').then(communityData => {
             console.log('Fetching communties from AsyncStorage: ');
-            if (communityData) {
+            if (false) {
                 console.log("Found communities in AsyncStorage!");
                 communityData = JSON.parse(communityData);
                 dispatch({ type: UPDATE_COMMUNITIES, communities: communityData });
