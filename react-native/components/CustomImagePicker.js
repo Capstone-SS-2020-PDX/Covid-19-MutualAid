@@ -113,7 +113,7 @@ const CustomImagePicker = props => {
         } else {
             return (
                 <FontAwesome5
-                size={130}
+                size={120}
                 name={props.iconName}
                />
             );

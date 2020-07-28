@@ -192,7 +192,6 @@ const styles = StyleSheet.create({
   },
   inputText: {
     width: '80%',
-    height: 50,
     color: Colors.dark_shade1,
   },
   icon: {

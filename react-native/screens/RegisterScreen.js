@@ -62,13 +62,11 @@ const RegisterScreen = props => {
       initialValues={{ email: '', username: '', password: '', confirm_password: ''}}
       onSubmit={values => {
         attemptRegister(values);
-        console.log(values);
       }}
     validationSchema={Yup.object().shape({
       email: Yup.string().email('Invalid email').required('email required'),
       username: Yup.string().trim().min(4, 'Too short!').max(30, 'Too long!')
                    .test('username-available', 'username not available', () => {
-                     console.log("Is usernameValid? " + isValidUsername);
                      return isValidUsername;
                    })
                    .required('username required'),

@@ -10,6 +10,7 @@ import {
     Platform,
     StyleSheet,
 } from 'react-native';
+import { AntDesign, FontAwesome, FontAwesome5, Entypo } from '@expo/vector-icons';
 import KeyboardShift from 'react-native-keyboardshift-razzium';
 import { Formik } from "formik";
 import * as Yup from "yup";
@@ -29,7 +30,6 @@ const ProfileCreationScreen = props => {
     const { navigation } = props;
     const { addProfile, updateUser, updateProfile, user, communities } = useContext(AuthContext);
 
-    const [formValue, setFormValue] = useState(null);
     const [selectedCommunity, setSelectedCommunity] = useState(communities[0]);
     const [selectedImage, setSelectedImage] = useState(null);
     const [isProcessing, setIsProcessing] = useState(false);
@@ -38,22 +38,20 @@ const ProfileCreationScreen = props => {
     const lastNameRef = useRef(null);
     const profileTextRef = useRef(null);
 
-    const updateForm = (text, input) => {
-        setFormValue({ ...formValue, [input]: text });
+    const errorIcon = () => (
+        <FontAwesome
+          name={'exclamation-circle'}
+          size={20}
+          color={Colors.contrast3}
+          style={styles.icon}
+        />
+    );
+
+    const attemptProfileCreation = values => {
+        handleProfileCreation(values)
     };
 
-    const attemptProfileCreation = () => {
-        if (!selectedImage || !formValue) {
-            showModal('VALIDATION_ERROR');
-            setTimeout(() => {
-                hideModal();
-            }, 900);
-        } else {
-            handleProfileCreation();
-        }
-    };
-
-    const handleProfileCreation = () => {
+    const handleProfileCreation = values => {
         if (!isProcessing) {
             setIsProcessing(true);
             showModal('CREATING_PROFILE');
@@ -62,40 +60,42 @@ const ProfileCreationScreen = props => {
             const profilePatchUrl = profiles_url + user.profile.id + '/';
 
             let updatedUserData = user;
-            updatedUserData.user.first_name = formValue.first_name;
-            updatedUserData.user.last_name = formValue.last_name;
+            updatedUserData.user.first_name = values.first_name;
+            updatedUserData.user.last_name = values.last_name;
 
             sendUpdateUserRequest(JSON.stringify(updatedUserData.user), userPatchUrl, 'PATCH');
-            sendUpdateProfileRequest(profilePatchUrl, 'PATCH');
+            sendUpdateProfileRequest(profilePatchUrl, 'PATCH', values);
         } else {
             console.log('Processing your request, please wait');
         }
     };
 
-    const createFormData = () => {
+    const createFormData = values => {
         const data = new FormData();
 
         if (selectedImage) {
             data.append('profile_pic', selectedImage);
         }
-        data.append('profile_text', formValue.profile_text);
+        data.append('profile_text', values.profile_text || 'This is my profile');
         data.append('home', selectedCommunity.id);
         data.append('member_of', selectedCommunity.id);
+
+        console.log(data);
         return data;
     };
 
-    const sendUpdateProfileRequest = (url, method) => {
+    const sendUpdateProfileRequest = (url, method, values) => {
         return fetch(url, {
             method: method,
             headers: {
                 'Content-type': 'multipart/form-data',
             },
-            body: createFormData(),
+            body: createFormData(values),
         })
             .then(response => response.json())
             .then(json => {
-                // console.log("In update profile Request: ");
-                // console.log(json);
+                console.log("In update profile Request: ");
+                console.log(json);
                 updateProfile(json);
             })
             .catch(error => {
@@ -119,8 +119,8 @@ const ProfileCreationScreen = props => {
         })
             .then(response => response.json())
             .then(json => {
-                // console.log("In update user Request: ");
-                // console.log(json);
+                console.log("In update user Request: ");
+                console.log(json);
                 updateUser(json);
             })
             .catch(error => {
@@ -144,7 +144,6 @@ const ProfileCreationScreen = props => {
     };
 
     const selectImage = imageData => {
-        // console.log("In selectImage: " + JSON.stringify(imageData));
         setSelectedImage(imageData);
     };
 
@@ -198,12 +197,14 @@ const ProfileCreationScreen = props => {
             );
         } else {
             return(
-                <View style={{...styles.inputView, flexDirection: 'column', height: 80, paddingVertical: 10}}>
-                  <Button
-                    onPress={showiOSActionSheet}
-                    title='Choose Home Community'
-                  />
-                  <Text style={styles.text}>{selectedCommunity.name}</Text>
+                <View style={styles.inputContainer}>
+                  <View style={{...styles.inputView, flexDirection: 'column', height: 80, paddingVertical: 10}}>
+                    <Button
+                      onPress={showiOSActionSheet}
+                      title='Choose Home Community'
+                    />
+                    <Text style={styles.text}>{selectedCommunity.name}</Text>
+                  </View>
                 </View>
             );
         }
@@ -215,10 +216,111 @@ const ProfileCreationScreen = props => {
         }
     }
 
+    const form = () => (
+        <Formik
+          initialValues={{ first_name: '', last_name: '', profile_text: '' }}
+          onSubmit={values => {
+              attemptProfileCreation(values);
+          }}
+          validationSchema={Yup.object().shape({
+              first_name: Yup.string().required('first name is required') ,
+              last_name: Yup.string().required('last name is required'),
+              profile_text: Yup.string().notRequired(),
+          })}
+        >
+          {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
+              <>
+                <View style={styles.inputContainer} behavior='padding'>
+                  <View style={styles.errorContainer}>
+                    <Text style={styles.errorText}>{errors.first_name && touched.first_name ? errors.first_name : ''}</Text>
+                  </View>
+                  <View style={styles.inputView}>
+                    <FontAwesome5
+                      name={'id-badge'}
+                      size={20}
+                      style={styles.icon}
+                    />
+                    <TextInput
+                      style={styles.inputText}
+                      placeholder='First Name...'
+                      placeholderTextColor={Colors.placeholder_text}
+                      blurOnSubmit={false}
+                      maxLength={25}
+                      returnKeyType='next'
+                      onBlur={handleBlur('first_name')}
+                      value={values.first_name}
+                      onChangeText={handleChange('first_name')}
+                      onSubmitEditing={() => lastNameRef.current.focus()}
+                      ref={firstNameRef}
+                    />
+                    { errors.first_name && touched.first_name ? errorIcon() : null }
+                  </View>
+                  <View style={styles.errorContainer}>
+                    <Text style={styles.errorText}>{errors.last_name && touched.last_name ? errors.last_name : ''}</Text>
+                  </View>
+                  <View style={styles.inputView}>
+                    <FontAwesome5
+                      name={'id-badge'}
+                      size={20}
+                      style={styles.icon}
+                    />
+                    <TextInput
+                      style={styles.inputText}
+                      placeholder='Last Name...'
+                      placeholderTextColor={Colors.placeholder_text}
+                      blurOnSubmit={false}
+                      maxLength={25}
+                      returnKeyType='next'
+                      onBlur={handleBlur('last_name')}
+                      value={values.last_name}
+                      onChangeText={handleChange('last_name')}
+                      onSubmitEditing={() => profileTextRef.current.focus()}
+                      ref={lastNameRef}
+                    />
+                    { errors.last_name && touched.last_name ? errorIcon() : null }
+                  </View>
+                  <View style={styles.errorContainer}>
+                    <Text style={styles.errorText}>{errors.profile_text && touched.profile_text ? errors.profile_text : ''}</Text>
+                  </View>
+                  <View style={{ ...styles.inputView, ...styles.profileInputView}}>
+                    <Entypo
+                      name={'text-document'}
+                      size={20}
+                      style={styles.icon}
+                    />
+                    <TextInput
+                      style={styles.inputText}
+                      placeholder='Profile Text...'
+                      placeholderTextColor={Colors.placeholder_text}
+                      blurOnSubmit={true}
+                      maxLength={255}
+                      blurOnSubmit={true}
+                      multiline={true}
+                      returnKeyType='done'
+                      onBlur={handleBlur('profile_text')}
+                      value={values.profile_text}
+                      onKeyPress={nativeEvent => onKeyPress(nativeEvent.key)}
+                      onChangeText={handleChange('profile_text')}
+                      ref={profileTextRef}
+                    />
+                  </View>
+                </View>
+                { renderHomeCommunityPicker() }
+                <CustomButton
+                  onPress={handleSubmit}
+                  style={{ marginBottom: 10, alignSelf: 'center'}}
+                >
+                  <Text style={styles.buttonText}>Confirm</Text>
+                </CustomButton>
+
+              </>
+          )}
+        </Formik>
+    );
+
     return(
         <KeyboardShift>
           {() => (
-
               <View style={styles.screen}>
                 <Text style={styles.screenTitle}>Create Your Profile</Text>
 
@@ -230,57 +332,7 @@ const ProfileCreationScreen = props => {
                     setImage={setSelectedImage}
                   />
                 </View>
-
-                <View style={styles.inputContainer} behavior='padding'>
-                  <View style={styles.inputView}>
-                    <TextInput
-                      style={styles.inputText}
-                      placeholder='First Name...'
-                      placeholderTextColor={Colors.placeholder_text}
-                      blurOnSubmit={false}
-                      maxLength={25}
-                      returnKeyType='next'
-                      onChangeText={text => updateForm(text, 'first_name')}
-                      onSubmitEditing={() => lastNameRef.current.focus()}
-                      ref={firstNameRef}
-                    />
-                  </View>
-                  <View style={styles.inputView}>
-                    <TextInput
-                      style={styles.inputText}
-                      placeholder='Last Name...'
-                      placeholderTextColor={Colors.placeholder_text}
-                      blurOnSubmit={false}
-                      maxLength={25}
-                      returnKeyType='next'
-                      onChangeText={text => updateForm(text, 'last_name')}
-                      onSubmitEditing={() => profileTextRef.current.focus()}
-                      ref={lastNameRef}
-                    />
-                  </View>
-                  <View style={{ ...styles.inputView, ...styles.profileInputView}}>
-                    <TextInput
-                      style={styles.inputText}
-                      placeholder='Profile Text...'
-                      placeholderTextColor={Colors.placeholder_text}
-                      blurOnSubmit={true}
-                      maxLength={255}
-                      blurOnSubmit={true}
-                      multiline={true}
-                      returnKeyType='done'
-                      onKeyPress={nativeEvent => onKeyPress(nativeEvent.key)}
-                      onChangeText={text => updateForm(text, 'profile_text')}
-                      ref={profileTextRef}
-                    />
-                  </View>
-                </View>
-                { renderHomeCommunityPicker() }
-                <CustomButton
-                  onPress={attemptProfileCreation}
-                  style={{ marginBottom: 10, alignSelf: 'center'}}
-                >
-                  <Text style={styles.buttonText}>Confirm</Text>
-                </CustomButton>
+                { form() }
               </View>
           )}
         </KeyboardShift>
@@ -310,14 +362,14 @@ const styles = StyleSheet.create({
     },
     inputView: {
         flexDirection: 'row',
-        justifyContent: 'center',
         alignItems: 'center',
+        width: '100%',
+        height: 50,
 
         backgroundColor: Colors.light_shade4,
         borderRadius: 25,
         borderColor: Colors.placeholder_text,
         borderWidth: 0.5,
-        height: 50,
         marginBottom: 10,
         paddingHorizontal: 20,
 
@@ -331,13 +383,16 @@ const styles = StyleSheet.create({
         elevation: 5,
     },
     profileInputView: {
-        height: 100,
+        height: 80,
         alignItems: 'flex-start',
         paddingVertical: 10,
     },
     inputText: {
-        width: '90%',
+        width: '80%',
         color: Colors.dark_shade1,
+    },
+    icon: {
+        width: '10%',
     },
     buttonText: {
         color: Colors.light_shade1,
@@ -363,6 +418,14 @@ const styles = StyleSheet.create({
     communityPicker: {
         height: isAndroid ? 50 : 200,
         width: '80%',
+    },
+    errorContainer: {
+        alignItems: 'flex-end',
+        marginHorizontal: 30,
+    },
+    errorText: {
+        fontSize: 10,
+        color: Colors.contrast3,
     },
 });
 
