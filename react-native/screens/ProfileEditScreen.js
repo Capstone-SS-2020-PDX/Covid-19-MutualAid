@@ -231,7 +231,7 @@ const ProfileEditScreen = props => {
     <KeyboardShift>
       {() => (
         <ScrollView style={{ showsVerticalScrollIndicator: false}}>
-          <View style={{marginHorizontal: 20}}>
+          <View style={styles.screen}>
             <View style={styles.imageContainer}>
               <CustomImagePicker
                 iconName='images'
@@ -316,8 +316,9 @@ const ProfileEditScreen = props => {
 
 const styles = StyleSheet.create({
   screen: {
-    justifyContent: 'space-around',
+    justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: Colors.light_shade4,
   },
   screenTitle: {
     color: Colors.dark_shade1,
@@ -336,14 +337,14 @@ const styles = StyleSheet.create({
   },
   inputView: {
     flexDirection: 'row',
-    justifyContent: 'center',
     alignItems: 'center',
+    height: 50,
+    width: '80%',
 
     backgroundColor: Colors.light_shade4,
     borderRadius: 25,
     borderColor: Colors.placeholder_text,
     borderWidth: 0.5,
-    height: 50,
     marginBottom: 10,
     paddingHorizontal: 20,
 
@@ -362,7 +363,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   inputText: {
-    width: '90%',
+    width: '80%',
     color: Colors.dark_shade1,
   },
   buttonText: {

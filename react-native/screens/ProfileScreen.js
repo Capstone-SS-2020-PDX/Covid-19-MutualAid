@@ -68,6 +68,7 @@ const styles = StyleSheet.create({
   screen: {
     justifyContent: 'flex-start',
     alignItems: 'center',
+    backgroundColor: Colors.light_shade4,
   },
   userDetailSection: {
     alignItems: 'center'
