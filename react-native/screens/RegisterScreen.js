@@ -59,14 +59,14 @@ const RegisterScreen = props => {
 
   const registerForm = () => (
     <Formik
-      initialValues={{ email: '', username: '', password: '' }}
+      initialValues={{ email: '', username: '', password: '', confirm_password: ''}}
       onSubmit={values => {
         attemptRegister(values);
         console.log(values);
       }}
     validationSchema={Yup.object().shape({
       email: Yup.string().email('Invalid email').required('email required'),
-      username: Yup.string().min(4, 'Too short!').max(30, 'Too long!')
+      username: Yup.string().trim().min(4, 'Too short!').max(30, 'Too long!')
                    .test('username-available', 'username not available', () => {
                      console.log("Is usernameValid? " + isValidUsername);
                      return isValidUsername;
@@ -76,13 +76,16 @@ const RegisterScreen = props => {
                    .required('password required'),
       confirm_password: Yup.string().oneOf(
         [Yup.ref('password'), null],
-        'Passwords must match'
+        'passwords must match'
       ).required('confirm your password'),
     })}
     >
       {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
         <>
           <View style={styles.inputContainer}>
+            <View style={styles.errorContainer}>
+              <Text style={styles.errorText}>{errors.email && touched.email ? errors.email : ''}</Text>
+            </View>
             <View style={styles.inputView}>
               <AntDesign
                 name={'mail'}
@@ -99,10 +102,14 @@ const RegisterScreen = props => {
                 blurOnSubmit={false}
                 placeholderTextColor={Colors.placeholder_text}
                 value={values.email}
+                onBlur={handleBlur('email')}
                 onChangeText={handleChange('email')}
                 onSubmitEditing={() => usernameInputRef.current.focus()}
               />
               { errors.email && touched.email ? errorIcon() : null }
+            </View>
+            <View style={styles.errorContainer}>
+              <Text style={styles.errorText}>{errors.username && touched.username ? errors.username : ''}</Text>
             </View>
             <View style={styles.inputView}>
               <AntDesign
@@ -117,15 +124,16 @@ const RegisterScreen = props => {
                 autoCapitalize='none'
                 placeholderTextColor={Colors.placeholder_text}
                 returnKeyType='next'
-                onBlur={() => {
-                  updateIsValidUsername(values.username);
-                }}
+                onBlur={handleBlur('username')}
                 blurOnSubmit={false}
                 value={values.username}
                 onChangeText={handleChange('username')}
                 onSubmitEditing={() => passwordInputRef.current.focus()}
               />
               { errors.username && touched.username ? errorIcon() : null }
+            </View>
+            <View style={styles.errorContainer}>
+              <Text style={styles.errorText}>{errors.password && touched.password ? errors.password : ''}</Text>
             </View>
             <View style={styles.inputView}>
               <AntDesign
@@ -142,10 +150,14 @@ const RegisterScreen = props => {
                 returnKeyType='next'
                 blurOnSubmit={false}
                 value={values.password}
+                onBlur={handleBlur('password')}
                 onChangeText={handleChange('password')}
                 onSubmitEditing={() => confirmPasswordInputRef.current.focus()}
               />
               { errors.password && touched.password ? errorIcon() : null }
+            </View>
+            <View style={styles.errorContainer}>
+              <Text style={styles.errorText}>{errors.confirm_password && touched.confirm_password ? errors.confirm_password : ''}</Text>
             </View>
             <View style={styles.inputView}>
               <AntDesign
@@ -161,6 +173,7 @@ const RegisterScreen = props => {
                 placeholderTextColor={Colors.placeholder_text}
                 secureTextEntry
                 value={values.confirm_password}
+                onBlur={handleBlur('confirm_password')}
                 onChangeText={handleChange('confirm_password')}
               />
               { errors.confirm_password && touched.confirm_password ? errorIcon() : null }
@@ -220,7 +233,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     borderColor: Colors.placeholder_text,
     borderWidth: 0.5,
-    marginBottom: 20,
+    marginBottom: 10,
     paddingHorizontal: 20,
     shadowColor: Colors.dark_shade1,
     shadowOffset: {
@@ -262,6 +275,14 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primary,
     marginTop: 20,
     marginBottom: 20,
+  },
+  errorContainer: {
+    alignItems: 'flex-end',
+    marginHorizontal: 20,
+  },
+  errorText: {
+    fontSize: 10,
+    color: Colors.contrast3,
   },
 });
 

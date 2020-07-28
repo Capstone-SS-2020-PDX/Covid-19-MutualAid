@@ -23,9 +23,14 @@ const LoginScreen = props => {
 
   const passwordInputRef = useRef(null);
 
-  const attemptLogin = async values => {
+  const attemptLogin = values => {
+    showModal('LOADING');
+    setTimeout(() => {
+      hideModal();
+    }, 900);
+
     const loginData = { username: values.username, password: values.password };
-    await login(loginData);
+    login(loginData);
   };
 
   const errorIcon = () => (
@@ -44,13 +49,16 @@ const LoginScreen = props => {
         attemptLogin(values);
       }}
       validationSchema={Yup.object().shape({
-        username: Yup.string().required('Required'),
-        password: Yup.string().required('Required'),
+        username: Yup.string().min(4, 'too short!').required('username is required'),
+        password: Yup.string().min(4, 'too short!').required('password is required'),
       })}
     >
       {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
         <>
           <View style={styles.inputContainer}>
+            <View style={styles.errorContainer}>
+              <Text style={styles.errorText}>{errors.username && touched.username ? errors.username : ''}</Text>
+            </View>
             <View style={styles.inputView}>
               <AntDesign
                 name={'user'}
@@ -72,6 +80,9 @@ const LoginScreen = props => {
               />
               { errors.username && touched.username ? errorIcon() : null }
             </View>
+            <View style={styles.errorContainer}>
+              <Text style={styles.errorText}>{errors.password && touched.password ? errors.password : ''}</Text>
+            </View>
             <View style={styles.inputView}>
               <AntDesign
                 name={'lock'}
@@ -92,18 +103,14 @@ const LoginScreen = props => {
               { errors.password && touched.password ? errorIcon() : null }
             </View>
           </View>
-          <TouchableOpacity>
-            <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
-          </TouchableOpacity>
+          {/* <TouchableOpacity> */}
+          {/*   <Text style={styles.forgotPasswordText}>Forgot Password?</Text> */}
+          {/* </TouchableOpacity> */}
 
           <CustomButton
             style={styles.loginButton}
             onPress={() => {
-              showModal('LOADING');
               handleSubmit();
-              setTimeout(() => {
-                hideModal();
-              }, 800);
             }}
           >
             <Text style={styles.loginText}>LOGIN</Text>
@@ -160,7 +167,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     borderColor: Colors.placeholder_text,
     borderWidth: 0.5,
-    marginBottom: 20,
+    marginBottom: 10,
     paddingHorizontal: 20,
 
     shadowColor: Colors.dark_shade1,
@@ -207,6 +214,14 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primary,
     marginTop: 20,
     marginBottom: 20,
+  },
+  errorContainer: {
+    alignItems: 'flex-end',
+    marginHorizontal: 30,
+  },
+  errorText: {
+    fontSize: 10,
+    color: Colors.contrast3,
   },
 });
 
