@@ -3,16 +3,10 @@ import { StyleSheet,
          Text,
          TextInput,
          View,
-         Button,
-         Switch,
-         TouchableOpacity,
          ScrollView,
-         Dimensions,
-         Image,
          Platform,
-         ActivityIndicator,
        } from "react-native";
-import { useHeaderHeight } from '@react-navigation/stack';
+
 import RNPickerSelect from 'react-native-picker-select';
 
 import { showModal, hideModal } from '../components/CustomModal';
@@ -28,6 +22,8 @@ import { postings_url } from '../config/urls';
 
 import { AuthContext } from '../providers/AuthProvider';
 
+const isAndroid = Platform.OS === 'android';
+
 const PostingCreationScreen = props => {
   const { navigation } = props;
   const { user } = useContext(AuthContext);
@@ -36,15 +32,13 @@ const PostingCreationScreen = props => {
   const [itemName, setItemName] = useState('');
   const [itemDescription, setItemDescription] = useState('');
   const [itemCount, setItemCount] = useState(1);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [isRequestSelected, setIsRequestSelected] = useState(true);
   const [isGoodSelected, setIsGoodSelected] = useState(true);
-  const [isProcessing, setIsProcessing] = useState(false);
 
   const nameInputRef = useRef(null);
   const descriptionInputRef = useRef(null);
   const itemCountInputRef = useRef(null);
-
-  const isAndroid = Platform.OS === 'android';
 
   const handlePostCreation = () => {
     if(!isProcessing) {
@@ -64,6 +58,7 @@ const PostingCreationScreen = props => {
   const createFormData = () => {
     const categoryValue = isGoodSelected ? 'goods' : 'services';
     const requestValue = isRequestSelected ? true : false;
+    const location = user.profile.home_location;
 
     const data = new FormData();
 
@@ -78,7 +73,7 @@ const PostingCreationScreen = props => {
     data.append('category', categoryValue);
     data.append('request', requestValue);
     data.append('in_community', user.profile.home);
-
+    data.append('location', location);
     return data;
   };
 
@@ -94,6 +89,7 @@ const PostingCreationScreen = props => {
     })
       .then(response => response.json())
       .then(json => {
+        console.log('Post Request: \n')
         console.log(json);
         notifyMessage('Posting Sucessfully Created!');
         resetFormState();

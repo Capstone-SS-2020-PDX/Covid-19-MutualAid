@@ -1,4 +1,4 @@
-import React, { useContext, useState, useRef } from 'react';
+import React, { useContext, useState, useRef, useEffect } from 'react';
 import {
     View,
     Text,
@@ -11,6 +11,7 @@ import {
     Platform,
     StyleSheet,
 } from 'react-native';
+import * as Location from 'expo-location';
 
 import { AuthContext } from '../providers/AuthProvider';
 
@@ -35,6 +36,7 @@ const ProfileCreationScreen = props => {
     const firstNameRef = useRef(null);
     const lastNameRef = useRef(null);
     const profileTextRef = useRef(null);
+    const [ location, setLocation] = useState(null);
 
     const updateForm = (text, input) => {
         setFormValue({ ...formValue, [input]: text });
@@ -50,6 +52,18 @@ const ProfileCreationScreen = props => {
             handleProfileCreation();
         }
     };
+
+    useEffect(() => {
+        (async () => {
+          let { status } = await Location.requestPermissionsAsync();
+          if (status !== 'granted') {
+            setErrorMsg('Permission to access location was denied');
+          } 
+            let location = await Location.getCurrentPositionAsync({accuracy: 5})
+            setLocation(location);
+          }
+        )()
+      }, []);
 
     const handleProfileCreation = () => {
         if (!isProcessing) {
@@ -79,6 +93,9 @@ const ProfileCreationScreen = props => {
         data.append('profile_text', formValue.profile_text);
         data.append('home', selectedCommunity.id);
         data.append('member_of', selectedCommunity.id);
+        let home_location = 'POINT(' + location.coords.latitude + ' ' + location.coords.longitude + ')';
+        console.log(home_location);
+        data.append('home_location', home_location);
         return data;
     };
 

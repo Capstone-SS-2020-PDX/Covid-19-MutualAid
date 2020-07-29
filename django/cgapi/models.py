@@ -4,6 +4,7 @@ from datetime import date
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 from rest_framework.authtoken.models import Token
+from django.contrib.gis.db import models as geomodels
 
 
 @receiver(post_save, sender=User)
@@ -16,7 +17,8 @@ class Community(models.Model):
     """"""
     name = models.CharField(max_length=50)
     created_on = models.DateField(default=date.today)
-    home_pic = models.ImageField(upload_to='cimg/', default='')    
+    home_pic = models.ImageField(upload_to='cimg/', default='')
+    location = geomodels.PointField(blank=True, null=True)
     class Meta:
         db_table = 'community'
         ordering = ['id']
@@ -35,6 +37,7 @@ class Posting(models.Model):
     item_pic = models.ImageField(upload_to='pimg/', default='')
     request = models.BooleanField(default=True)
     flagged = models.BooleanField(default=False)
+    location = geomodels.PointField(blank=True, null=True)
     
     # Meta data about DB table
     class Meta:
@@ -57,6 +60,7 @@ class UserProfile(models.Model):
     profile_pic = models.ImageField(upload_to='uimg/', default='')
     saved_postings = models.ManyToManyField(Posting, blank=True)
     is_admin = models.BooleanField(default=False)
+    home_location = geomodels.PointField(blank=True, null=True)
     
     class Meta:
         db_table = 'userprofile'
