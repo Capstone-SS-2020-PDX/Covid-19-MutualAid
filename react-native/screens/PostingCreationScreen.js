@@ -6,7 +6,7 @@ import { StyleSheet,
          ScrollView,
          Platform,
        } from "react-native";
-
+import { FontAwesome } from '@expo/vector-icons';
 import RNPickerSelect from 'react-native-picker-select';
 import { Formik } from "formik";
 import * as Yup from "yup";
@@ -39,8 +39,6 @@ const PostingCreationScreen = props => {
   const nameInputRef = useRef(null);
   const descriptionInputRef = useRef(null);
   const itemCountInputRef = useRef(null);
-
-  const height = useHeaderHeight();
 
   const errorIcon = () => (
     <FontAwesome

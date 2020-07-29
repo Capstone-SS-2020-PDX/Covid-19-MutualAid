@@ -5,7 +5,6 @@ import {
   Text,
   TextInput,
   Picker,
-  ActionSheetIOS,
   Button,
   TouchableOpacity,
   Platform,
@@ -20,7 +19,7 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import Dialog, { DialogContent, DialogTitle, DialogButton, DialogFooter } from 'react-native-popup-dialog';
 
-
+import CommunityPicker from '../components/CommunityPicker';
 import Colors from '../config/colors';
 import { notifyMessage } from '../components/CustomToast';
 import { windowWidth } from '../config/dimensions';
@@ -187,60 +186,40 @@ const ProfileEditScreen = props => {
     );
   }
 
-  const showiOSActionSheet = () => {
-    const options = communities.map(community => community.name);
-
-    ActionSheetIOS.showActionSheetWithOptions(
-      {
-        title: 'Home Community',
-        options: ['Cancel', ...options],
-        cancelButtonIndex: 0
-      },
-      buttonIndex => {
-        if (buttonIndex === 0) {
-          // cancel action
-        } else if (buttonIndex === 1) {
-          console.log(communities[buttonIndex-1].name);
-          setSelectedCommunity(communities[buttonIndex - 1]);
-        } else if (buttonIndex === 2) {
-          console.log(communities[buttonIndex-1].name);
-          setSelectedCommunity(communities[buttonIndex - 1]);
-        } else if (buttonIndex === 3) {
-          console.log(communities[buttonIndex-1].name);
-          setSelectedCommunity(communities[buttonIndex - 1]);
-        }
-      }
-    );
+  const renderHomeCommunityPicker = () => {
+    // if (isAndroid) {
+    //   return(
+    //     <View style={{ alignItems: 'center'}}>
+    //       <Text style={styles.labelText}>Home Community</Text>
+    //       <View style={{...styles.inputView, ...styles.communityPickerContainer}}>
+    //         <Picker
+    //           style={styles.communityPicker}
+    //           selectedValue={selectedCommunity}
+    //           onValueChange={(itemValue, itemIndex) => setSelectedCommunity(itemValue)}
+    //         >
+    //           { renderCommunityPickerItems() }
+    //         </Picker>
+    //       </View>
+    //     </View>
+    //   );
+    // }
+    return(
+      <>
+        <View style={styles.legendContainer}>
+          <Text style={styles.labelText}>Home Community</Text>
+        </View>
+        <CommunityPicker
+          items={availableCommunities}
+          selectedItem={selectedItem}
+        />
+      </>
+    )
   };
 
-  const renderHomeCommunityPicker = () => {
-    if (isAndroid) {
-      return(
-        <View style={{ alignItems: 'center'}}>
-          <Text style={styles.labelText}>Home Community</Text>
-          <View style={{...styles.inputView, ...styles.communityPickerContainer}}>
-            <Picker
-              style={styles.communityPicker}
-              selectedValue={selectedCommunity}
-              onValueChange={(itemValue, itemIndex) => setSelectedCommunity(itemValue)}
-            >
-              { renderCommunityPickerItems() }
-            </Picker>
-          </View>
-        </View>
-      );
-    } else {
-      return(
-        <View style={{...styles.inputView, flexDirection: 'column', height: 80, paddingVertical: 10}}>
-          <Button
-            onPress={showiOSActionSheet}
-            title='Choose Home Community'
-          />
-          <Text style={styles.text}>{selectedCommunity.name}</Text>
-        </View>
-      );
-    }
-
+  const selectedItem = community => {
+    console.log('In Edit Screen');
+    console.log(community);
+    setSelectedCommunity(community);
   };
 
   const getImage = () => {
@@ -250,6 +229,7 @@ const ProfileEditScreen = props => {
   const selectImage = imageData => {
     setSelectedImage(imageData);
   };
+
 
   const onKeyPress = key => {
     if (key === 'Enter') {
