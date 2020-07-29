@@ -44,8 +44,8 @@ const JoinCommunitiesScreen = props => {
 
 
     const receiveUpdatedCommunitySelections = selections => {
-        console.log('in receive updatecommunitySelections');
-        console.log(selections);
+        // console.log('in receive updatecommunitySelections');
+        // console.log(selections);
         setCommunitySelections(selections);
     }
 
@@ -72,6 +72,7 @@ const JoinCommunitiesScreen = props => {
                isLoading={isLoading}
                communities={searchCommunities}
                communitySelections={communitySelections}
+               /* updateCommunitySelections={handleUpdateCommunitySelections} */
                sendCommunitySelections={receiveUpdatedCommunitySelections}
     /* onRefresh={fetchCommunities} */
    />
