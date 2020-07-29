@@ -6,6 +6,7 @@ import { StyleSheet,
          ScrollView,
          Platform,
        } from "react-native";
+
 import RNPickerSelect from 'react-native-picker-select';
 
 import { showModal, hideModal } from '../components/CustomModal';
