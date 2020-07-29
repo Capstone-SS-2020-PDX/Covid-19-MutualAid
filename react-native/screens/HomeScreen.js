@@ -6,6 +6,7 @@ import MapView, { Marker, Circle, PROVIDER_GOOGLE } from 'react-native-maps';
 import { AuthContext } from '../providers/AuthProvider';
 
 const HomeScreen = props => {
+  const radius = 4000;
   const { logout } = useContext(AuthContext);
   var Latlng = {
     latitude: 45.435170,
@@ -14,8 +15,14 @@ const HomeScreen = props => {
 
   console.log(Latlng);
 
+  /*
+    This adds a value in the range of +/- 0.0247 degrees to the longitude and latitude of the point
+    0.0247 degrees is equivalent to 2757.7 meters. So the maximum distance this could put between the actual
+    location and the shifted location is 3,899.9m according to Pythagoras. With a radius of 4000m, the true
+    point will always be within the shifted points radius
+  */
   const rando = (latlng) => {
-      let num = Math.random() * (0.03 - (-0.03)) - 0.03;
+      let num = Math.random() * (0.0247 - (-0.0247)) - 0.0247;
       console.log(num);
       latlng.latitude = latlng.latitude + num;
       latlng.longitude = latlng.longitude + num;
