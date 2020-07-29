@@ -40,8 +40,6 @@ const PostingCreationScreen = props => {
   const descriptionInputRef = useRef(null);
   const itemCountInputRef = useRef(null);
 
-  const height = useHeaderHeight();
-
   const errorIcon = () => (
     <FontAwesome
       name={'exclamation-circle'}
