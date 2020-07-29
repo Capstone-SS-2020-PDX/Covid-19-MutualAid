@@ -1,12 +1,10 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   View,
   ScrollView,
   Text,
-  Button,
   Image,
   StyleSheet,
-  ActivityIndicator,
 } from 'react-native';
 
 import { AuthContext } from '../providers/AuthProvider';
@@ -21,7 +19,6 @@ const itemPlaceHolder = '../assets/image_place_holder.jpg';
 const ProfileScreen = props => {
   const { navigation } = props;
   const { user, communities } = useContext(AuthContext);
-
   const picUrl = user.profile.profile_pic ? user.profile.profile_pic : null;
   const homeCommunity = communities.find(community => community.id === user.profile.home);
 
