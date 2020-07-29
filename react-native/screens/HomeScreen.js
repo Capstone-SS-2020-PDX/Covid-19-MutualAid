@@ -8,12 +8,16 @@ import { AuthContext } from '../providers/AuthProvider';
 const HomeScreen = props => {
   const radius = 4000;
   const { logout } = useContext(AuthContext);
-  var Latlng = {
+  var latlng = {
+    latitude: 45.435170,
+    longitude:-122.640020
+  };
+  const truePoint = {
     latitude: 45.435170,
     longitude:-122.640020
   };
 
-  console.log(Latlng);
+  console.log(latlng);
 
   /*
     This adds a value in the range of +/- 0.0247 degrees to the longitude and latitude of the point
@@ -21,16 +25,25 @@ const HomeScreen = props => {
     location and the shifted location is 3,899.9m according to Pythagoras. With a radius of 4000m, the true
     point will always be within the shifted points radius
   */
-  const rando = (latlng) => {
-      let num = Math.random() * (0.0247 - (-0.0247)) - 0.0247;
-      console.log(num);
-      latlng.latitude = latlng.latitude + num;
-      latlng.longitude = latlng.longitude + num;
+  const rando = (radius, latlng) => {
+    radius = radius - 50; // give us some breathing room
+
+    // get degree shift based on radius
+    // this guarantees the shifted point will be within radius
+    let deg = Math.sqrt((radius * radius) / 2 ) / 111320; 
+    console.log("Degree shift: " + deg);
+    let lat = Math.random() * (deg - (-deg)) - deg;
+    let lng = Math.random() * (deg - (-deg)) - deg;
+
+    console.log(lat + ', ' + lng);
+
+    latlng.latitude = latlng.latitude + lat;
+    latlng.longitude = latlng.longitude + lng;
   }
 
-  rando(Latlng);
+  rando(radius, latlng);
 
-  console.log(Latlng);
+  console.log(latlng);
 
   return(
     <Center>
@@ -52,15 +65,12 @@ const HomeScreen = props => {
         }}
       >
         <Circle
-        center={Latlng}
-        radius={4000}
+        center={latlng}
+        radius={radius}
         fillColor='rgba(50,10,10,0.2)'
         />
         <Marker
-        coordinate={{
-          latitude: 45.420170,
-          longitude:-122.540020
-        }}
+        coordinate={truePoint}
         />
       </MapView>
       </View>
