@@ -20,10 +20,8 @@ const HomeScreen = props => {
   console.log(latlng);
 
   /*
-    This adds a value in the range of +/- 0.0247 degrees to the longitude and latitude of the point
-    0.0247 degrees is equivalent to 2757.7 meters. So the maximum distance this could put between the actual
-    location and the shifted location is 3,899.9m according to Pythagoras. With a radius of 4000m, the true
-    point will always be within the shifted points radius
+    This dynamically calculates a safe value to shift the true location while still ensuring
+    that the radius will encompass the point
   */
   const rando = (radius, latlng) => {
     radius = radius - 50; // give us some breathing room
