@@ -264,7 +264,7 @@ const ProfileEditScreen = props => {
       <Dialog
         visible={isDialogVisible}
         onTouchOutside={() => setIsDialogVisible(false)}
-        dialogTitle={<DialogTitle title="Are you sure you want to Delete your profile?"/>}
+        dialogTitle={<DialogTitle title="Are you sure you want to Delete your account and all associated postings? This is permanent!"/>}
         width={windowWidth * 0.75}
         footer={
           <DialogFooter>
