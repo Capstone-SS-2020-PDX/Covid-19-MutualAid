@@ -12,10 +12,14 @@ import {
   StyleSheet,
 } from 'react-native';
 
+import { AntDesign, FontAwesome } from '@expo/vector-icons';
 import CustomImagePicker from '../components/CustomImagePicker';
 import CustomButton from '../components/CustomButton';
 import KeyboardShift from 'react-native-keyboardshift-razzium';
+import { Formik } from "formik";
+import * as Yup from "yup";
 import Dialog, { DialogContent, DialogTitle, DialogButton, DialogFooter } from 'react-native-popup-dialog';
+
 
 import Colors from '../config/colors';
 import { notifyMessage } from '../components/CustomToast';
@@ -36,14 +40,7 @@ const ProfileEditScreen = props => {
   const homeCommunity = communities.find(community => community.id === user.profile.home);
   const availableCommunities = communities.filter(community => user.profile.member_of.includes(community.id));
 
-  const [formValue, setFormValue] = useState({
-    email: user.user.email,
-    first_name: user.user.first_name,
-    last_name: user.user.last_name,
-    profile_text: user.profile.profile_text,
-  });
-
-  const [selectedCommunity, setSelectedCommunity] = useState(homeCommunity || communities[0]);
+  const [selectedCommunity, setSelectedCommunity] = useState(homeCommunity);
   const [selectedImage, setSelectedImage] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isDialogVisible, setIsDialogVisible] = useState(false);
@@ -53,6 +50,20 @@ const ProfileEditScreen = props => {
   const emailRef = useRef(null);
   const profileTextRef = useRef(null);
 
+  const errorIcon = () => (
+    <FontAwesome
+      name={'exclamation-circle'}
+      size={20}
+      color={Colors.contrast3}
+      style={styles.icon}
+    />
+  );
+
+  const attemptProfileUpdate = values => {
+    handleProfileUpdate(values)
+  };
+
+  
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
@@ -88,11 +99,7 @@ const ProfileEditScreen = props => {
     });
   };
 
-  const attemptProfileUpdate = () => {
-    handleProfileUpdate();
-  };
-
-  const handleProfileUpdate = async () => {
+  const handleProfileUpdate = async values => {
     if (!isProcessing) {
       setIsProcessing(true);
       showModal('UPDATING_PROFILE');
@@ -101,25 +108,25 @@ const ProfileEditScreen = props => {
       const profilePatchUrl = profiles_url + user.profile.id + '/';
 
       let updatedUserData = user;
-      updatedUserData.user.first_name = formValue.first_name;
-      updatedUserData.user.last_name = formValue.last_name;
-      updatedUserData.user.email = formValue.email;
+      updatedUserData.user.first_name = values.first_name;
+      updatedUserData.user.last_name = values.last_name;
+      updatedUserData.user.email = values.email;
 
       await sendUpdateUserRequest(JSON.stringify(updatedUserData.user), userPatchUrl, 'PATCH');
-      await sendUpdateProfileRequest(profilePatchUrl, 'PATCH');
+      await sendUpdateProfileRequest(profilePatchUrl, 'PATCH', values);
 
     } else {
       console.log('Processing your request, please wait');
     }
   };
 
-  const createFormData = () => {
+  const createFormData = values => {
     const data = new FormData();
     if (selectedImage) {
       data.append('profile_pic', selectedImage);
     }
 
-    data.append('profile_text', formValue.profile_text);
+    data.append('profile_text', values.profile_text);
     if (selectedCommunity) {
       data.append('home', selectedCommunity.id);
     }
@@ -127,7 +134,7 @@ const ProfileEditScreen = props => {
     return data;
   };
 
-  const sendUpdateProfileRequest = (url, method) => {
+  const sendUpdateProfileRequest = (url, method, values) => {
     // console.log("In update profile Request, Outgoing url: " + url);
 
     return fetch(url, {
@@ -135,7 +142,7 @@ const ProfileEditScreen = props => {
       headers: {
         'Content-type': 'multipart/form-data',
       },
-      body: createFormData(),
+      body: createFormData(values),
     })
 
       .then(response => response.json())
@@ -236,15 +243,6 @@ const ProfileEditScreen = props => {
 
   };
 
-  const clearInputs = () => {
-    setFormValue({});
-
-    firstNameRef.current.clear();
-    lastNameRef.current.clear();
-    profileTextRef.current.clear();
-  };
-
-
   const getImage = () => {
     return selectedImage;
   };
@@ -253,12 +251,12 @@ const ProfileEditScreen = props => {
     setSelectedImage(imageData);
   };
 
-  const onKeyPress = (key) => {
+  const onKeyPress = key => {
     if (key === 'Enter') {
       descriptionInputRef.current.blur();
     }
   }
-
+  
   const renderDeleteDialog = () => {
     return(
       <Dialog
@@ -284,11 +282,117 @@ const ProfileEditScreen = props => {
     )
   };
 
+
+  const form = () => (
+    <Formik
+      initialValues={{ first_name: user.user.first_name, last_name: user.user.last_name,
+                       email: user.user.email, profile_text: user.profile.profile_text }}
+      onSubmit={values => {
+        attemptProfileUpdate(values);
+      }}
+      validationSchema={Yup.object().shape({
+        first_name: Yup.string().min(4, 'must be at least 4 letters').required('first name is required'),
+        last_name: Yup.string().min(4, 'must be at least 4 letters').required('last name is required'),
+        email: Yup.string().email('invalid email').required('email address is required'),
+        profile_text: Yup.string().min(2, 'must be at least 1 letter').required('profile text is required'),
+      })}
+    >
+
+      {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
+        <>
+            <View style={styles.legendContainer}>
+              <Text style={styles.labelText}>First Name</Text>
+              <Text style={styles.errorText}>{errors.first_name && touched.first_name ? errors.first_name : ''}</Text>
+            </View>
+            <View style={styles.inputView}>
+              <TextInput
+                style={styles.inputText}
+                maxLength={25}
+                returnKeyType='next'
+                blurOnSubmit={false}
+                value={values.first_name}
+                onBlur={handleBlur('first_name')}
+                onChangeText={handleChange('first_name')}
+                onSubmitEditing={() => lastNameRef.current.focus()}
+                ref={firstNameRef}
+              />
+              { errors.first_name && touched.first_name ? errorIcon() : null }
+            </View>
+            <View style={styles.legendContainer}>
+              <Text style={styles.labelText}>Last Name</Text>
+              <Text style={styles.errorText}>{errors.last_name && touched.last_name ? errors.last_name : ''}</Text>
+            </View>
+            <View style={styles.inputView}>
+              <TextInput
+                style={styles.inputText}
+                maxLength={35}
+                returnKeyType='next'
+                blurOnSubmit={false}
+                value={values.last_name}
+                onBlur={handleBlur('last_name')}
+                onChangeText={handleChange('last_name')}
+                onSubmitEditing={() => emailRef.current.focus()}
+                ref={lastNameRef}
+              />
+              { errors.last_name && touched.last_name ? errorIcon() : null }
+            </View>
+            <View style={styles.legendContainer}>
+              <Text style={styles.labelText}>Email</Text>
+              <Text style={styles.errorText}>{errors.email && touched.email ? errors.email : ''}</Text>
+            </View>
+            <View style={styles.inputView}>
+              <TextInput
+                style={styles.inputText}
+                maxLength={50}
+                keyboardType='email-address'
+                autoCapitalize='none'
+                autoCorrect={false}
+                returnKeyType='next'
+                blurOnSubmit={false}
+                value={values.email}
+                onBlur={handleBlur('email')}
+                onChangeText={handleChange('email')}
+                onSubmitEditing={() => profileTextRef.current.focus()}
+                ref={emailRef}
+              />
+              { errors.email && touched.email ? errorIcon() : null }
+            </View>
+            <View style={styles.legendContainer}>
+              <Text style={styles.labelText}>Profile Text</Text>
+              <Text style={styles.errorText}>{errors.profile_text && touched.profile_text ? errors.profile_text : ''}</Text>
+            </View>
+            <View style={{ ...styles.inputView, ...styles.profileInputView}}>
+              <TextInput
+                style={styles.inputText}
+                blurOnSubmit={true}
+                maxLength={255}
+                multiline={true}
+                returnKeyType='done'
+                onKeyPress={nativeEvent => onKeyPress(nativeEvent.key)}
+                value={values.profile_text}
+                onBlur={handleBlur('profile_text')}
+                onChangeText={handleChange('profile_text')}
+                ref={profileTextRef}
+              />
+              { errors.profile_text && touched.profile_text ? errorIcon() : null }
+            </View>
+            { renderHomeCommunityPicker() }
+            <CustomButton
+              onPress={handleSubmit}
+              style={{ marginBottom: 10, alignSelf: 'center'}}
+            >
+              <Text style={styles.buttonText}>Confirm</Text>
+            </CustomButton>
+        </>
+      )}
+    </Formik>
+  );
+
   return(
     <KeyboardShift>
       {() => (
         <ScrollView style={{ showsVerticalScrollIndicator: false}}>
-          <View style={{marginHorizontal: 20}}>
+          <View style={styles.screen}>
             <View style={styles.imageContainer}>
               <CustomImagePicker
                 iconName='images'
@@ -299,70 +403,7 @@ const ProfileEditScreen = props => {
                 placeholderImage={user.profile.profile_pic}
               />
             </View>
-
-            <View style={styles.inputView}>
-              <TextInput
-                style={styles.inputText}
-                placeholder={ `First Name: ${user.user.first_name}` }
-                placeholderTextColor={Colors.placeholder_text}
-                maxLength={25}
-                returnKeyType='next'
-                blurOnSubmit={false}
-                onChangeText={text => updateForm(text, 'first_name')}
-                onSubmitEditing={() => lastNameRef.current.focus()}
-                ref={firstNameRef}
-              />
-            </View>
-            <View style={styles.inputView}>
-              <TextInput
-                style={styles.inputText}
-                placeholder={ `Last Name: ${user.user.last_name}` }
-                placeholderTextColor={Colors.placeholder_text}
-                maxLength={35}
-                returnKeyType='next'
-                blurOnSubmit={false}
-                onChangeText={text => updateForm(text, 'last_name')}
-                onSubmitEditing={() => emailRef.current.focus()}
-                ref={lastNameRef}
-              />
-            </View>
-            <View style={styles.inputView}>
-              <TextInput
-                style={styles.inputText}
-                placeholder={ `email: ${user.user.email}` }
-                placeholderTextColor={Colors.placeholder_text}
-                maxLength={50}
-                keyboardType='email-address'
-                autoCapitalize='none'
-                autoCorrect={false}
-                returnKeyType='next'
-                blurOnSubmit={false}
-                onChangeText={text => updateForm(text, 'email')}
-                onSubmitEditing={() => profileTextRef.current.focus()}
-                ref={emailRef}
-              />
-            </View>
-            <View style={{ ...styles.inputView, ...styles.profileInputView}}>
-              <TextInput
-                style={styles.inputText}
-                placeholder={ `Profile Text: ${user.profile.profile_text}` }
-                placeholderTextColor={Colors.placeholder_text}
-                blurOnSubmit={true}
-                maxLength={255}
-                multiline={true}
-                returnKeyType='done'
-                onKeyPress={nativeEvent => onKeyPress(nativeEvent.key)}
-                onChangeText={text => updateForm(text, 'profile_text')}
-                ref={profileTextRef}
-              />
-            </View>
-            { renderHomeCommunityPicker() }
-            <CustomButton
-              onPress={attemptProfileUpdate}
-              style={{ marginBottom: 10, alignSelf: 'center'}}
-            >
-              <Text style={styles.buttonText}>Confirm</Text>
-            </CustomButton>
+            { form() }
           </View>
           {renderDeleteDialog()}
         </ScrollView>
@@ -374,8 +415,9 @@ const ProfileEditScreen = props => {
 
 const styles = StyleSheet.create({
   screen: {
-    justifyContent: 'space-around',
+    justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: Colors.light_shade4,
   },
   screenTitle: {
     color: Colors.dark_shade1,
@@ -394,14 +436,14 @@ const styles = StyleSheet.create({
   },
   inputView: {
     flexDirection: 'row',
-    justifyContent: 'center',
     alignItems: 'center',
+    height: 50,
+    width: '80%',
 
     backgroundColor: Colors.light_shade4,
     borderRadius: 25,
     borderColor: Colors.placeholder_text,
     borderWidth: 0.5,
-    height: 50,
     marginBottom: 10,
     paddingHorizontal: 20,
 
@@ -415,7 +457,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   profileInputView: {
-    height: 100,
+    height: 80,
     alignItems: 'flex-start',
     paddingVertical: 10,
   },
@@ -443,7 +485,24 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
     fontFamily: 'open-sans',
     fontSize: 12,
-
+  },
+  icon: {
+    width: '10%',
+  },
+  legendContainer: {
+    flexDirection: 'row',
+    width: '70%',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+  },
+  labelText: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: Colors.dark_shade1,
+  },
+  errorText: {
+    fontSize: 10,
+    color: Colors.contrast3,
   },
   headerButton: {
     marginRight: 15,

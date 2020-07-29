@@ -14,8 +14,8 @@ const JoinCommunitiesList = props => {
     const { navigation, communities } = props;
     const { user, updateProfile } = useContext(AuthContext);
 
-    console.log("Inside CommunityList, communitySelections: ");
-    console.log(props.communitySelections);
+    // console.log("Inside CommunityList, communitySelections: ");
+    // console.log(props.communitySelections);
     const renderCommunityListItem = itemData => {
         let isMemberOf = props.communitySelections[itemData.item.id];
         return(
@@ -54,7 +54,7 @@ const JoinCommunitiesList = props => {
             }
         }
         selectedCommunities.push(user.profile.home);
-        console.log(selectedCommunities);
+        // console.log(selectedCommunities);
 
         const newCommunitiesList = { member_of: selectedCommunities };
         const updatedProfile = {
@@ -70,8 +70,8 @@ const JoinCommunitiesList = props => {
         const url = profiles_url + user.profile.id + '/';
 
         const payload = createRequestPayload(selections);
-        console.log('outoing payload');
-        console.log(payload);
+        // console.log('outoing payload');
+        // console.log(payload);
 
         await fetch(url, {
             method: 'PATCH',
@@ -83,7 +83,7 @@ const JoinCommunitiesList = props => {
         })
             .then(response => response.json())
             .then(json => {
-                console.log(json);
+                // console.log(json);
             });
     };
 
