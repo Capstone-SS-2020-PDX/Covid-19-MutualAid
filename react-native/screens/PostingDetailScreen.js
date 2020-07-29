@@ -84,11 +84,11 @@ const PostingDetailScreen = props => {
       },
       body: JSON.stringify(payload),
     }).then(response => {
-      console.log("Server Response: " + response.status);
+      // console.log("Server Response: " + response.status);
       return response.json();
     }).then(json => {
-      console.log("Server response after toggling favorite");
-      console.log(json);
+      // console.log("Server response after toggling favorite");
+      // console.log(json);
       updateProfile(json);
     });
 
