@@ -11,6 +11,8 @@ import { View,
          ActivityIndicator,
        } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons'; 
+import OptionsMenu from "react-native-options-menu";
 
 import { RFValue, RFPercentage } from "react-native-responsive-fontsize";
 import { WToast } from 'react-native-smart-tip'
@@ -91,16 +93,28 @@ console.log(latlng);
 
       navigation.setOptions({
         headerRight: () => (
-          <TouchableOpacity
-            style={styles.favIcon}
-            onPress={() => handleToggleFavorite(!isFavorited)}
-          >
-            <AntDesign
-              name={heartIcon}
-              size={25}
-              color={Colors.light_shade4}
-            />
-          </TouchableOpacity>
+          <View style={styles.headerOptions}>
+            <TouchableOpacity
+              style={styles.favIcon}
+              onPress={() => handleToggleFavorite(!isFavorited)}
+            >
+              <AntDesign
+                name={heartIcon}
+                size={25}
+                color={Colors.light_shade4}
+              />
+            </TouchableOpacity>
+            <View style={styles.favIcon}>
+              <OptionsMenu
+                  customButton={(<Entypo 
+                                    name="dots-three-vertical" 
+                                    size={25} 
+                                    color={Colors.light_shade4} />)}
+                  destructiveIndex={1}
+                  options={["Flag", "Cancel"]}
+                  actions={[() => handleFlagPost()]}/>
+            </View>
+          </View>
         ),
       });
     }
@@ -133,6 +147,30 @@ console.log(latlng);
       updateProfile(json);
     });
 
+  };
+
+  const handleFlagPost = () => {
+    const url = postings_url + route.params.id + '/';
+
+    let flag = route.params.flagged;
+    flag = flag + 1;
+
+    const payload = { 'flagged': flag };
+
+    fetch(url, {
+      method: 'PATCH',
+      headers: {
+        'Accept': 'application/json',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    }).then(response => {
+      console.log("Server Response: " + response.status);
+      return response.json();
+    }).then(json => {
+      console.log("Server response after flagging post: ");
+      console.log(json);
+    });
   };
 
   const handleReachOut = () => {
@@ -369,6 +407,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     backgroundColor: Colors.light_shade4,
     alignItems: 'center'
+  },
+  headerOptions: {
+    flexDirection: 'row',
   },
   detailTitleContainer: {
     width: '100%',

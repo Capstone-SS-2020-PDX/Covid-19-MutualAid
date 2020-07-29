@@ -31,6 +31,7 @@ const PostingList = props => {
                     moderatorView: props.moderatorView,
                     location: itemData.item.location,
 
+                    flagged: itemData.item.flagged,
                   });
               }}
             />
