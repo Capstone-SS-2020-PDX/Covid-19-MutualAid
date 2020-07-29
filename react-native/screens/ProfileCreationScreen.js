@@ -96,9 +96,10 @@ const ProfileCreationScreen = props => {
         data.append('profile_text', values.profile_text || 'This is my profile');
         data.append('home', selectedCommunity.id);
         data.append('member_of', selectedCommunity.id);
-
-        let home_location = 'POINT(' + location.coords.latitude + ' ' + location.coords.longitude + ')';
+      
+        let home_location = 'POINT(' + location.coords.longitude + ' ' + location.coords.latitude + ')';
         console.log(home_location);
+      
         data.append('home_location', home_location);
 
         return data;
