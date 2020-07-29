@@ -251,14 +251,6 @@ const ProfileEditScreen = props => {
     setSelectedImage(imageData);
   };
 
-  const getImage = () => {
-    return selectedImage;
-  };
-
-  const selectImage = imageData => {
-    setSelectedImage(imageData);
-  };
-
   const onKeyPress = key => {
     if (key === 'Enter') {
       descriptionInputRef.current.blur();
