@@ -27,7 +27,6 @@ const updatePostingOptions = {
     data: 'Updating your Posting...',
 };
 
-
 const loginFailedOptions = {
     ...defaultOptions,
     data: 'Login Failed!',
@@ -53,6 +52,12 @@ const sendingEmailOptions = {
 const validationErrorOptions = {
     ...defaultOptions,
     data: 'Fill out all details',
+    icon: <MaterialIcons name='error-outline' size={50} color='red'/>,
+};
+
+const noImageErrorOptions = {
+    ...defaultOptions,
+    data: 'You must include an image',
     icon: <MaterialIcons name='error-outline' size={50} color='red'/>,
 };
 
@@ -99,6 +104,9 @@ export function showModal(type) {
             break;
         case 'VALIDATION_ERROR':
             options = validationErrorOptions;
+            break;
+        case 'NO_IMAGE_ERROR':
+            options = noImageErrorOptions;
             break;
         case 'INVALID_USERNAME' :
             options = invalidUsernameOptions;

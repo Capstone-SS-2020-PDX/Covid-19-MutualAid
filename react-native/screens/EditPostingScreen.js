@@ -9,7 +9,10 @@ import { View,
          Platform,
          StyleSheet
        } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
 import KeyboardShift from 'react-native-keyboardshift-razzium';
+import { Formik } from "formik";
+import * as Yup from "yup";
 
 import { notifyMessage } from '../components/CustomToast';
 import { showModal, hideModal } from '../components/CustomModal';
@@ -22,7 +25,6 @@ import { postings_url } from '../config/urls';
 import { AuthContext } from '../providers/AuthProvider';
 
 const handleUpdatePosting = async (url, data) => {
-
   console.log("Outgoing payload: " + JSON.stringify(data));
 
   return fetch(url, {
@@ -38,9 +40,6 @@ const handleUpdatePosting = async (url, data) => {
     })
     .then(json => {
       // console.log(json);
-    })
-    .catch(error => {
-      console.log(error.message)
     })
     .finally(() => {
       hideModal();
@@ -58,8 +57,6 @@ const handleDeletePosting = async (url) => {
     return response.json();
   }).then(json => {
     // console.log(json);
-  }).catch(error => {
-    console.log(error.message);
   }).finally(() => {
     hideModal();
     notifyMessage('Posting Deleted Successfully!');
@@ -87,6 +84,15 @@ const EditPostingScreen = props => {
   const submitEditPosting = useRef(null);
   const titleTextRef = useRef(null);
   const descriptionTextRef = useRef(null);
+
+  const errorIcon = () => (
+    <FontAwesome
+      name={'exclamation-circle'}
+      size={20}
+      color={Colors.contrast3}
+      style={styles.icon}
+    />
+  );
 
   submitEditPosting.current = () => {
     showModal('UPDATING_POSTING');
@@ -224,7 +230,7 @@ const EditPostingScreen = props => {
               { renderCommunityPicker() }
               <CustomButton
                 onPress={() => submitDeletePosting()}
-                style={{ backgroundColor: Colors.contrast3, marginBottom: 10, alignSelf: 'center' }}
+                style={styles.deleteButton}
               >
                 <Text style={styles.buttonText}>Delete Posting</Text>
               </CustomButton>
@@ -281,6 +287,10 @@ const styles = StyleSheet.create({
   buttonText: {
     color: Colors.light_shade1,
     fontSize: 24,
+  },
+  deleteButton: {
+    backgroundColor: Colors.contrast3,
+    marginTop: 20,
   },
 });
 
