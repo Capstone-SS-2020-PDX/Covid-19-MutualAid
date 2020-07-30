@@ -129,7 +129,7 @@ const PostingDetailScreen = props => {
       })
       .catch(error => {
         console.log('Error from sendEmail: ' + error.message)
-        notifyMessage('Oops! something went wrong! Couldn\'t send your email...');
+        notifyMessage('Oops! something went wrong! Couldn\'t send your email. Please try again later...');
       })
       .finally(() => {
         resetFormState();
