@@ -79,7 +79,7 @@ const PostingCreationScreen = props => {
   const createFormData = values => {
     const categoryValue = isGoodSelected ? 'goods' : 'services';
     const requestValue = isRequestSelected ? true : false;
-    const location = user.profile.home_location;
+    const location = selectedCommunity.location;
 
     const data = new FormData();
 
@@ -95,6 +95,7 @@ const PostingCreationScreen = props => {
     data.append('request', requestValue);
     data.append('in_community', selectedCommunity.id);
     data.append('location', location);
+
     return data;
   };
 
@@ -108,7 +109,11 @@ const PostingCreationScreen = props => {
       body: createFormData(values),
     })
       .then(response => {
-        return response.text();
+        if (!response.ok) {
+          throw Error();
+        } else {
+          return response.json();
+        }
       })
       .then(json => {
         console.log('Post Request: \n')
@@ -119,7 +124,6 @@ const PostingCreationScreen = props => {
       })
       .catch(error => {
         notifyMessage('Oops! Something went wrong...');
-        console.log(error)
       })
       .finally(() => {
         hideModal();
