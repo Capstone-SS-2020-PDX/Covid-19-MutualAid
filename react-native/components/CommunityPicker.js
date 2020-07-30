@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, Platform } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 
@@ -9,6 +9,7 @@ import { windowHeight, windowWidth } from '../config/dimensions';
 
 const CommunityPicker = props => {
     const isAndroid = Platform.OS === 'android';
+    const [selectedValue, setSelectedValue] = useState(props.defaultItem);
 
     const pickerItems = props.items.map(item => {
         let obj = {}
@@ -26,12 +27,17 @@ const CommunityPicker = props => {
         </View>
     );
 
+    const appliedStyles = isAndroid ? styles.androidPicker : styles.iOSPicker;
+
     return(
-        <View style={isAndroid ? styles.androidPicker : styles.iOSPicker}>
+        <View style={{ ...appliedStyles, ...props.style }}>
           <RNPickerSelect
-            style={{...styles.communityPicker, ...props.style}}
             placeholder={{}}
-            onValueChange={value => props.selectedItem(value)}
+            onValueChange={value => {
+                setSelectedValue(value);
+                props.selectedItem(value)
+            }}
+            value={selectedValue}
             items={pickerItems}
           />
           {isAndroid ? null : icon()}
@@ -41,7 +47,7 @@ const CommunityPicker = props => {
 
 const styles = StyleSheet.create({
     androidPicker: {
-        width: '80%',
+        width: '75%',
         height: 50,
     },
     iOSPicker: {

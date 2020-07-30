@@ -180,35 +180,14 @@ const ProfileEditScreen = props => {
       });
   };
 
-  const renderCommunityPickerItems = () => {
-    return availableCommunities.map(community =>
-      <Picker.Item label={community.name} value={community} key={community.id}/>
-    );
-  }
-
   const renderHomeCommunityPicker = () => {
-    // if (isAndroid) {
-    //   return(
-    //     <View style={{ alignItems: 'center'}}>
-    //       <Text style={styles.labelText}>Home Community</Text>
-    //       <View style={{...styles.inputView, ...styles.communityPickerContainer}}>
-    //         <Picker
-    //           style={styles.communityPicker}
-    //           selectedValue={selectedCommunity}
-    //           onValueChange={(itemValue, itemIndex) => setSelectedCommunity(itemValue)}
-    //         >
-    //           { renderCommunityPickerItems() }
-    //         </Picker>
-    //       </View>
-    //     </View>
-    //   );
-    // }
     return(
       <>
         <View style={styles.legendContainer}>
           <Text style={styles.labelText}>Home Community</Text>
         </View>
         <CommunityPicker
+          defaultItem={homeCommunity}
           items={availableCommunities}
           selectedItem={selectedItem}
         />
@@ -217,8 +196,6 @@ const ProfileEditScreen = props => {
   };
 
   const selectedItem = community => {
-    console.log('In Edit Screen');
-    console.log(community);
     setSelectedCommunity(community);
   };
 
