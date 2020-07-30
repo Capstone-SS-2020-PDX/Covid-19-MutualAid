@@ -248,10 +248,10 @@ const ProfileEditScreen = props => {
         attemptProfileUpdate(values);
       }}
       validationSchema={Yup.object().shape({
-        first_name: Yup.string().min(4, 'must be at least 4 letters').required('first name is required'),
-        last_name: Yup.string().min(4, 'must be at least 4 letters').required('last name is required'),
+        first_name: Yup.string().min(2, 'must be at least 2 letters').required('first name is required'),
+        last_name: Yup.string().min(2, 'must be at least 2 letters').required('last name is required'),
         email: Yup.string().email('invalid email').required('email address is required'),
-        profile_text: Yup.string().min(2, 'must be at least 1 letter').required('profile text is required'),
+        profile_text: Yup.string().min(4, 'must be at least 4 letters').required('profile text is required'),
       })}
     >
 
