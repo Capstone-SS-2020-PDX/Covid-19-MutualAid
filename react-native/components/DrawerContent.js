@@ -55,7 +55,7 @@ const DrawerContent = props => {
               />
               <View style={styles.avatarCaptionContainer}>
                 <Title style={styles.name}>{fullName}</Title>
-                <Caption style={styles.caption}>{username}</Caption>
+                <Caption style={styles.caption}>@{username}</Caption>
               </View>
             </TouchableOpacity>
             <View style={styles.statsSection}>
