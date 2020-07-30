@@ -6,7 +6,7 @@ import { StyleSheet,
          ScrollView,
          Platform,
        } from "react-native";
-
+import { FontAwesome } from '@expo/vector-icons';
 import RNPickerSelect from 'react-native-picker-select';
 import { Formik } from "formik";
 import * as Yup from "yup";
@@ -18,6 +18,7 @@ import CustomButton from '../components/CustomButton';
 import CustomImagePicker from '../components/CustomImagePicker';
 import KeyboardShift from 'react-native-keyboardshift-razzium';
 
+import CommunityPicker from '../components/CommunityPicker';
 import Colors from '../config/colors.js';
 import { windowHeight, windowWidth } from '../config/dimensions';
 import { postings_url } from '../config/urls';
@@ -28,8 +29,11 @@ const isAndroid = Platform.OS === 'android';
 
 const PostingCreationScreen = props => {
   const { navigation } = props;
-  const { user } = useContext(AuthContext);
+  const { user, communities } = useContext(AuthContext);
+  const homeCommunity = communities.find(community => community.id === user.profile.home);
+  const availableCommunities = communities.filter(community => user.profile.member_of.includes(community.id));
 
+  const [selectedCommunity, setSelectedCommunity] = useState(homeCommunity);
   const [selectedImage, setSelectedImage] = useState(null);
   const [itemCount, setItemCount] = useState(1);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -39,8 +43,6 @@ const PostingCreationScreen = props => {
   const nameInputRef = useRef(null);
   const descriptionInputRef = useRef(null);
   const itemCountInputRef = useRef(null);
-
-  const height = useHeaderHeight();
 
   const errorIcon = () => (
     <FontAwesome
@@ -77,7 +79,7 @@ const PostingCreationScreen = props => {
   const createFormData = values => {
     const categoryValue = isGoodSelected ? 'goods' : 'services';
     const requestValue = isRequestSelected ? true : false;
-    const location = user.profile.home_location;
+    const location = selectedCommunity.location;
 
     const data = new FormData();
 
@@ -91,8 +93,9 @@ const PostingCreationScreen = props => {
     data.append('owner', user.user.id);
     data.append('category', categoryValue);
     data.append('request', requestValue);
-    data.append('in_community', user.profile.home);
+    data.append('in_community', selectedCommunity.id);
     data.append('location', location);
+
     return data;
   };
 
@@ -105,7 +108,13 @@ const PostingCreationScreen = props => {
       },
       body: createFormData(values),
     })
-      .then(response => response.json())
+      .then(response => {
+        if (!response.ok) {
+          throw Error();
+        } else {
+          return response.json();
+        }
+      })
       .then(json => {
         console.log('Post Request: \n')
         console.log(json);
@@ -115,7 +124,6 @@ const PostingCreationScreen = props => {
       })
       .catch(error => {
         notifyMessage('Oops! Something went wrong...');
-        console.log(error)
       })
       .finally(() => {
         hideModal();
@@ -128,6 +136,7 @@ const PostingCreationScreen = props => {
     setSelectedImage(null);
     setItemCount(1);
     setIsProcessing(false);
+    setSelectedCommunity(homeCommunity);
 
     setIsRequestSelected(true);
     setIsGoodSelected(true);
@@ -168,13 +177,32 @@ const PostingCreationScreen = props => {
   const selectImage = imageData => {
     setSelectedImage(imageData);
   };
-  const Wrapper = (windowHeight > 650) ? View : ScrollView;
+  const Wrapper = (windowHeight > 750) ? View : ScrollView;
 
   const onKeyPress = (key) => {
     if (key === 'Enter') {
       descriptionInputRef.current.blur();
     }
-  }
+  };
+
+  const renderCommunityPicker = () => {
+    return(
+      <>
+        <View style={styles.legendContainer}>
+          <Text style={styles.labelText}>Community</Text>
+        </View>
+        <CommunityPicker
+          defaultItem={homeCommunity}
+          items={availableCommunities}
+          selectedItem={selectedItem}
+        />
+      </>
+    )
+  };
+
+  const selectedItem = community => {
+    setSelectedCommunity(community);
+  };
 
   const form = () => (
     <Formik
@@ -276,7 +304,7 @@ const PostingCreationScreen = props => {
             </View>
             <View style={styles.countView}>
               <View style={styles.countInputTitle}>
-                <Text style={styles.countInputTitleText}>
+                <Text style={styles.labelText}>
                   Quantity
                 </Text>
               </View>
@@ -293,6 +321,7 @@ const PostingCreationScreen = props => {
               </View>
             </View>
           </View>
+          { renderCommunityPicker() }
           <CustomButton
             onPress={handleSubmit}
             style={styles.confirmButton}
@@ -390,7 +419,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 10,
   },
-  countInputTitleText: {
+  labelText: {
     fontWeight: 'bold',
     fontSize: 16,
   },

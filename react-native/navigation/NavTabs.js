@@ -1,6 +1,6 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { MaterialCommunityIcons, Ionicons, FontAwesome } from '@expo/vector-icons';
+import { MaterialCommunityIcons, Ionicons, FontAwesome, MaterialIcons } from '@expo/vector-icons';
 
 import HomeStack from './HomeStack';
 import ProfileStack from './ProfileStack';
@@ -43,12 +43,12 @@ const NavTabs = props => {
             );
           } else if (route.name === 'Profile') {
             iconName = focused
-              ? 'user'
-              : 'user-o';
+              ? 'person'
+              : 'person-outline';
             return (
-              <FontAwesome
+              <MaterialIcons
                 name={iconName}
-                size={size}
+                size={size + 5}
                 color={color}
               />
             );
