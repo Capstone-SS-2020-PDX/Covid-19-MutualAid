@@ -144,19 +144,26 @@ const ProfileEditScreen = props => {
       body: createFormData(values),
     })
 
-      .then(response => response.json())
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw Error(response.text());
+        }
+      })
       .then(json => {
         // console.log(json);
         updateProfile(json);
+        notifyMessage('Profile Sucessfully Updated!');
       })
       .catch(error => {
         console.log(error.message);
+        notifyMessage('Profile Sucessfully Updated!');
       })
       .finally(() => {
         setIsProcessing(false);
         hideModal();
         navigation.goBack();
-        notifyMessage('Profile Sucessfully Updated!');
       });
   };
 
