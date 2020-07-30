@@ -116,19 +116,25 @@ const PostingDetailScreen = props => {
       },
       body: requestJSON,
     })
-      .then(response => response.text())
+      .then(response => {
+        if (response.ok) {
+          return response.text();
+        } else {
+          throw Error(response.text());
+        }
+      })
       .then(text => {
         console.log('Response from sendEmail: ' + text);
+        notifyMessage('Email sent successfully!');
       })
       .catch(error => {
-        console.log('Error from sendEmail: ' + error)
-        notifyMessage('Oops! something went wrong...');
+        console.log('Error from sendEmail: ' + error.message)
+        notifyMessage('Oops! something went wrong! Couldn\'t send your email...');
       })
       .finally(() => {
         resetFormState();
         setIsProcessing(false)
         hideModal();
-        notifyMessage('Email sent successfully!');
         navigateToHomeStack();
       });
   }
