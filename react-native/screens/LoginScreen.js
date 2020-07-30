@@ -19,11 +19,10 @@ import { windowHeight, windowWidth } from '../config/dimensions';
 
 const LoginScreen = props => {
   const { navigation, route } = props;
-  const { login, authFailed, resetAuthStatus } = useContext(AuthContext);
+  const { login } = useContext(AuthContext);
 
   const passwordInputRef = useRef(null);
 
-<<<<<<< HEAD
   const attemptLogin = values => {
     showModal('LOADING');
     setTimeout(() => {
@@ -32,43 +31,6 @@ const LoginScreen = props => {
 
     const loginData = { username: values.username, password: values.password };
     login(loginData);
-=======
-  useEffect(() => {
-    console.log('Auth Failed? ' + authFailed);
-  }, [authFailed]);
-
-  const attemptLogin = () => {
-    if (!emailText || !passwordText) {
-      showModal('VALIDATION_ERROR');
-      setTimeout(() => {
-        hideModal();
-      }, 900);
-    } else {
-      const loginData = { username: emailText, password: passwordText };
-      login(loginData);
-
-      showModal('LOADING');
-      setTimeout(() => {
-        hideModal();
-        checkAuthFailed();
-      }, 1000);
-    }
-  };
-
-  const checkAuthFailed = () => {
-    // console.log('Auth Failed? ' + authFailed);
-    if (authFailed) {
-      showErrorModal();
-    }
-  }
-
-  const showErrorModal = () => {
-    showModal('LOGIN_FAILED');
-    setTimeout(() => {
-      hideModal();
-      resetAuthStatus();
-    }, 900);
->>>>>>> Add authFailed var to Context and listen on it in Login Screen
   };
 
   const errorIcon = () => (
@@ -134,13 +96,9 @@ const LoginScreen = props => {
                 placeholderTextColor={Colors.placeholder_text}
                 returnKeyType='done'
                 secureTextEntry
-<<<<<<< HEAD
                 value={values.password}
                 onBlur={handleBlur('password')}
                 onChangeText={handleChange('password')}
-=======
-                onChangeText={text => setPasswordText(text)}
->>>>>>> Add authFailed var to Context and listen on it in Login Screen
               />
               { errors.password && touched.password ? errorIcon() : null }
             </View>
