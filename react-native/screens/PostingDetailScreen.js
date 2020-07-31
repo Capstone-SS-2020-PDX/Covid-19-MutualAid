@@ -79,8 +79,6 @@ const PostingDetailScreen = props => {
 
 rando(radius, latlng);
 
-console.log(latlng);
-
 
   useLayoutEffect(() => {
 
@@ -157,7 +155,10 @@ console.log(latlng);
       },
       body: requestJSON,
     })
-      .then(response => response.text())
+      .then(response => {
+        console.log(response.status);
+        return response.text();
+      })
       .then(text => {
         console.log('Response from sendEmail: ' + text);
       })
