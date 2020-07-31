@@ -200,7 +200,7 @@ const PostingDetailScreen = props => {
   const renderBottomButton = () => {
     if (isModeratorView) {
       return (
-        <>
+        <View style={styles.moderatorButtonsContainer}>
           <CustomButton
             style={{...styles.reachOutButton, ...styles.unflagButton}}
             onPress={() => {
@@ -217,7 +217,7 @@ const PostingDetailScreen = props => {
           >
             <Text style={styles.reachOutButtonText}>Delete Posting</Text>
           </CustomButton>
-        </>
+        </View>
       );
 
     } else if (route.params.owner === user.user.id) {
@@ -368,6 +368,11 @@ const styles = StyleSheet.create({
   },
   unflagButton: {
     backgroundColor: Colors.contrast2,
+  },
+  moderatorButtonsContainer: {
+    width: '100%',
+    alignItems: 'center',
+    paddingVertical: 10,
   },
   inputContainer: {
     width: '80%',
