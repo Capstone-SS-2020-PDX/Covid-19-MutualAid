@@ -1,8 +1,10 @@
 from django.contrib.gis.geos import Point
 from django.contrib.gis.measure import Distance
+from .models import Posting
 from django_filters import rest_framework as filters
 
-class PostingFilterFilter(filters.FilterSet):
+
+class PostingFilter(filters.FilterSet):
     radius = filters.CharFilter(method='radius_filter')
 
     class Meta:
