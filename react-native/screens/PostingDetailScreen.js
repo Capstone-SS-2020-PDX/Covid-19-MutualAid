@@ -161,7 +161,7 @@ const PostingDetailScreen = props => {
   const handleUnflagPosting = () => {
     showModal('UPDATING_POSTING');
     const url = postings_url + route.params.id + '/';
-    const payload = { flagged: 0 };
+    const payload = JSON.stringify({ flagged: 0 });
 
     fetch(url, {
       method: 'PATCH',
