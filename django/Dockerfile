@@ -8,6 +8,7 @@ RUN echo `python3 --version`
 
 # Set environment variables
 ENV PYTHONUNBUFFERED 1
+ENV SENDGRID_API_KEY="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"
 
 COPY requirements.txt /
 

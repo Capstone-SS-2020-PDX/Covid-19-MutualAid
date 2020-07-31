@@ -14,7 +14,7 @@ import { AntDesign } from '@expo/vector-icons';
 
 import { RFValue, RFPercentage } from "react-native-responsive-fontsize";
 import { WToast } from 'react-native-smart-tip'
-
+import MapView, { Marker, Circle, PROVIDER_GOOGLE } from 'react-native-maps';
 import Center from '../components/Center';
 import CustomButton from '../components/CustomButton';
 import EditPostingScreen from './EditPostingScreen';
@@ -37,10 +37,50 @@ const PostingDetailScreen = props => {
   const { route, navigation } = props;
   const [postingImage, setPostingImage] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
-
+  const radius = 4000;
   const picUrl = route.params.item_pic;
   const isModeratorView = route.params.moderatorView;
   const isOwned = user.user.id === route.params.owner;
+
+  console.log(route.params.location);
+  if(route.params.location !== null) {
+    var point = route.params.location;
+    console.log(point)
+    point = point.slice(point.indexOf('(') + 1, point.indexOf(')'));
+    console.log(point);
+    var latitude = parseFloat(point.slice(0, point.indexOf(' ')));
+    var longitude = parseFloat(point.slice(point.indexOf(' ') + 1));
+    var latlng = {latitude, longitude};
+    var truePoint = {latitude, longitude};
+  }
+  else {
+    console.log("null point")
+  }
+  console.log(latlng);
+
+  /*
+    This dynamically calculates a safe value to shift the true location while still ensuring
+    that the radius will encompass the point
+  */
+ const rando = (radius, latlng) => {
+  radius = radius - 50; // give us some breathing room
+
+  // get degree shift based on radius
+  // this guarantees the shifted point will be within radius
+  let deg = Math.sqrt((radius * radius) / 2 ) / 111320; 
+  console.log("Degree shift: " + deg);
+  let lat = Math.random() * (deg - (-deg)) - deg;
+  let lng = Math.random() * (deg - (-deg)) - deg;
+
+  console.log(lat + ', ' + lng);
+
+  latlng.latitude = latlng.latitude + lat;
+  latlng.longitude = latlng.longitude + lng;
+}
+
+rando(radius, latlng);
+
+console.log(latlng);
 
 
   useLayoutEffect(() => {
@@ -252,7 +292,6 @@ const PostingDetailScreen = props => {
       <View style={styles.detailTitleContainer}>
         <Text style={styles.detailTitleText}>{route.params.title}</Text>
       </View>
-
       <View style={styles.imageContainer}>
         <Image
           style={styles.itemImage}
@@ -274,27 +313,53 @@ const PostingDetailScreen = props => {
       </View>
 
       <View style={styles.descriptionContainer}>
-        <ScrollView style={styles.descriptionScroll}>
           <Text style={styles.bodyText}>{route.params.description}</Text>
-        </ScrollView>
-      </View>
+          <View style={styles.map}>
+          <MapView 
+            provider={PROVIDER_GOOGLE}
+            style={{
+              height: 250,
+              width: 250,
+            }}
+            initialRegion={{
+              ...latlng,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421,
+            }}
+          >
+            <Circle
+              center={latlng}
+              radius={radius}
+              fillColor='rgba(50,10,10,0.2)'
+            />
+            <Marker
+              coordinate={truePoint}
+            />
+          </MapView>
+          </View>
+        </View>
+
       { renderBottomButton() }
     </>
   )
 
   return(
-    windowHeight < 650
-      ? <ScrollView contentContainerStyle={styles.scrollScreen}>
-     {screenContent}
-   </ScrollView>
-    : <Center style={styles.screen}>
-   {screenContent}
- </Center>
+      <ScrollView contentContainerStyle={styles.scrollScreen}>
+        {screenContent}
+      </ScrollView>
   );
 };
 
 
 const styles = StyleSheet.create({
+  map: {
+    alignSelf: 'center',
+    backgroundColor: Colors.light_shade4,
+    padding: 5,
+    borderColor: 'black',
+    borderWidth: 1,
+    marginTop: 10
+  },
   scrollScreen: {
     alignItems: 'center',
     paddingHorizontal: 10,
@@ -304,6 +369,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     paddingHorizontal: 10,
     backgroundColor: Colors.light_shade4,
+    alignItems: 'center'
   },
   detailTitleContainer: {
     width: '100%',
