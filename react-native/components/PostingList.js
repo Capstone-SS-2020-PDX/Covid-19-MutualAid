@@ -28,7 +28,9 @@ const PostingList = props => {
                     item_pic: itemData.item.item_pic,
                     request: itemData.item.request,
                     in_community: itemData.item.in_community,
+                    moderatorView: props.moderatorView,
                     location: itemData.item.location,
+
                   });
               }}
             />

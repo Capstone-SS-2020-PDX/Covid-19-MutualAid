@@ -25,7 +25,7 @@ const CommunityList = props => {
           id={itemData.item.id}
           isHome={isHomeCommunity}
           onSelectCommunity={() => {
-            console.log(itemData.item.id + ' selected');
+            console.log(itemData.item.name + ' selected');
           }}
         />
       </View>
