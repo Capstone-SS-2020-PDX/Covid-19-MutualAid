@@ -14,7 +14,7 @@ console:
 
 # Deploy the application
 deploy:
-	bash qa/deploy.sh
+	qa/deploy.sh
 
 # Install general dependencies needed for app
 install:
