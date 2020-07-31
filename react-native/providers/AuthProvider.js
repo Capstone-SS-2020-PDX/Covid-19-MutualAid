@@ -20,10 +20,6 @@ export const AuthContext = createContext({});
 
 export const AuthProvider = props => {
 
-    // useEffect(() => {
-       
-    // }, [loginState.updated]);
-
     const initialLoginState = {
         isLoading: true,
         token: null,
@@ -105,7 +101,7 @@ export const AuthProvider = props => {
     const fetchCommunities = async () => {
         await AsyncStorage.getItem('communities').then(communityData => {
             console.log('Fetching communties from AsyncStorage: ');
-            if (false) {
+            if (communityData) {
                 console.log("Found communities in AsyncStorage!");
                 communityData = JSON.parse(communityData);
                 dispatch({ type: UPDATE_COMMUNITIES, communities: communityData });
@@ -221,11 +217,11 @@ export const AuthProvider = props => {
                     });
     };
 
-    const handleCheckUsername = async username => {
+    const handleCheckUsername = username => {
         const usernameUrl = check_username_url + username;
         let isValid = false;
 
-        await fetch(usernameUrl, {
+        fetch(usernameUrl, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
