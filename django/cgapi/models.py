@@ -36,7 +36,7 @@ class Posting(models.Model):
     in_community = models.ForeignKey(Community, on_delete=models.CASCADE, blank=True, null=True, related_name='posts')
     item_pic = models.ImageField(upload_to='pimg/', default='')
     request = models.BooleanField(default=True)
-    flagged = models.BooleanField(default=False)
+    flagged = models.IntegerField(default=0)
     location = geomodels.PointField(blank=True, null=True)
     
     # Meta data about DB table
