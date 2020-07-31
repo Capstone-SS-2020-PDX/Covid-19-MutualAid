@@ -214,8 +214,6 @@ console.log(latlng);
       <View style={styles.detailTitleContainer}>
         <Text style={styles.detailTitleText}>{route.params.title}</Text>
       </View>
-      <ScrollView contentContainerStyle={styles.screen}>
-
       <View style={styles.imageContainer}>
         <Image
           style={styles.itemImage}
@@ -238,7 +236,7 @@ console.log(latlng);
 
       <View style={styles.descriptionContainer}>
           <Text style={styles.bodyText}>{route.params.description}</Text>
-          <View>
+          <View style={styles.map}>
           <MapView 
             provider={PROVIDER_GOOGLE}
             style={{
@@ -263,24 +261,27 @@ console.log(latlng);
           </View>
         </View>
 
-        </ScrollView>
       { renderBottomButton() }
     </>
   )
 
   return(
-    windowHeight < 650
-      ? <ScrollView contentContainerStyle={styles.scrollScreen}>
+      <ScrollView contentContainerStyle={styles.scrollScreen}>
         {screenContent}
       </ScrollView>
-    : <Center style={styles.screen}>
-                       {screenContent}
-                     </Center>
   );
 };
 
 
 const styles = StyleSheet.create({
+  map: {
+    alignSelf: 'center',
+    backgroundColor: Colors.light_shade4,
+    padding: 5,
+    borderColor: 'black',
+    borderWidth: 1,
+    marginTop: 10
+  },
   scrollScreen: {
     alignItems: 'center',
     paddingHorizontal: 10,
@@ -290,6 +291,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     paddingHorizontal: 10,
     backgroundColor: Colors.light_shade4,
+    alignItems: 'center'
   },
   detailTitleContainer: {
     width: '100%',
