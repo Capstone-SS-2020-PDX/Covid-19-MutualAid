@@ -1,3 +1,5 @@
+from django.contrib.gis.geos import Point
+from django.contrib.gis.measure import Distance
 from django_filters import rest_framework as filters
 
 class PostingFilterFilter(filters.FilterSet):
