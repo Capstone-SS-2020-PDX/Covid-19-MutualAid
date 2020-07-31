@@ -14,6 +14,7 @@ const PostingList = props => {
               request={itemData.item.request}
               item_pic={itemData.item.item_pic}
               in_community={itemData.item.in_community}
+              location={itemData.item.location}
               onSelectPosting={() => {
                   navigation.navigate('PostingDetail', {
                     title: itemData.item.title,
@@ -27,6 +28,7 @@ const PostingList = props => {
                     item_pic: itemData.item.item_pic,
                     request: itemData.item.request,
                     in_community: itemData.item.in_community,
+                    location: itemData.item.location,
                   });
               }}
             />
