@@ -12,13 +12,18 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from django.contrib.auth import get_user
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
+from django_filters import rest_framework as filters
 from .models import Posting, Community, UserProfile
+from .filters import PostingFilter
 from .serializers import PostingSerializer, CommunitySerializer, UserProfileSerializer, UserSerializer
 import datetime
         
+
 class PostingViewSet(ModelViewSet):
     queryset = Posting.objects.all()
     serializer_class = PostingSerializer
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = PostingFilter
     
     @action(detail=False)
     def foo(self, request):
