@@ -12,10 +12,13 @@ class PostingFilter(filters.FilterSet):
         fields = ['radius',]
 
     def radius_filter(self, queryset, name, value):
+        """Filter postings in a radius about a given longitude/latitude"""
         lng = self.request.GET.get('longitude')
         lat = self.request.GET.get('latitude')
         rad = self.request.GET.get('radius')
-        radius = int(rad)
-        point = Point(float(lng), float(lat))
-        return queryset.filter(location__distance_lt=(point, Distance(mi=radius)))
+        if None not in (lng, lat, rad):
+            radius = int(rad)
+            point = Point(float(lng), float(lat))
+            return queryset.filter(location__distance_lt=(point, Distance(mi=radius)))
+        return queryset.none()
 
