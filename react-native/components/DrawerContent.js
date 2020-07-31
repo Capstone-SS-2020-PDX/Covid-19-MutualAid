@@ -120,6 +120,20 @@ const DrawerContent = props => {
               label="Communities"
               onPress={() => {navigation.navigate('Communities')}}
             />
+            { user.profile.is_admin ?
+              <DrawerItem
+                icon={params => (
+                  <MaterialCommunityIcons
+                    name='sword'
+                    color={params.color}
+                    size={params.size}
+                  />
+                )}
+                label="Moderator"
+                onPress={() => {navigation.navigate('Moderator')}}
+              />
+              : null
+            }
             <DrawerItem
               icon={params => (
                 <MaterialCommunityIcons

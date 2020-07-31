@@ -14,7 +14,7 @@ import { AntDesign } from '@expo/vector-icons';
 
 import { RFValue, RFPercentage } from "react-native-responsive-fontsize";
 import { WToast } from 'react-native-smart-tip'
-
+import MapView, { Marker, Circle, PROVIDER_GOOGLE } from 'react-native-maps';
 import Center from '../components/Center';
 import CustomButton from '../components/CustomButton';
 import EditPostingScreen from './EditPostingScreen';
@@ -27,7 +27,7 @@ import Colors from '../config/colors';
 import { windowHeight, windowWidth } from '../config/dimensions';
 import { showModal, hideModal } from '../components/CustomModal';
 import { notifyMessage } from '../components/CustomToast';
-import { email_url, profiles_url } from '../config/urls';
+import { email_url, profiles_url, postings_url } from '../config/urls';
 
 import { AuthContext } from '../providers/AuthProvider';
 
@@ -37,13 +37,55 @@ const PostingDetailScreen = props => {
   const { route, navigation } = props;
   const [postingImage, setPostingImage] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
-
+  const radius = 4000;
   const picUrl = route.params.item_pic;
+  const isModeratorView = route.params.moderatorView;
+  const isOwned = user.user.id === route.params.owner;
+
+  console.log(route.params.location);
+  if(route.params.location !== null) {
+    var point = route.params.location;
+    console.log(point)
+    point = point.slice(point.indexOf('(') + 1, point.indexOf(')'));
+    console.log(point);
+    var latitude = parseFloat(point.slice(0, point.indexOf(' ')));
+    var longitude = parseFloat(point.slice(point.indexOf(' ') + 1));
+    var latlng = {latitude, longitude};
+    var truePoint = {latitude, longitude};
+  }
+  else {
+    console.log("null point")
+  }
+  console.log(latlng);
+
+  /*
+    This dynamically calculates a safe value to shift the true location while still ensuring
+    that the radius will encompass the point
+  */
+ const rando = (radius, latlng) => {
+  radius = radius - 50; // give us some breathing room
+
+  // get degree shift based on radius
+  // this guarantees the shifted point will be within radius
+  let deg = Math.sqrt((radius * radius) / 2 ) / 111320; 
+  console.log("Degree shift: " + deg);
+  let lat = Math.random() * (deg - (-deg)) - deg;
+  let lng = Math.random() * (deg - (-deg)) - deg;
+
+  console.log(lat + ', ' + lng);
+
+  latlng.latitude = latlng.latitude + lat;
+  latlng.longitude = latlng.longitude + lng;
+}
+
+rando(radius, latlng);
+
+console.log(latlng);
+
 
   useLayoutEffect(() => {
-    const isOwned = user.user.id === route.params.owner;
 
-    if (!isOwned) {
+    if (!isOwned && !isModeratorView) {
 
       const isFavorited = user.profile.saved_postings.includes(route.params.id);
       const heartIcon = isFavorited ? 'heart' : 'hearto';
@@ -139,6 +181,59 @@ const PostingDetailScreen = props => {
       });
   }
 
+  const handleDeletePosting = () => {
+    showModal('DELETE_POSTING');
+    const url = postings_url + route.params.id + '/';
+
+    fetch(url, {
+      method: 'DELETE',
+    }).then(response => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw Error(response.text());
+      }
+    }).then(json => {
+      hideModal();
+      notifyMessage('Posting Deleted Successfully!');
+      navigation.goBack();
+    }).catch(error => {
+      hideModal();
+      notifyMessage('Whoops! Something went wrong!!');
+    }).finally(() => {
+    });
+  };
+
+  const handleUnflagPosting = () => {
+    showModal('UPDATING_POSTING');
+    const url = postings_url + route.params.id + '/';
+    const payload = JSON.stringify({ flagged: 0 });
+
+    fetch(url, {
+      method: 'PATCH',
+      headers: {
+        'Accept': 'application/json',
+        'Content-type': 'application/json',
+      },
+      body: payload,
+    }).then(response => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw Error(response.text());
+      }
+    }).then(json => {
+      hideModal();
+      notifyMessage('Posting un-flagged Successfully!');
+      navigation.goBack();
+    }).catch(error => {
+      console.log(JSON.stringify(error));
+      hideModal();
+      notifyMessage('Whoops! Something went wrong!!');
+    }).finally(() => {
+    });
+  };
+
   const resetFormState = () => {
     setIsProcessing(false);
   };
@@ -149,10 +244,32 @@ const PostingDetailScreen = props => {
   };
 
   const renderBottomButton = () => {
-    if (route.params.owner === user.user.id) {
+    if (isModeratorView) {
+      return (
+        <View style={styles.moderatorButtonsContainer}>
+          <CustomButton
+            style={{...styles.reachOutButton, ...styles.unflagButton}}
+            onPress={() => {
+              handleUnflagPosting();
+            }}
+          >
+            <Text style={styles.reachOutButtonText}>Unflag Posting</Text>
+          </CustomButton>
+          <CustomButton
+            style={{...styles.reachOutButton, ...styles.deleteButton}}
+            onPress={() => {
+              handleDeletePosting();
+            }}
+          >
+            <Text style={styles.reachOutButtonText}>Delete Posting</Text>
+          </CustomButton>
+        </View>
+      );
+
+    } else if (route.params.owner === user.user.id) {
       return(
         <CustomButton
-          style={styles.reachOutButton}
+          style={{...styles.reachOutButton, ...styles.deleteButton}}
           onPress={() => {
             navigation.navigate('EditPosting', {
               ...route.params,
@@ -181,7 +298,6 @@ const PostingDetailScreen = props => {
       <View style={styles.detailTitleContainer}>
         <Text style={styles.detailTitleText}>{route.params.title}</Text>
       </View>
-
       <View style={styles.imageContainer}>
         <Image
           style={styles.itemImage}
@@ -203,27 +319,53 @@ const PostingDetailScreen = props => {
       </View>
 
       <View style={styles.descriptionContainer}>
-        <ScrollView style={styles.descriptionScroll}>
           <Text style={styles.bodyText}>{route.params.description}</Text>
-        </ScrollView>
-      </View>
+          <View style={styles.map}>
+          <MapView 
+            provider={PROVIDER_GOOGLE}
+            style={{
+              height: 250,
+              width: 250,
+            }}
+            initialRegion={{
+              ...latlng,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421,
+            }}
+          >
+            <Circle
+              center={latlng}
+              radius={radius}
+              fillColor='rgba(50,10,10,0.2)'
+            />
+            <Marker
+              coordinate={truePoint}
+            />
+          </MapView>
+          </View>
+        </View>
+
       { renderBottomButton() }
     </>
   )
 
   return(
-    windowHeight < 650
-      ? <ScrollView contentContainerStyle={styles.scrollScreen}>
+      <ScrollView contentContainerStyle={styles.scrollScreen}>
         {screenContent}
       </ScrollView>
-    : <Center style={styles.screen}>
-                       {screenContent}
-                     </Center>
   );
 };
 
 
 const styles = StyleSheet.create({
+  map: {
+    alignSelf: 'center',
+    backgroundColor: Colors.light_shade4,
+    padding: 5,
+    borderColor: 'black',
+    borderWidth: 1,
+    marginTop: 10
+  },
   scrollScreen: {
     alignItems: 'center',
     paddingHorizontal: 10,
@@ -233,6 +375,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     paddingHorizontal: 10,
     backgroundColor: Colors.light_shade4,
+    alignItems: 'center'
   },
   detailTitleContainer: {
     width: '100%',
@@ -292,6 +435,17 @@ const styles = StyleSheet.create({
     color: Colors.light_shade4,
     fontSize: 24,
   },
+  deleteButton: {
+    backgroundColor: Colors.contrast3,
+  },
+  unflagButton: {
+    backgroundColor: Colors.contrast2,
+  },
+  moderatorButtonsContainer: {
+    width: '100%',
+    alignItems: 'center',
+    paddingVertical: 10,
+  },
   inputContainer: {
     width: '80%',
   },
@@ -320,9 +474,6 @@ const styles = StyleSheet.create({
   inputText: {
     width: '90%',
     color: Colors.dark_shade1,
-  },
-  confirmButton: {
-    marginBottom: 20,
   },
   cancelText: {
     color: Colors.contrast2,

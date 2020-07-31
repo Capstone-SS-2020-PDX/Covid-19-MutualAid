@@ -6,6 +6,7 @@ import AboutStack from './AboutStack';
 import UserPostingStack from './UserPostingStack';
 import SavedPostingStack from './SavedPostingStack';
 import CommunityStack from './CommunityStack';
+import ModeratorStack from './ModeratorStack';
 import DrawerContent from '../components/DrawerContent';
 
 const Drawer = createDrawerNavigator();
@@ -35,6 +36,10 @@ const DrawerNav = props => {
       <Drawer.Screen
         name='Communities'
         component={CommunityStack}
+      />
+      <Drawer.Screen
+        name='Moderator'
+        component={ModeratorStack}
       />
     </Drawer.Navigator>
   );

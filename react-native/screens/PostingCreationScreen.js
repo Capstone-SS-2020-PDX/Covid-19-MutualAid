@@ -96,6 +96,8 @@ const PostingCreationScreen = props => {
     data.append('in_community', selectedCommunity.id);
     data.append('location', location);
 
+    console.log(data);
+
     return data;
   };
 
@@ -123,6 +125,7 @@ const PostingCreationScreen = props => {
         navigateToHomeStack();
       })
       .catch(error => {
+        console.log(error);
         notifyMessage('Oops! Something went wrong...');
       })
       .finally(() => {
