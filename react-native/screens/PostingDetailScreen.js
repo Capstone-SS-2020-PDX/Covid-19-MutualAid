@@ -42,19 +42,18 @@ const PostingDetailScreen = props => {
   const isModeratorView = route.params.moderatorView;
   const isOwned = user.user.id === route.params.owner;
 
-  console.log(route.params.location);
   if(route.params.location !== null) {
     var point = route.params.location;
     console.log(point)
     point = point.slice(point.indexOf('(') + 1, point.indexOf(')'));
     console.log(point);
-    var latitude = parseFloat(point.slice(0, point.indexOf(' ')));
-    var longitude = parseFloat(point.slice(point.indexOf(' ') + 1));
+    var longitude = parseFloat(point.slice(0, point.indexOf(' ')));
+    var latitude = parseFloat(point.slice(point.indexOf(' ') + 1));
     var latlng = {latitude, longitude};
     var truePoint = {latitude, longitude};
   }
   else {
-    console.log("null point")
+    console.log("null point");
   }
   console.log(latlng);
 
