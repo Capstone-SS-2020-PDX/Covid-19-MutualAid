@@ -27,7 +27,7 @@ import Colors from '../config/colors';
 import { windowHeight, windowWidth } from '../config/dimensions';
 import { showModal, hideModal } from '../components/CustomModal';
 import { notifyMessage } from '../components/CustomToast';
-import { email_url, profiles_url } from '../config/urls';
+import { email_url, profiles_url, postings_url } from '../config/urls';
 
 import { AuthContext } from '../providers/AuthProvider';
 
@@ -39,11 +39,13 @@ const PostingDetailScreen = props => {
   const [isProcessing, setIsProcessing] = useState(false);
 
   const picUrl = route.params.item_pic;
+  const isModeratorView = route.params.moderatorView;
+  const isOwned = user.user.id === route.params.owner;
+
 
   useLayoutEffect(() => {
-    const isOwned = user.user.id === route.params.owner;
 
-    if (!isOwned) {
+    if (!isOwned && !isModeratorView) {
 
       const isFavorited = user.profile.saved_postings.includes(route.params.id);
       const heartIcon = isFavorited ? 'heart' : 'hearto';
@@ -133,6 +135,59 @@ const PostingDetailScreen = props => {
       });
   }
 
+  const handleDeletePosting = () => {
+    showModal('DELETE_POSTING');
+    const url = postings_url + route.params.id + '/';
+
+    fetch(url, {
+      method: 'DELETE',
+    }).then(response => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw Error(response.text());
+      }
+    }).then(json => {
+      hideModal();
+      notifyMessage('Posting Deleted Successfully!');
+      navigation.goBack();
+    }).catch(error => {
+      hideModal();
+      notifyMessage('Whoops! Something went wrong!!');
+    }).finally(() => {
+    });
+  };
+
+  const handleUnflagPosting = () => {
+    showModal('UPDATING_POSTING');
+    const url = postings_url + route.params.id + '/';
+    const payload = { flagged: 0 };
+
+    fetch(url, {
+      method: 'PATCH',
+      headers: {
+        'Accept': 'application/json',
+        'Content-type': 'application/json',
+      },
+      body: payload,
+    }).then(response => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw Error(response.text());
+      }
+    }).then(json => {
+      hideModal();
+      notifyMessage('Posting un-flagged Successfully!');
+      navigation.goBack();
+    }).catch(error => {
+      console.log(JSON.stringify(error));
+      hideModal();
+      notifyMessage('Whoops! Something went wrong!!');
+    }).finally(() => {
+    });
+  };
+
   const resetFormState = () => {
     setIsProcessing(false);
   };
@@ -143,10 +198,32 @@ const PostingDetailScreen = props => {
   };
 
   const renderBottomButton = () => {
-    if (route.params.owner === user.user.id) {
+    if (isModeratorView) {
+      return (
+        <>
+          <CustomButton
+            style={{...styles.reachOutButton, ...styles.unflagButton}}
+            onPress={() => {
+              handleUnflagPosting();
+            }}
+          >
+            <Text style={styles.reachOutButtonText}>Unflag Posting</Text>
+          </CustomButton>
+          <CustomButton
+            style={{...styles.reachOutButton, ...styles.deleteButton}}
+            onPress={() => {
+              handleDeletePosting();
+            }}
+          >
+            <Text style={styles.reachOutButtonText}>Delete Posting</Text>
+          </CustomButton>
+        </>
+      );
+
+    } else if (route.params.owner === user.user.id) {
       return(
         <CustomButton
-          style={styles.reachOutButton}
+          style={{...styles.reachOutButton, ...styles.deleteButton}}
           onPress={() => {
             navigation.navigate('EditPosting', {
               ...route.params,
@@ -208,11 +285,11 @@ const PostingDetailScreen = props => {
   return(
     windowHeight < 650
       ? <ScrollView contentContainerStyle={styles.scrollScreen}>
-        {screenContent}
-      </ScrollView>
+     {screenContent}
+   </ScrollView>
     : <Center style={styles.screen}>
-                       {screenContent}
-                     </Center>
+   {screenContent}
+ </Center>
   );
 };
 
@@ -286,6 +363,12 @@ const styles = StyleSheet.create({
     color: Colors.light_shade4,
     fontSize: 24,
   },
+  deleteButton: {
+    backgroundColor: Colors.contrast3,
+  },
+  unflagButton: {
+    backgroundColor: Colors.contrast2,
+  },
   inputContainer: {
     width: '80%',
   },
@@ -314,9 +397,6 @@ const styles = StyleSheet.create({
   inputText: {
     width: '90%',
     color: Colors.dark_shade1,
-  },
-  confirmButton: {
-    marginBottom: 20,
   },
   cancelText: {
     color: Colors.contrast2,

@@ -83,6 +83,7 @@ const FlaggedPostingsScreen = props => {
               navigation={navigation}
               isLoading={isLoading}
               onRefresh={fetchPostings}
+              moderatorView={true}
             />
 
     return(
