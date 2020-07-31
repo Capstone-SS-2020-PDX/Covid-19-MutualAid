@@ -5,7 +5,8 @@ import { Text,
          TouchableOpacity,
          Image,
        } from 'react-native';
-import { Entypo } from '@expo/vector-icons'; 
+import { Entypo } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 
 import Colors from '../config/colors';
 import { AuthContext } from '../providers/AuthProvider';
@@ -46,9 +47,17 @@ const PostingListItem = props => {
               />
             </View>
             <View style={styles.itemTextContainer}>
-              <Text style={styles.itemTitleText}>
-                {props.title}
-              </Text>
+              <View style={styles.itemTitleRow}>
+                <View style={styles.itemTitleContainer}>
+                  <Text style={styles.itemTitleText}>
+                    {props.title}
+                  </Text>
+                </View>
+                <Ionicons 
+                    name="ios-flag" 
+                    size={24} 
+                    color="black" />
+              </View>
               <View style={styles.postingTypeContainer}>
                 <Image
                   style={styles.postingTypeIconImage}
@@ -60,7 +69,11 @@ const PostingListItem = props => {
                 </Text>
               </View>
               <View style={styles.postingTypeContainer}>
-                <Entypo name="location-pin" size={20} color="black" style={{marginTop: 5}} />
+                <Entypo 
+                    name="location-pin" 
+                    size={20} 
+                    color="black" 
+                    style={{marginTop: 5}} />
                 <Text style={styles.itemDetailText}>
                   {communityName}
                 </Text>
@@ -100,6 +113,13 @@ const styles = StyleSheet.create({
         width: 90,
         borderWidth: 1,
         borderColor: Colors.dark_shade1,
+    },
+    itemTitleRow: {
+        flexDirection: 'row',
+    },
+    itemTitleContainer: {
+        width: '85%',
+        marginRight: '5%',
     },
     itemTitleText: {
         fontSize: 20,
