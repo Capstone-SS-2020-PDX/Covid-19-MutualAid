@@ -18,6 +18,8 @@ import datetime
         
 class PostingViewSet(ModelViewSet):
     queryset = Posting.objects.all()
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
     serializer_class = PostingSerializer
     
     @action(detail=False)
@@ -29,12 +31,10 @@ class PostingViewSet(ModelViewSet):
     
     @action(detail=False)
     @api_view(['GET'])
-    @authentication_classes([TokenAuthentication])
-    @permission_classes([IsAuthenticated])
     def auth(request):
-            posting = Posting.objects.all()
-            serializer = PostingSerializer(posting, many=True)
-            return Response(serializer.data)
+        posting = Posting.objects.all()
+        serializer = PostingSerializer(posting, many=True)
+        return Response(serializer.data)
             
     @action(detail=False, methods=['POST'])
     def contact(self, request):
@@ -62,6 +62,8 @@ class CommunityViewSet(ModelViewSet):
     API endpoint allowing Community objects to be created, viewed, edited, deleted
     """
     queryset = Community.objects.all()
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
     serializer_class = CommunitySerializer
     
     @action(detail=True)
@@ -72,10 +74,14 @@ class CommunityViewSet(ModelViewSet):
 
 class UserProfileViewSet(ModelViewSet):
     queryset = UserProfile.objects.all()
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
     serializer_class = UserProfileSerializer
         
 class UserViewSet(ModelViewSet):
     queryset = User.objects.all()
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
     serializer_class = UserSerializer
     
     @action(detail=True)
