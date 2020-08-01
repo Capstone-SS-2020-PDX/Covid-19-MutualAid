@@ -9,6 +9,7 @@ import { View,
          StyleSheet,
          TextInput,
          ActivityIndicator,
+         Platform,
        } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 
@@ -281,10 +282,13 @@ const PostingDetailScreen = props => {
       <View style={styles.descriptionContainer}>
         <Text style={styles.bodyText}>{route.params.description}</Text>
       </View>
-      <Map
-        radius={3000}
-        location={route.params.location}
-      />
+      { Platform.OS === 'android' ?
+        <Map
+          radius={3000}
+          location={route.params.location}
+        />
+        : null
+      }
 
       { renderBottomButton() }
     </>
