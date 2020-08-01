@@ -274,26 +274,26 @@ const PostingDetailScreen = props => {
       <View style={styles.detailContainer}>
         <Text style={styles.detailText}>
           Created on: <Text style={styles.boldText}>{route.params.created_on}{'  '}</Text>
-          Available: <Text style={styles.boldText}>{route.params.count}</Text>
+          Amount: <Text style={styles.boldText}>{route.params.count}</Text>
         </Text>
       </View>
 
       <View style={styles.descriptionContainer}>
-          <Text style={styles.bodyText}>{route.params.description}</Text>
-        <Map
-          radius={3000}
-          location={route.params.location}
-        />
-        </View>
+        <Text style={styles.bodyText}>{route.params.description}</Text>
+      </View>
+      <Map
+        radius={3000}
+        location={route.params.location}
+      />
 
       { renderBottomButton() }
     </>
   )
 
   return(
-      <ScrollView contentContainerStyle={styles.scrollScreen}>
-        {screenContent}
-      </ScrollView>
+    <ScrollView contentContainerStyle={styles.scrollScreen}>
+      {screenContent}
+    </ScrollView>
   );
 };
 
@@ -342,6 +342,7 @@ const styles = StyleSheet.create({
   },
   descriptionContainer: {
     width: '100%',
+    marginVertical: 10,
   },
   descriptionScroll: {
     padding: 5,

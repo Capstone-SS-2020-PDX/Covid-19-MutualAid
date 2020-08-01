@@ -55,8 +55,8 @@ const Map = props => {
       <MapView
         provider={PROVIDER_GOOGLE}
         style={{
-          height: 250,
-          width: 250,
+          height: 150,
+          width: '100%',
         }}
         initialRegion={{
           ...modifiedPoint,
@@ -79,12 +79,10 @@ const Map = props => {
 
 const styles = StyleSheet.create({
   mapContainer: {
+    width: '100%',
     alignSelf: 'center',
     backgroundColor: Colors.light_shade4,
-    padding: 5,
-    borderColor: 'black',
-    borderWidth: 1,
-    marginTop: 10
+    marginTop: 10,
   },
 
 });
