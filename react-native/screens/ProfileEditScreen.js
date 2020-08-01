@@ -144,19 +144,26 @@ const ProfileEditScreen = props => {
       body: createFormData(values),
     })
 
-      .then(response => response.json())
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw Error(response.text());
+        }
+      })
       .then(json => {
         // console.log(json);
         updateProfile(json);
+        notifyMessage('Profile Sucessfully Updated!');
       })
       .catch(error => {
         console.log(error.message);
+        notifyMessage('Profile Sucessfully Updated!');
       })
       .finally(() => {
         setIsProcessing(false);
         hideModal();
         navigation.goBack();
-        notifyMessage('Profile Sucessfully Updated!');
       });
   };
 
@@ -248,10 +255,10 @@ const ProfileEditScreen = props => {
         attemptProfileUpdate(values);
       }}
       validationSchema={Yup.object().shape({
-        first_name: Yup.string().min(4, 'must be at least 4 letters').required('first name is required'),
-        last_name: Yup.string().min(4, 'must be at least 4 letters').required('last name is required'),
+        first_name: Yup.string().min(2, 'must be at least 2 letters').required('first name is required'),
+        last_name: Yup.string().min(2, 'must be at least 2 letters').required('last name is required'),
         email: Yup.string().email('invalid email').required('email address is required'),
-        profile_text: Yup.string().min(2, 'must be at least 1 letter').required('profile text is required'),
+        profile_text: Yup.string().min(4, 'must be at least 4 letters').required('profile text is required'),
       })}
     >
 

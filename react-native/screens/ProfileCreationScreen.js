@@ -201,8 +201,8 @@ const ProfileCreationScreen = props => {
         attemptProfileCreation(values);
       }}
       validationSchema={Yup.object().shape({
-        first_name: Yup.string().required('first name is required') ,
-        last_name: Yup.string().required('last name is required'),
+        first_name: Yup.string().min(2, 'must be at least 2 letters').required('first name is required') ,
+        last_name: Yup.string().min(2, 'must be at least 2 letters').required('last name is required'),
         profile_text: Yup.string().notRequired(),
       })}
     >
