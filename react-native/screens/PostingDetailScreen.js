@@ -14,7 +14,6 @@ import { AntDesign } from '@expo/vector-icons';
 
 import { RFValue, RFPercentage } from "react-native-responsive-fontsize";
 import { WToast } from 'react-native-smart-tip'
-import MapView, { Marker, Circle, PROVIDER_GOOGLE } from 'react-native-maps';
 
 import Center from '../components/Center';
 import CustomButton from '../components/CustomButton';
@@ -41,43 +40,6 @@ const PostingDetailScreen = props => {
   const picUrl = route.params.item_pic;
   const isModeratorView = route.params.moderatorView;
   const isOwned = user.user.id === route.params.owner;
-
-  if(route.params.location !== null) {
-    var point = route.params.location;
-    console.log(point)
-    point = point.slice(point.indexOf('(') + 1, point.indexOf(')'));
-    console.log(point);
-    var longitude = parseFloat(point.slice(0, point.indexOf(' ')));
-    var latitude = parseFloat(point.slice(point.indexOf(' ') + 1));
-    var latlng = {latitude, longitude};
-    var truePoint = {latitude, longitude};
-  }
-  else {
-    console.log("null point");
-  }
-  console.log(latlng);
-
-  /*
-    This dynamically calculates a safe value to shift the true location while still ensuring
-    that the radius will encompass the point
-  */
- const rando = (radius, latlng) => {
-  radius = radius - 50; // give us some breathing room
-
-  // get degree shift based on radius
-  // this guarantees the shifted point will be within radius
-  let deg = Math.sqrt((radius * radius) / 2 ) / 111320; 
-  console.log("Degree shift: " + deg);
-  let lat = Math.random() * (deg - (-deg)) - deg;
-  let lng = Math.random() * (deg - (-deg)) - deg;
-
-  console.log(lat + ', ' + lng);
-
-  latlng.latitude = latlng.latitude + lat;
-  latlng.longitude = latlng.longitude + lng;
-}
-
-rando(radius, latlng);
 
 
   useLayoutEffect(() => {
@@ -156,22 +118,26 @@ rando(radius, latlng);
       body: requestJSON,
     })
       .then(response => {
-        console.log(response.status);
-        return response.text();
+        if (response.ok) {
+          return response.text();
+        } else {
+          throw Error(response.text());
+        }
       })
       .then(text => {
-        console.log('Response from sendEmail: ' + text);
+        // console.log('Response from sendEmail: ' + text);
+        hideModal();
+        notifyMessage('Email sent successfully!');
+        navigateToHomeStack();
       })
       .catch(error => {
-        console.log('Error from sendEmail: ' + error)
+        // console.log('Error from sendEmail: ' + error)
+        hideModal();
         notifyMessage('Oops! something went wrong...');
       })
       .finally(() => {
         resetFormState();
         setIsProcessing(false)
-        hideModal();
-        notifyMessage('Email sent successfully!');
-        navigateToHomeStack();
       });
   }
 
@@ -314,33 +280,10 @@ rando(radius, latlng);
 
       <View style={styles.descriptionContainer}>
           <Text style={styles.bodyText}>{route.params.description}</Text>
-          <View style={styles.map}>
-          <MapView
-            provider={PROVIDER_GOOGLE}
-            style={{
-              height: 250,
-              width: 250,
-              }}
-            initialRegion={{
-              ...latlng,
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
-            }}
-          >
-            <Circle
-              center={latlng}
-              radius={radius}
-              fillColor='rgba(50,10,10,0.2)'
-            />
-            <Marker
-              coordinate={truePoint}
-            />
-          </MapView>
-          </View>
-        {/* <Map */}
-        {/*   radius={3000} */}
-        {/*   point={route.params.location} */}
-        {/* /> */}
+        <Map
+          radius={3000}
+          location={route.params.location}
+        />
         </View>
 
       { renderBottomButton() }
@@ -356,14 +299,6 @@ rando(radius, latlng);
 
 
 const styles = StyleSheet.create({
-  map: {
-    alignSelf: 'center',
-    backgroundColor: Colors.light_shade4,
-    padding: 5,
-    borderColor: 'black',
-    borderWidth: 1,
-    marginTop: 10
-  },
   scrollScreen: {
     alignItems: 'center',
     paddingHorizontal: 10,

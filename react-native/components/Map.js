@@ -4,19 +4,51 @@ import MapView, { Marker, Circle, PROVIDER_GOOGLE } from 'react-native-maps';
 import Colors from '../config/colors';
 
 const Map = props => {
-  const { radius, point } = props;
+  const { radius, location } = props;
 
-  const parseCoordinates = () => {
-    let longitude = parseFloat(point.slice(0, point.indexOf(' ')));
-    let latitude = parseFloat(point.slice(point.indexOf(' ') + 1));
-    let coordinates = {latitude, longitude};
-    // let truePoint = {latitude, longitude};
+  if (location) {
+    var point = location;
+    point = point.slice(point.indexOf('(') + 1, point.indexOf(')'));
+    var longitude = parseFloat(point.slice(0, point.indexOf(' ')));
+    var latitude = parseFloat(point.slice(point.indexOf(' ') + 1));
+    var modifiedPoint = {latitude, longitude};
+    var truePoint = {latitude, longitude};
+  }
+  else {
+    console.log("null point");
+  }
 
-    return coordinates;
-  };
+  // const parseLocation = point => {
 
+  //   let longitude = parseFloat(point.slice(0, point.indexOf(' ')));
+  //   let latitude = parseFloat(point.slice(point.indexOf(' ') + 1));
+  //   let parsedPoint = {latitude, longitude};
 
-  const coordinates = parseCoordinates();
+  //   return parsedPoint;
+  // };
+
+  // let modifiedPoint = parseLocation(location);
+  // let truePoint = modifiedPoint;
+
+   // This dynamically calculates a safe value to shift the true location while still ensuring
+   // that the radius will encompass the point
+  const generateRandomCircleCenter = (radius, modifiedPoint) => {
+    radius = radius - 50; // give us some breathing room
+
+    // get degree shift based on radius
+    // this guarantees the shifted point will be within radius
+    let deg = Math.sqrt((radius * radius) / 2 ) / 111320;
+    // console.log("Degree shift: " + deg);
+    let lat = Math.random() * (deg - (-deg)) - deg;
+    let lng = Math.random() * (deg - (-deg)) - deg;
+
+    // console.log(lat + ', ' + lng);
+
+    modifiedPoint.latitude = modifiedPoint.latitude + lat;
+    modifiedPoint.longitude = modifiedPoint.longitude + lng;
+  }
+
+  generateRandomCircleCenter(radius, modifiedPoint);
 
   return(
     <View style={{ ...styles.mapContainer, ...props.style }}>
@@ -27,18 +59,18 @@ const Map = props => {
           width: 250,
         }}
         initialRegion={{
-          ...coordinates,
+          ...modifiedPoint,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
       >
-        {/* <Circle */}
-        {/*   center={circleCenter} */}
-        {/*   radius={radius} */}
-        {/*   fillColor='rgba(50,10,10,0.2)' */}
-        {/* /> */}
+        <Circle
+          center={modifiedPoint}
+          radius={radius}
+          fillColor='rgba(50,10,10,0.2)'
+        />
         <Marker
-          coordinate={coordinates}
+          coordinate={truePoint}
         />
       </MapView>
     </View>
