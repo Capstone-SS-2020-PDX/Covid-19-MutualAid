@@ -15,15 +15,12 @@ import { AntDesign } from '@expo/vector-icons';
 import { RFValue, RFPercentage } from "react-native-responsive-fontsize";
 import { WToast } from 'react-native-smart-tip'
 import MapView, { Marker, Circle, PROVIDER_GOOGLE } from 'react-native-maps';
+
 import Center from '../components/Center';
 import CustomButton from '../components/CustomButton';
 import EditPostingScreen from './EditPostingScreen';
-
-const offeredItemIconImage = '../assets/offered_item.png';
-const requestedItemIconImage = '../assets/requested_item.png';
-const itemPlaceHolder = '../assets/image_place_holder.jpg';
-
 import Colors from '../config/colors';
+import Map from '../components/Map';
 import { windowHeight, windowWidth } from '../config/dimensions';
 import { showModal, hideModal } from '../components/CustomModal';
 import { notifyMessage } from '../components/CustomToast';
@@ -31,6 +28,9 @@ import { email_url, profiles_url, postings_url } from '../config/urls';
 
 import { AuthContext } from '../providers/AuthProvider';
 
+const offeredItemIconImage = '../assets/offered_item.png';
+const requestedItemIconImage = '../assets/requested_item.png';
+const itemPlaceHolder = '../assets/image_place_holder.jpg';
 
 const PostingDetailScreen = props => {
   const { user, updateProfile } = useContext(AuthContext);
@@ -315,12 +315,12 @@ rando(radius, latlng);
       <View style={styles.descriptionContainer}>
           <Text style={styles.bodyText}>{route.params.description}</Text>
           <View style={styles.map}>
-          <MapView 
+          <MapView
             provider={PROVIDER_GOOGLE}
             style={{
               height: 250,
               width: 250,
-            }}
+              }}
             initialRegion={{
               ...latlng,
               latitudeDelta: 0.0922,
@@ -337,6 +337,10 @@ rando(radius, latlng);
             />
           </MapView>
           </View>
+        {/* <Map */}
+        {/*   radius={3000} */}
+        {/*   point={route.params.location} */}
+        {/* /> */}
         </View>
 
       { renderBottomButton() }
