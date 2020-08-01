@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import action, api_view, authentication_classes, permission_classes, renderer_classes
 from rest_framework.renderers import JSONRenderer
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser, ReadOnly
 from rest_framework.views import APIView
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
@@ -65,7 +65,7 @@ class CommunityViewSet(ModelViewSet):
     """API endpoint for communities"""
     queryset = Community.objects.all()
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminUser|ReadOnly]
     serializer_class = CommunitySerializer
     
     @action(detail=True)
