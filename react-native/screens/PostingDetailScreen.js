@@ -11,7 +11,8 @@ import { View,
          ActivityIndicator,
        } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
-import { Entypo } from '@expo/vector-icons'; 
+import { Entypo } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import OptionsMenu from "react-native-options-menu";
 
 import { RFValue, RFPercentage } from "react-native-responsive-fontsize";
@@ -43,6 +44,7 @@ const PostingDetailScreen = props => {
   const picUrl = route.params.item_pic;
   const isModeratorView = route.params.moderatorView;
   const isOwned = user.user.id === route.params.owner;
+  const isFlagged = route.params.flagged;
 
   if(route.params.location !== null) {
     var point = route.params.location;
@@ -110,9 +112,9 @@ console.log(latlng);
                                     name="dots-three-vertical" 
                                     size={25} 
                                     color={Colors.light_shade4} />)}
-                  destructiveIndex={1}
+                  destructiveIndex={0}
                   options={["Flag", "Cancel"]}
-                  actions={[() => handleFlagPost()]}/>
+                  actions={[handleFlagPost, dismissMenu]}/>
             </View>
           </View>
         ),
@@ -171,6 +173,10 @@ console.log(latlng);
       console.log("Server response after flagging post: ");
       console.log(json);
     });
+  };
+
+  const dismissMenu = () => {
+    console.log('dismissing menu');
   };
 
   const handleReachOut = () => {
@@ -328,6 +334,15 @@ console.log(latlng);
     <>
       <View style={styles.detailTitleContainer}>
         <Text style={styles.detailTitleText}>{route.params.title}</Text>
+        <View style={styles.flagIconContainer}>
+        {isFlagged? (
+            <Ionicons 
+                name="ios-flag" 
+                size={30}
+                color={Colors.contrast3} />)
+            : (null)
+        }
+        </View>
       </View>
       <View style={styles.imageContainer}>
         <Image
@@ -418,10 +433,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   detailTitleText: {
-    marginLeft: windowWidth / 128,
+    width: '80%',
+    marginRight: windowWidth / 20,
+    marginLeft: windowWidth / 20,
     textAlign: 'center',
     fontFamily: 'open-sans-bold',
     fontSize: RFPercentage(4.2),
+    marginTop: 10,
+  },
+  flagIconContainer: {
     marginTop: 10,
   },
   detailText: {

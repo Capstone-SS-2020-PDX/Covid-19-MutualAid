@@ -54,7 +54,7 @@ const PostingListItem = props => {
                     {props.title}
                   </Text>
                 </View>
-                <View>
+                <View style={styles.flagIconContainer}>
                   {isFlagged? (
                   <Ionicons 
                       name="ios-flag" 
@@ -130,6 +130,8 @@ const styles = StyleSheet.create({
     itemTitleText: {
         fontSize: 20,
         fontFamily: 'open-sans',
+    },
+    flagIconContainer: {
     },
     itemDetailText: {
         fontSize: 14,
