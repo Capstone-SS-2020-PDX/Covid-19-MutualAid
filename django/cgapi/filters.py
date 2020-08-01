@@ -9,7 +9,7 @@ class PostingFilter(filters.FilterSet):
 
     class Meta:
         model = Posting
-        fields = ['radius',]
+        fields = ['radius', 'communities',]
 
     def radius_filter(self, queryset, name, value):
         """Filter postings in a radius about a given longitude/latitude"""
@@ -20,5 +20,13 @@ class PostingFilter(filters.FilterSet):
             radius = int(rad)
             point = Point(float(lng), float(lat))
             return queryset.filter(location__distance_lt=(point, Distance(mi=radius)))
+        return queryset.none()
+
+    def communities_filter(self, queryset, name, value):
+        """Filter postings by a list of community IDs"""
+        communities = self.request.GET.get('communities')
+        if communities is not None:
+            ids = communities.split(',')
+            return queryset.filter(in_community__in=ids)
         return queryset.none()
 
