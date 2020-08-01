@@ -1,3 +1,4 @@
+import datetime
 import logging
 import json
 from rest_framework.viewsets import ModelViewSet
@@ -14,9 +15,10 @@ from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
 from .models import Posting, Community, UserProfile
 from .serializers import PostingSerializer, CommunitySerializer, UserProfileSerializer, UserSerializer
-import datetime
         
+
 class PostingViewSet(ModelViewSet):
+    """API Endpoint for postings"""
     queryset = Posting.objects.all()
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
@@ -38,6 +40,7 @@ class PostingViewSet(ModelViewSet):
             
     @action(detail=False, methods=['POST'])
     def contact(self, request):
+        """Send an email to contact the owner of the posting"""
         if request.method == 'POST':
             post_id = request.data.get('postid', '')
             related_post = Posting.objects.get(pk=post_id)
@@ -57,10 +60,9 @@ class PostingViewSet(ModelViewSet):
             email.send()
         return Response(request.data)
 
+
 class CommunityViewSet(ModelViewSet):
-    """
-    API endpoint allowing Community objects to be created, viewed, edited, deleted
-    """
+    """API endpoint for communities"""
     queryset = Community.objects.all()
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
@@ -68,17 +70,22 @@ class CommunityViewSet(ModelViewSet):
     
     @action(detail=True)
     def postings(self, request, *args, **kwargs):
+        """Show all postings for a given community"""
         community = self.get_object()
         posting_serializer = PostingSerializer(community.posts, many=True)
         return Response(posting_serializer.data)
 
+
 class UserProfileViewSet(ModelViewSet):
+    """API endpoint for user profiles"""
     queryset = UserProfile.objects.all()
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     serializer_class = UserProfileSerializer
         
+
 class UserViewSet(ModelViewSet):
+    """API endpoint for users"""
     queryset = User.objects.all()
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
@@ -94,6 +101,7 @@ class UserViewSet(ModelViewSet):
 @api_view(('POST',))
 @renderer_classes((JSONRenderer,))
 def register_user(request):
+    """Register a new user"""
     post_data = json.loads(request.body)
     usrpw = post_data.get('password')
     serializer = UserSerializer(data=post_data)
@@ -112,8 +120,10 @@ def register_user(request):
         return Response(content)
     return Response(data=serializer.errors)   
     
+
 @api_view(('GET',))
 def username_available(request):
+    """Endpoint to check if a username is available"""
     argument = request.query_params.get('username', '')
     if User.objects.filter(username=argument).exists():
         return Response(status=409)
@@ -121,6 +131,8 @@ def username_available(request):
     
     
 class CustomAuthToken(ObtainAuthToken):
+    """Obtain an authentication token"""
+
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
