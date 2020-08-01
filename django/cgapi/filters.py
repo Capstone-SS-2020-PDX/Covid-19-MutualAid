@@ -26,7 +26,8 @@ class PostingFilter(filters.FilterSet):
         """Filter postings by a list of community IDs"""
         communities = self.request.GET.get('communities')
         if communities is not None:
-            ids = communities.split(',')
+            # Cast all strings to integers in list
+            ids = [int(i) for i in communities.split(',')]
             return queryset.filter(in_community__in=ids)
         return queryset.none()
 
