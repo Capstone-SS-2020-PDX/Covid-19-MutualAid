@@ -24,6 +24,7 @@ const PostingListItem = props => {
         : 'Offer';
 
     const picUrl = props.item_pic;
+    const isFlagged = props.flagged;
 
     let communityName;
     if (props.in_community) {
@@ -53,10 +54,15 @@ const PostingListItem = props => {
                     {props.title}
                   </Text>
                 </View>
-                <Ionicons 
-                    name="ios-flag" 
-                    size={24} 
-                    color="black" />
+                <View>
+                  {isFlagged? (
+                  <Ionicons 
+                      name="ios-flag" 
+                      size={24} 
+                      color={Colors.contrast3} />)
+                  : (null)
+                  }
+                </View>
               </View>
               <View style={styles.postingTypeContainer}>
                 <Image
