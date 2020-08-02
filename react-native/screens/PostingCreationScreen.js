@@ -112,7 +112,7 @@ const PostingCreationScreen = props => {
     })
       .then(response => {
         if (!response.ok) {
-          throw Error(JSON.stringify(response));
+          throw Error(response.text());
         } else {
           return response.json();
         }
