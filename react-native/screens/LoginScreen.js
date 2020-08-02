@@ -118,7 +118,7 @@ const LoginScreen = props => {
 
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate('Register');
+              navigation.navigate('UserAgreement');
             }}
           >
             <Text style={styles.registerText}>Register</Text>
