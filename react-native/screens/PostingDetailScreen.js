@@ -9,21 +9,21 @@ import { View,
          StyleSheet,
          TextInput,
          ActivityIndicator,
+         Platform,
        } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
+import OptionsMenu from "react-native-options-menu";
 
 import { RFValue, RFPercentage } from "react-native-responsive-fontsize";
 import { WToast } from 'react-native-smart-tip'
-import MapView, { Marker, Circle, PROVIDER_GOOGLE } from 'react-native-maps';
+
 import Center from '../components/Center';
 import CustomButton from '../components/CustomButton';
 import EditPostingScreen from './EditPostingScreen';
-
-const offeredItemIconImage = '../assets/offered_item.png';
-const requestedItemIconImage = '../assets/requested_item.png';
-const itemPlaceHolder = '../assets/image_place_holder.jpg';
-
 import Colors from '../config/colors';
+import Map from '../components/Map';
 import { windowHeight, windowWidth } from '../config/dimensions';
 import { showModal, hideModal } from '../components/CustomModal';
 import { notifyMessage } from '../components/CustomToast';
@@ -31,6 +31,9 @@ import { email_url, profiles_url, postings_url } from '../config/urls';
 
 import { AuthContext } from '../providers/AuthProvider';
 
+const offeredItemIconImage = '../assets/offered_item.png';
+const requestedItemIconImage = '../assets/requested_item.png';
+const itemPlaceHolder = '../assets/image_place_holder.jpg';
 
 const PostingDetailScreen = props => {
   const { user, updateProfile } = useContext(AuthContext);
@@ -41,45 +44,7 @@ const PostingDetailScreen = props => {
   const picUrl = route.params.item_pic;
   const isModeratorView = route.params.moderatorView;
   const isOwned = user.user.id === route.params.owner;
-
-  if(route.params.location !== null) {
-    var point = route.params.location;
-    console.log(point)
-    point = point.slice(point.indexOf('(') + 1, point.indexOf(')'));
-    console.log(point);
-    var longitude = parseFloat(point.slice(0, point.indexOf(' ')));
-    var latitude = parseFloat(point.slice(point.indexOf(' ') + 1));
-    var latlng = {latitude, longitude};
-    var truePoint = {latitude, longitude};
-  }
-  else {
-    console.log("null point");
-  }
-  console.log(latlng);
-
-  /*
-    This dynamically calculates a safe value to shift the true location while still ensuring
-    that the radius will encompass the point
-  */
- const rando = (radius, latlng) => {
-  radius = radius - 50; // give us some breathing room
-
-  // get degree shift based on radius
-  // this guarantees the shifted point will be within radius
-  let deg = Math.sqrt((radius * radius) / 2 ) / 111320; 
-  console.log("Degree shift: " + deg);
-  let lat = Math.random() * (deg - (-deg)) - deg;
-  let lng = Math.random() * (deg - (-deg)) - deg;
-
-  console.log(lat + ', ' + lng);
-
-  latlng.latitude = latlng.latitude + lat;
-  latlng.longitude = latlng.longitude + lng;
-}
-
-rando(radius, latlng);
-
-console.log(latlng);
+  const isFlagged = route.params.flagged;
 
 
   useLayoutEffect(() => {
@@ -91,16 +56,28 @@ console.log(latlng);
 
       navigation.setOptions({
         headerRight: () => (
-          <TouchableOpacity
-            style={styles.favIcon}
-            onPress={() => handleToggleFavorite(!isFavorited)}
-          >
-            <AntDesign
-              name={heartIcon}
-              size={25}
-              color={Colors.light_shade4}
-            />
-          </TouchableOpacity>
+          <View style={styles.headerOptions}>
+            <TouchableOpacity
+              style={styles.favIcon}
+              onPress={() => handleToggleFavorite(!isFavorited)}
+            >
+              <AntDesign
+                name={heartIcon}
+                size={25}
+                color={Colors.light_shade4}
+              />
+            </TouchableOpacity>
+            <View style={styles.favIcon}>
+              <OptionsMenu
+                  customButton={(<Entypo 
+                                    name="dots-three-vertical" 
+                                    size={25} 
+                                    color={Colors.light_shade4} />)}
+                  destructiveIndex={0}
+                  options={["Flag", "Cancel"]}
+                  actions={[handleFlagPost, dismissMenu]}/>
+            </View>
+          </View>
         ),
       });
     }
@@ -135,6 +112,34 @@ console.log(latlng);
 
   };
 
+  const handleFlagPost = () => {
+    const url = postings_url + route.params.id + '/';
+
+    let flag = route.params.flagged;
+    flag = flag + 1;
+
+    const payload = { 'flagged': flag };
+
+    fetch(url, {
+      method: 'PATCH',
+      headers: {
+        'Accept': 'application/json',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    }).then(response => {
+      console.log("Server Response: " + response.status);
+      return response.json();
+    }).then(json => {
+      console.log("Server response after flagging post: ");
+      console.log(json);
+    });
+  };
+
+  const dismissMenu = () => {
+    console.log('dismissing menu');
+  };
+
   const handleReachOut = () => {
     if (!isProcessing) {
       setIsProcessing(true);
@@ -157,20 +162,27 @@ console.log(latlng);
       },
       body: requestJSON,
     })
-      .then(response => {console.log(response.status); return response.text() })
+      .then(response => {
+        if (response.ok) {
+          return response.text();
+        } else {
+          throw Error(response.text());
+        }
+      })
       .then(text => {
-        console.log('Response from sendEmail: ' + text);
+        // console.log('Response from sendEmail: ' + text);
+        hideModal();
+        notifyMessage('Email sent successfully!');
+        navigateToHomeStack();
       })
       .catch(error => {
-        console.log('Error from sendEmail: ' + error)
+        // console.log('Error from sendEmail: ' + error)
+        hideModal();
         notifyMessage('Oops! something went wrong...');
       })
       .finally(() => {
         resetFormState();
         setIsProcessing(false)
-        hideModal();
-        notifyMessage('Email sent successfully!');
-        navigateToHomeStack();
       });
   }
 
@@ -290,6 +302,15 @@ console.log(latlng);
     <>
       <View style={styles.detailTitleContainer}>
         <Text style={styles.detailTitleText}>{route.params.title}</Text>
+        <View style={styles.flagIconContainer}>
+        {isFlagged? (
+            <Ionicons 
+                name="ios-flag" 
+                size={30}
+                color={Colors.contrast3} />)
+            : (null)
+        }
+        </View>
       </View>
       <View style={styles.imageContainer}>
         <Image
@@ -307,58 +328,38 @@ console.log(latlng);
       <View style={styles.detailContainer}>
         <Text style={styles.detailText}>
           Created on: <Text style={styles.boldText}>{route.params.created_on}{'  '}</Text>
-          Available: <Text style={styles.boldText}>{route.params.count}</Text>
+          Amount: <Text style={styles.boldText}>{route.params.count}</Text>
         </Text>
       </View>
 
       <View style={styles.descriptionContainer}>
-          <Text style={styles.bodyText}>{route.params.description}</Text>
-          <View style={styles.map}>
-          <MapView 
-            provider={PROVIDER_GOOGLE}
-            style={{
-              height: 250,
-              width: 250,
-            }}
-            initialRegion={{
-              ...latlng,
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
-            }}
-          >
-            <Circle
-              center={latlng}
-              radius={radius}
-              fillColor='rgba(50,10,10,0.2)'
-            />
-            <Marker
-              coordinate={truePoint}
-            />
-          </MapView>
-          </View>
-        </View>
+        <Text style={styles.bodyText}>{route.params.description}</Text>
+      </View>
+      {/* { Platform.OS === 'android' ? */}
+      {/*   <Map */}
+      {/*     radius={3000} */}
+      {/*     location={route.params.location} */}
+      {/*   /> */}
+      {/*   : null */}
+      {/* } */}
+      <Map
+        radius={3000}
+        location={route.params.location}
+      />
 
       { renderBottomButton() }
     </>
   )
 
   return(
-      <ScrollView contentContainerStyle={styles.scrollScreen}>
-        {screenContent}
-      </ScrollView>
+    <ScrollView contentContainerStyle={styles.scrollScreen}>
+      {screenContent}
+    </ScrollView>
   );
 };
 
 
 const styles = StyleSheet.create({
-  map: {
-    alignSelf: 'center',
-    backgroundColor: Colors.light_shade4,
-    padding: 5,
-    borderColor: 'black',
-    borderWidth: 1,
-    marginTop: 10
-  },
   scrollScreen: {
     alignItems: 'center',
     paddingHorizontal: 10,
@@ -370,6 +371,9 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.light_shade4,
     alignItems: 'center'
   },
+  headerOptions: {
+    flexDirection: 'row',
+  },
   detailTitleContainer: {
     width: '100%',
     flexDirection: 'row',
@@ -377,10 +381,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   detailTitleText: {
-    marginLeft: windowWidth / 128,
+    width: '80%',
+    marginRight: windowWidth / 20,
+    marginLeft: windowWidth / 20,
     textAlign: 'center',
     fontFamily: 'open-sans-bold',
     fontSize: RFPercentage(4.2),
+    marginTop: 10,
+  },
+  flagIconContainer: {
     marginTop: 10,
   },
   detailText: {
@@ -402,6 +411,7 @@ const styles = StyleSheet.create({
   },
   descriptionContainer: {
     width: '100%',
+    marginVertical: 10,
   },
   descriptionScroll: {
     padding: 5,
