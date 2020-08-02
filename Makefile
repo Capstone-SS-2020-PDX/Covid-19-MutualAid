@@ -1,4 +1,4 @@
-.PHONY: server js console deploy install install2
+.PHONY: server js console deploy install install2 build-droid build-ios
 
 # Default target: Run expo server
 js:
@@ -23,3 +23,11 @@ install:
 # Install app-specific packages
 install2:
 	sudo bash qa/prereq-linux2.sh
+
+# Build android apk
+build-droid:
+	cd react-native && expo build:android -t apk
+
+# Build iOS tarball (for emulators)
+build-ios:
+	cd react-native && expo build:ios

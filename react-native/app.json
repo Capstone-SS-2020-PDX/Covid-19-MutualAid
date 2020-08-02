@@ -1,11 +1,10 @@
 {
   "expo": {
-    "name": "react-native",
-    "slug": "react-native",
+    "name": "CommonGoods",
+    "slug": "common-goods",
     "platforms": [
       "ios",
-      "android",
-      "web"
+      "android"
     ],
     "version": "1.0.0",
     "orientation": "portrait",
@@ -22,7 +21,13 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier": "com.pdxcapstone.CommonGoods",
+      "buildNumber": "1.0.0",
       "supportsTablet": true
+    },
+    "android": {
+      "package": "com.pdxcapstone.CommonGoods",
+      "versionCode": 1
     }
   }
 }
