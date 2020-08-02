@@ -16,6 +16,8 @@ const PostingList = props => {
               in_community={itemData.item.in_community}
               location={itemData.item.location}
               flagged={itemData.item.flagged}
+              owner={itemData.item.owner}
+              moderatorView={props.moderatorView}
               onSelectPosting={() => {
                   navigation.navigate('PostingDetail', {
                     title: itemData.item.title,

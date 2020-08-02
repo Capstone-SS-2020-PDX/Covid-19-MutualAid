@@ -5,6 +5,7 @@ import { Text,
          TouchableOpacity,
          Image,
        } from 'react-native';
+import { AntDesign } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -12,7 +13,7 @@ import Colors from '../config/colors';
 import { AuthContext } from '../providers/AuthProvider';
 
 const PostingListItem = props => {
-    const { communities } = useContext(AuthContext);
+    const { user, communities } = useContext(AuthContext);
    
     const offeredItemIconImage = '../assets/round_offer.png';
     const requestedItemIconImage = '../assets/round_request.png';
@@ -24,6 +25,11 @@ const PostingListItem = props => {
         : 'Offer';
 
     const picUrl = props.item_pic;
+
+    const isModeratorView = props.moderatorView;
+    const isOwned = user.user.id == props.owner;
+    const isFavorited = user.profile.saved_postings.includes(props.id);
+    
     const isFlagged = props.flagged;
 
     let communityName;
@@ -53,6 +59,15 @@ const PostingListItem = props => {
                   <Text style={styles.itemTitleText}>
                     {props.title}
                   </Text>
+                </View>
+                <View style={styles.heartIconContainer}>
+                  {(!isOwned && !isModeratorView && isFavorited)? (
+                    <AntDesign
+                      name={'heart'}
+                      size={24}
+                      color={Colors.contrast2}
+                    />)
+                  : (null)}
                 </View>
                 <View style={styles.flagIconContainer}>
                   {isFlagged? (
@@ -130,6 +145,8 @@ const styles = StyleSheet.create({
     itemTitleText: {
         fontSize: 20,
         fontFamily: 'open-sans',
+    },
+    heartIconContainer: {
     },
     flagIconContainer: {
     },
