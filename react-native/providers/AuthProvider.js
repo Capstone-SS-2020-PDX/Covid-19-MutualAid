@@ -1,4 +1,4 @@
-import React, { createContext, useState, useReducer, useContext } from 'react';
+import React, { createContext, useReducer } from 'react';
 import { AsyncStorage } from 'react-native';
 
 import { showModal, hideModal } from '../components/CustomModal';
