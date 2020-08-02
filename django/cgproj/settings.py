@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'sd1v^qwjvnb+4hd1tn0dy0#cl98mlfxez@69pno-^t3s$*2v4+'
+SECRET_KEY = os.getenv('DJANGO_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -87,11 +87,11 @@ CORS_ORIGIN_ALLOW_ALL = True
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'HOST': '10.63.0.7',
+        'HOST': os.getenv('DB_IP_ADDR'),
         'PORT': '5432',
         'USER': 'postgres',
         'NAME': 'postgres',
-        'PASSWORD': 'testpassword',
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
         }
     }
 # Password validation
@@ -136,7 +136,7 @@ STATIC_ROOT = 'static'
 DEFAULT_FILE_STORAGE = 'gcloud.GoogleCloudMediaFileStorage'
 
 GS_PROJECT_ID = 'ace-mote-270703'
-GS_MEDIA_BUCKET_NAME = 'charmander'
+GS_MEDIA_BUCKET_NAME = os.getenv('GS_MEDIA_BUCKET_NAME')
 
 
 MEDIA_URL = 'https://storage.googleapis.com/{}/'.format(GS_MEDIA_BUCKET_NAME)
