@@ -282,13 +282,17 @@ const PostingDetailScreen = props => {
       <View style={styles.descriptionContainer}>
         <Text style={styles.bodyText}>{route.params.description}</Text>
       </View>
-      { Platform.OS === 'android' ?
-        <Map
-          radius={3000}
-          location={route.params.location}
-        />
-        : null
-      }
+      {/* { Platform.OS === 'android' ? */}
+      {/*   <Map */}
+      {/*     radius={3000} */}
+      {/*     location={route.params.location} */}
+      {/*   /> */}
+      {/*   : null */}
+      {/* } */}
+      <Map
+        radius={3000}
+        location={route.params.location}
+      />
 
       { renderBottomButton() }
     </>
