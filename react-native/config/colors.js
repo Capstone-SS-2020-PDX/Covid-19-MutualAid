@@ -12,5 +12,7 @@ const colors = {
     light_shade3: 'rgb(217, 226, 216)', // timberwolf
     light_shade4: 'rgb(255, 255, 255)', // white
     placeholder_text: 'rgb(150,150,150)', // light gray
+    map_circle_fill: 'rgba(50,10,10,0.2)',  // transparent gray
+    map_circle_stroke: 'rgba(100,100,100,0.8)',
   };
  export default colors;

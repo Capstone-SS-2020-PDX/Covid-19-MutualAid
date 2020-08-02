@@ -67,7 +67,8 @@ const Map = props => {
         <Circle
           center={modifiedPoint}
           radius={radius}
-          fillColor='rgba(50,10,10,0.2)'
+          fillColor={Colors.map_circle_fill}
+          strokeColor={Colors.map_circle_stroke}
         />
         <Marker
           coordinate={truePoint}
@@ -83,6 +84,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     backgroundColor: Colors.light_shade4,
     marginTop: 10,
+    marginBottom: 10,
   },
 
 });
