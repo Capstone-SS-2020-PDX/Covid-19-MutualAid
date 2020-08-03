@@ -60,23 +60,27 @@ const PostingListItem = props => {
                     {props.title}
                   </Text>
                 </View>
-                <View style={styles.heartIconContainer}>
-                  {(!isOwned && !isModeratorView && isFavorited)? (
-                    <AntDesign
-                      name={'heart'}
-                      size={24}
-                      color={Colors.contrast2}
-                    />)
-                  : (null)}
-                </View>
-                <View style={styles.flagIconContainer}>
-                  {isFlagged? (
-                  <Ionicons 
-                      name="ios-flag" 
-                      size={24} 
-                      color={Colors.contrast3} />)
-                  : (null)
-                  }
+                <View style={styles.iconContainer}>
+                  <View style={isFlagged?
+                      styles.heartIconContainerFlag:
+                      styles.heartIconContainerNoFlag}>
+                    {(!isOwned && !isModeratorView && isFavorited)? (
+                      <AntDesign
+                        name={'heart'}
+                        size={24}
+                        color={Colors.contrast2}
+                      />)
+                    : (null)}
+                  </View>
+                  <View style={styles.flagIconContainer}>
+                    {isFlagged? (
+                    <Ionicons 
+                        name="ios-flag" 
+                        size={24} 
+                        color={Colors.contrast3} />)
+                    : (null)
+                    }
+                  </View>
                 </View>
               </View>
               <View style={styles.postingTypeContainer}>
@@ -139,14 +143,21 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     itemTitleContainer: {
-        width: '85%',
+        width: '75%',
         marginRight: '5%',
     },
     itemTitleText: {
         fontSize: 20,
         fontFamily: 'open-sans',
     },
-    heartIconContainer: {
+    iconContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-evenly',
+    },
+    heartIconContainerFlag: {
+      marginRight: '7%',
+    },
+    heartIconContainerNoFlag: {
     },
     flagIconContainer: {
     },
