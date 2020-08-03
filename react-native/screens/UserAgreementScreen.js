@@ -31,8 +31,8 @@ non-commercial transitory viewing only. This is the grant of a license, not a tr
     `\tiv. remove any copyright or other proprietary notations from the materials; or\n`,
     `\tv. transfer the materials to another person or "mirror" the materials on any other server.\n`,
     `b. This license shall automatically terminate if you violate any of these restrictions and may be terminated by \
-    Common Goods at any time. Upon terminating your viewing of these materials or upon the termination of this license, \
-    you must destroy any downloaded materials in your possession whether in electronic or printed format.\n`
+Common Goods at any time. Upon terminating your viewing of these materials or upon the termination of this license, \
+you must destroy any downloaded materials in your possession whether in electronic or printed format.\n`
   ];
 
   const disclaimerTerms = [
