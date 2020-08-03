@@ -53,55 +53,55 @@ const PostingListItem = props => {
                 : require(itemPlaceHolder)}
               />
             </View>
-            <View style={styles.itemTextContainer}>
-              <View style={styles.itemTitleRow}>
-                <View style={styles.itemTitleContainer}>
-                  <Text style={styles.itemTitleText}>
-                    {props.title}
+            <View style={styles.itemDetailsContainer}>
+              <View style={styles.itemTextContainer}>
+                <View style={styles.itemTitleRow}>
+                  <View style={styles.itemTitleContainer}>
+                    <Text style={styles.itemTitleText}>
+                      {props.title}
+                    </Text>
+                  </View>
+                </View>
+                <View style={styles.postingTypeContainer}>
+                  <Image
+                    style={styles.postingTypeIconImage}
+                    resizeMode='contain'
+                    source={itemIcon}
+                  />
+                  <Text style={styles.itemDetailText}>
+                    {itemType}
                   </Text>
                 </View>
-                <View style={styles.iconContainer}>
-                  <View style={isFlagged?
-                      styles.heartIconContainerFlag:
-                      styles.heartIconContainerNoFlag}>
-                    {(!isOwned && !isModeratorView && isFavorited)? (
-                      <AntDesign
-                        name={'heart'}
-                        size={24}
-                        color={Colors.contrast2}
-                      />)
-                    : (null)}
-                  </View>
-                  <View style={styles.flagIconContainer}>
-                    {isFlagged? (
-                    <Ionicons 
-                        name="ios-flag" 
-                        size={24} 
-                        color={Colors.contrast3} />)
-                    : (null)
-                    }
-                  </View>
-                </View>
-              </View>
-              <View style={styles.postingTypeContainer}>
-                <Image
-                  style={styles.postingTypeIconImage}
-                  resizeMode='contain'
-                  source={itemIcon}
-                />
-                <Text style={styles.itemDetailText}>
-                  {itemType}
-                </Text>
-              </View>
-              <View style={styles.postingTypeContainer}>
-                <Entypo 
+                <View style={styles.postingTypeContainer}>
+                  <Entypo
                     name="location-pin" 
                     size={20} 
                     color="black" 
                     style={{marginTop: 5}} />
-                <Text style={styles.itemDetailText}>
-                  {communityName}
-                </Text>
+                  <Text style={styles.itemDetailText}>
+                    {communityName}
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <View style={styles.iconContainer}>
+              <View style={styles.heartIconContainer}>
+                {(!isOwned && !isModeratorView && isFavorited)? (
+                    <AntDesign
+                      name={'heart'}
+                      size={24}
+                      color={Colors.contrast2}
+                    />)
+                 : (null)}
+              </View>
+              <View style={styles.flagIconContainer}>
+                {isFlagged? (
+                    <Ionicons
+                      name="ios-flag"
+                      size={24}
+                      color={Colors.contrast3} />)
+                 : (null)
+                }
               </View>
             </View>
           </View>
@@ -123,9 +123,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-around',
     },
-    itemTextContainer: {
+    itemDetailsContainer: {
         width: '70%',
+    },
+    itemTextContainer: {
         alignContent: 'flex-start',
+        marginLeft: '5%',
         paddingHorizontal: 5,
     },
     listImageContainer: {
@@ -143,23 +146,24 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     itemTitleContainer: {
-        width: '75%',
-        marginRight: '5%',
     },
     itemTitleText: {
         fontSize: 20,
         fontFamily: 'open-sans',
     },
     iconContainer: {
-      flexDirection: 'row',
-      justifyContent: 'space-evenly',
+        width: '10%',
+        height: '100%',
+        flexDirection: 'column',
+        justifyContent: 'space-around',
     },
-    heartIconContainerFlag: {
-      marginRight: '7%',
+    heartIconContainer: {
+        marginRight: 10,
     },
     heartIconContainerNoFlag: {
     },
     flagIconContainer: {
+        marginLeft: 5,
     },
     itemDetailText: {
         fontSize: 14,
