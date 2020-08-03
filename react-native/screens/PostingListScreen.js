@@ -18,16 +18,17 @@ import { postings_url } from '../config/urls';
 
 const Feed = props => {
   const { navigation } = props;
-  const { user, communities } = useContext(AuthContext);
+  const { user, communities, postings, updatePostings } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(true);
-  const [postings, setPostings] = useState([]);
+  // const [postings, setPostings] = useState([]);
+  const [filteredPostings, setFilteredPostings] = useState([]);
   const [searchPostings, setSearchPostings] = useState([]);
   const [searchText, setSearchText] = useState('');
   const searchInputRef = useRef(null);
 
   const fetchPostings = () => {
     setIsLoading(true);
-   
+
     fetch(postings_url, {
       method: 'GET',
       headers: {
@@ -38,36 +39,40 @@ const Feed = props => {
     })
       .then(response => response.json())
       .then(json => {
-        filterPostings(json);
+        // filterPostings(json);
+        updatePostings(json);
       })
       .catch(error => console.log(error))
       .finally(() => {
         setIsLoading(false)
       });
+  };
 
-    const filterPostings = postings => {
-      // filter postings by whether it is in the user's member_of list
-      let filteredPostings = postings.filter(posting => {
-        return user.profile.member_of.includes(posting.in_community);
-      });
+  const filterPostings = postings => {
+    // filter postings by whether it is in the user's member_of list
+    let filtered = postings.filter(posting => {
+      return user.profile.member_of.includes(posting.in_community);
+    });
 
-      setPostings(filteredPostings);
-      setSearchPostings(filteredPostings);
-    }
+    // setPostings(filteredPostings);
+    setFilteredPostings(filtered);
+    setSearchPostings(filtered);
+    setIsLoading(false);
   };
 
   useEffect(() => {
-    fetchPostings();
+    // fetchPostings();
+    filterPostings(postings);
   }, [user.profile.member_of]);
 
   const handleSearch = text => {
     setSearchText(text);
 
-    let filteredPostings = postings.filter(posting =>
+    let filtered = postings.filter(posting =>
       posting.title.toLowerCase().includes(text.toLowerCase())
     );
 
-    setSearchPostings(filteredPostings);
+    setSearchPostings(filtered);
   };
 
   const handleClearSearchInput = () => {

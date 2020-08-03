@@ -1,7 +1,7 @@
 import React, { createContext, useState, useReducer, useContext } from 'react';
 import { AsyncStorage } from 'react-native';
 
-import { login_url, register_url, check_username_url, communities_url } from '../config/urls';
+import { login_url, register_url, check_username_url, communities_url, postings_url } from '../config/urls';
 
 const AUTO_LOGIN = 'AUTO_LOGIN';
 const LOGIN = 'LOGIN';
@@ -12,6 +12,7 @@ const ADD_PROFILE = 'ADD_PROFILE';
 const UPDATE_PROFILE = 'UPDATE_PROFILE';
 const UPDATE_USER = 'UPDATE_USER';
 const UPDATE_COMMUNITIES = 'UPDATE_COMMUNITIES';
+const UPDATE_POSTINGS = 'UPDATE_POSTINGS';
 
 // Provides token and login/logout functionality to Global App Context
 // Allows the app to know which user is using it and to handle login/logout
@@ -26,6 +27,7 @@ export const AuthProvider = props => {
         hasProfile: true,
         user: null,
         communities: null,
+        postings: null,
         updated: false,
     };
 
@@ -93,10 +95,53 @@ export const AuthProvider = props => {
                     communities: action.communities,
                     isLoading: false,
                 };
+            case UPDATE_POSTINGS:
+                return {
+                    ...previousState,
+                    postings: action.postings,
+                    isLoading: false,
+                };
         }
     };
 
     const [loginState, dispatch] = useReducer(loginReducer, initialLoginState);
+
+    const fetchPostings = async () => {
+        await AsyncStorage.getItem('postings').then(postingsData => {
+            console.log('Fetching postings from AsyncStorage: ');
+            if (postingsData) {
+                console.log('Found postings in AsyncStorage!');
+                postingsData = JSON.parse(postingsData);
+                console.log(postingsData.length + ' postings fetched');
+                dispatch({ type: UPDATE_POSTINGS, postings: postingsData });
+            } else {
+                console.log("Postings NOT in AsyncStorage, fetching from server...");
+
+                fetch(postings_url, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-type': 'application/json',
+                    },
+                }).then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw 'FETCH_POSTINGS_ERROR';
+                    }
+                }).then(postingsJSON => {
+                    console.log('Fetching Postings Response: ');
+                    console.log(postingsJSON.length + ' postings fetched');
+
+                    AsyncStorage.setItem('postings', JSON.stringify(postingsJSON)).then(() => {
+                        dispatch({ type: UPDATE_POSTINGS, postings: postingsJSON });
+                    })
+                }).catch(error => {
+                    console.log(error);
+                });
+            }
+        })
+    }
 
     const fetchCommunities = async () => {
         await AsyncStorage.getItem('communities').then(communityData => {
@@ -104,6 +149,7 @@ export const AuthProvider = props => {
             if (communityData) {
                 console.log("Found communities in AsyncStorage!");
                 communityData = JSON.parse(communityData);
+                console.log(communityData.length + ' communities fetched');
                 dispatch({ type: UPDATE_COMMUNITIES, communities: communityData });
             } else {
                 console.log("Communities DONT exist in AsyncStorage, fetching from server: ");
@@ -116,8 +162,8 @@ export const AuthProvider = props => {
                     },
                 }).then(response => response.json())
                   .then(communitiesJson => {
-                      // console.log("Fetching communities: ");
-                      // console.log(communitiesJson);
+                      console.log("Fetching communities: ");
+                      console.log(communitiesJson.length + ' communities fetched');
 
                       AsyncStorage.setItem('communities', JSON.stringify(communitiesJson)).then(() => {
                           dispatch({ type: UPDATE_COMMUNITIES, communities: communitiesJson });
@@ -163,6 +209,7 @@ export const AuthProvider = props => {
             .then(json => {
                 console.log('Server Response: ' + JSON.stringify(json));
                 loginData = json;
+                fetchPostings();
                 fetchCommunities();
                 setLoginData(loginData, requestType);
 
@@ -175,14 +222,22 @@ export const AuthProvider = props => {
     };
 
     const updateProfile = newProfileData => {
+        console.log('updating profile');
         dispatch({ type: UPDATE_PROFILE, updatedProfile: newProfileData });
     }
 
     const updateUser = newUserData => {
+        console.log('updating user');
         dispatch({ type: UPDATE_USER, updatedUser: newUserData });
     }
 
+    const updatePostings = newPostingsData => {
+        console.log('updating postings');
+        dispatch({ type: UPDATE_POSTINGS, postings: newPostingsData });
+    }
+
     const handleAutoLogin = () => {
+        fetchPostings();
         fetchCommunities();
         AsyncStorage.getItem('loginData').then(loginData => {
             console.log('Attempting to fetch token from AsyncStorage...');
@@ -205,16 +260,16 @@ export const AuthProvider = props => {
         return performAuthRequest(LOGIN, userData, login_url);
     };
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
         console.log("Logging out...");
 
-        AsyncStorage.removeItem('loginData')
+        await AsyncStorage.removeItem('loginData')
                     .catch(error => console.log(error))
                     .finally(() => {
-                        AsyncStorage.removeItem('communities').finally(() => {
-                            dispatch({ type: LOGOUT });
-                        })
+                        AsyncStorage.removeItem('communities');
+                        AsyncStorage.removeItem('postings');
                     });
+        dispatch({ type: LOGOUT });
     };
 
     const handleCheckUsername = username => {
@@ -261,8 +316,10 @@ export const AuthProvider = props => {
               hasProfile: loginState.hasProfile,
               user: loginState.user,
               communities: loginState.communities,
+              postings: loginState.postings,
               updateProfile,
               updateUser,
+              updatePostings,
               autoLogin: handleAutoLogin,
               login: handleLogin,
               logout: handleLogout,
