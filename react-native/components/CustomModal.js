@@ -41,7 +41,7 @@ const registerFailedOptions = {
 
  const unacceptedTermsOptions = {
      ...defaultOptions,
-     data: 'Agreements must be accpeted to continue!',
+     data: 'Agreement acceptances are required!',
      icon: <MaterialIcons name='error-outline' size={50} color='red'/>,
  };
 
