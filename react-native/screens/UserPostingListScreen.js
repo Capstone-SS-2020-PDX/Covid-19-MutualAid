@@ -1,114 +1,122 @@
 import React, { useEffect, useContext, useState, useRef } from 'react';
 import {
-    View,
-    Text,
-    TextInput,
-    ActivityIndicator,
-    TouchableOpacity,
-    StyleSheet,
+  View,
+  Text,
+  TextInput,
+  ActivityIndicator,
+  TouchableOpacity,
+  StyleSheet,
 } from 'react-native';
 import { Ionicons, Feather } from '@expo/vector-icons';
 
 import PostingList from '../components/PostingList';
 import Colors from '../config/colors';
 import { windowWidth, windowHeight } from '../config/dimensions';
-import { users_url } from '../config/urls';
+import { postings_url } from '../config/urls';
 
 import { AuthContext } from '../providers/AuthProvider';
 
 const UserPostingListScreen = props => {
-    const { navigation } = props;
-    const { user } = useContext(AuthContext);
-    const userPostingsUrl = users_url + user.user.id + '/postings/';
+  const { navigation } = props;
+  const { user, postings, updatePostings } = useContext(AuthContext);
 
-    const [isLoading, setIsLoading] = useState(true);
-    const [postings, setPostings] = useState([]);
-    const [searchPostings, setSearchPostings] = useState([]);
-    const [searchText, setSearchText] = useState('');
-    const searchInputRef = useRef(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [filteredPostings, setFilteredPostings] = useState([]);
+  const [searchPostings, setSearchPostings] = useState([]);
+  const [searchText, setSearchText] = useState('');
+  const searchInputRef = useRef(null);
 
-    const fetchPostings = () => {
-        setIsLoading(true);
 
-        fetch(userPostingsUrl, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-                'Content-type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-            }
-        })
-            .then(response => response.json())
-            .then(json => {
-                setPostings(json);
-                setSearchPostings(json);
-            })
-            .catch(error => console.log(error))
-            .finally(() => {
-                setIsLoading(false)
-            });
-    };
+  useEffect(() => {
+    filterPostings(postings);
+  }, [postings]);
 
-    useEffect(() => {
-        fetchPostings();
-    }, []);
+  const fetchPostings = () => {
+    setIsLoading(true);
 
-    const handleSearch = text => {
-        setSearchText(text);
+    fetch(postings_url, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      }
+    })
+      .then(response => response.json())
+      .then(json => {
+        updatePostings(json);
+      })
+      .finally(() => {
+        setIsLoading(false)
+      });
+  };
 
-        let filteredPostings = postings.filter(posting =>
-            posting.title.toLowerCase().includes(text.toLowerCase())
-        );
+  const filterPostings = postings => {
+    let filtered = postings.filter(posting => {
+      return posting.owner === user.user.id;
+    });
 
-        setSearchPostings(filteredPostings);
-    };
+    setFilteredPostings(filtered);
+    setSearchPostings(filtered);
+    setIsLoading(false);
+  };
 
-    const handleClearSearchInput = () => {
-        setSearchText('');
-        setSearchPostings(postings);
-        searchInputRef.current.clear();
-    };
+  const handleSearch = text => {
+    setSearchText(text);
+
+    let filteredPostings = postings.filter(posting =>
+      posting.title.toLowerCase().includes(text.toLowerCase())
+    );
+
+    setSearchPostings(filteredPostings);
+  };
+
+  const handleClearSearchInput = () => {
+    setSearchText('');
+    setSearchPostings(postings);
+    searchInputRef.current.clear();
+  };
 
   const PostingListSection = isLoading ? <ActivityIndicator size='large'/>
-          : <PostingList
+        : <PostingList
             postings={searchPostings}
             navigation={navigation}
             isLoading={isLoading}
             onRefresh={fetchPostings}
           />
 
-    return(
-       <View style={styles.screen}>
-          <View style={styles.searchContainer}>
-            <View style={styles.inputView}>
-              <Ionicons
-                name={'ios-search'}
-                size={23}
-                style={styles.inputIcon}
-              />
-              <TextInput
-                style={styles.inputText}
-                placeholder='Search for an item'
-                placeholderTextColor={Colors.placeholder_text}
-                autoCapitalize='none'
-                onChangeText={text => handleSearch(text)}
-                returnKeyType='done'
-                ref={searchInputRef}
-              />
-              <TouchableOpacity
-                style={styles.inputIcon}
-                onPress={() => handleClearSearchInput()}
-              >
-                <Feather
-                  name={'x-circle'}
-                  size={20}
-                />
-              </TouchableOpacity>
-            </View>
-          </View>
-         {PostingListSection}
+  return(
+    <View style={styles.screen}>
+      <View style={styles.searchContainer}>
+        <View style={styles.inputView}>
+          <Ionicons
+            name={'ios-search'}
+            size={23}
+            style={styles.inputIcon}
+          />
+          <TextInput
+            style={styles.inputText}
+            placeholder='Search for an item'
+            placeholderTextColor={Colors.placeholder_text}
+            autoCapitalize='none'
+            onChangeText={text => handleSearch(text)}
+            returnKeyType='done'
+            ref={searchInputRef}
+          />
+          <TouchableOpacity
+            style={styles.inputIcon}
+            onPress={() => handleClearSearchInput()}
+          >
+            <Feather
+              name={'x-circle'}
+              size={20}
+            />
+          </TouchableOpacity>
         </View>
-    );
+      </View>
+      {PostingListSection}
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({

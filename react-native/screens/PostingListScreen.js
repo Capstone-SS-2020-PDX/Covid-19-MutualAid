@@ -19,12 +19,17 @@ import { postings_url } from '../config/urls';
 const Feed = props => {
   const { navigation } = props;
   const { user, communities, postings, updatePostings } = useContext(AuthContext);
+
   const [isLoading, setIsLoading] = useState(true);
-  // const [postings, setPostings] = useState([]);
   const [filteredPostings, setFilteredPostings] = useState([]);
   const [searchPostings, setSearchPostings] = useState([]);
   const [searchText, setSearchText] = useState('');
   const searchInputRef = useRef(null);
+
+  useEffect(() => {
+    filterPostings(postings);
+  }, [user.profile.member_of, postings]);
+
 
   const fetchPostings = () => {
     setIsLoading(true);
@@ -39,7 +44,6 @@ const Feed = props => {
     })
       .then(response => response.json())
       .then(json => {
-        // filterPostings(json);
         updatePostings(json);
       })
       .catch(error => console.log(error))
@@ -54,16 +58,11 @@ const Feed = props => {
       return user.profile.member_of.includes(posting.in_community);
     });
 
-    // setPostings(filteredPostings);
     setFilteredPostings(filtered);
     setSearchPostings(filtered);
     setIsLoading(false);
   };
 
-  useEffect(() => {
-    // fetchPostings();
-    filterPostings(postings);
-  }, [user.profile.member_of]);
 
   const handleSearch = text => {
     setSearchText(text);
