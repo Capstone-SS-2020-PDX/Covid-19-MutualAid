@@ -18,13 +18,17 @@ import { AuthContext } from '../providers/AuthProvider';
 
 const SavedPostingListScreen = props => {
   const { navigation } = props;
-  const { user } = useContext(AuthContext);
+  const { user, postings, updatePostings } = useContext(AuthContext);
 
   const [isLoading, setIsLoading] = useState(true);
-  const [postings, setPostings] = useState([]);
+  const [filteredPostings, setFilteredPostings] = useState([]);
   const [searchPostings, setSearchPostings] = useState([]);
   const [searchText, setSearchText] = useState('');
   const searchInputRef = useRef(null);
+
+  useEffect(() => {
+    filterPostings(postings);
+  }, [postings, user.profile.saved_postings]);
 
   const fetchPostings = () => {
     setIsLoading(true);
@@ -39,7 +43,7 @@ const SavedPostingListScreen = props => {
     })
       .then(response => response.json())
       .then(json => {
-        filterToSavedPostings(json)
+        updatePostings(json);
       })
       .catch(error => console.log(error))
       .finally(() => {
@@ -47,17 +51,14 @@ const SavedPostingListScreen = props => {
       });
   };
 
-  useEffect(() => {
-    fetchPostings();
-  }, []);
-
-  const filterToSavedPostings = postings => {
+  const filterPostings = postings => {
     let savedPostings = postings.filter(posting => user.profile.saved_postings.includes(posting.id));
     console.log('Users Postings: ');
     console.log(savedPostings);
 
-    setPostings(savedPostings);
+    setFilteredPostings(savedPostings);
     setSearchPostings(savedPostings);
+    setIsLoading(false);
   };
 
   const handleSearch = text => {
@@ -78,11 +79,11 @@ const SavedPostingListScreen = props => {
 
   const PostingListSection = isLoading ? <ActivityIndicator size='large'/>
         : <PostingList
-             postings={searchPostings}
-             navigation={navigation}
-           isLoading={isLoading}
-             onRefresh={fetchPostings}
-           />
+            postings={searchPostings}
+            navigation={navigation}
+            isLoading={isLoading}
+            onRefresh={fetchPostings}
+          />
 
   return(
     <View style={styles.screen}>
