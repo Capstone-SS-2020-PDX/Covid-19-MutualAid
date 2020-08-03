@@ -39,6 +39,12 @@ const registerFailedOptions = {
     icon: <MaterialIcons name='error-outline' size={50} color='red'/>,
  };
 
+ const unacceptedTermsOptions = {
+     ...defaultOptions,
+     data: 'Agreement acceptances are required!',
+     icon: <MaterialIcons name='error-outline' size={50} color='red'/>,
+ };
+
 const deletePostingOptions = {
     ...defaultOptions,
     data: 'Deleting your Posting...',
@@ -89,6 +95,9 @@ export function showModal(type) {
             break;
         case 'REGISTER_FAILED':
             options = registerFailedOptions;
+            break;
+        case 'UNACCEPTED_TERMS':
+            options = unacceptedTermsOptions;
             break;
         case 'CREATING_POSTING':
             options = createPostingOptions;
