@@ -44,6 +44,11 @@ const deletePostingOptions = {
     data: 'Deleting your Posting...',
 };
 
+const flaggingPostingOptions = {
+    ...defaultOptions,
+    data: 'Flagging Posting...',
+};
+
 const sendingEmailOptions = {
     ...defaultOptions,
     data: 'Sending Message...',
@@ -98,6 +103,9 @@ export function showModal(type) {
             break;
         case 'DELETE_POSTING':
             options = deletePostingOptions;
+            break;
+        case 'FLAGGING_POSTING':
+            options = flaggingPostingOptions;
             break;
         case 'SENDING_EMAIL':
             options = sendingEmailOptions;
