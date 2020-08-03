@@ -181,7 +181,7 @@ export const AuthProvider = props => {
         }).catch(error => {
             console.log(error);
         });
-    }
+    };
 
     const performAuthRequest = (requestType, userData, url) => {
 
@@ -224,17 +224,48 @@ export const AuthProvider = props => {
     const updateProfile = newProfileData => {
         console.log('updating profile');
         dispatch({ type: UPDATE_PROFILE, updatedProfile: newProfileData });
-    }
+    };
 
     const updateUser = newUserData => {
         console.log('updating user');
         dispatch({ type: UPDATE_USER, updatedUser: newUserData });
-    }
+    };
 
     const updatePostings = newPostingsData => {
         console.log('updating postings');
         dispatch({ type: UPDATE_POSTINGS, postings: newPostingsData });
-    }
+    };
+
+    const updateOnePosting = updatedPosting => {
+        console.log('updating one posting with id: ' + updatedPosting.id);
+
+        const updatedPostings = loginState.postings;
+
+        const updatedPostingIndex = loginState.postings.indexOf(
+            updatedPostings.find(posting => posting.id === updatedPosting.id)
+        );
+
+        console.log(updatedPostingIndex);
+        if (updatedPostingIndex !== -1) {
+            updatedPostings[updatedPostingIndex] = updatedPosting;
+            dispatch({ type: UPDATE_POSTINGS, postings: loginState.postings });
+        }
+    };
+
+    const deletePosting = postToDelete => {
+        console.log('deleting one posting with id: ' + updatedPosting.id);
+
+        const updatedPostings = loginState.postings;
+
+        const deletedPostingIndex = loginState.postings.indexOf(
+            updatedPostings.find(posting => posting.id === updatedPosting.id)
+        );
+
+        if (deletedPostingIndex !== -1) {
+            updatedPostings.splice(deletedPostingIndex, 1);
+            dispatch({ type: UPDATE_POSTINGS, postings: loginState.postings });
+        }
+    };
 
     const handleAutoLogin = () => {
         fetchPostings();
@@ -320,6 +351,7 @@ export const AuthProvider = props => {
               updateProfile,
               updateUser,
               updatePostings,
+              updateOnePosting,
               autoLogin: handleAutoLogin,
               login: handleLogin,
               logout: handleLogout,

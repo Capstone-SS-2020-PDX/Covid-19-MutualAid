@@ -27,9 +27,8 @@ const Feed = props => {
   const searchInputRef = useRef(null);
 
   useEffect(() => {
-    filterPostings(postings);
+    filterPostings();
   }, [user.profile.member_of, postings]);
-
 
   const fetchPostings = () => {
     setIsLoading(true);
@@ -52,7 +51,7 @@ const Feed = props => {
       });
   };
 
-  const filterPostings = postings => {
+  const filterPostings = () => {
     // filter postings by whether it is in the user's member_of list
     let filtered = postings.filter(posting => {
       return user.profile.member_of.includes(posting.in_community);
@@ -67,7 +66,7 @@ const Feed = props => {
   const handleSearch = text => {
     setSearchText(text);
 
-    let filtered = postings.filter(posting =>
+    let filtered = filteredPostings.filter(posting =>
       posting.title.toLowerCase().includes(text.toLowerCase())
     );
 
@@ -76,7 +75,7 @@ const Feed = props => {
 
   const handleClearSearchInput = () => {
     setSearchText('');
-    setSearchPostings(postings);
+    setSearchPostings(filteredPostings);
     searchInputRef.current.clear();
   };
 

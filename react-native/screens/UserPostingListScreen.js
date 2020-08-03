@@ -28,7 +28,7 @@ const UserPostingListScreen = props => {
 
 
   useEffect(() => {
-    filterPostings(postings);
+    filterPostings();
   }, [postings]);
 
   const fetchPostings = () => {
@@ -51,7 +51,7 @@ const UserPostingListScreen = props => {
       });
   };
 
-  const filterPostings = postings => {
+  const filterPostings = () => {
     let filtered = postings.filter(posting => {
       return posting.owner === user.user.id;
     });
@@ -64,16 +64,16 @@ const UserPostingListScreen = props => {
   const handleSearch = text => {
     setSearchText(text);
 
-    let filteredPostings = postings.filter(posting =>
+    let filtered = filteredPostings.filter(posting =>
       posting.title.toLowerCase().includes(text.toLowerCase())
     );
 
-    setSearchPostings(filteredPostings);
+    setSearchPostings(filtered);
   };
 
   const handleClearSearchInput = () => {
     setSearchText('');
-    setSearchPostings(postings);
+    setSearchPostings(filteredPostings);
     searchInputRef.current.clear();
   };
 

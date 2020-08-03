@@ -11,9 +11,7 @@ import { View,
          ActivityIndicator,
          Platform,
        } from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
-import { Entypo } from '@expo/vector-icons';
-import { Ionicons } from '@expo/vector-icons';
+import { AntDesign, Entypo, Ionicons } from '@expo/vector-icons';
 import OptionsMenu from "react-native-options-menu";
 
 import { RFValue, RFPercentage } from "react-native-responsive-fontsize";
@@ -36,7 +34,7 @@ const requestedItemIconImage = '../assets/requested_item.png';
 const itemPlaceHolder = '../assets/image_place_holder.jpg';
 
 const PostingDetailScreen = props => {
-  const { user, updateProfile } = useContext(AuthContext);
+  const { user, updateProfile, postings, updateOnePosting } = useContext(AuthContext);
   const { route, navigation } = props;
   const [postingImage, setPostingImage] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -48,7 +46,6 @@ const PostingDetailScreen = props => {
 
 
   useLayoutEffect(() => {
-
     if (!isOwned && !isModeratorView) {
 
       const isFavorited = user.profile.saved_postings.includes(route.params.id);
@@ -113,6 +110,7 @@ const PostingDetailScreen = props => {
   };
 
   const handleFlagPost = () => {
+    showModal('FLAGGING_POSTING');
     const url = postings_url + route.params.id + '/';
 
     let flag = route.params.flagged;
@@ -128,11 +126,15 @@ const PostingDetailScreen = props => {
       },
       body: JSON.stringify(payload),
     }).then(response => {
-      console.log("Server Response: " + response.status);
+      // console.log("Server Response: " + response.status);
       return response.json();
     }).then(json => {
-      console.log("Server response after flagging post: ");
-      console.log(json);
+      // console.log("Server response after flagging post: ");
+      // console.log(json);
+      updateOnePosting(json);
+      hideModal();
+      notifyMessage('Posting Flagged Successfully!');
+      navigation.goBack();
     });
   };
 
@@ -230,6 +232,7 @@ const PostingDetailScreen = props => {
     }).then(json => {
       hideModal();
       notifyMessage('Posting un-flagged Successfully!');
+      updateOnePosting(json);
       navigation.goBack();
     }).catch(error => {
       console.log(JSON.stringify(error));

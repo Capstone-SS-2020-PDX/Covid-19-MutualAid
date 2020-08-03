@@ -17,17 +17,18 @@ import { postings_url } from '../config/urls';
 
 const FlaggedPostingsScreen = props => {
     const { navigation } = props;
-    const { user, communities } = useContext(AuthContext);
+    const { user, communities, postings, updatePostings } = useContext(AuthContext);
     const [isLoading, setIsLoading] = useState(true);
-    const [postings, setPostings] = useState([]);
+
+    const [filteredPostings, setFilteredPostings] = useState([]);
     const [searchPostings, setSearchPostings] = useState([]);
     const [searchText, setSearchText] = useState('');
     const searchInputRef = useRef(null);
-
-
+ 
+  
     useEffect(() => {
-        fetchPostings();
-    }, [user]);
+        filterPostings();
+    }, [postings, user]);
 
     const fetchPostings = () => {
         setIsLoading(true);
@@ -39,41 +40,39 @@ const FlaggedPostingsScreen = props => {
                 'Content-type': 'application/json',
                 'Access-Control-Allow-Origin': '*',
             }
-        })
-            .then(response => response.json())
-            .then(json => {
-                filterPostings(json);
-            })
-            .catch(error => console.log(error))
-            .finally(() => {
-                setIsLoading(false)
-            });
-
+        }).then(response => response.json())
+          .then(json => {
+              updatePostings(json);
+          })
+          .finally(() => {
+              setIsLoading(false)
+          });
     };
 
-    const filterPostings = postings => {
+    const filterPostings = () => {
         // filter postings by whether they are flagged
-        let filteredPostings = postings.filter(posting => {
+        let filtered = postings.filter(posting => {
             return posting.flagged > 0;
         });
 
-        setPostings(filteredPostings);
+        setFilteredPostings(filtered);
         setSearchPostings(filteredPostings);
+        setIsLoading(false);
     };
 
     const handleSearch = text => {
         setSearchText(text);
 
-        let filteredPostings = postings.filter(posting =>
+        let filtered = filteredPostings.filter(posting =>
             posting.title.toLowerCase().includes(text.toLowerCase())
         );
 
-        setSearchPostings(filteredPostings);
+        setSearchPostings(filtered);
     };
 
     const handleClearSearchInput = () => {
         setSearchText('');
-        setSearchPostings(postings);
+        setSearchPostings(filteredPostings);
         searchInputRef.current.clear();
     };
 
@@ -84,7 +83,7 @@ const FlaggedPostingsScreen = props => {
               isLoading={isLoading}
               onRefresh={fetchPostings}
               moderatorView={true}
-            />
+             />
 
     return(
         <View style={styles.screen}>

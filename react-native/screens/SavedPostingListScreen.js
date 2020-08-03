@@ -27,7 +27,7 @@ const SavedPostingListScreen = props => {
   const searchInputRef = useRef(null);
 
   useEffect(() => {
-    filterPostings(postings);
+    filterPostings();
   }, [postings, user.profile.saved_postings]);
 
   const fetchPostings = () => {
@@ -45,16 +45,15 @@ const SavedPostingListScreen = props => {
       .then(json => {
         updatePostings(json);
       })
-      .catch(error => console.log(error))
       .finally(() => {
         setIsLoading(false)
       });
   };
 
-  const filterPostings = postings => {
+  const filterPostings = () => {
     let savedPostings = postings.filter(posting => user.profile.saved_postings.includes(posting.id));
-    console.log('Users Postings: ');
-    console.log(savedPostings);
+    // console.log('Users Postings: ');
+    // console.log(savedPostings);
 
     setFilteredPostings(savedPostings);
     setSearchPostings(savedPostings);
@@ -64,16 +63,16 @@ const SavedPostingListScreen = props => {
   const handleSearch = text => {
     setSearchText(text);
 
-    let filteredPostings = postings.filter(posting =>
+    let filtered = filteredPostings.filter(posting =>
       posting.title.toLowerCase().includes(text.toLowerCase())
     );
 
-    setSearchPostings(filteredPostings);
+    setSearchPostings(filtered);
   };
 
   const handleClearSearchInput = () => {
     setSearchText('');
-    setSearchPostings(postings);
+    setSearchPostings(filteredPostings);
     searchInputRef.current.clear();
   };
 

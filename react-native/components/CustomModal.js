@@ -27,6 +27,11 @@ const updatePostingOptions = {
     data: 'Updating your Posting...',
 };
 
+const flaggingPostingOptions = {
+    ...defaultOptions,
+    data: 'Flagging Posting...',
+};
+
 const loginFailedOptions = {
     ...defaultOptions,
     data: 'Login Failed!',
@@ -95,6 +100,9 @@ export function showModal(type) {
             break;
         case 'UPDATING_POSTING':
             options = updatePostingOptions;
+            break;
+        case 'FLAGGING_POSTING':
+            options = flaggingPostingOptions;
             break;
         case 'DELETE_POSTING':
             options = deletePostingOptions;
