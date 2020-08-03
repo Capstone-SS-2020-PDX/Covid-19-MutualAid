@@ -161,7 +161,7 @@ export const AuthProvider = props => {
                     setTimeout(() => {
                         hideModal();
                         }, 1000);
-                }, 800);
+                }, 600);
                 throw "Auth_failed"
             } else {
                 return response.json();
