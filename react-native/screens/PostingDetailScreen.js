@@ -195,10 +195,10 @@ const PostingDetailScreen = props => {
     fetch(url, {
       method: 'DELETE',
     }).then(response => {
-      if (response.ok) {
+      if (response.status === 204) {
         return response.json();
       } else {
-        throw Error(response.text());
+        throw Error(response.json());
       }
     }).then(json => {
       hideModal();
