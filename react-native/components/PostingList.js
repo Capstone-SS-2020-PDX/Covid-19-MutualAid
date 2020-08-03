@@ -16,6 +16,7 @@ const PostingList = props => {
               in_community={itemData.item.in_community}
               location={itemData.item.location}
               flagged={itemData.item.flagged}
+              id={itemData.item.id}
               owner={itemData.item.owner}
               moderatorView={props.moderatorView}
               onSelectPosting={() => {
