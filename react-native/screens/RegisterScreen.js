@@ -64,20 +64,20 @@ const RegisterScreen = props => {
       onSubmit={values => {
         attemptRegister(values);
       }}
-    validationSchema={Yup.object().shape({
-      email: Yup.string().email('Invalid email').required('email required'),
-      username: Yup.string().trim().min(4, 'Too short!').max(30, 'Too long!')
-                   .test('username-available', 'username not available', () => {
-                     return isValidUsername;
-                   })
-                   .required('username required'),
-      password: Yup.string().min(4, 'Too short!').max(30, 'Too long!')
-                   .required('password required'),
-      confirm_password: Yup.string().oneOf(
-        [Yup.ref('password'), null],
-        'passwords must match'
-      ).required('confirm your password'),
-    })}
+      validationSchema={Yup.object().shape({
+        email: Yup.string().email('Invalid email').required('email required'),
+        username: Yup.string().trim().min(4, 'Too short!').max(30, 'Too long!')
+                     .test('username-available', 'username not available', () => {
+                       return isValidUsername;
+                     })
+                     .required('username required'),
+        password: Yup.string().min(4, 'Too short!').max(30, 'Too long!')
+                     .required('password required'),
+        confirm_password: Yup.string().oneOf(
+          [Yup.ref('password'), null],
+          'passwords must match'
+        ).required('confirm your password'),
+      })}
     >
       {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
         <>

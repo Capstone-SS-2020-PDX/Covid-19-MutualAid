@@ -80,7 +80,7 @@ handle user data and personal information, feel free to contact us. This policy 
     <ScrollView>
         <View style={styles.screen}>
           <Text style={styles.screenTitle}>{'User Agreements'}</Text>
-          <View style={styles.container} behavior='padding'>
+          <View style={styles.textContainer} behavior='padding'>
             <Text style={styles.bigHeader}>{`Common Goods Terms of Service`}</Text>
             <Text style={styles.tosText}>{preamble}</Text>
 
@@ -118,27 +118,31 @@ handle user data and personal information, feel free to contact us. This policy 
             <Text style={styles.bigHeader}>{privacyHeader}</Text>
             <Text style={styles.tosText}>{privacyText}</Text>
           </View>
-          <CustomButton
-            style={styles.loginButton}
-            onPress={() => {
-              navigation.navigate('Register');
-            }}
-          >
-            <Text style={styles.buttonText}>I Agree</Text>
-          </CustomButton>
 
-          <CustomButton
-            style={styles.loginButton}
-            onPress={() => {
-              showModal('UNACCEPTED_TERMS');
-              setTimeout(() => {
+          <View style={styles.buttonContainer}>
+
+            <CustomButton
+              style={{...styles.button, ...styles.refuseButton}}
+              onPress={() => {
+                showModal('UNACCEPTED_TERMS');
+                setTimeout(() => {
                   hideModal();
                   navigation.navigate('Login');
                 }, 900);
-            }}
-          >
-              <Text style={styles.buttonText}>I Refuse</Text>
-          </CustomButton>
+              }}
+            >
+              <Text style={styles.buttonText}>Refuse</Text>
+            </CustomButton>
+
+            <CustomButton
+              style={{...styles.button, ...styles.agreeButton}}
+              onPress={() => {
+                navigation.navigate('Register');
+              }}
+            >
+              <Text style={styles.buttonText}>Agree</Text>
+            </CustomButton>
+          </View>
         </View>
     </ScrollView>
   );
@@ -146,40 +150,53 @@ handle user data and personal information, feel free to contact us. This policy 
 
 const styles = StyleSheet.create({
   screen: {
-    flex: 1,
-    justifyContent: 'space-around',
     alignItems: 'center',
-    backgroundColor: Colors.light_shade2,
+    backgroundColor: Colors.light_shade4,
+    padding: 20,
   },
   screenTitle: {
     color: Colors.dark_shade1,
     fontFamily: 'open-sans-bold',
     fontSize: 36,
     textAlign: 'center',
-    marginTop: 20,
-    marginBottom: 40,
+    marginTop: 30,
+    marginBottom: 30,
   },
-  container: {
+  textContainer: {
     width: '95%',
     textAlign: 'left',
   },
   bigHeader: {
     fontWeight: 'bold',
     fontSize: 22,
+    marginTop: 20,
     marginBottom: 10,
   },
   subHeader: {
     fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 20,
+    marginTop: 20,
+    marginBottom: 10,
   },
   tosText: {
     fontSize: 16,
-    marginBottom: 5,
     lineHeight: 30,
   },
-  loginButton: {
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignContent: 'center',
+    width: '100%',
+    paddingVertical: 20,
+    paddingHorizontal: 10,
+  },
+  button: {
+    width: '50%',
     marginBottom: 10,
+    marginHorizontal: 10,
+  },
+  refuseButton: {
+    backgroundColor: Colors.contrast3,
   },
   buttonText: {
     color: Colors.light_shade1,
