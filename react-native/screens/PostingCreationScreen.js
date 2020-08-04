@@ -29,7 +29,7 @@ const isAndroid = Platform.OS === 'android';
 
 const PostingCreationScreen = props => {
   const { navigation } = props;
-  const { user, communities } = useContext(AuthContext);
+  const { user, communities, addPosting } = useContext(AuthContext);
   const homeCommunity = communities.find(community => community.id === user.profile.home);
   const availableCommunities = communities.filter(community => user.profile.member_of.includes(community.id));
 
@@ -120,6 +120,7 @@ const PostingCreationScreen = props => {
       .then(json => {
         console.log('Post Request: \n')
         console.log(json);
+        addPosting(json);
         notifyMessage('Posting Sucessfully Created!');
         resetFormState();
         navigateToHomeStack();

@@ -260,6 +260,19 @@ export const AuthProvider = props => {
         }
     };
 
+    const addPosting = newPosting => {
+        console.log('Adding new posting with id: ' + newPosting.id);
+
+        const updatedPostings = loginState.postings;
+        updatedPostings.push(newPosting);
+
+        dispatch({
+            type: UPDATE_POSTINGS,
+            postings: updatedPostings,
+            postings_updated: Math.random(),
+        });
+    };
+
     const deletePosting = postToDelete => {
         console.log('deleting one posting with id: ' + updatedPosting.id);
 
@@ -361,6 +374,7 @@ export const AuthProvider = props => {
               updateUser,
               updatePostings,
               updateOnePosting,
+              addPosting,
               autoLogin: handleAutoLogin,
               login: handleLogin,
               logout: handleLogout,

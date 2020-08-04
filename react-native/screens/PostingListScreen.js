@@ -20,15 +20,10 @@ const Feed = props => {
   const { navigation } = props;
   const { user, communities, postings, updatePostings } = useContext(AuthContext);
 
-  const [isLoading, setIsLoading] = useState(true);
-  const [filteredPostings, setFilteredPostings] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [searchPostings, setSearchPostings] = useState([]);
   const [searchText, setSearchText] = useState('');
   const searchInputRef = useRef(null);
-
-  useEffect(() => {
-    filterPostings();
-  }, [user.profile.member_of, postings]);
 
   const fetchPostings = () => {
     setIsLoading(true);
@@ -50,18 +45,6 @@ const Feed = props => {
         setIsLoading(false)
       });
   };
-
-  const filterPostings = () => {
-    // filter postings by whether it is in the user's member_of list
-    let filtered = postings.filter(posting => {
-      return user.profile.member_of.includes(posting.in_community);
-    });
-
-    setFilteredPostings(filtered);
-    setSearchPostings(filtered);
-    setIsLoading(false);
-  };
-
 
   const handleSearch = text => {
     setSearchText(text);
