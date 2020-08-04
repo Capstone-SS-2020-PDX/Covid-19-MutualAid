@@ -5,6 +5,7 @@ import { Text,
          TouchableOpacity,
          Image,
        } from 'react-native';
+import { AntDesign } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -12,7 +13,7 @@ import Colors from '../config/colors';
 import { AuthContext } from '../providers/AuthProvider';
 
 const PostingListItem = props => {
-    const { communities } = useContext(AuthContext);
+    const { user, communities } = useContext(AuthContext);
    
     const offeredItemIconImage = '../assets/round_offer.png';
     const requestedItemIconImage = '../assets/round_request.png';
@@ -24,6 +25,11 @@ const PostingListItem = props => {
         : 'Offer';
 
     const picUrl = props.item_pic;
+
+    const isModeratorView = props.moderatorView;
+    const isOwned = user.user.id == props.owner;
+    const isFavorited = user.profile.saved_postings.includes(props.id);
+    
     const isFlagged = props.flagged;
 
     let communityName;
@@ -47,42 +53,55 @@ const PostingListItem = props => {
                 : require(itemPlaceHolder)}
               />
             </View>
-            <View style={styles.itemTextContainer}>
-              <View style={styles.itemTitleRow}>
-                <View style={styles.itemTitleContainer}>
-                  <Text style={styles.itemTitleText}>
-                    {props.title}
+            <View style={styles.itemDetailsContainer}>
+              <View style={styles.itemTextContainer}>
+                <View style={styles.itemTitleRow}>
+                  <View style={styles.itemTitleContainer}>
+                    <Text style={styles.itemTitleText}>
+                      {props.title}
+                    </Text>
+                  </View>
+                </View>
+                <View style={styles.postingTypeContainer}>
+                  <Image
+                    style={styles.postingTypeIconImage}
+                    resizeMode='contain'
+                    source={itemIcon}
+                  />
+                  <Text style={styles.itemDetailText}>
+                    {itemType}
                   </Text>
                 </View>
-                <View style={styles.flagIconContainer}>
-                  {isFlagged? (
-                  <Ionicons 
-                      name="ios-flag" 
-                      size={24} 
-                      color={Colors.contrast3} />)
-                  : (null)
-                  }
-                </View>
-              </View>
-              <View style={styles.postingTypeContainer}>
-                <Image
-                  style={styles.postingTypeIconImage}
-                  resizeMode='contain'
-                  source={itemIcon}
-                />
-                <Text style={styles.itemDetailText}>
-                  {itemType}
-                </Text>
-              </View>
-              <View style={styles.postingTypeContainer}>
-                <Entypo 
+                <View style={styles.postingTypeContainer}>
+                  <Entypo
                     name="location-pin" 
                     size={20} 
                     color="black" 
                     style={{marginTop: 5}} />
-                <Text style={styles.itemDetailText}>
-                  {communityName}
-                </Text>
+                  <Text style={styles.itemDetailText}>
+                    {communityName}
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <View style={styles.iconContainer}>
+              <View style={styles.heartIconContainer}>
+                {(!isOwned && !isModeratorView && isFavorited)? (
+                    <AntDesign
+                      name={'heart'}
+                      size={24}
+                      color={Colors.contrast2}
+                    />)
+                 : (null)}
+              </View>
+              <View style={styles.flagIconContainer}>
+                {isFlagged? (
+                    <Ionicons
+                      name="ios-flag"
+                      size={24}
+                      color={Colors.contrast3} />)
+                 : (null)
+                }
               </View>
             </View>
           </View>
@@ -104,9 +123,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-around',
     },
-    itemTextContainer: {
+    itemDetailsContainer: {
         width: '70%',
+    },
+    itemTextContainer: {
         alignContent: 'flex-start',
+        marginLeft: '5%',
         paddingHorizontal: 5,
     },
     listImageContainer: {
@@ -124,14 +146,24 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     itemTitleContainer: {
-        width: '85%',
-        marginRight: '5%',
     },
     itemTitleText: {
         fontSize: 20,
         fontFamily: 'open-sans',
     },
+    iconContainer: {
+        width: '10%',
+        height: '100%',
+        flexDirection: 'column',
+        justifyContent: 'space-around',
+    },
+    heartIconContainer: {
+        marginRight: 10,
+    },
+    heartIconContainerNoFlag: {
+    },
     flagIconContainer: {
+        marginLeft: 5,
     },
     itemDetailText: {
         fontSize: 14,
