@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import { View, StyleSheet, FlatList, RefreshControl } from 'react-native';
 
 import PostingListItem from '../components/PostingListItem';
@@ -6,7 +6,30 @@ import { AuthContext } from '../providers/AuthProvider';
 
 const PostingList = props => {
   const { navigation } = props;
-  const { postings } = useContext(AuthContext);
+  const { user, postings, postings_updated } = useContext(AuthContext);
+  const [filteredPostings, setFilteredPostings] = useState([]);
+
+  useEffect(() => {
+    filterPostings();
+  }, [postings_updated, user.profile.member_of]);
+
+  const filterPostings = filterType => {
+    let filtered = postings.filter(posting => {
+      return user.profile.member_of.includes(posting.in_community);
+    });
+
+    if (props.filterType === 'FLAGGED') {
+      filtered = filtered.filter(posting => posting.flagged > 0);
+    } else if (props.filterType === 'SAVED') {
+      filtered = filtered.filter(posting =>
+        user.profile.saved_postings.includes(posting.id));
+    } else if (props.filterType === 'USER') {
+      filtered = postings.filter(posting =>
+        posting.owner === user.user.id);
+    }
+
+    setFilteredPostings(filtered);
+  };
 
   const renderPostingListItem = itemData => {
     return(
@@ -20,20 +43,8 @@ const PostingList = props => {
           flagged={itemData.item.flagged}
           onSelectPosting={() => {
             navigation.navigate('PostingDetail', {
-              title: itemData.item.title,
-              description: itemData.item.desc,
-              userId: itemData.item.userId,
-              id: itemData.item.id,
-              category: itemData.item.category,
-              count: itemData.item.count,
-              owner: itemData.item.owner,
-              created_on: itemData.item.created_on,
-              item_pic: itemData.item.item_pic,
-              request: itemData.item.request,
-              in_community: itemData.item.in_community,
+              ...itemData.item,
               moderatorView: props.moderatorView,
-              location: itemData.item.location,
-              flagged: itemData.item.flagged,
             });
           }}
         />
@@ -46,7 +57,7 @@ const PostingList = props => {
       style={styles.list}
       renderItem={renderPostingListItem}
       keyExtractor={(itemData, i) => i.toString()}
-      data={postings}
+      data={filteredPostings}
       showsVerticalScrollIndicator={false}
       refreshControl={
         <RefreshControl

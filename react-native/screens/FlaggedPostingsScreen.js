@@ -18,18 +18,13 @@ import { postings_url } from '../config/urls';
 const FlaggedPostingsScreen = props => {
     const { navigation } = props;
     const { user, communities, postings, updatePostings } = useContext(AuthContext);
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
 
     const [filteredPostings, setFilteredPostings] = useState([]);
     const [searchPostings, setSearchPostings] = useState([]);
     const [searchText, setSearchText] = useState('');
     const searchInputRef = useRef(null);
  
-  
-    useEffect(() => {
-        filterPostings();
-    }, [postings, user]);
-
     const fetchPostings = () => {
         setIsLoading(true);
 
@@ -47,17 +42,6 @@ const FlaggedPostingsScreen = props => {
           .finally(() => {
               setIsLoading(false)
           });
-    };
-
-    const filterPostings = () => {
-        // filter postings by whether they are flagged
-        let filtered = postings.filter(posting => {
-            return posting.flagged > 0;
-        });
-
-        setFilteredPostings(filtered);
-        setSearchPostings(filteredPostings);
-        setIsLoading(false);
     };
 
     const handleSearch = text => {
@@ -83,6 +67,7 @@ const FlaggedPostingsScreen = props => {
               isLoading={isLoading}
               onRefresh={fetchPostings}
               moderatorView={true}
+              filterType='FLAGGED'
              />
 
     return(

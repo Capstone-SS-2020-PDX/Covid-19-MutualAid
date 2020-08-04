@@ -28,11 +28,10 @@ export const AuthProvider = props => {
         user: null,
         communities: null,
         postings: null,
-        updated: false,
+        postings_updated: 0,
     };
 
-    const loginReducer = (previousState, action) => {
-        switch(action.type) {
+    const loginReducer = (previousState, action) => {switch(action.type) {
             case AUTO_LOGIN:
                 return {
                     ...previousState,
@@ -100,6 +99,7 @@ export const AuthProvider = props => {
                     ...previousState,
                     postings: action.postings,
                     isLoading: false,
+                    postings_updated: action.postings_updated,
                 };
         }
     };
@@ -233,7 +233,11 @@ export const AuthProvider = props => {
 
     const updatePostings = newPostingsData => {
         console.log('updating postings');
-        dispatch({ type: UPDATE_POSTINGS, postings: newPostingsData });
+        dispatch({
+            type: UPDATE_POSTINGS,
+            postings: newPostingsData,
+            postings_updated: Math.random(),
+        });
     };
 
     const updateOnePosting = updatedPosting => {
@@ -248,7 +252,11 @@ export const AuthProvider = props => {
         console.log(updatedPostingIndex);
         if (updatedPostingIndex !== -1) {
             updatedPostings[updatedPostingIndex] = updatedPosting;
-            dispatch({ type: UPDATE_POSTINGS, postings: loginState.postings });
+            dispatch({
+                type: UPDATE_POSTINGS,
+                postings: loginState.postings,
+                postings_updated: Math.random(),
+            });
         }
     };
 
@@ -348,6 +356,7 @@ export const AuthProvider = props => {
               user: loginState.user,
               communities: loginState.communities,
               postings: loginState.postings,
+              postings_updated: loginState.postings_updated,
               updateProfile,
               updateUser,
               updatePostings,

@@ -34,7 +34,7 @@ const requestedItemIconImage = '../assets/requested_item.png';
 const itemPlaceHolder = '../assets/image_place_holder.jpg';
 
 const PostingDetailScreen = props => {
-  const { user, updateProfile, postings, updateOnePosting } = useContext(AuthContext);
+  const { user, updateProfile, updateOnePosting } = useContext(AuthContext);
   const { route, navigation } = props;
   const [postingImage, setPostingImage] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);

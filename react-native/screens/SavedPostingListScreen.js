@@ -20,15 +20,11 @@ const SavedPostingListScreen = props => {
   const { navigation } = props;
   const { user, postings, updatePostings } = useContext(AuthContext);
 
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [filteredPostings, setFilteredPostings] = useState([]);
   const [searchPostings, setSearchPostings] = useState([]);
   const [searchText, setSearchText] = useState('');
   const searchInputRef = useRef(null);
-
-  useEffect(() => {
-    filterPostings();
-  }, [postings, user.profile.saved_postings]);
 
   const fetchPostings = () => {
     setIsLoading(true);
@@ -82,6 +78,7 @@ const SavedPostingListScreen = props => {
             navigation={navigation}
             isLoading={isLoading}
             onRefresh={fetchPostings}
+            filterType='SAVED'
           />
 
   return(

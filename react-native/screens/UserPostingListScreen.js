@@ -20,16 +20,10 @@ const UserPostingListScreen = props => {
   const { navigation } = props;
   const { user, postings, updatePostings } = useContext(AuthContext);
 
-  const [isLoading, setIsLoading] = useState(true);
-  const [filteredPostings, setFilteredPostings] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [searchPostings, setSearchPostings] = useState([]);
   const [searchText, setSearchText] = useState('');
   const searchInputRef = useRef(null);
-
-
-  useEffect(() => {
-    filterPostings();
-  }, [postings]);
 
   const fetchPostings = () => {
     setIsLoading(true);
@@ -83,6 +77,7 @@ const UserPostingListScreen = props => {
             navigation={navigation}
             isLoading={isLoading}
             onRefresh={fetchPostings}
+            filterType='USER'
           />
 
   return(
