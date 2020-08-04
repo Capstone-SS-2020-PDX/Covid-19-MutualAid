@@ -110,7 +110,6 @@ const PostingDetailScreen = props => {
   };
 
   const handleFlagPost = () => {
-    showModal('FLAGGING_POSTING');
     const url = postings_url + route.params.id + '/';
 
     let flag = route.params.flagged;
@@ -132,9 +131,6 @@ const PostingDetailScreen = props => {
       // console.log("Server response after flagging post: ");
       // console.log(json);
       updateOnePosting(json);
-      hideModal();
-      notifyMessage('Posting Flagged Successfully!');
-      navigation.goBack();
     });
   };
 
