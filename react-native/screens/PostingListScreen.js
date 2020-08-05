@@ -31,6 +31,7 @@ const Feed = props => {
   const fetchPostings = () => {
     setIsLoading(true);
 
+    console.log(searchMethod);
     const url = searchMethod === 'COMMUNITY' ? postings_url : generateRadiusUrl();
 
     fetch(url, {

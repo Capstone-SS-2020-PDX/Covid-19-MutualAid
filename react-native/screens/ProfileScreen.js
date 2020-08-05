@@ -47,15 +47,16 @@ const ProfileScreen = props => {
   }, [navigation]);
 
   const handleUpdateLocation = async () => {
-    showModal('UPDATING_LOCATION');
     (async () => {
       let { status } = await Location.requestPermissionsAsync();
       if (status !== 'granted') {
         setErrorMsg('Permission to access location was denied');
+      } else {
+        showModal('UPDATING_LOCATION');
+        let location = await Location.getCurrentPositionAsync({accuracy: 5})
+        console.log(location);
+        await updateProfileWithNewLocation(location);
       }
-      let location = await Location.getCurrentPositionAsync({accuracy: 5})
-      console.log(location);
-      await updateProfileWithNewLocation(location);
     }
     )()
   };
