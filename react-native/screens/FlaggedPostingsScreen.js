@@ -17,7 +17,7 @@ import { postings_url } from '../config/urls';
 
 const FlaggedPostingsScreen = props => {
     const { navigation } = props;
-    const { user, communities, postings, updatePostings } = useContext(AuthContext);
+    const { user, updatePostings } = useContext(AuthContext);
     const [isLoading, setIsLoading] = useState(false);
     const [searchText, setSearchText] = useState('');
     const searchInputRef = useRef(null);

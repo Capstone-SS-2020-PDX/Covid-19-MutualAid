@@ -18,7 +18,7 @@ import { postings_url } from '../config/urls';
 
 const Feed = props => {
   const { navigation } = props;
-  const { user, communities, postings, updatePostings } = useContext(AuthContext);
+  const { user, communities, updatePostings } = useContext(AuthContext);
 
   const [isLoading, setIsLoading] = useState(false);
   const [searchText, setSearchText] = useState('');

@@ -18,7 +18,7 @@ import { AuthContext } from '../providers/AuthProvider';
 
 const SavedPostingListScreen = props => {
   const { navigation } = props;
-  const { user, postings, updatePostings } = useContext(AuthContext);
+  const { user, updatePostings } = useContext(AuthContext);
 
   const [isLoading, setIsLoading] = useState(false);
   const [searchText, setSearchText] = useState('');
