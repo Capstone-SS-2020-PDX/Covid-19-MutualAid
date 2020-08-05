@@ -124,7 +124,7 @@ export const AuthProvider = props => {
                 console.log(postingsData.length + ' postings fetched');
                 dispatch({ type: UPDATE_POSTINGS, postings: postingsData });
             } else {
-                console.log("Postings NOT in AsyncStorage, fetching from server...");
+                console.log("Postings NOT in AsyncStorage, fetching from server with method: " + loginState.searchMethod);
 
                 fetch(postings_url, {
                     method: 'GET',

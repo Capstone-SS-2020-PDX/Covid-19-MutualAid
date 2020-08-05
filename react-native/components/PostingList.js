@@ -6,7 +6,7 @@ import { AuthContext } from '../providers/AuthProvider';
 
 const PostingList = props => {
   const { navigation, searchText } = props;
-  const { user, postings, postings_updated } = useContext(AuthContext);
+  const { user, postings, postings_updated, searchMethod } = useContext(AuthContext);
   const [filteredPostings, setFilteredPostings] = useState([]);
 
   useEffect(() => {
@@ -14,10 +14,17 @@ const PostingList = props => {
   }, [props.searchText, postings_updated, user.profile.member_of]);
 
   const filterPostings = filterType => {
-    let filtered = postings.filter(posting => {
-      return user.profile.member_of.includes(posting.in_community);
-    });
+    let filtered = postings;
 
+    // filtering by searchMethod
+    if (searchMethod === 'COMMUNITY') {
+      filtered = postings.filter(posting => {
+        return user.profile.member_of.includes(posting.in_community);
+      });
+
+    }
+
+    // filtering by postingListScreen type
     if (props.filterType === 'FLAGGED') {
       filtered = filtered.filter(posting => posting.flagged > 0);
     } else if (props.filterType === 'SAVED') {
@@ -28,6 +35,7 @@ const PostingList = props => {
         posting.owner === user.user.id);
     }
 
+    // search filtering
     if (searchText.length > 0) {
       filtered = filtered.filter(posting =>
         posting.title.toLowerCase().includes(

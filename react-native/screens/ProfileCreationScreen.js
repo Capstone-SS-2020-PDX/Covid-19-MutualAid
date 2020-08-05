@@ -37,11 +37,11 @@ const ProfileCreationScreen = props => {
     const [selectedCommunity, setSelectedCommunity] = useState(communities[0]);
     const [selectedImage, setSelectedImage] = useState(null);
     const [isProcessing, setIsProcessing] = useState(false);
+    const [location, setLocation] = useState(null);
 
     const firstNameRef = useRef(null);
     const lastNameRef = useRef(null);
     const profileTextRef = useRef(null);
-    const [ location, setLocation] = useState(null);
 
     const errorIcon = () => (
         <FontAwesome

@@ -18,7 +18,7 @@ import { postings_url } from '../config/urls';
 
 const Feed = props => {
   const { navigation } = props;
-  const { user, communities, updatePostings } = useContext(AuthContext);
+  const { user, updatePostings, searchMethod, searchRadius } = useContext(AuthContext);
 
   const [isLoading, setIsLoading] = useState(false);
   const [searchText, setSearchText] = useState('');
@@ -27,7 +27,9 @@ const Feed = props => {
   const fetchPostings = () => {
     setIsLoading(true);
 
-    fetch(postings_url, {
+    const url = searchMethod === 'COMMUNITY' ? postings_url : generateRadiusUrl();
+
+    fetch(url, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
@@ -45,6 +47,13 @@ const Feed = props => {
       });
   };
 
+  const generateRadiusUrl = () => {
+    let url = postings_url;
+    url += '?longitude=' + '-122.084' + '&latitude=' + '37.4219983' + '&radius=' + searchRadius;
+    console.log(url);
+    return url;
+  };
+
   const handleSearch = text => {
     setSearchText(text);
   };
@@ -55,7 +64,7 @@ const Feed = props => {
   };
 
   const PostingListSection = isLoading ? <ActivityIndicator size='large'/>
-          : <PostingList
+        : <PostingList
             navigation={navigation}
             isLoading={isLoading}
             onRefresh={fetchPostings}
@@ -63,36 +72,36 @@ const Feed = props => {
           />
 
   return(
-       <View style={styles.screen}>
-          <View style={styles.searchContainer}>
-            <View style={styles.inputView}>
-              <Ionicons
-                name={'ios-search'}
-                size={23}
-                style={styles.inputIcon}
-              />
-              <TextInput
-                style={styles.inputText}
-                placeholder='Search for an item'
-                placeholderTextColor={Colors.placeholder_text}
-                autoCapitalize='none'
-                onChangeText={text => handleSearch(text)}
-                returnKeyType='done'
-                ref={searchInputRef}
-              />
-              <TouchableOpacity
-                style={styles.inputIcon}
-                onPress={() => handleClearSearchInput()}
-              >
-                <Feather
-                  name={'x-circle'}
-                  size={20}
-                />
-              </TouchableOpacity>
-            </View>
-          </View>
-         {PostingListSection}
+    <View style={styles.screen}>
+      <View style={styles.searchContainer}>
+        <View style={styles.inputView}>
+          <Ionicons
+            name={'ios-search'}
+            size={23}
+            style={styles.inputIcon}
+          />
+          <TextInput
+            style={styles.inputText}
+            placeholder='Search for an item'
+            placeholderTextColor={Colors.placeholder_text}
+            autoCapitalize='none'
+            onChangeText={text => handleSearch(text)}
+            returnKeyType='done'
+            ref={searchInputRef}
+          />
+          <TouchableOpacity
+            style={styles.inputIcon}
+            onPress={() => handleClearSearchInput()}
+          >
+            <Feather
+              name={'x-circle'}
+              size={20}
+            />
+          </TouchableOpacity>
         </View>
+      </View>
+      {PostingListSection}
+    </View>
   );
 };
 
