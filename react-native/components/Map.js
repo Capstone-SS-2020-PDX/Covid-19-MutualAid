@@ -64,12 +64,15 @@ const Map = props => {
           longitudeDelta: 0.0421,
         }}
       >
-        <Circle
-          center={modifiedPoint}
-          radius={radius}
-          fillColor={Colors.map_circle_fill}
-          strokeColor={Colors.map_circle_stroke}
-        />
+        { props.no_circle ? null
+          :
+          <Circle
+            center={modifiedPoint}
+            radius={radius}
+            fillColor={Colors.map_circle_fill}
+            strokeColor={Colors.map_circle_stroke}
+          />
+        }
         <Marker
           coordinate={truePoint}
         />

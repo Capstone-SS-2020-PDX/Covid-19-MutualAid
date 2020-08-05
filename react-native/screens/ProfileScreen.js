@@ -114,10 +114,16 @@ const ProfileScreen = props => {
         <Text style={styles.labelText}>Home</Text>
         <Text style={styles.text}>{homeCommunity.name}</Text>
       </View>
+
+      {
+        user.profile.home_location ?
         <Map
-          radius={3000}
+          radius={2000}
           location={user.profile.home_location}
+          no_circle={true}
         />
+        : null
+      }
       <CustomButton
         style={styles.button}
         onPress={() => {
