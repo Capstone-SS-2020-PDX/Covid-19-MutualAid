@@ -13,6 +13,7 @@ const UPDATE_PROFILE = 'UPDATE_PROFILE';
 const UPDATE_USER = 'UPDATE_USER';
 const UPDATE_COMMUNITIES = 'UPDATE_COMMUNITIES';
 const UPDATE_POSTINGS = 'UPDATE_POSTINGS';
+const SET_SEARCH_METHOD = 'SET_SEARCH_METHOD';
 
 // Provides token and login/logout functionality to Global App Context
 // Allows the app to know which user is using it and to handle login/logout
@@ -29,6 +30,8 @@ export const AuthProvider = props => {
         communities: null,
         postings: null,
         postings_updated: 0,
+        searchMethod: 'COMMUNITY',
+        searchRadius: 10,
     };
 
     const loginReducer = (previousState, action) => {switch(action.type) {
@@ -101,6 +104,12 @@ export const AuthProvider = props => {
                     isLoading: false,
                     postings_updated: action.postings_updated,
                 };
+            case SET_SEARCH_METHOD:
+                return {
+                    ...previousState,
+                    searchMethod: action.searchMethod,
+                    searchRadius: action.searchRadius,
+                }
         }
     };
 
@@ -363,6 +372,15 @@ export const AuthProvider = props => {
         dispatch({ type: SET_IS_LOADING, isLoading: loadingStatus });
     };
 
+    const setSearchMethod = (method, radius) => {
+        console.log('Setting search method: ' + method + ' with radius: ' + radius);
+        dispatch({
+            type: SET_SEARCH_METHOD,
+            searchMethod: method,
+            searchRadius: radius,
+        });
+    };
+
     return (
         <AuthContext.Provider
           value={{
@@ -374,6 +392,9 @@ export const AuthProvider = props => {
               communities: loginState.communities,
               postings: loginState.postings,
               postings_updated: loginState.postings_updated,
+              searchMethod: loginState.searchMethod,
+              searchRadius: loginState.searchRadius,
+              setSearchMethod,
               updateProfile,
               updateUser,
               updatePostings,
