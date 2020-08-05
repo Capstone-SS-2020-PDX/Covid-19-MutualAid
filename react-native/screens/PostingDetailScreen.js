@@ -38,7 +38,6 @@ const PostingDetailScreen = props => {
   const { route, navigation } = props;
   const [postingImage, setPostingImage] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
-  const radius = 4000;
   const picUrl = route.params.item_pic;
   const isModeratorView = route.params.moderatorView;
   const isOwned = user.user.id === route.params.owner;

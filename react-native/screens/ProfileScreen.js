@@ -10,6 +10,7 @@ import {
 import { Entypo } from '@expo/vector-icons';
 import OptionsMenu from "react-native-options-menu";
 import * as Location from 'expo-location';
+import Map from '../components/Map';
 
 import { AuthContext } from '../providers/AuthProvider';
 import CustomButton from '../components/CustomButton';
@@ -113,6 +114,10 @@ const ProfileScreen = props => {
         <Text style={styles.labelText}>Home</Text>
         <Text style={styles.text}>{homeCommunity.name}</Text>
       </View>
+        <Map
+          radius={3000}
+          location={user.profile.home_location}
+        />
       <CustomButton
         style={styles.button}
         onPress={() => {
