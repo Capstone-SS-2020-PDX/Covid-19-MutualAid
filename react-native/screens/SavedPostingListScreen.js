@@ -18,16 +18,23 @@ import { AuthContext } from '../providers/AuthProvider';
 
 const SavedPostingListScreen = props => {
   const { navigation } = props;
-  const { user, updatePostings } = useContext(AuthContext);
+  const { user, updatePostings, searchMethod, searchRadius, searchMethodChanged } = useContext(AuthContext);
 
   const [isLoading, setIsLoading] = useState(false);
   const [searchText, setSearchText] = useState('');
   const searchInputRef = useRef(null);
 
+  useEffect(() => {
+    fetchPostings();
+  }, [searchMethodChanged]);
+
   const fetchPostings = () => {
     setIsLoading(true);
 
-    fetch(postings_url, {
+    console.log(searchMethod);
+    const url = searchMethod === 'COMMUNITY' ? postings_url : generateRadiusUrl();
+
+    fetch(url, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
@@ -39,9 +46,22 @@ const SavedPostingListScreen = props => {
       .then(json => {
         updatePostings(json);
       })
+      .catch(error => console.log(error))
       .finally(() => {
         setIsLoading(false)
       });
+  };
+
+  const generateRadiusUrl = () => {
+    const loc = user.profile.home_location;
+    const longitude = loc.slice(loc.indexOf('(') + 1, loc.lastIndexOf(' '));
+    const latitude = loc.slice(loc.lastIndexOf(' ') + 1, loc.indexOf(')'));
+
+    let url = postings_url;
+    url += '?longitude=' + longitude + '&latitude=' + latitude + '&radius=' + searchRadius;
+    console.log(url);
+
+    return url;
   };
 
   const handleSearch = text => {

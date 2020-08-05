@@ -17,28 +17,50 @@ import { postings_url } from '../config/urls';
 
 const FlaggedPostingsScreen = props => {
     const { navigation } = props;
-    const { user, updatePostings } = useContext(AuthContext);
+    const { user, updatePostings, searchMethod, searchRadius, searchMethodChanged } = useContext(AuthContext);
+
     const [isLoading, setIsLoading] = useState(false);
     const [searchText, setSearchText] = useState('');
     const searchInputRef = useRef(null);
- 
+
+    useEffect(() => {
+        fetchPostings();
+    }, [searchMethodChanged]);
+
     const fetchPostings = () => {
         setIsLoading(true);
 
-        fetch(postings_url, {
+        console.log(searchMethod);
+        const url = searchMethod === 'COMMUNITY' ? postings_url : generateRadiusUrl();
+
+        fetch(url, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
                 'Content-type': 'application/json',
                 'Access-Control-Allow-Origin': '*',
             }
-        }).then(response => response.json())
-          .then(json => {
-              updatePostings(json);
-          })
-          .finally(() => {
-              setIsLoading(false)
-          });
+        })
+            .then(response => response.json())
+            .then(json => {
+                updatePostings(json);
+            })
+            .catch(error => console.log(error))
+            .finally(() => {
+                setIsLoading(false)
+            });
+    };
+
+    const generateRadiusUrl = () => {
+        const loc = user.profile.home_location;
+        const longitude = loc.slice(loc.indexOf('(') + 1, loc.lastIndexOf(' '));
+        const latitude = loc.slice(loc.lastIndexOf(' ') + 1, loc.indexOf(')'));
+
+        let url = postings_url;
+        url += '?longitude=' + longitude + '&latitude=' + latitude + '&radius=' + searchRadius;
+        console.log(url);
+
+        return url;
     };
 
     const handleSearch = text => {
@@ -52,13 +74,13 @@ const FlaggedPostingsScreen = props => {
 
     const PostingListSection = isLoading ? <ActivityIndicator size='large'/>
           : <PostingList
-              navigation={navigation}
-              isLoading={isLoading}
-              onRefresh={fetchPostings}
-              moderatorView={true}
-              searchText={searchText}
-              filterType='FLAGGED'
-             />
+                  navigation={navigation}
+                  isLoading={isLoading}
+                  onRefresh={fetchPostings}
+                  moderatorView={true}
+                  searchText={searchText}
+                  filterType='FLAGGED'
+      />
 
     return(
         <View style={styles.screen}>

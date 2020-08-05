@@ -16,6 +16,10 @@ const Map = props => {
   });
 
 
+  useEffect(() => {
+    
+  }, [user.profile.home_location]);
+
   if (location) {
     var point = location;
     point = point.slice(point.indexOf('(') + 1, point.indexOf(')'));
@@ -28,9 +32,6 @@ const Map = props => {
     console.log("null point");
   }
 
-  useEffect(() => {
-    generateRandomCircleCenter(radius, modifiedPoint);
-  }, [user.profile.home_location]);
 
   // const parseLocation = point => {
 
@@ -65,7 +66,10 @@ const Map = props => {
   generateRandomCircleCenter(radius, modifiedPoint);
 
   const changeRegion = () => {
-
+    setRegion({
+      ...region,
+      ...modifiedPoint,
+    })
   };
 
   return(
