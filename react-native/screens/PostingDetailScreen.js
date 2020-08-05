@@ -332,7 +332,7 @@ const PostingDetailScreen = props => {
       </View>
 
       <View style={styles.descriptionContainer}>
-        <Text style={styles.bodyText}>{route.params.description}</Text>
+        <Text style={styles.bodyText}>{route.params.desc}</Text>
       </View>
 
       <Map
