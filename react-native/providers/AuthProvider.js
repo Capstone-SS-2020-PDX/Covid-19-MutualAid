@@ -13,6 +13,7 @@ const UPDATE_PROFILE = 'UPDATE_PROFILE';
 const UPDATE_USER = 'UPDATE_USER';
 const UPDATE_COMMUNITIES = 'UPDATE_COMMUNITIES';
 const UPDATE_POSTINGS = 'UPDATE_POSTINGS';
+const UPDATE_RADIUS_POSTINGS = ''
 const SET_SEARCH_METHOD = 'SET_SEARCH_METHOD';
 
 // Provides token and login/logout functionality to Global App Context
@@ -29,12 +30,14 @@ export const AuthProvider = props => {
         user: null,
         communities: null,
         postings: null,
+        postingsRadius: null,
         postings_updated: 0,
         searchMethod: 'COMMUNITY',
         searchRadius: 10,
     };
 
-    const loginReducer = (previousState, action) => {switch(action.type) {
+    const loginReducer = (previousState, action) => {
+        switch(action.type) {
             case AUTO_LOGIN:
                 return {
                     ...previousState,

@@ -79,7 +79,7 @@ const PostingCreationScreen = props => {
   const createFormData = values => {
     const categoryValue = isGoodSelected ? 'goods' : 'services';
     const requestValue = isRequestSelected ? true : false;
-    const location = selectedCommunity.location;
+    const location = user.profile.home_location || selectedCommunity.location;
 
     const data = new FormData();
 
