@@ -48,9 +48,14 @@ const Feed = props => {
   };
 
   const generateRadiusUrl = () => {
+    const loc = user.profile.home_location;
+    const longitude = loc.slice(loc.indexOf('(') + 1, loc.lastIndexOf(' '));
+    const latitude = loc.slice(loc.lastIndexOf(' ') + 1, loc.indexOf(')'));
+
     let url = postings_url;
-    url += '?longitude=' + '-122.084' + '&latitude=' + '37.4219983' + '&radius=' + searchRadius;
+    url += '?longitude=' + longitude + '&latitude=' + latitude + '&radius=' + searchRadius;
     console.log(url);
+
     return url;
   };
 
