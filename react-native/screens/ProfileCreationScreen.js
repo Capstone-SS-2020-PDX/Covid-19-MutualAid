@@ -10,24 +10,23 @@ import {
     Platform,
     StyleSheet,
 } from 'react-native';
-
 import { AntDesign, FontAwesome, FontAwesome5, Entypo } from '@expo/vector-icons';
 import KeyboardShift from 'react-native-keyboardshift-razzium';
 import { Formik } from "formik";
 import * as Yup from "yup";
-
 import * as Location from 'expo-location';
 
 import { AuthContext } from '../providers/AuthProvider';
 
 import CustomImagePicker from '../components/CustomImagePicker';
 import CustomButton from '../components/CustomButton';
-
 import CommunityPicker from '../components/CommunityPicker';
 import Colors from '../config/colors';
+
 import { showModal, hideModal } from '../components/CustomModal';
 import { windowHeight, windowWidth } from '../config/dimensions';
 import { users_url, profiles_url } from '../config/urls';
+
 const isAndroid = Platform.OS === 'android' ? true : false;
 
 const ProfileCreationScreen = props => {

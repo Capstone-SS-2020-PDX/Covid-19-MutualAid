@@ -82,6 +82,11 @@ const updateProfileOptions = {
     data: 'Updating Profile...',
 };
 
+const updateLocationOptions = {
+    ...defaultOptions,
+    data: 'Updating Location...',
+};
+
 export function showModal(type) {
     let options;
 
@@ -124,6 +129,9 @@ export function showModal(type) {
             break;
         case 'UPDATING_PROFILE':
             options = updateProfileOptions;
+            break;
+        case 'UPDATING_LOCATION':
+            options = updateLocationOptions;
             break;
         default:
             options = defaultOptions;

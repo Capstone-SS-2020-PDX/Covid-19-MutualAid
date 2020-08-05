@@ -7,7 +7,9 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
-import { Ionicons, SimpleLineIcons } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
+import OptionsMenu from "react-native-options-menu";
+import * as Location from 'expo-location';
 
 import { AuthContext } from '../providers/AuthProvider';
 import CustomButton from '../components/CustomButton';
@@ -15,12 +17,15 @@ import CustomButton from '../components/CustomButton';
 import Colors from '../config/colors';
 import { windowHeight, windowWidth } from '../config/dimensions';
 import { prettifyDate } from '../utility/helperFunctions';
+import { showModal, hideModal } from '../components/CustomModal';
+import { profiles_url } from '../config/urls';
+import { notifyMessage } from '../components/CustomToast';
 
 const itemPlaceHolder = '../assets/image_place_holder.jpg';
 
 const ProfileScreen = props => {
   const { navigation } = props;
-  const { user, communities } = useContext(AuthContext);
+  const { user, communities, updateProfile } = useContext(AuthContext);
   const picUrl = user.profile.profile_pic ? user.profile.profile_pic : null;
   const homeCommunity = communities.find(community => community.id === user.profile.home) || '';
 
@@ -29,12 +34,10 @@ const ProfileScreen = props => {
       headerRight: () => (
         <TouchableOpacity
           style={styles.optionsMenuIcon}
-          onPress={() => {
-            console.log(navigation);
-          }}
+          onPress={handleUpdateLocation}
         >
-          <SimpleLineIcons
-            name='options-vertical'
+          <Entypo
+            name='location'
             size={23}
             color={Colors.light_shade4}
           />
@@ -42,6 +45,45 @@ const ProfileScreen = props => {
       ),
     });
   }, [navigation]);
+
+  const handleUpdateLocation = async () => {
+    showModal('UPDATING_LOCATION');
+    (async () => {
+      let { status } = await Location.requestPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+      }
+      let location = await Location.getCurrentPositionAsync({accuracy: 5})
+      console.log(location);
+      await updateProfileWithNewLocation(location);
+    }
+    )()
+  };
+
+  const updateProfileWithNewLocation = async location => {
+    let home_location = 'POINT(' + location.coords.longitude + ' ' + location.coords.latitude + ')';
+
+    const url = profiles_url + user.profile.id + '/';
+    const payload = JSON.stringify({ home_location: home_location });
+
+    return fetch(url, {
+      method: 'PATCH',
+      headers: {
+        'Accept': 'application/json',
+        'Content-type': 'application/json',
+      },
+      body: payload,
+    })
+      .then(response => response.json())
+      .then(json => {
+        console.log(json);
+        updateProfile(json);
+      })
+      .finally(() => {
+        hideModal();
+        notifyMessage('Location successfully updated!');
+      });
+  };
 
   return(
     <ScrollView contentContainerStyle={styles.screen}>
