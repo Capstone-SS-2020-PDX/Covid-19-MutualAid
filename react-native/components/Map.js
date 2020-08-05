@@ -1,10 +1,20 @@
-import React from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import MapView, { Marker, Circle, PROVIDER_GOOGLE } from 'react-native-maps';
+
+import { AuthContext } from '../providers/AuthProvider';
 import Colors from '../config/colors';
 
 const Map = props => {
   const { radius, location } = props;
+  const { user } = useContext(AuthContext);
+  const [region, setRegion] = useState({
+    latitude: location.latitude,
+    longitude: location.longitude,
+    latitudeDelta: 0.0922,
+    longitudeDelta: 0.0421,
+  });
+
 
   if (location) {
     var point = location;
@@ -17,6 +27,10 @@ const Map = props => {
   else {
     console.log("null point");
   }
+
+  useEffect(() => {
+    generateRandomCircleCenter(radius, modifiedPoint);
+  }, [user.profile.home_location]);
 
   // const parseLocation = point => {
 
@@ -50,6 +64,10 @@ const Map = props => {
 
   generateRandomCircleCenter(radius, modifiedPoint);
 
+  const changeRegion = () => {
+
+  };
+
   return(
     <View style={{ ...styles.mapContainer, ...props.style }}>
       <MapView
@@ -63,6 +81,7 @@ const Map = props => {
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
+        onRegionChange={changeRegion}
       >
         { props.no_circle ? null
           :
@@ -73,9 +92,11 @@ const Map = props => {
             strokeColor={Colors.map_circle_stroke}
           />
         }
-        <Marker
-          coordinate={truePoint}
-        />
+        { props.hide_point ? null
+          : <Marker
+                 coordinate={truePoint}
+          />
+        }
       </MapView>
     </View>
   );

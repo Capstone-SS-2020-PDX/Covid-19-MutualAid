@@ -337,6 +337,7 @@ const PostingDetailScreen = props => {
       <Map
         radius={3000}
         location={route.params.location}
+        hide_point={true}
       />
 
       { renderBottomButton() }
