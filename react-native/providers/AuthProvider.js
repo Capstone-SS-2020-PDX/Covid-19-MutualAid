@@ -254,7 +254,7 @@ export const AuthProvider = props => {
             updatedPostings[updatedPostingIndex] = updatedPosting;
             dispatch({
                 type: UPDATE_POSTINGS,
-                postings: loginState.postings,
+                postings: updatedPostings,
                 postings_updated: Math.random(),
             });
         }
@@ -273,18 +273,22 @@ export const AuthProvider = props => {
         });
     };
 
-    const deletePosting = postToDelete => {
-        console.log('deleting one posting with id: ' + updatedPosting.id);
+    const deletePosting = postID => {
+        console.log('deleting one posting with id: ' + postID);
 
         const updatedPostings = loginState.postings;
 
         const deletedPostingIndex = loginState.postings.indexOf(
-            updatedPostings.find(posting => posting.id === updatedPosting.id)
+            updatedPostings.find(posting => posting.id === postID)
         );
 
         if (deletedPostingIndex !== -1) {
             updatedPostings.splice(deletedPostingIndex, 1);
-            dispatch({ type: UPDATE_POSTINGS, postings: loginState.postings });
+            dispatch({
+                type: UPDATE_POSTINGS,
+                postings: updatedPostings,
+                postings_updated: Math.random(),
+            });
         }
     };
 
@@ -375,6 +379,7 @@ export const AuthProvider = props => {
               updatePostings,
               updateOnePosting,
               addPosting,
+              deletePosting,
               autoLogin: handleAutoLogin,
               login: handleLogin,
               logout: handleLogout,
