@@ -18,11 +18,15 @@ import { postings_url } from '../config/urls';
 
 const Feed = props => {
   const { navigation } = props;
-  const { user, updatePostings, searchMethod, searchRadius } = useContext(AuthContext);
+  const { user, updatePostings, searchMethod, searchRadius, searchMethodChanged } = useContext(AuthContext);
 
   const [isLoading, setIsLoading] = useState(false);
   const [searchText, setSearchText] = useState('');
   const searchInputRef = useRef(null);
+
+  useEffect(() => {
+    fetchPostings();
+  }, [searchMethodChanged]);
 
   const fetchPostings = () => {
     setIsLoading(true);

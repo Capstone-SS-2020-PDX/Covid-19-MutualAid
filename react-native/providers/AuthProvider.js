@@ -33,6 +33,7 @@ export const AuthProvider = props => {
         postingsRadius: null,
         postings_updated: 0,
         searchMethod: 'COMMUNITY',
+        searchMethodChanged: 0,
         searchRadius: 10,
     };
 
@@ -112,6 +113,7 @@ export const AuthProvider = props => {
                     ...previousState,
                     searchMethod: action.searchMethod,
                     searchRadius: action.searchRadius,
+                    searchMethodChanged: action.searchMethodChanged,
                 }
         }
     };
@@ -377,11 +379,22 @@ export const AuthProvider = props => {
 
     const setSearchMethod = (method, radius) => {
         console.log('Setting search method: ' + method + ' with radius: ' + radius);
-        dispatch({
-            type: SET_SEARCH_METHOD,
-            searchMethod: method,
-            searchRadius: radius,
-        });
+
+        if (radius === loginState.radius) {
+            dispatch({
+                type: SET_SEARCH_METHOD,
+                searchMethod: method,
+                searchRadius: radius,
+                searchMethodChanged: loginState.searchMethodChanged,
+            });
+        } else {
+            dispatch({
+                type: SET_SEARCH_METHOD,
+                searchMethod: method,
+                searchRadius: radius,
+                searchMethodChanged: Math.random(),
+            });
+        }
     };
 
     return (
@@ -397,6 +410,7 @@ export const AuthProvider = props => {
               postings_updated: loginState.postings_updated,
               searchMethod: loginState.searchMethod,
               searchRadius: loginState.searchRadius,
+              searchMethodChanged: loginState.searchMethodChanged,
               setSearchMethod,
               updateProfile,
               updateUser,
