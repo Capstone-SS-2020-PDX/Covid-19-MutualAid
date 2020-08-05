@@ -21,7 +21,6 @@ const UserPostingListScreen = props => {
   const { user, postings, updatePostings } = useContext(AuthContext);
 
   const [isLoading, setIsLoading] = useState(false);
-  const [searchPostings, setSearchPostings] = useState([]);
   const [searchText, setSearchText] = useState('');
   const searchInputRef = useRef(null);
 
@@ -45,38 +44,21 @@ const UserPostingListScreen = props => {
       });
   };
 
-  const filterPostings = () => {
-    let filtered = postings.filter(posting => {
-      return posting.owner === user.user.id;
-    });
-
-    setFilteredPostings(filtered);
-    setSearchPostings(filtered);
-    setIsLoading(false);
-  };
-
   const handleSearch = text => {
     setSearchText(text);
-
-    let filtered = filteredPostings.filter(posting =>
-      posting.title.toLowerCase().includes(text.toLowerCase())
-    );
-
-    setSearchPostings(filtered);
   };
 
   const handleClearSearchInput = () => {
     setSearchText('');
-    setSearchPostings(filteredPostings);
     searchInputRef.current.clear();
   };
 
   const PostingListSection = isLoading ? <ActivityIndicator size='large'/>
         : <PostingList
-            postings={searchPostings}
             navigation={navigation}
             isLoading={isLoading}
             onRefresh={fetchPostings}
+            searchText={searchText}
             filterType='USER'
           />
 

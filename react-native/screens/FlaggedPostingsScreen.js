@@ -19,9 +19,6 @@ const FlaggedPostingsScreen = props => {
     const { navigation } = props;
     const { user, communities, postings, updatePostings } = useContext(AuthContext);
     const [isLoading, setIsLoading] = useState(false);
-
-    const [filteredPostings, setFilteredPostings] = useState([]);
-    const [searchPostings, setSearchPostings] = useState([]);
     const [searchText, setSearchText] = useState('');
     const searchInputRef = useRef(null);
  
@@ -46,27 +43,20 @@ const FlaggedPostingsScreen = props => {
 
     const handleSearch = text => {
         setSearchText(text);
-
-        let filtered = filteredPostings.filter(posting =>
-            posting.title.toLowerCase().includes(text.toLowerCase())
-        );
-
-        setSearchPostings(filtered);
     };
 
     const handleClearSearchInput = () => {
         setSearchText('');
-        setSearchPostings(filteredPostings);
         searchInputRef.current.clear();
     };
 
     const PostingListSection = isLoading ? <ActivityIndicator size='large'/>
           : <PostingList
-              postings={searchPostings}
               navigation={navigation}
               isLoading={isLoading}
               onRefresh={fetchPostings}
               moderatorView={true}
+              searchText={searchText}
               filterType='FLAGGED'
              />
 

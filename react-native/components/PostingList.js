@@ -5,13 +5,13 @@ import PostingListItem from '../components/PostingListItem';
 import { AuthContext } from '../providers/AuthProvider';
 
 const PostingList = props => {
-  const { navigation } = props;
+  const { navigation, searchText } = props;
   const { user, postings, postings_updated } = useContext(AuthContext);
   const [filteredPostings, setFilteredPostings] = useState([]);
 
   useEffect(() => {
     filterPostings();
-  }, [postings_updated, user.profile.member_of]);
+  }, [props.searchText, postings_updated, user.profile.member_of]);
 
   const filterPostings = filterType => {
     let filtered = postings.filter(posting => {
@@ -24,8 +24,14 @@ const PostingList = props => {
       filtered = filtered.filter(posting =>
         user.profile.saved_postings.includes(posting.id));
     } else if (props.filterType === 'USER') {
-      filtered = postings.filter(posting =>
+      filtered = filtered.filter(posting =>
         posting.owner === user.user.id);
+    }
+
+    if (searchText.length > 0) {
+      filtered = filtered.filter(posting =>
+        posting.title.toLowerCase().includes(
+          searchText.toLowerCase()));
     }
 
     setFilteredPostings(filtered);
