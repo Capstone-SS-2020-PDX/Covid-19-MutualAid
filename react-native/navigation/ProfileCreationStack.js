@@ -24,11 +24,6 @@ const ProfileCreationStack = props => {
         name='CreateProfile'
         component={ProfileCreationScreen}
       />
-      {/* <Stack.Screen */}
-      {/*   name='JoinCommunity' */}
-      {/*   component={JoinCommunityScreen} */}
-      {/*   options={JoinCommunityScreenOptions} */}
-      {/* /> */}
     </Stack.Navigator>
   );
 

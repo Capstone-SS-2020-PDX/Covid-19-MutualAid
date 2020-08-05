@@ -1,11 +1,13 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useLayoutEffect } from 'react';
 import {
   View,
   ScrollView,
   Text,
   Image,
+  TouchableOpacity,
   StyleSheet,
 } from 'react-native';
+import { Ionicons, SimpleLineIcons } from '@expo/vector-icons';
 
 import { AuthContext } from '../providers/AuthProvider';
 import CustomButton from '../components/CustomButton';
@@ -22,33 +24,52 @@ const ProfileScreen = props => {
   const picUrl = user.profile.profile_pic ? user.profile.profile_pic : null;
   const homeCommunity = communities.find(community => community.id === user.profile.home) || '';
 
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity
+          style={styles.optionsMenuIcon}
+          onPress={() => {
+            console.log(navigation);
+          }}
+        >
+          <SimpleLineIcons
+            name='options-vertical'
+            size={23}
+            color={Colors.light_shade4}
+          />
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation]);
+
   return(
     <ScrollView contentContainerStyle={styles.screen}>
-        <Text style={styles.username}>{user.user.username}</Text>
-        <Text style={styles.date}>Member Since: {prettifyDate(user.user.date_joined)}</Text>
+      <Text style={styles.username}>{user.user.username}</Text>
+      <Text style={styles.date}>Member Since: {prettifyDate(user.user.date_joined)}</Text>
 
-        <View style={styles.imageContainer}>
-          <Image
-            style={styles.itemImage}
-            resizeMode='cover'
+      <View style={styles.imageContainer}>
+        <Image
+          style={styles.itemImage}
+          resizeMode='cover'
 
-            source={picUrl !== null
-                    ? {uri:picUrl}
-                    : require(itemPlaceHolder)
-                   }
-          />
-        </View>
+          source={picUrl !== null
+                  ? {uri:picUrl}
+                  : require(itemPlaceHolder)
+                 }
+        />
+      </View>
 
-        <View style={styles.userDetailSection}>
-          <Text style={styles.labelText}>Name</Text>
-          <Text style={styles.text}>{user.user.first_name} {user.user.last_name}</Text>
-          <Text style={styles.labelText}>Email</Text>
-          <Text style={styles.text}>{user.user.email}</Text>
-          <Text style={styles.labelText}>Bio</Text>
-          <Text style={styles.text}>{user.profile.profile_text}</Text>
-          <Text style={styles.labelText}>Home</Text>
-          <Text style={styles.text}>{homeCommunity.name}</Text>
-        </View>
+      <View style={styles.userDetailSection}>
+        <Text style={styles.labelText}>Name</Text>
+        <Text style={styles.text}>{user.user.first_name} {user.user.last_name}</Text>
+        <Text style={styles.labelText}>Email</Text>
+        <Text style={styles.text}>{user.user.email}</Text>
+        <Text style={styles.labelText}>Bio</Text>
+        <Text style={styles.text}>{user.profile.profile_text}</Text>
+        <Text style={styles.labelText}>Home</Text>
+        <Text style={styles.text}>{homeCommunity.name}</Text>
+      </View>
       <CustomButton
         style={styles.button}
         onPress={() => {
@@ -111,7 +132,10 @@ const styles = StyleSheet.create({
   },
   date: {
     fontSize: 12,
-  }
+  },
+  optionsMenuIcon: {
+    paddingRight: 15,
+  },
 });
 
 export default ProfileScreen;
