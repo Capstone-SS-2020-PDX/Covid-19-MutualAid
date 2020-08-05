@@ -154,7 +154,7 @@ const DrawerContent = props => {
                 />
               )}
               label="Settings"
-              onPress={() => {}}
+              onPress={() => {navigation.navigate('Settings')}}
             />
           </Drawer.Section>
 
