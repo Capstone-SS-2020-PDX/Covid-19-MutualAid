@@ -8,6 +8,20 @@ import Colors from '../config/colors';
 const Map = props => {
   const { radius, location } = props;
   const { user } = useContext(AuthContext);
+  const [region, setRegion] = useState(null);
+
+  useEffect(() => {
+    changeRegion();
+  }, [props.truePoint, props.circleCenter]);
+
+  const changeRegion = () => {
+    console.log('In changeRegion');
+    setRegion({
+      ...props.truePoint,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421,
+    });
+  };
 
   return(
     <View style={{ ...styles.mapContainer, ...props.style }}>
@@ -17,11 +31,7 @@ const Map = props => {
           height: 150,
           width: '100%',
         }}
-        initialRegion={{
-          ...props.circleCenter,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        }}
+        region={region}
       >
         { props.no_circle ? null
           :
