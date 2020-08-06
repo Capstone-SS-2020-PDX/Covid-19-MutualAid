@@ -6,7 +6,7 @@ import ProfileScreen from '../screens/ProfileScreen';
 import ProfileEditScreen from '../screens/ProfileEditScreen';
 import ProfileCreationScreen from '../screens/ProfileCreationScreen';
 
-import { headerOptions, drawerMenuIcon, optionsMenuIcon } from '../config/navigation-options';
+import { headerOptions, drawerMenuIcon } from '../config/navigation-options';
 
 const Stack = createStackNavigator();
 
@@ -17,7 +17,6 @@ const ProfileStack = props => {
         headerTitle: 'Your Profile',
         ...headerOptions,
         headerLeft: drawerMenuIcon.bind(this, navigation),
-        headerRight: optionsMenuIcon.bind(this, navigation),
     };
 
     const ProfileEditScreenOptions = {

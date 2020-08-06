@@ -15,8 +15,6 @@ import {
   Paragraph,
   Drawer,
   Text,
-  TouchableRipple,
-  Switch
 } from 'react-native-paper';
 
 import { AuthContext } from '../providers/AuthProvider';
@@ -154,10 +152,9 @@ const DrawerContent = props => {
                 />
               )}
               label="Settings"
-              onPress={() => {}}
+              onPress={() => {navigation.navigate('Settings')}}
             />
           </Drawer.Section>
-
         </View>
       </DrawerContentScrollView>
       <Drawer.Section style={styles.bottomDrawerSection}>

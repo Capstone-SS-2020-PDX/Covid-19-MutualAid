@@ -1,114 +1,119 @@
 import React, { useEffect, useContext, useState, useRef } from 'react';
 import {
-    View,
-    Text,
-    TextInput,
-    ActivityIndicator,
-    TouchableOpacity,
-    StyleSheet,
+  View,
+  Text,
+  TextInput,
+  ActivityIndicator,
+  TouchableOpacity,
+  StyleSheet,
 } from 'react-native';
 import { Ionicons, Feather } from '@expo/vector-icons';
 
 import PostingList from '../components/PostingList';
 import Colors from '../config/colors';
 import { windowWidth, windowHeight } from '../config/dimensions';
-import { users_url } from '../config/urls';
+import { postings_url } from '../config/urls';
 
 import { AuthContext } from '../providers/AuthProvider';
 
 const UserPostingListScreen = props => {
-    const { navigation } = props;
-    const { user } = useContext(AuthContext);
-    const userPostingsUrl = users_url + user.user.id + '/postings/';
+  const { navigation } = props;
+  const { user, updatePostings, searchMethod, searchRadius, searchMethodChanged } = useContext(AuthContext);
 
-    const [isLoading, setIsLoading] = useState(true);
-    const [postings, setPostings] = useState([]);
-    const [searchPostings, setSearchPostings] = useState([]);
-    const [searchText, setSearchText] = useState('');
-    const searchInputRef = useRef(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [searchText, setSearchText] = useState('');
+  const searchInputRef = useRef(null);
 
-    const fetchPostings = () => {
-        setIsLoading(true);
+  useEffect(() => {
+    fetchPostings();
+  }, [searchMethodChanged]);
 
-        fetch(userPostingsUrl, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-                'Content-type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-            }
-        })
-            .then(response => response.json())
-            .then(json => {
-                setPostings(json);
-                setSearchPostings(json);
-            })
-            .catch(error => console.log(error))
-            .finally(() => {
-                setIsLoading(false)
-            });
-    };
+  const fetchPostings = () => {
+    setIsLoading(true);
 
-    useEffect(() => {
-        fetchPostings();
-    }, []);
+    console.log(searchMethod);
+    const url = searchMethod === 'COMMUNITY' ? postings_url : generateRadiusUrl();
 
-    const handleSearch = text => {
-        setSearchText(text);
+    fetch(url, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      }
+    })
+      .then(response => response.json())
+      .then(json => {
+        updatePostings(json);
+      })
+      .catch(error => console.log(error))
+      .finally(() => {
+        setIsLoading(false)
+      });
+  };
 
-        let filteredPostings = postings.filter(posting =>
-            posting.title.toLowerCase().includes(text.toLowerCase())
-        );
+  const generateRadiusUrl = () => {
+    const loc = user.profile.home_location;
+    const longitude = loc.slice(loc.indexOf('(') + 1, loc.lastIndexOf(' '));
+    const latitude = loc.slice(loc.lastIndexOf(' ') + 1, loc.indexOf(')'));
 
-        setSearchPostings(filteredPostings);
-    };
+    let url = postings_url;
+    url += '?longitude=' + longitude + '&latitude=' + latitude + '&radius=' + searchRadius;
+    console.log(url);
 
-    const handleClearSearchInput = () => {
-        setSearchText('');
-        setSearchPostings(postings);
-        searchInputRef.current.clear();
-    };
+    return url;
+  };
+
+  const handleSearch = text => {
+    setSearchText(text);
+  };
+
+  const handleClearSearchInput = () => {
+    setSearchText('');
+    searchInputRef.current.clear();
+  };
 
   const PostingListSection = isLoading ? <ActivityIndicator size='large'/>
-          : <PostingList
-            postings={searchPostings}
+        : <PostingList
             navigation={navigation}
             isLoading={isLoading}
             onRefresh={fetchPostings}
+            searchText={searchText}
+            filterType='USER'
           />
 
-    return(
-       <View style={styles.screen}>
-          <View style={styles.searchContainer}>
-            <View style={styles.inputView}>
-              <Ionicons
-                name={'ios-search'}
-                size={23}
-                style={styles.inputIcon}
-              />
-              <TextInput
-                style={styles.inputText}
-                placeholder='Search for an item'
-                placeholderTextColor={Colors.placeholder_text}
-                autoCapitalize='none'
-                onChangeText={text => handleSearch(text)}
-                returnKeyType='done'
-                ref={searchInputRef}
-              />
-              <TouchableOpacity
-                style={styles.inputIcon}
-                onPress={() => handleClearSearchInput()}
-              >
-                <Feather
-                  name={'x-circle'}
-                  size={20}
-                />
-              </TouchableOpacity>
-            </View>
-          </View>
-         {PostingListSection}
+  return(
+    <View style={styles.screen}>
+      <View style={styles.searchContainer}>
+        <View style={styles.inputView}>
+          <Ionicons
+            name={'ios-search'}
+            size={23}
+            style={styles.inputIcon}
+          />
+          <TextInput
+            style={styles.inputText}
+            placeholder='Search for an item'
+            placeholderTextColor={Colors.placeholder_text}
+            autoCapitalize='none'
+            onChangeText={text => handleSearch(text)}
+            returnKeyType='done'
+            ref={searchInputRef}
+          />
+          <TouchableOpacity
+            style={styles.inputIcon}
+            onPress={() => handleClearSearchInput()}
+          >
+            <Feather
+              name={'x-circle'}
+              size={20}
+            />
+          </TouchableOpacity>
         </View>
-    );
+      </View>
+      {PostingListSection}
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({

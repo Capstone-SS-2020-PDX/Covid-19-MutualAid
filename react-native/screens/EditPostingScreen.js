@@ -47,25 +47,10 @@ const handleUpdatePosting = async (url, data) => {
     });
 };
 
-const handleDeletePosting = async (url) => {
-  showModal('DELETE_POSTING');
-
-  return fetch(url, {
-    method: 'DELETE',
-  }).then(response => {
-    console.log(response.status);
-    return response.json();
-  }).then(json => {
-    // console.log(json);
-  }).finally(() => {
-    hideModal();
-    notifyMessage('Posting Deleted Successfully!');
-  });
-};
 
 const EditPostingScreen = props => {
   const { route, navigation } = props;
-  const { communities, user } = useContext(AuthContext);
+  const { communities, user, deletePosting } = useContext(AuthContext);
   const availableCommunities = communities.filter(community => user.profile.member_of.includes(community.id));
 
   const isAndroid = Platform.OS === 'android' ? true : false;
@@ -106,9 +91,22 @@ const EditPostingScreen = props => {
     navigation.setParams({submitEditPosting});
   }, []);
 
+  const handleDeletePosting = async (url, id) => {
+    showModal('DELETE_POSTING');
+
+    return fetch(url, {
+      method: 'DELETE',
+    }).finally(() => {
+      deletePosting(id);
+      hideModal();
+      navigation.goBack();
+      notifyMessage('Posting Deleted Successfully!');
+    });
+  };
+
   const submitDeletePosting = () => {
-    handleDeletePosting(postingPatchUrl);
-    navigation.navigate('Feed');
+    handleDeletePosting(postingPatchUrl, route.params.id);
+    navigation.goBack();
   }
 
   const createFormData = () => {

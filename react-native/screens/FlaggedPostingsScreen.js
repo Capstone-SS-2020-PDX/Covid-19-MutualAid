@@ -17,22 +17,23 @@ import { postings_url } from '../config/urls';
 
 const FlaggedPostingsScreen = props => {
     const { navigation } = props;
-    const { user, communities } = useContext(AuthContext);
-    const [isLoading, setIsLoading] = useState(true);
-    const [postings, setPostings] = useState([]);
-    const [searchPostings, setSearchPostings] = useState([]);
+    const { user, updatePostings, searchMethod, searchRadius, searchMethodChanged } = useContext(AuthContext);
+
+    const [isLoading, setIsLoading] = useState(false);
     const [searchText, setSearchText] = useState('');
     const searchInputRef = useRef(null);
 
-
     useEffect(() => {
         fetchPostings();
-    }, [user]);
+    }, [searchMethodChanged]);
 
     const fetchPostings = () => {
         setIsLoading(true);
 
-        fetch(postings_url, {
+        console.log(searchMethod);
+        const url = searchMethod === 'COMMUNITY' ? postings_url : generateRadiusUrl();
+
+        fetch(url, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
@@ -42,49 +43,44 @@ const FlaggedPostingsScreen = props => {
         })
             .then(response => response.json())
             .then(json => {
-                filterPostings(json);
+                updatePostings(json);
             })
             .catch(error => console.log(error))
             .finally(() => {
                 setIsLoading(false)
             });
-
     };
 
-    const filterPostings = postings => {
-        // filter postings by whether they are flagged
-        let filteredPostings = postings.filter(posting => {
-            return posting.flagged > 0;
-        });
+    const generateRadiusUrl = () => {
+        const loc = user.profile.home_location;
+        const longitude = loc.slice(loc.indexOf('(') + 1, loc.lastIndexOf(' '));
+        const latitude = loc.slice(loc.lastIndexOf(' ') + 1, loc.indexOf(')'));
 
-        setPostings(filteredPostings);
-        setSearchPostings(filteredPostings);
+        let url = postings_url;
+        url += '?longitude=' + longitude + '&latitude=' + latitude + '&radius=' + searchRadius;
+        console.log(url);
+
+        return url;
     };
 
     const handleSearch = text => {
         setSearchText(text);
-
-        let filteredPostings = postings.filter(posting =>
-            posting.title.toLowerCase().includes(text.toLowerCase())
-        );
-
-        setSearchPostings(filteredPostings);
     };
 
     const handleClearSearchInput = () => {
         setSearchText('');
-        setSearchPostings(postings);
         searchInputRef.current.clear();
     };
 
     const PostingListSection = isLoading ? <ActivityIndicator size='large'/>
           : <PostingList
-              postings={searchPostings}
-              navigation={navigation}
-              isLoading={isLoading}
-              onRefresh={fetchPostings}
-              moderatorView={true}
-            />
+                  navigation={navigation}
+                  isLoading={isLoading}
+                  onRefresh={fetchPostings}
+                  moderatorView={true}
+                  searchText={searchText}
+                  filterType='FLAGGED'
+      />
 
     return(
         <View style={styles.screen}>

@@ -27,6 +27,11 @@ const updatePostingOptions = {
     data: 'Updating your Posting...',
 };
 
+const flaggingPostingOptions = {
+    ...defaultOptions,
+    data: 'Flagging Posting...',
+};
+
 const loginFailedOptions = {
     ...defaultOptions,
     data: 'Login attempt failed!',
@@ -88,6 +93,11 @@ const updateProfileOptions = {
     data: 'Updating Profile...',
 };
 
+const updateLocationOptions = {
+    ...defaultOptions,
+    data: 'Updating Location...',
+};
+
 export function showModal(type) {
     let options;
 
@@ -109,6 +119,9 @@ export function showModal(type) {
             break;
         case 'UPDATING_POSTING':
             options = updatePostingOptions;
+            break;
+        case 'FLAGGING_POSTING':
+            options = flaggingPostingOptions;
             break;
         case 'DELETE_POSTING':
             options = deletePostingOptions;
@@ -133,6 +146,9 @@ export function showModal(type) {
             break;
         case 'UPDATING_PROFILE':
             options = updateProfileOptions;
+            break;
+        case 'UPDATING_LOCATION':
+            options = updateLocationOptions;
             break;
         default:
             options = defaultOptions;

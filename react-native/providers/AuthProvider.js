@@ -1,8 +1,10 @@
 import React, { createContext, useReducer } from 'react';
 import { AsyncStorage } from 'react-native';
 
+
+import { login_url, register_url, check_username_url, communities_url, postings_url } from '../config/urls';
 import { showModal, hideModal } from '../components/CustomModal';
-import { login_url, register_url, check_username_url, communities_url } from '../config/urls';
+
 
 const AUTO_LOGIN = 'AUTO_LOGIN';
 const LOGIN = 'LOGIN';
@@ -13,6 +15,9 @@ const ADD_PROFILE = 'ADD_PROFILE';
 const UPDATE_PROFILE = 'UPDATE_PROFILE';
 const UPDATE_USER = 'UPDATE_USER';
 const UPDATE_COMMUNITIES = 'UPDATE_COMMUNITIES';
+const UPDATE_POSTINGS = 'UPDATE_POSTINGS';
+const UPDATE_RADIUS_POSTINGS = ''
+const SET_SEARCH_METHOD = 'SET_SEARCH_METHOD';
 
 // Provides token and login/logout functionality to Global App Context
 // Allows the app to know which user is using it and to handle login/logout
@@ -27,6 +32,13 @@ export const AuthProvider = props => {
         hasProfile: true,
         user: null,
         communities: null,
+        postings: null,
+        postingsRadius: null,
+        postings_updated: 0,
+        searchMethod: 'COMMUNITY',
+        searchMethodChanged: 0,
+        searchRadius: 10,
+
     };
 
     const loginReducer = (previousState, action) => {
@@ -92,10 +104,61 @@ export const AuthProvider = props => {
                     communities: action.communities,
                     isLoading: false,
                 };
+            case UPDATE_POSTINGS:
+                return {
+                    ...previousState,
+                    postings: action.postings,
+                    isLoading: false,
+                    postings_updated: action.postings_updated,
+                };
+            case SET_SEARCH_METHOD:
+                return {
+                    ...previousState,
+                    searchMethod: action.searchMethod,
+                    searchRadius: action.searchRadius,
+                    searchMethodChanged: action.searchMethodChanged,
+                }
         }
     };
 
     const [loginState, dispatch] = useReducer(loginReducer, initialLoginState);
+
+    const fetchPostings = async () => {
+        await AsyncStorage.getItem('postings').then(postingsData => {
+            console.log('Fetching postings from AsyncStorage: ');
+            if (postingsData) {
+                console.log('Found postings in AsyncStorage!');
+                postingsData = JSON.parse(postingsData);
+                console.log(postingsData.length + ' postings fetched');
+                dispatch({ type: UPDATE_POSTINGS, postings: postingsData });
+            } else {
+                console.log("Postings NOT in AsyncStorage, fetching from server with method: " + loginState.searchMethod);
+
+                fetch(postings_url, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-type': 'application/json',
+                    },
+                }).then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw 'FETCH_POSTINGS_ERROR';
+                    }
+                }).then(postingsJSON => {
+                    console.log('Fetching Postings Response: ');
+                    console.log(postingsJSON.length + ' postings fetched');
+
+                    AsyncStorage.setItem('postings', JSON.stringify(postingsJSON)).then(() => {
+                        dispatch({ type: UPDATE_POSTINGS, postings: postingsJSON });
+                    })
+                }).catch(error => {
+                    console.log(error);
+                });
+            }
+        })
+    }
 
     const fetchCommunities = async () => {
         await AsyncStorage.getItem('communities').then(communityData => {
@@ -103,6 +166,7 @@ export const AuthProvider = props => {
             if (communityData) {
                 console.log("Found communities in AsyncStorage!");
                 communityData = JSON.parse(communityData);
+                console.log(communityData.length + ' communities fetched');
                 dispatch({ type: UPDATE_COMMUNITIES, communities: communityData });
             } else {
                 console.log("Communities DONT exist in AsyncStorage, fetching from server: ");
@@ -115,6 +179,8 @@ export const AuthProvider = props => {
                     },
                 }).then(response => response.json())
                   .then(communitiesJson => {
+                      console.log("Fetching communities: ");
+                      console.log(communitiesJson.length + ' communities fetched');
 
                       AsyncStorage.setItem('communities', JSON.stringify(communitiesJson)).then(() => {
                           dispatch({ type: UPDATE_COMMUNITIES, communities: communitiesJson });
@@ -132,7 +198,7 @@ export const AuthProvider = props => {
         }).catch(error => {
             console.log(error);
         });
-    }
+    };
 
     const performAuthRequest = (requestType, userData, url) => {
 
@@ -171,6 +237,7 @@ export const AuthProvider = props => {
             if (json) {
                 console.log('Server Response: ' + JSON.stringify(json));
                 loginData = json;
+                fetchPostings();
                 fetchCommunities();
                 setLoginData(loginData, requestType);
             }
@@ -181,14 +248,78 @@ export const AuthProvider = props => {
     };
 
     const updateProfile = newProfileData => {
+        console.log('updating profile');
         dispatch({ type: UPDATE_PROFILE, updatedProfile: newProfileData });
-    }
+    };
 
     const updateUser = newUserData => {
+        console.log('updating user');
         dispatch({ type: UPDATE_USER, updatedUser: newUserData });
-    }
+    };
+
+    const updatePostings = newPostingsData => {
+        console.log('updating postings');
+        dispatch({
+            type: UPDATE_POSTINGS,
+            postings: newPostingsData,
+            postings_updated: Math.random(),
+        });
+    };
+
+    const updateOnePosting = updatedPosting => {
+        console.log('updating one posting with id: ' + updatedPosting.id);
+
+        const updatedPostings = loginState.postings;
+
+        const updatedPostingIndex = loginState.postings.indexOf(
+            updatedPostings.find(posting => posting.id === updatedPosting.id)
+        );
+
+        console.log(updatedPostingIndex);
+        if (updatedPostingIndex !== -1) {
+            updatedPostings[updatedPostingIndex] = updatedPosting;
+            dispatch({
+                type: UPDATE_POSTINGS,
+                postings: updatedPostings,
+                postings_updated: Math.random(),
+            });
+        }
+    };
+
+    const addPosting = newPosting => {
+        console.log('Adding new posting with id: ' + newPosting.id);
+
+        const updatedPostings = loginState.postings;
+        updatedPostings.push(newPosting);
+
+        dispatch({
+            type: UPDATE_POSTINGS,
+            postings: updatedPostings,
+            postings_updated: Math.random(),
+        });
+    };
+
+    const deletePosting = postID => {
+        console.log('deleting one posting with id: ' + postID);
+
+        const updatedPostings = loginState.postings;
+
+        const deletedPostingIndex = loginState.postings.indexOf(
+            updatedPostings.find(posting => posting.id === postID)
+        );
+
+        if (deletedPostingIndex !== -1) {
+            updatedPostings.splice(deletedPostingIndex, 1);
+            dispatch({
+                type: UPDATE_POSTINGS,
+                postings: updatedPostings,
+                postings_updated: Math.random(),
+            });
+        }
+    };
 
     const handleAutoLogin = () => {
+        fetchPostings();
         fetchCommunities();
         AsyncStorage.getItem('loginData').then(loginData => {
             console.log('Attempting to fetch token from AsyncStorage...');
@@ -211,16 +342,16 @@ export const AuthProvider = props => {
         return performAuthRequest(LOGIN, userData, login_url);
     };
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
         console.log("Logging out...");
 
-        AsyncStorage.removeItem('loginData')
+        await AsyncStorage.removeItem('loginData')
                     .catch(error => console.log(error))
                     .finally(() => {
-                        AsyncStorage.removeItem('communities').finally(() => {
-                            dispatch({ type: LOGOUT });
-                        })
+                        AsyncStorage.removeItem('communities');
+                        AsyncStorage.removeItem('postings');
                     });
+        dispatch({ type: LOGOUT });
     };
 
     const handleCheckUsername = username => {
@@ -258,6 +389,26 @@ export const AuthProvider = props => {
         dispatch({ type: SET_IS_LOADING, isLoading: loadingStatus });
     };
 
+    const setSearchMethod = (method, radius) => {
+        console.log('Setting search method: ' + method + ' with radius: ' + radius);
+
+        if (radius === loginState.radius) {
+            dispatch({
+                type: SET_SEARCH_METHOD,
+                searchMethod: method,
+                searchRadius: radius,
+                searchMethodChanged: loginState.searchMethodChanged,
+            });
+        } else {
+            dispatch({
+                type: SET_SEARCH_METHOD,
+                searchMethod: method,
+                searchRadius: radius,
+                searchMethodChanged: Math.random(),
+            });
+        }
+    };
+
     return (
         <AuthContext.Provider
           value={{
@@ -267,8 +418,18 @@ export const AuthProvider = props => {
               hasProfile: loginState.hasProfile,
               user: loginState.user,
               communities: loginState.communities,
+              postings: loginState.postings,
+              postings_updated: loginState.postings_updated,
+              searchMethod: loginState.searchMethod,
+              searchRadius: loginState.searchRadius,
+              searchMethodChanged: loginState.searchMethodChanged,
+              setSearchMethod,
               updateProfile,
               updateUser,
+              updatePostings,
+              updateOnePosting,
+              addPosting,
+              deletePosting,
               autoLogin: handleAutoLogin,
               login: handleLogin,
               logout: handleLogout,

@@ -28,29 +28,8 @@ export const drawerMenuIcon = navigation => {
       );
 };
 
-export const optionsMenuIcon = navigation => {
-  return(
-    <TouchableOpacity
-      style={styles.optionsMenuIcon}
-      onPress={() => {
-        console.log(navigation);
-      }}
-    >
-      <SimpleLineIcons
-        name='options-vertical'
-        size={23}
-        color={Colors.light_shade4}
-      />
-    </TouchableOpacity>
-  );
-};
-
-
 const styles = StyleSheet.create({
   drawerIcon: {
     paddingLeft: 15,
   },
-  optionsMenuIcon: {
-    paddingRight: 15,
-  }
 });

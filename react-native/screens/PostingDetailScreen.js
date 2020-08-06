@@ -11,9 +11,7 @@ import { View,
          ActivityIndicator,
          Platform,
        } from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
-import { Entypo } from '@expo/vector-icons';
-import { Ionicons } from '@expo/vector-icons';
+import { AntDesign, Entypo, Ionicons } from '@expo/vector-icons';
 import OptionsMenu from "react-native-options-menu";
 
 import { RFValue, RFPercentage } from "react-native-responsive-fontsize";
@@ -36,11 +34,10 @@ const requestedItemIconImage = '../assets/requested_item.png';
 const itemPlaceHolder = '../assets/image_place_holder.jpg';
 
 const PostingDetailScreen = props => {
-  const { user, updateProfile } = useContext(AuthContext);
+  const { user, updateProfile, updateOnePosting } = useContext(AuthContext);
   const { route, navigation } = props;
   const [postingImage, setPostingImage] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
-  const radius = 4000;
   const picUrl = route.params.item_pic;
   const isModeratorView = route.params.moderatorView;
   const isOwned = user.user.id === route.params.owner;
@@ -48,7 +45,6 @@ const PostingDetailScreen = props => {
 
 
   useLayoutEffect(() => {
-
     if (!isOwned && !isModeratorView) {
 
       const isFavorited = user.profile.saved_postings.includes(route.params.id);
@@ -131,6 +127,7 @@ const PostingDetailScreen = props => {
     }).then(response => {
       return response.json();
     }).then(json => {
+      updateOnePosting(json);
       hideModal();
       notifyMessage('Posting Flagged Successfully!');
       navigation.goBack();
@@ -194,10 +191,10 @@ const PostingDetailScreen = props => {
     fetch(url, {
       method: 'DELETE',
     }).then(response => {
-      if (response.ok) {
+      if (response.status === 204) {
         return response.json();
       } else {
-        throw Error(response.text());
+        throw Error(response.json());
       }
     }).then(json => {
       hideModal();
@@ -231,6 +228,7 @@ const PostingDetailScreen = props => {
     }).then(json => {
       hideModal();
       notifyMessage('Posting un-flagged Successfully!');
+      updateOnePosting(json);
       navigation.goBack();
     }).catch(error => {
       console.log(JSON.stringify(error));
@@ -334,12 +332,13 @@ const PostingDetailScreen = props => {
       </View>
 
       <View style={styles.descriptionContainer}>
-        <Text style={styles.bodyText}>{route.params.description}</Text>
+        <Text style={styles.bodyText}>{route.params.desc}</Text>
       </View>
 
       <Map
         radius={3000}
         location={route.params.location}
+        hide_point={true}
       />
 
       { renderBottomButton() }
