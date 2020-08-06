@@ -1,4 +1,4 @@
-import React, { useRef, useState, useContext } from 'react';
+import React, { useRef, useContext } from 'react';
 import { View,
          Text,
          TextInput,
@@ -118,7 +118,7 @@ const LoginScreen = props => {
 
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate('Register');
+              navigation.navigate('UserAgreement');
             }}
           >
             <Text style={styles.registerText}>Register</Text>

@@ -1,7 +1,10 @@
-import React, { createContext, useState, useReducer, useContext } from 'react';
+import React, { createContext, useReducer } from 'react';
 import { AsyncStorage } from 'react-native';
 
+
 import { login_url, register_url, check_username_url, communities_url, postings_url } from '../config/urls';
+import { showModal, hideModal } from '../components/CustomModal';
+
 
 const AUTO_LOGIN = 'AUTO_LOGIN';
 const LOGIN = 'LOGIN';
@@ -35,6 +38,7 @@ export const AuthProvider = props => {
         searchMethod: 'COMMUNITY',
         searchMethodChanged: 0,
         searchRadius: 10,
+
     };
 
     const loginReducer = (previousState, action) => {
@@ -43,7 +47,6 @@ export const AuthProvider = props => {
                 return {
                     ...previousState,
                     token: action.token,
-                    // isLoading: false,
                     user: action.user,
                 };
             case LOGIN:
@@ -212,27 +215,36 @@ export const AuthProvider = props => {
             },
             body: payloadData,
         })
-            .then(response => {
-                console.log("Response status: " + response.status);
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    throw Error('ERROR: ' + requestType + ' failed! ' + response.body);
-                }
-            })
-            .then(json => {
+        .then(response => {
+            console.log("Response status: " + response.status);
+            if (response.status != 200) {
+                setTimeout(() => {
+                    if (requestType == 'LOGIN') {
+                        showModal('LOGIN_FAILED');
+                    } else if (requestType == 'REGISTER') {
+                        showModal('REGISTER_FAILED')
+                    }
+                    setTimeout(() => {
+                        hideModal();
+                        }, 1000);
+                }, 600);
+                throw "Auth_failed"
+            } else {
+                return response.json();
+            }
+        })
+        .then(json => {
+            if (json) {
                 console.log('Server Response: ' + JSON.stringify(json));
                 loginData = json;
                 fetchPostings();
                 fetchCommunities();
                 setLoginData(loginData, requestType);
-
-            })
-            .catch(error => {
-                console.log(error);
-            })
-            .finally(() => {
-            });
+            }
+        })
+        .catch((error) => {
+            console.log(`Failure during performAuthRequest. Request type: ${requestType}, error: ${error}`);
+        });
     };
 
     const updateProfile = newProfileData => {

@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import ProfileCreationScreen from '../screens/ProfileCreationScreen';
+import UserAgreementScreen from '../screens/UserAgreementScreen';
 
 const Stack = createStackNavigator();
 
@@ -32,6 +33,13 @@ const AuthStack = props => {
         component={RegisterScreen}
         options={{
           title: 'Sign Up',
+        }}
+      />
+      <Stack.Screen
+        name='UserAgreement'
+        component={UserAgreementScreen}
+        options={{
+          title: 'Terms of Service'
         }}
       />
       <Stack.Screen

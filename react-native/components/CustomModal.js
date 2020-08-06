@@ -34,19 +34,30 @@ const flaggingPostingOptions = {
 
 const loginFailedOptions = {
     ...defaultOptions,
-    data: 'Login Failed!',
+    data: 'Login attempt failed!',
     icon: <MaterialIcons name='error-outline' size={50} color='red'/>,
 };
 
 const registerFailedOptions = {
     ...defaultOptions,
-    data: 'Register Failed!',
+    data: 'Registration attempt failed!',
     icon: <MaterialIcons name='error-outline' size={50} color='red'/>,
+ };
+
+ const unacceptedTermsOptions = {
+     ...defaultOptions,
+     data: 'Agreement acceptances are required!',
+     icon: <MaterialIcons name='error-outline' size={50} color='red'/>,
  };
 
 const deletePostingOptions = {
     ...defaultOptions,
     data: 'Deleting your Posting...',
+};
+
+const flaggingPostingOptions = {
+    ...defaultOptions,
+    data: 'Flagging Posting...',
 };
 
 const sendingEmailOptions = {
@@ -100,6 +111,9 @@ export function showModal(type) {
         case 'REGISTER_FAILED':
             options = registerFailedOptions;
             break;
+        case 'UNACCEPTED_TERMS':
+            options = unacceptedTermsOptions;
+            break;
         case 'CREATING_POSTING':
             options = createPostingOptions;
             break;
@@ -111,6 +125,9 @@ export function showModal(type) {
             break;
         case 'DELETE_POSTING':
             options = deletePostingOptions;
+            break;
+        case 'FLAGGING_POSTING':
+            options = flaggingPostingOptions;
             break;
         case 'SENDING_EMAIL':
             options = sendingEmailOptions;
