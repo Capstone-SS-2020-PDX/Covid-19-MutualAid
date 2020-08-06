@@ -307,9 +307,6 @@ const PostingDetailScreen = props => {
     var circleCenter = {latitude, longitude};
     var truePoint = {latitude, longitude};
   }
-  else {
-    console.log("null point");
-  }
 
    // This dynamically calculates a safe value to shift the true location while still ensuring
    // that the radius will encompass the point

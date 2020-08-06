@@ -87,6 +87,15 @@ const ProfileScreen = props => {
       });
   };
 
+  if (user.profile.home_location) {
+    var point = user.profile.home_location;
+    point = point.slice(point.indexOf('(') + 1, point.indexOf(')'));
+    var longitude = parseFloat(point.slice(0, point.indexOf(' ')));
+    var latitude = parseFloat(point.slice(point.indexOf(' ') + 1));
+    var circleCenter = {latitude, longitude};
+    var truePoint = {latitude, longitude};
+  }
+
   return(
     <ScrollView contentContainerStyle={styles.screen}>
       <Text style={styles.username}>{user.user.username}</Text>
@@ -121,6 +130,8 @@ const ProfileScreen = props => {
           radius={2000}
           location={user.profile.home_location}
           no_circle={true}
+          truePoint={truePoint}
+          circleCenter={truePoint}
         />
         : null
       }
