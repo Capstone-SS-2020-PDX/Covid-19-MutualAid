@@ -33,6 +33,8 @@ const offeredItemIconImage = '../assets/offered_item.png';
 const requestedItemIconImage = '../assets/requested_item.png';
 const itemPlaceHolder = '../assets/image_place_holder.jpg';
 
+const radius = 3000;
+
 const PostingDetailScreen = props => {
   const { user, updateProfile, updateOnePosting } = useContext(AuthContext);
   const { route, navigation } = props;
@@ -297,6 +299,35 @@ const PostingDetailScreen = props => {
     }
   };
 
+  if (route.params.location) {
+    var point = route.params.location;
+    point = point.slice(point.indexOf('(') + 1, point.indexOf(')'));
+    var longitude = parseFloat(point.slice(0, point.indexOf(' ')));
+    var latitude = parseFloat(point.slice(point.indexOf(' ') + 1));
+    var circleCenter = {latitude, longitude};
+    var truePoint = {latitude, longitude};
+  }
+  else {
+    console.log("null point");
+  }
+
+   // This dynamically calculates a safe value to shift the true location while still ensuring
+   // that the radius will encompass the point
+  const generateRandomCircleCenter = (radius, circleCenter) => {
+    radius = radius - 50; // give us some breathing room
+
+    // get degree shift based on radius
+    // this guarantees the shifted point will be within radius
+    let deg = Math.sqrt((radius * radius) / 2 ) / 111320;
+    let lat = Math.random() * (deg - (-deg)) - deg;
+    let lng = Math.random() * (deg - (-deg)) - deg;
+
+    circleCenter.latitude = circleCenter.latitude + lat;
+    circleCenter.longitude = circleCenter.longitude + lng;
+  }
+
+  generateRandomCircleCenter(radius, circleCenter);
+
   const screenContent = (
     <>
       <View style={styles.detailTitleContainer}>
@@ -336,8 +367,10 @@ const PostingDetailScreen = props => {
       </View>
 
       <Map
-        radius={3000}
+        radius={radius}
         location={route.params.location}
+        truePoint={truePoint}
+        circleCenter={circleCenter}
         hide_point={true}
       />
 
