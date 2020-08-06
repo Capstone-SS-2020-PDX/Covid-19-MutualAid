@@ -55,11 +55,6 @@ const deletePostingOptions = {
     data: 'Deleting your Posting...',
 };
 
-const flaggingPostingOptions = {
-    ...defaultOptions,
-    data: 'Flagging Posting...',
-};
-
 const sendingEmailOptions = {
     ...defaultOptions,
     data: 'Sending Message...',
