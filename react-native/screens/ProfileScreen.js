@@ -1,4 +1,4 @@
-import React, { useState, useContext, useLayoutEffect } from 'react';
+import React, { useState, useEffect, useContext, useLayoutEffect } from 'react';
 import {
   View,
   ScrollView,
@@ -47,6 +47,10 @@ const ProfileScreen = props => {
     });
   }, [navigation]);
 
+  useEffect(() => {
+    renderMap();
+  }, [user.profile.home_location]);
+
   const handleUpdateLocation = async () => {
     (async () => {
       let { status } = await Location.requestPermissionsAsync();
@@ -87,6 +91,26 @@ const ProfileScreen = props => {
       });
   };
 
+  const renderMap = () => {
+    var point = user.profile.home_location;
+    point = point.slice(point.indexOf('(') + 1, point.indexOf(')'));
+    var longitude = parseFloat(point.slice(0, point.indexOf(' ')));
+    var latitude = parseFloat(point.slice(point.indexOf(' ') + 1));
+    var circleCenter = {latitude, longitude};
+    var truePoint = {latitude, longitude};
+
+    return (
+      <Map
+        radius={2000}
+        location={user.profile.home_location}
+        no_circle={true}
+        truePoint={truePoint}
+        circleCenter={truePoint}
+      />
+    );
+  };
+
+
   return(
     <ScrollView contentContainerStyle={styles.screen}>
       <Text style={styles.username}>{user.user.username}</Text>
@@ -117,12 +141,8 @@ const ProfileScreen = props => {
 
       {
         user.profile.home_location ?
-        <Map
-          radius={2000}
-          location={user.profile.home_location}
-          no_circle={true}
-        />
-        : null
+          renderMap()
+          : null
       }
       <CustomButton
         style={styles.button}
