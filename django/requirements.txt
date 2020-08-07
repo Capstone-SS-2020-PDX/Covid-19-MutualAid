@@ -1,9 +1,10 @@
 Django
-djangorestframework
-psycopg2-binary
 django-cors-headers
-pillow
-google-cloud-storage
+django-filter
 django-storages
+djangorestframework
 gcloud
+google-cloud-storage
+pillow
+psycopg2-binary
 pytest
