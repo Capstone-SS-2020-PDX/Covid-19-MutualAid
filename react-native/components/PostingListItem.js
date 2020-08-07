@@ -48,7 +48,7 @@ const PostingListItem = props => {
             <View style={styles.listImageContainer}>
               <Image
                 style={styles.listImage}
-                resizeMode='contain'
+                resizeMode='cover'
                 source={picUrl != null?{uri:picUrl}
                 : require(itemPlaceHolder)}
               />

@@ -193,11 +193,7 @@ const PostingDetailScreen = props => {
     fetch(url, {
       method: 'DELETE',
     }).then(response => {
-      if (response.status === 204) {
-        return response.json();
-      } else {
-        throw Error(response.json());
-      }
+      return response.json();
     }).then(json => {
       hideModal();
       notifyMessage('Posting Deleted Successfully!');
