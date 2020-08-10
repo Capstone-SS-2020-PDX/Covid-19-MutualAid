@@ -36,7 +36,7 @@ const itemPlaceHolder = '../assets/image_place_holder.jpg';
 const radius = 3000;
 
 const PostingDetailScreen = props => {
-  const { user, updateProfile, updateOnePosting } = useContext(AuthContext);
+  const { user, updateProfile, updateOnePosting, deletePosting } = useContext(AuthContext);
   const { route, navigation } = props;
   const [postingImage, setPostingImage] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -189,18 +189,18 @@ const PostingDetailScreen = props => {
   const handleDeletePosting = () => {
     showModal('DELETE_POSTING');
     const url = postings_url + route.params.id + '/';
+    console.log("Deleting posting url: " + url);
 
     fetch(url, {
       method: 'DELETE',
     }).then(response => {
-      return response.json();
+      console.log(response.status);
+      return response.text();
     }).then(json => {
+      deletePosting(route.params.id);
       hideModal();
       notifyMessage('Posting Deleted Successfully!');
       navigation.goBack();
-    }).catch(error => {
-      hideModal();
-      notifyMessage('Whoops! Something went wrong!!');
     }).finally(() => {
     });
   };
