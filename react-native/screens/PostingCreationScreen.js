@@ -271,6 +271,7 @@ const PostingCreationScreen = props => {
               <View style={isAndroid ? styles.pickerViewAndroid : {...styles.inputView, ...styles.pickerViewiOS}}>
                 <RNPickerSelect
                   placeholder={{}}
+                  value={'r'}
                   items={[
                     {label: 'Request', value: 'r'},
                     {label: 'Offer', value: 'o'},
@@ -290,6 +291,7 @@ const PostingCreationScreen = props => {
                 <RNPickerSelect
                   style={styles.picker}
                   placeholder={{}}
+                  value={'g'}
                   items={[
                     {label: 'Goods', value: 'g'},
                     {label: 'Services', value: 's'},
