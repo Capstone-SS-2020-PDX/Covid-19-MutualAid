@@ -15,7 +15,6 @@ const Map = props => {
   }, [props.truePoint, props.circleCenter]);
 
   const changeRegion = () => {
-    console.log('In changeRegion');
     setRegion({
       ...props.truePoint,
       latitudeDelta: 0.0922,

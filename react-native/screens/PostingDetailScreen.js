@@ -78,6 +78,23 @@ const PostingDetailScreen = props => {
           </View>
         ),
       });
+    } else if (isOwned && !isModeratorView) {
+      navigation.setOptions({
+        headerRight: () => (
+          <View style={styles.headerOptions}>
+            <TouchableOpacity
+              style={styles.favIcon}
+              onPress={() => handleDeletePosting()}
+            >
+              <Ionicons
+                name={'md-trash'}
+                size={25}
+                color={Colors.contrast3}
+              />
+            </TouchableOpacity>
+          </View>
+        ),
+      });
     }
   }, [navigation, user.profile]);
 
@@ -270,16 +287,17 @@ const PostingDetailScreen = props => {
 
     } else if (route.params.owner === user.user.id) {
       return(
-        <CustomButton
-          style={{...styles.reachOutButton, ...styles.deleteButton}}
-          onPress={() => {
-            navigation.navigate('EditPosting', {
-              ...route.params,
-            })
-          }}
-        >
-          <Text style={styles.reachOutButtonText}>Edit Posting</Text>
-        </CustomButton>
+        // <CustomButton
+        //   style={{...styles.reachOutButton, ...styles.deleteButton}}
+        //   onPress={() => {
+        //     navigation.navigate('EditPosting', {
+        //       ...route.params,
+        //     })
+        //   }}
+        // >
+        //   <Text style={styles.reachOutButtonText}>Edit Posting</Text>
+        // </CustomButton>
+        null
       );
     } else {
       return(
