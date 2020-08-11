@@ -35,7 +35,6 @@ const PostingCreationScreen = props => {
 
   const [selectedCommunity, setSelectedCommunity] = useState(homeCommunity);
   const [selectedImage, setSelectedImage] = useState(null);
-  const [itemCount, setItemCount] = useState(1);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isRequestSelected, setIsRequestSelected] = useState(true);
   const [isGoodSelected, setIsGoodSelected] = useState(true);
@@ -89,7 +88,7 @@ const PostingCreationScreen = props => {
 
     data.append('title', values.item_name);
     data.append('desc', values.item_description);
-    data.append('count', values.quantity.toString());
+    data.append('count', values.quantity);
     data.append('owner', user.user.id);
     data.append('category', categoryValue);
     data.append('request', requestValue);
@@ -138,7 +137,6 @@ const PostingCreationScreen = props => {
   // clears the input fields and state for the input
   const resetFormState = () => {
     setSelectedImage(null);
-    setItemCount(1);
     setIsProcessing(false);
     setSelectedCommunity(homeCommunity);
 
@@ -210,7 +208,7 @@ const PostingCreationScreen = props => {
 
   const form = () => (
     <Formik
-      initialValues={{ item_name: '', item_description: '', quantity: 1 }}
+      initialValues={{ item_name: '', item_description: '', quantity: '1' }}
       onSubmit={values => {
         handlePostCreation(values);
       }}
@@ -271,6 +269,7 @@ const PostingCreationScreen = props => {
               <View style={isAndroid ? styles.pickerViewAndroid : {...styles.inputView, ...styles.pickerViewiOS}}>
                 <RNPickerSelect
                   placeholder={{}}
+                  value={isRequestSelected ? 'r' : 'o'}
                   items={[
                     {label: 'Request', value: 'r'},
                     {label: 'Offer', value: 'o'},
@@ -290,6 +289,7 @@ const PostingCreationScreen = props => {
                 <RNPickerSelect
                   style={styles.picker}
                   placeholder={{}}
+                  value={isGoodSelected ? 'g' : 's'}
                   items={[
                     {label: 'Goods', value: 'g'},
                     {label: 'Services', value: 's'},
@@ -316,10 +316,13 @@ const PostingCreationScreen = props => {
                 <TextInput
                   style={styles.countInputText}
                   placeholderTextColor={Colors.placeholder_text}
+                  placeholder='1'
                   keyboardType='numeric'
                   returnKeyType='done'
-                  value={itemCount.toString()}
+                  value={values.quantity}
                   onChangeText={text => setItemCount(text)}
+                  onBlur={handleBlur('quantity')}
+                  onChangeText={handleChange('quantity')}
                   ref={itemCountInputRef}
                 />
               </View>
